@@ -1227,7 +1227,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_allow_threads</span>() {
-        <span class="comment">// allow_threads should temporarily release GIL in Py03&#39;s internal tracking too.</span>
+        <span class="comment">// allow_threads should temporarily release GIL in PyO3&#39;s internal tracking too.</span>
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
 
