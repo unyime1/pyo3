@@ -229,37 +229,36 @@ struct UserModel {
 impl Model for UserModel {
     fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
         println!(&quot;Rust calling Python to set the variables&quot;);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        let values: Vec&lt;f64&gt; = var.clone();
-        let list: PyObject = values.into_py(py);
-        let py_model = self.model.as_ref(py);
-        py_model
-            .call_method(&quot;set_variables&quot;, (list,), None)
-            .unwrap();
+        Python::with_gil(|py| {
+            let values: Vec&lt;f64&gt; = var.clone();
+            let list: PyObject = values.into_py(py);
+            let py_model = self.model.as_ref(py);
+            py_model
+                .call_method(&quot;set_variables&quot;, (list,), None)
+                .unwrap();
+        })
     }
 
     fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
         println!(&quot;Rust calling Python to get the results&quot;);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        self
-            .model
-            .as_ref(py)
-            .call_method(&quot;get_results&quot;, (), None)
-            .unwrap()
-            .extract()
-            .unwrap()
+        Python::with_gil(|py| {
+            self.model
+                .as_ref(py)
+                .call_method(&quot;get_results&quot;, (), None)
+                .unwrap()
+                .extract()
+                .unwrap()
+        })
     }
 
     fn compute(&amp;mut self) {
         println!(&quot;Rust calling Python to perform the computation&quot;);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        self.model
-            .as_ref(py)
-            .call_method(&quot;compute&quot;, (), None)
-            .unwrap();
+        Python::with_gil(|py| {
+            self.model
+                .as_ref(py)
+                .call_method(&quot;compute&quot;, (), None)
+                .unwrap();
+        })
     }
 }
 <span class="boring">}
@@ -328,61 +327,55 @@ This wrapper will also perform the type conversions between Python and Rust.</p>
 </span><span class="boring">impl Model for UserModel {
 </span><span class="boring"> fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
 </span><span class="boring">     println!(&quot;Rust calling Python to set the variables&quot;);
-</span><span class="boring">     let gil = Python::acquire_gil();
-</span><span class="boring">     let py = gil.python();
-</span><span class="boring">     let values: Vec&lt;f64&gt; = var.clone();
-</span><span class="boring">     let list: PyObject = values.into_py(py);
-</span><span class="boring">     let py_model = self.model.as_ref(py);
-</span><span class="boring">     py_model
-</span><span class="boring">         .call_method(&quot;set_variables&quot;, (list,), None)
-</span><span class="boring">         .unwrap();
+</span><span class="boring">     Python::with_gil(|py| {
+</span><span class="boring">         let values: Vec&lt;f64&gt; = var.clone();
+</span><span class="boring">         let list: PyObject = values.into_py(py);
+</span><span class="boring">         let py_model = self.model.as_ref(py);
+</span><span class="boring">         py_model
+</span><span class="boring">             .call_method(&quot;set_variables&quot;, (list,), None)
+</span><span class="boring">             .unwrap();
+</span><span class="boring">     })
 </span><span class="boring"> }
 </span><span class="boring">
 </span><span class="boring"> fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
 </span><span class="boring">     println!(&quot;Rust calling Python to get the results&quot;);
-</span><span class="boring">     let gil = Python::acquire_gil();
-</span><span class="boring">     let py = gil.python();
-</span><span class="boring">     self
-</span><span class="boring">         .model
-</span><span class="boring">         .as_ref(py)
-</span><span class="boring">         .call_method(&quot;get_results&quot;, (), None)
-</span><span class="boring">         .unwrap()
-</span><span class="boring">         .extract()
-</span><span class="boring">         .unwrap()
+</span><span class="boring">     Python::with_gil(|py| {
+</span><span class="boring">         self.model
+</span><span class="boring">             .as_ref(py)
+</span><span class="boring">             .call_method(&quot;get_results&quot;, (), None)
+</span><span class="boring">             .unwrap()
+</span><span class="boring">             .extract()
+</span><span class="boring">             .unwrap()
+</span><span class="boring">     })
 </span><span class="boring"> }
 </span><span class="boring">
 </span><span class="boring"> fn compute(&amp;mut self) {
 </span><span class="boring">     println!(&quot;Rust calling Python to perform the computation&quot;);
-</span><span class="boring">     let gil = Python::acquire_gil();
-</span><span class="boring">     let py = gil.python();
-</span><span class="boring">     self.model
-</span><span class="boring">         .as_ref(py)
-</span><span class="boring">         .call_method(&quot;compute&quot;, (), None)
-</span><span class="boring">         .unwrap();
+</span><span class="boring">     Python::with_gil(|py| {
+</span><span class="boring">         self.model
+</span><span class="boring">             .as_ref(py)
+</span><span class="boring">             .call_method(&quot;compute&quot;, (), None)
+</span><span class="boring">             .unwrap();
+</span><span class="boring">     })
+</span><span class="boring">
 </span><span class="boring"> }
 </span><span class="boring">}
 </span>
 #[pymethods]
 impl UserModel {
-    pub fn set_variables(&amp;mut self, var: Vec&lt;f64&gt;) -&gt; PyResult&lt;()&gt; {
+    pub fn set_variables(&amp;mut self, var: Vec&lt;f64&gt;) {
         println!(&quot;Set variables from Python calling Rust&quot;);
-        Model::set_variables(self, &amp;var);
-        Ok(())
+        Model::set_variables(self, &amp;var)
     }
 
-    pub fn get_results(&amp;mut self) -&gt; PyResult&lt;Vec&lt;f64&gt;&gt; {
+    pub fn get_results(&amp;mut self) -&gt; Vec&lt;f64&gt; {
         println!(&quot;Get results from Python calling Rust&quot;);
-        let results = Model::get_results(self);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        let py_results = results.into_py(py);
-        Ok(py_results)
+        Model::get_results(self)
     }
 
-    pub fn compute(&amp;mut self) -&gt; PyResult&lt;()&gt; {
+    pub fn compute(&amp;mut self) {
         println!(&quot;Compute from Python calling Rust&quot;);
-        Model::compute(self);
-        Ok(())
+        Model::compute(self)
     }
 }
 <span class="boring">}
@@ -475,39 +468,38 @@ TypeError
 </span><span class="boring">}
 </span>
 impl Model for UserModel {
-  fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
-    println!(&quot;Get results from Rust calling Python&quot;);
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    self
-        .model
-        .as_ref(py)
-        .call_method(&quot;get_results&quot;, (), None)
-        .unwrap()
-        .extract()
-        .unwrap()
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
+        println!(&quot;Rust calling Python to get the results&quot;);
+        Python::with_gil(|py| {
+            self.model
+                .as_ref(py)
+                .call_method(&quot;get_results&quot;, (), None)
+                .unwrap()
+                .extract()
+                .unwrap()
+        })
     }
-<span class="boring"> fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
-</span><span class="boring">     println!(&quot;Rust calling Python to set the variables&quot;);
-</span><span class="boring">     let gil = Python::acquire_gil();
-</span><span class="boring">     let py = gil.python();
-</span><span class="boring">     let values: Vec&lt;f64&gt; = var.clone();
-</span><span class="boring">     let list: PyObject = values.into_py(py);
-</span><span class="boring">     let py_model = self.model.as_ref(py);
-</span><span class="boring">     py_model
-</span><span class="boring">         .call_method(&quot;set_variables&quot;, (list,), None)
-</span><span class="boring">         .unwrap();
-</span><span class="boring"> }
+<span class="boring">    fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
+</span><span class="boring">        println!(&quot;Rust calling Python to set the variables&quot;);
+</span><span class="boring">        Python::with_gil(|py| {
+</span><span class="boring">            let values: Vec&lt;f64&gt; = var.clone();
+</span><span class="boring">            let list: PyObject = values.into_py(py);
+</span><span class="boring">            let py_model = self.model.as_ref(py);
+</span><span class="boring">            py_model
+</span><span class="boring">                .call_method(&quot;set_variables&quot;, (list,), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
 </span><span class="boring">
-</span><span class="boring"> fn compute(&amp;mut self) {
-</span><span class="boring">     println!(&quot;Rust calling Python to perform the computation&quot;);
-</span><span class="boring">     let gil = Python::acquire_gil();
-</span><span class="boring">     let py = gil.python();
-</span><span class="boring">     self.model
-</span><span class="boring">         .as_ref(py)
-</span><span class="boring">         .call_method(&quot;compute&quot;, (), None)
-</span><span class="boring">         .unwrap();
-</span><span class="boring"> }
+</span><span class="boring">    fn compute(&amp;mut self) {
+</span><span class="boring">        println!(&quot;Rust calling Python to perform the computation&quot;);
+</span><span class="boring">        Python::with_gil(|py| {
+</span><span class="boring">            self.model
+</span><span class="boring">                .as_ref(py)
+</span><span class="boring">                .call_method(&quot;compute&quot;, (), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
 </span>}
 <span class="boring">}
 </span></code></pre></pre>
@@ -530,42 +522,43 @@ impl Model for UserModel {
 </span><span class="boring">}
 </span>
 impl Model for UserModel {
-  fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
-      println!(&quot;Get results from Rust calling Python&quot;);
-      let gil = Python::acquire_gil();
-      let py = gil.python();
-      let py_result: &amp;PyAny = self
-          .model
-          .as_ref(py)
-          .call_method(&quot;get_results&quot;, (), None)
-          .unwrap();
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
+        println!(&quot;Get results from Rust calling Python&quot;);
+        Python::with_gil(|py| {
+            let py_result: &amp;PyAny = self
+                .model
+                .as_ref(py)
+                .call_method(&quot;get_results&quot;, (), None)
+                .unwrap();
 
-      if py_result.get_type().name() != &quot;list&quot; {
-          panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name());
-      }
-      py_result.extract().unwrap()
-  }
-<span class="boring"> fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
-</span><span class="boring">     println!(&quot;Rust calling Python to set the variables&quot;);
-</span><span class="boring">     let gil = Python::acquire_gil();
-</span><span class="boring">     let py = gil.python();
-</span><span class="boring">     let values: Vec&lt;f64&gt; = var.clone();
-</span><span class="boring">     let list: PyObject = values.into_py(py);
-</span><span class="boring">     let py_model = self.model.as_ref(py);
-</span><span class="boring">     py_model
-</span><span class="boring">         .call_method(&quot;set_variables&quot;, (list,), None)
-</span><span class="boring">         .unwrap();
-</span><span class="boring"> }
+            if py_result.get_type().name() != &quot;list&quot; {
+                panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name());
+            }
+            py_result.extract()
+        })
+        .unwrap()
+    }
+<span class="boring">    fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
+</span><span class="boring">        println!(&quot;Rust calling Python to set the variables&quot;);
+</span><span class="boring">        Python::with_gil(|py| {
+</span><span class="boring">            let values: Vec&lt;f64&gt; = var.clone();
+</span><span class="boring">            let list: PyObject = values.into_py(py);
+</span><span class="boring">            let py_model = self.model.as_ref(py);
+</span><span class="boring">            py_model
+</span><span class="boring">                .call_method(&quot;set_variables&quot;, (list,), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
 </span><span class="boring">
-</span><span class="boring"> fn compute(&amp;mut self) {
-</span><span class="boring">     println!(&quot;Rust calling Python to perform the computation&quot;);
-</span><span class="boring">     let gil = Python::acquire_gil();
-</span><span class="boring">     let py = gil.python();
-</span><span class="boring">     self.model
-</span><span class="boring">         .as_ref(py)
-</span><span class="boring">         .call_method(&quot;compute&quot;, (), None)
-</span><span class="boring">         .unwrap();
-</span><span class="boring"> }
+</span><span class="boring">    fn compute(&amp;mut self) {
+</span><span class="boring">        println!(&quot;Rust calling Python to perform the computation&quot;);
+</span><span class="boring">        Python::with_gil(|py| {
+</span><span class="boring">            self.model
+</span><span class="boring">                .as_ref(py)
+</span><span class="boring">                .call_method(&quot;compute&quot;, (), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
 </span>}
 <span class="boring">}
 </span></code></pre></pre>
@@ -612,7 +605,7 @@ pub struct UserModel {
 #[pymodule]
 fn trait_exposure(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
     m.add_class::&lt;UserModel&gt;()?;
-    m.add_wrapped(wrap_pyfunction!(solve_wrapper)).unwrap();
+    m.add_wrapped(wrap_pyfunction!(solve_wrapper))?;
     Ok(())
 }
 
@@ -623,64 +616,59 @@ impl UserModel {
         UserModel { model }
     }
 
-    pub fn set_variables(&amp;mut self, var: Vec&lt;f64&gt;) -&gt; PyResult&lt;()&gt; {
+    pub fn set_variables(&amp;mut self, var: Vec&lt;f64&gt;) {
         println!(&quot;Set variables from Python calling Rust&quot;);
-        Model::set_variables(self, &amp;var);
-        Ok(())
+        Model::set_variables(self, &amp;var)
     }
 
-    pub fn get_results(&amp;mut self) -&gt; PyResult&lt;Vec&lt;f64&gt;&gt; {
+    pub fn get_results(&amp;mut self) -&gt; Vec&lt;f64&gt; {
         println!(&quot;Get results from Python calling Rust&quot;);
-        let results = Model::get_results(self);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        let py_results = results.into_py(py);
-        Ok(py_results)
+        Model::get_results(self)
     }
 
-    pub fn compute(&amp;mut self) -&gt; PyResult&lt;()&gt; {
-        Model::compute(self);
-        Ok(())
+    pub fn compute(&amp;mut self) {
+        Model::compute(self)
     }
 }
 
 impl Model for UserModel {
     fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
-        println!(&quot;Set variables from Rust calling Python&quot;);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        let values: Vec&lt;f64&gt; = var.clone();
-        let list: PyObject = values.into_py(py);
-        let py_model = self.model.as_ref(py);
-        py_model
-            .call_method(&quot;set_variables&quot;, (list,), None)
-            .unwrap();
+        println!(&quot;Rust calling Python to set the variables&quot;);
+        Python::with_gil(|py| {
+            let values: Vec&lt;f64&gt; = var.clone();
+            let list: PyObject = values.into_py(py);
+            let py_model = self.model.as_ref(py);
+            py_model
+                .call_method(&quot;set_variables&quot;, (list,), None)
+                .unwrap();
+        })
     }
 
     fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
         println!(&quot;Get results from Rust calling Python&quot;);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        let py_result: &amp;PyAny = self
-            .model
-            .as_ref(py)
-            .call_method(&quot;get_results&quot;, (), None)
-            .unwrap();
+        Python::with_gil(|py| {
+            let py_result: &amp;PyAny = self
+                .model
+                .as_ref(py)
+                .call_method(&quot;get_results&quot;, (), None)
+                .unwrap();
 
-        if py_result.get_type().name() != &quot;list&quot; {
-            panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name());
-        }
-        py_result.extract().unwrap()
+            if py_result.get_type().name() != &quot;list&quot; {
+                panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name());
+            }
+            py_result.extract()
+        })
+        .unwrap()
     }
 
     fn compute(&amp;mut self) {
-        println!(&quot;Compute from Rust calling Python&quot;);
-        let gil = Python::acquire_gil();
-        let py = gil.python();
-        self.model
-            .as_ref(py)
-            .call_method(&quot;compute&quot;, (), None)
-            .unwrap();
+        println!(&quot;Rust calling Python to perform the computation&quot;);
+        Python::with_gil(|py| {
+            self.model
+                .as_ref(py)
+                .call_method(&quot;compute&quot;, (), None)
+                .unwrap();
+        })
     }
 }
 <span class="boring">}

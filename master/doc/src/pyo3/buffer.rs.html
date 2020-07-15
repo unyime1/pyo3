@@ -698,7 +698,6 @@
 <span id="698">698</span>
 <span id="699">699</span>
 <span id="700">700</span>
-<span id="701">701</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017 Daniel Grunwald</span>
 <span class="comment">//</span>
@@ -1271,8 +1270,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">PyBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">_gil_guard</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">PyBuffer_Release</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="number">0</span>) }
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">PyBuffer_Release</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="number">0</span>) });
     }
 }
 
