@@ -1000,7 +1000,7 @@
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
         <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;42&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw">unsafe</span> { <span class="ident">obj</span>.<span class="ident">get_type</span>().<span class="ident">as_type_ptr</span>() }, <span class="ident">obj</span>.<span class="ident">get_type_ptr</span>())
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">obj</span>.<span class="ident">get_type</span>().<span class="ident">as_type_ptr</span>(), <span class="ident">obj</span>.<span class="ident">get_type_ptr</span>())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
