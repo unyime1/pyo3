@@ -256,7 +256,7 @@
     <span class="kw">fn</span> <span class="ident">convert</span>(<span class="self">self</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">IterNextOutput</span>::<span class="ident">Yield</span>(<span class="ident">o</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">o</span>.<span class="ident">into_ptr</span>()),
-            <span class="ident">IterNextOutput</span>::<span class="ident">Return</span>(<span class="ident">opt</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">StopIteration</span>::<span class="ident">py_err</span>((<span class="ident">opt</span>,))),
+            <span class="ident">IterNextOutput</span>::<span class="ident">Return</span>(<span class="ident">opt</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">PyStopIteration</span>::<span class="ident">py_err</span>((<span class="ident">opt</span>,))),
         }
     }
 }

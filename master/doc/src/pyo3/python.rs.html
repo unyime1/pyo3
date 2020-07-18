@@ -680,7 +680,7 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use pyo3::prelude::*; use pyo3::types::IntoPyDict; use pyo3::wrap_pyfunction;</span>
-    <span class="doccomment">/// use pyo3::exceptions::RuntimeError;</span>
+    <span class="doccomment">/// use pyo3::exceptions::PyRuntimeError;</span>
     <span class="doccomment">/// use std::sync::Arc;</span>
     <span class="doccomment">/// use std::thread;</span>
     <span class="doccomment">/// #[pyfunction]</span>
@@ -693,7 +693,7 @@
     <span class="doccomment">///             .collect();</span>
     <span class="doccomment">///         let mut sum = 0;</span>
     <span class="doccomment">///         for t in threads {</span>
-    <span class="doccomment">///             sum += t.join().map_err(|_| PyErr::new::&lt;RuntimeError, _&gt;(()))?;</span>
+    <span class="doccomment">///             sum += t.join().map_err(|_| PyErr::new::&lt;PyRuntimeError, _&gt;(()))?;</span>
     <span class="doccomment">///         }</span>
     <span class="doccomment">///         Ok(sum)</span>
     <span class="doccomment">///     })</span>

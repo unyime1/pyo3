@@ -49,7 +49,7 @@ See <a href="fn.prepare_freethreaded_python.html">prepare_freethreaded_python()<
 </div><h4 id='method.allow_threads' class="method"><code id='allow_threads.v'>pub fn <a href='#method.allow_threads' class='fnname'>allow_threads</a>&lt;T, F&gt;(self, f: F) -&gt; T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; T,&nbsp;</span></code><a class='srclink' href='../src/pyo3/python.rs.html#154-175' title='goto source code'>[src]</a></h4><div class='docblock'><p>Temporarily releases the <code>GIL</code>, thus allowing other Python threads to run.</p>
 <h1 id="example-1" class="section-header"><a href="#example-1">Example</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>;
+<span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">exceptions</span>::<span class="ident">PyRuntimeError</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">thread</span>;
 <span class="attribute">#[<span class="ident">pyfunction</span>]</span>
@@ -62,7 +62,7 @@ See <a href="fn.prepare_freethreaded_python.html">prepare_freethreaded_python()<
             .<span class="ident">collect</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sum</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">for</span> <span class="ident">t</span> <span class="kw">in</span> <span class="ident">threads</span> {
-            <span class="ident">sum</span> <span class="op">+</span><span class="op">=</span> <span class="ident">t</span>.<span class="ident">join</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">RuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(()))<span class="question-mark">?</span>;
+            <span class="ident">sum</span> <span class="op">+</span><span class="op">=</span> <span class="ident">t</span>.<span class="ident">join</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">PyRuntimeError</span>, <span class="kw">_</span><span class="op">&gt;</span>(()))<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(<span class="ident">sum</span>)
     })

@@ -365,13 +365,12 @@ impl Names {
 <span class="boring">let gil = Python::acquire_gil();
 </span><span class="boring">let py = gil.python();
 </span><span class="boring">let names = PyCell::new(py, Names::new()).unwrap();
-</span><span class="boring">let borrow_mut_err = py.get_type::&lt;pyo3::pycell::PyBorrowMutError&gt;();
-</span><span class="boring">pyo3::py_run!(py, names borrow_mut_err, r&quot;
+</span><span class="boring">pyo3::py_run!(py, names, r&quot;
 </span><span class="boring">try:
 </span><span class="boring">   names.merge(names)
 </span><span class="boring">   assert False, 'Unreachable'
 </span><span class="boring">except RuntimeError as e:
-</span><span class="boring">   isinstance(e, borrow_mut_err)
+</span><span class="boring">   assert str(e) == 'Already borrowed'
 </span><span class="boring">&quot;);
 </span><span class="boring">}
 </span></code></pre></pre>

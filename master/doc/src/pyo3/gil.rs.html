@@ -719,7 +719,7 @@
 <span class="doccomment">///  1) for performance</span>
 <span class="doccomment">///  2) PyGILState_Check always returns 1 if the sub-interpreter APIs have ever been called,</span>
 <span class="doccomment">///     which could lead to incorrect conclusions that the GIL is held.</span>
-<span class="kw">fn</span> <span class="ident">gil_is_acquired</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">gil_is_acquired</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">GIL_COUNT</span>.<span class="ident">try_with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">get</span>() <span class="op">&gt;</span> <span class="number">0</span>).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
 }
 

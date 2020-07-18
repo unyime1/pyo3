@@ -726,9 +726,20 @@
 <span id="726">726</span>
 <span id="727">727</span>
 <span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Includes `PyCell` implementation.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">conversion</span>::{<span class="ident">AsPyPointer</span>, <span class="ident">FromPyPointer</span>, <span class="ident">ToPyObject</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">PyRuntimeError</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass</span>::{<span class="ident">PyClass</span>, <span class="ident">PyClassThreadChecker</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass_init</span>::<span class="ident">PyClassInitializer</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass_slots</span>::{<span class="ident">PyClassDict</span>, <span class="ident">PyClassWeakRef</span>};
@@ -1434,6 +1445,12 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PyBorrowError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PyErr</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">PyBorrowError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">PyRuntimeError</span>::<span class="ident">py_err</span>(<span class="ident">other</span>.<span class="ident">to_string</span>())
+    }
+}
+
 <span class="doccomment">/// An error returned by [`PyCell::try_borrow_mut`](struct.PyCell.html#method.try_borrow_mut).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// In Python, you can catch this error by `except RuntimeError`.</span>
@@ -1453,7 +1470,10 @@
     }
 }
 
-<span class="macro">pyo3_exception</span><span class="macro">!</span>(<span class="ident">PyBorrowError</span>, <span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>);
-<span class="macro">pyo3_exception</span><span class="macro">!</span>(<span class="ident">PyBorrowMutError</span>, <span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">RuntimeError</span>);
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PyBorrowMutError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PyErr</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">PyBorrowMutError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">PyRuntimeError</span>::<span class="ident">py_err</span>(<span class="ident">other</span>.<span class="ident">to_string</span>())
+    }
+}
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "pyo3";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

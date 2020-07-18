@@ -608,6 +608,8 @@
 <span id="608">608</span>
 <span id="609">609</span>
 <span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -650,7 +652,8 @@
         <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span> {
             <span class="kw">fn</span> <span class="ident">extract</span>(<span class="ident">obj</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">val</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">larger_type</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">extract</span>()<span class="question-mark">?</span>;
-                <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">val</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">exceptions</span>::<span class="ident">OverflowError</span>.<span class="ident">into</span>())
+                <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">val</span>)
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">exceptions</span>::<span class="ident">PyOverflowError</span>::<span class="ident">py_err</span>(<span class="ident">e</span>.<span class="ident">to_string</span>()))
             }
         }
     };
@@ -754,7 +757,8 @@
                         <span class="ident">val</span>
                     }
                 }<span class="question-mark">?</span>;
-                <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">val</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">exceptions</span>::<span class="ident">OverflowError</span>.<span class="ident">into</span>())
+                <span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">val</span>)
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">exceptions</span>::<span class="ident">PyOverflowError</span>::<span class="ident">py_err</span>(<span class="ident">e</span>.<span class="ident">to_string</span>()))
             }
         }
     };
@@ -1160,7 +1164,7 @@
             );
             <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">obj</span>);
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap_err</span>();
-            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">OverflowError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">PyOverflowError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
         }
     }
 
@@ -1178,7 +1182,7 @@
 
                     <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> (<span class="string">&quot;123&quot;</span>).<span class="ident">to_object</span>(<span class="ident">py</span>);
                     <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap_err</span>();
-                    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">TypeError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+                    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">PyTypeError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
                 }
 
                 <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1188,7 +1192,7 @@
 
                     <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> (<span class="number">12.3</span>).<span class="ident">to_object</span>(<span class="ident">py</span>);
                     <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap_err</span>();
-                    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">TypeError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+                    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">PyTypeError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
                 }
 
                 <span class="attribute">#[<span class="ident">test</span>]</span>
