@@ -470,31 +470,6 @@
 <span id="470">470</span>
 <span id="471">471</span>
 <span id="472">472</span>
-<span id="473">473</span>
-<span id="474">474</span>
-<span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
-<span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -539,10 +514,8 @@
 {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">t</span>.<span class="ident">as_ptr</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
-        }
+        <span class="self">self</span>.<span class="ident">as_ref</span>()
+            .<span class="ident">map_or_else</span>(<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">into_ptr</span>())
     }
 }
 
@@ -553,10 +526,7 @@
 {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">into_ptr</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">t</span>.<span class="ident">into_ptr</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
-        }
+        <span class="self">self</span>.<span class="ident">map_or_else</span>(<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">into_ptr</span>())
     }
 }
 
@@ -716,10 +686,8 @@
     <span class="ident">T</span>: <span class="ident">ToPyObject</span>,
 {
     <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">to_object</span>(<span class="ident">py</span>),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">py</span>.<span class="prelude-val">None</span>(),
-        }
+        <span class="self">self</span>.<span class="ident">as_ref</span>()
+            .<span class="ident">map_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">py</span>.<span class="prelude-val">None</span>(), <span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="ident">val</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))
     }
 }
 
@@ -728,10 +696,7 @@
     <span class="ident">T</span>: <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span>,
 {
     <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">into_py</span>(<span class="ident">py</span>),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">py</span>.<span class="prelude-val">None</span>(),
-        }
+        <span class="self">self</span>.<span class="ident">map_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">py</span>.<span class="prelude-val">None</span>(), <span class="op">|</span><span class="ident">val</span><span class="op">|</span> <span class="ident">val</span>.<span class="ident">into_py</span>(<span class="ident">py</span>))
     }
 }
 
@@ -805,10 +770,7 @@
         <span class="kw">if</span> <span class="ident">obj</span>.<span class="ident">as_ptr</span>() <span class="op">=</span><span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">Py_None</span>() } {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
         } <span class="kw">else</span> {
-            <span class="kw">match</span> <span class="ident">T</span>::<span class="ident">extract</span>(<span class="ident">obj</span>) {
-                <span class="prelude-val">Ok</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">v</span>)),
-                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>),
-            }
+            <span class="ident">T</span>::<span class="ident">extract</span>(<span class="ident">obj</span>).<span class="ident">map</span>(<span class="prelude-val">Some</span>)
         }
     }
 }
@@ -925,27 +887,18 @@
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">FromPyPointer</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>: <span class="ident">Sized</span> {
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_owned_ptr_or_opt</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span><span class="op">&gt;</span>;
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="self">Self</span>::<span class="ident">from_owned_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span>::<span class="ident">panic_after_error</span>(<span class="ident">py</span>),
-        }
+        <span class="self">Self</span>::<span class="ident">from_owned_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">err</span>::<span class="ident">panic_after_error</span>(<span class="ident">py</span>))
     }
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_owned_ptr</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span> {
         <span class="self">Self</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">ptr</span>)
     }
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_owned_ptr_or_err</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">Self</span>::<span class="ident">from_owned_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>::<span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>)),
-        }
+        <span class="self">Self</span>::<span class="ident">from_owned_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">err</span>::<span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>))
     }
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>)
         <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span><span class="op">&gt;</span>;
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_borrowed_ptr_or_panic</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="self">Self</span>::<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">s</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span>::<span class="ident">panic_after_error</span>(<span class="ident">py</span>),
-        }
+        <span class="self">Self</span>::<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">err</span>::<span class="ident">panic_after_error</span>(<span class="ident">py</span>))
     }
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_borrowed_ptr</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span> {
         <span class="self">Self</span>::<span class="ident">from_borrowed_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">ptr</span>)
@@ -954,10 +907,7 @@
         <span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
         <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">Self</span>::<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>::<span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>)),
-        }
+        <span class="self">Self</span>::<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">err</span>::<span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>))
     }
 }
 
