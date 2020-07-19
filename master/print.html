@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="module.html"><strong aria-hidden="true">1.</strong> Python Modules</a></li><li class="chapter-item expanded "><a href="function.html"><strong aria-hidden="true">2.</strong> Python Functions</a></li><li class="chapter-item expanded "><a href="class.html"><strong aria-hidden="true">3.</strong> Python Classes</a></li><li class="chapter-item expanded "><a href="conversions.html"><strong aria-hidden="true">4.</strong> Type Conversions</a></li><li class="chapter-item expanded "><a href="exception.html"><strong aria-hidden="true">5.</strong> Python Exceptions</a></li><li class="chapter-item expanded "><a href="python_from_rust.html"><strong aria-hidden="true">6.</strong> Calling Python from Rust</a></li><li class="chapter-item expanded "><a href="types.html"><strong aria-hidden="true">7.</strong> GIL, mutability and object types</a></li><li class="chapter-item expanded "><a href="parallelism.html"><strong aria-hidden="true">8.</strong> Parallelism</a></li><li class="chapter-item expanded "><a href="debugging.html"><strong aria-hidden="true">9.</strong> Debugging</a></li><li class="chapter-item expanded "><a href="advanced.html"><strong aria-hidden="true">10.</strong> Advanced Topics</a></li><li class="chapter-item expanded "><a href="building_and_distribution.html"><strong aria-hidden="true">11.</strong> Building and Distribution</a></li><li class="chapter-item expanded "><a href="pypy.html"><strong aria-hidden="true">12.</strong> PyPy support</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">13.</strong> FAQ &amp; Troubleshooting</a></li><li class="chapter-item expanded "><a href="rust_cpython.html"><strong aria-hidden="true">14.</strong> Appendix A: PyO3 and rust-cpython</a></li><li class="chapter-item expanded "><a href="migration.html"><strong aria-hidden="true">15.</strong> Appendix B: Migration Guide</a></li><li class="chapter-item expanded "><a href="trait_bounds.html"><strong aria-hidden="true">16.</strong> Appendix C: Trait bounds</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="module.html"><strong aria-hidden="true">1.</strong> Python Modules</a></li><li class="chapter-item expanded "><a href="function.html"><strong aria-hidden="true">2.</strong> Python Functions</a></li><li class="chapter-item expanded "><a href="class.html"><strong aria-hidden="true">3.</strong> Python Classes</a></li><li class="chapter-item expanded "><a href="conversions.html"><strong aria-hidden="true">4.</strong> Type Conversions</a></li><li class="chapter-item expanded "><a href="exception.html"><strong aria-hidden="true">5.</strong> Python Exceptions</a></li><li class="chapter-item expanded "><a href="python_from_rust.html"><strong aria-hidden="true">6.</strong> Calling Python from Rust</a></li><li class="chapter-item expanded "><a href="types.html"><strong aria-hidden="true">7.</strong> GIL, mutability and object types</a></li><li class="chapter-item expanded "><a href="parallelism.html"><strong aria-hidden="true">8.</strong> Parallelism</a></li><li class="chapter-item expanded "><a href="debugging.html"><strong aria-hidden="true">9.</strong> Debugging</a></li><li class="chapter-item expanded "><a href="advanced.html"><strong aria-hidden="true">10.</strong> Advanced Topics</a></li><li class="chapter-item expanded "><a href="building_and_distribution.html"><strong aria-hidden="true">11.</strong> Building and Distribution</a></li><li class="chapter-item expanded "><a href="pypy.html"><strong aria-hidden="true">12.</strong> PyPy support</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">13.</strong> FAQ &amp; Troubleshooting</a></li><li class="chapter-item expanded "><a href="rust_cpython.html"><strong aria-hidden="true">14.</strong> Appendix A: PyO3 and rust-cpython</a></li><li class="chapter-item expanded "><a href="migration.html"><strong aria-hidden="true">15.</strong> Appendix B: Migration Guide</a></li><li class="chapter-item expanded "><a href="trait_bounds.html"><strong aria-hidden="true">16.</strong> Appendix C: Trait bounds</a></li><li class="chapter-item expanded "><a href="logging.html"><strong aria-hidden="true">17.</strong> Appendix D: Logging</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -3161,6 +3161,60 @@ impl Model for UserModel {
 }
 <span class="boring">}
 </span></code></pre></pre>
+<h1><a class="header" href="#logging" id="logging">Logging</a></h1>
+<p>It is desirable if both the Python and Rust parts of the application end up
+logging using the same configuration into the same place.</p>
+<p>This section of the guide briefly discusses how to connect the two languages'
+logging ecosystems together. The recommended way for Python extension modules is
+to configure Rust's logger to send log messages to Python using the <code>pyo3-log</code>
+crate. For users who want to do the opposite and send Python log messages to
+Rust, see the note at the end of this guide.</p>
+<h2><a class="header" href="#using-pyo3-log-to-send-rust-log-messages-to-python" id="using-pyo3-log-to-send-rust-log-messages-to-python">Using <code>pyo3-log</code> to send Rust log messages to Python</a></h2>
+<p>The <a href="https://crates.io/crates/pyo3-log">pyo3-log</a> crate allows sending the messages from the Rust side to Python's
+<a href="https://docs.python.org/3/library/logging.html">logging</a> system. This is mostly suitable for writing native extensions for
+Python programs.</p>
+<p>Use <a href="https://docs.rs/pyo3-log/*/pyo3_log/fn.init.html"><code>pyo3_log::init</code></a> to install the logger in its default configuration.
+It's also possible to tweak its configuration (mostly to tune its performance).</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use log::info;
+use pyo3::prelude::*;
+use pyo3::wrap_pyfunction;
+
+#[pyfunction]
+fn log_something() {
+    // This will use the logger installed in `my_module` to send the `info`
+    // message to the Python logging facilities.
+    info!(&quot;Something!&quot;);
+}
+
+#[pymodule]
+fn my_module(_py: Python&lt;'_&gt;, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    // A good place to install the Rust -&gt; Python logger.
+    pyo3_log::init();
+
+    m.add_wrapped(wrap_pyfunction!(log_something))?;
+    Ok(())
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Then it is up to the Python side to actually output the messages somewhere.</p>
+<pre><code class="language-python">import logging
+import my_module
+
+FORMAT = '%(levelname)s %(name)s %(asctime)-15s %(filename)s:%(lineno)d %(message)s'
+logging.basicConfig(format=FORMAT)
+logging.getLogger().setLevel(logging.INFO)
+my_module.log_something()
+</code></pre>
+<p>It is important to initialize the Python loggers first, before calling any Rust
+functions that may log. This limitation can be worked around if it is not
+possible to satisfy, read the documentation about <a href="https://docs.rs/pyo3-log/*/pyo3_log/#performance-filtering-and-caching">caching</a>.</p>
+<h2><a class="header" href="#the-python-to-rust-direction" id="the-python-to-rust-direction">The Python to Rust direction</a></h2>
+<p>To best of our knowledge nobody implemented the reverse direction yet, though it
+should be possible. If interested, the <code>pyo3</code> community would be happy to
+provide guidance.</p>
 
                     </main>
 
