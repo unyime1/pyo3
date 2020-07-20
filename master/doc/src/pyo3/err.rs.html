@@ -655,20 +655,6 @@
 <span id="655">655</span>
 <span id="656">656</span>
 <span id="657">657</span>
-<span id="658">658</span>
-<span id="659">659</span>
-<span id="660">660</span>
-<span id="661">661</span>
-<span id="662">662</span>
-<span id="663">663</span>
-<span id="664">664</span>
-<span id="665">665</span>
-<span id="666">666</span>
-<span id="667">667</span>
-<span id="668">668</span>
-<span id="669">669</span>
-<span id="670">670</span>
-<span id="671">671</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -1060,20 +1046,6 @@
             <span class="ident">PyErrValue</span>::<span class="ident">ToObject</span>(<span class="ident">ob</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ob</span>.<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ptr</span>(),
         };
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">PyErr_Restore</span>(<span class="ident">ptype</span>.<span class="ident">into_ptr</span>(), <span class="ident">pvalue</span>, <span class="ident">ptraceback</span>.<span class="ident">into_ptr</span>()) }
-    }
-
-    <span class="doccomment">/// Utility method for proc-macro code</span>
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">restore_and_null</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span> {
-        <span class="self">self</span>.<span class="ident">restore</span>(<span class="ident">py</span>);
-        <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>()
-    }
-
-    <span class="doccomment">/// Utility method for proc-macro code</span>
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">restore_and_minus1</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">libc</span>::<span class="ident">c_int</span> {
-        <span class="self">self</span>.<span class="ident">restore</span>(<span class="ident">py</span>);
-        <span class="op">-</span><span class="number">1</span>
     }
 
     <span class="doccomment">/// Issues a warning message.</span>
