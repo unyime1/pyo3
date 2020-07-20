@@ -900,9 +900,9 @@
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span> {
     <span class="ident">inner</span>: <span class="ident">PyCellInner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">thread_checker</span>: <span class="ident">T</span>::<span class="ident">ThreadChecker</span>,
     <span class="ident">dict</span>: <span class="ident">T</span>::<span class="ident">Dict</span>,
     <span class="ident">weakref</span>: <span class="ident">T</span>::<span class="ident">WeakRef</span>,
-    <span class="ident">thread_checker</span>: <span class="ident">T</span>::<span class="ident">ThreadChecker</span>,
 }
 
 <span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span> <span class="ident">PyNativeType</span> <span class="kw">for</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
