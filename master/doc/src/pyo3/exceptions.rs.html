@@ -636,6 +636,8 @@
 <span id="636">636</span>
 <span id="637">637</span>
 <span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -665,10 +667,12 @@
         }
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">py_err</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ToPyObject</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">args</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyErr</span> {
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">py_err</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ToPyObject</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">args</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyErr</span> {
                 <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="ident">V</span><span class="op">&gt;</span>(<span class="ident">args</span>)
             }
-            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">V</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ToPyObject</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">args</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+            <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">V</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ToPyObject</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
+                <span class="ident">args</span>: <span class="ident">V</span>,
+            ) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
                 <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="ident">V</span><span class="op">&gt;</span>(<span class="ident">args</span>).<span class="ident">into</span>()
             }
         }
