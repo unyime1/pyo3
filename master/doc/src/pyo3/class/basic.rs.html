@@ -283,8 +283,6 @@
 <span id="283">283</span>
 <span id="284">284</span>
 <span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -563,10 +561,8 @@
     {
         <span class="kw">crate</span>::<span class="macro">callback_body</span><span class="macro">!</span>(<span class="ident">py</span>, {
             <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
-            <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyAny</span><span class="op">&gt;</span>(<span class="ident">arg</span>);
-
+            <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="macro">extract_or_return_not_implemented</span><span class="macro">!</span>(<span class="ident">py</span>, <span class="ident">arg</span>);
             <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">extract_op</span>(<span class="ident">op</span>)<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">extract</span>()<span class="question-mark">?</span>;
 
             <span class="ident">slf</span>.<span class="ident">try_borrow</span>()<span class="question-mark">?</span>.<span class="ident">__richcmp__</span>(<span class="ident">arg</span>, <span class="ident">op</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
         })

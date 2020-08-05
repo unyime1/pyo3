@@ -1135,6 +1135,87 @@ The return type must be <code>PyResult&lt;T&gt;</code> where <code>T</code> is o
 <p>Determines the &quot;truthyness&quot; of the object.</p>
 </li>
 </ul>
+<h3><a class="header" href="#emulating-numeric-types" id="emulating-numeric-types">Emulating numeric types</a></h3>
+<p>The [<code>PyNumberProtocol</code>] trait allows <a href="https://docs.python.org/3/reference/datamodel.html#emulating-numeric-types">emulate numeric types</a>.</p>
+<ul>
+<li><code>fn __add__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __sub__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __mul__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __matmul__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __truediv__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __floordiv__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __mod__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __divmod__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __pow__(lhs: impl FromPyObject, rhs: impl FromPyObject, modulo: Option&lt;impl FromPyObject&gt;) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __lshift__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rshift__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __and__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __or__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __xor__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+</ul>
+<p>These methods are called to implement the binary arithmetic operations
+(<code>+</code>, <code>-</code>, <code>*</code>, <code>@</code>, <code>/</code>, <code>//</code>, <code>%</code>, <code>divmod()</code>, <code>pow()</code> and <code>**</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>, <code>&amp;</code>, <code>^</code>, and <code>|</code>).</p>
+<p>If <code>rhs</code> is not of the type specified in the signature, the generated code
+will automatically <code>return NotImplemented</code>.  This is not the case for <code>lhs</code>
+which must match signature or else raise a TypeError.</p>
+<p>The reflected operations are also available:</p>
+<ul>
+<li><code>fn __radd__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rsub__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rmul__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rmatmul__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rtruediv__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rfloordiv__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rmod__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rdivmod__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rpow__(lhs: impl FromPyObject, rhs: impl FromPyObject, modulo: Option&lt;impl FromPyObject&gt;) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rlshift__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rrshift__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rand__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __ror__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __rxor__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+</ul>
+<p>The code generated for these methods expect that all arguments match the
+signature, or raise a TypeError.</p>
+<p><em>Note</em>: Currently implementing the method for a binary arithmetic operations
+(e.g, <code>__add__</code>) shadows the reflected operation (e.g, <code>__radd__</code>).  This is
+being addressed in <a href="https://github.com/PyO3/pyo3/issues/844">#844</a>.  to make
+these methods</p>
+<p>This trait also has support the augmented arithmetic assignments (<code>+=</code>, <code>-=</code>,
+<code>*=</code>, <code>@=</code>, <code>/=</code>, <code>//=</code>, <code>%=</code>, <code>**=</code>, <code>&lt;&lt;=</code>, <code>&gt;&gt;=</code>, <code>&amp;=</code>, <code>^=</code>, <code>|=</code>):</p>
+<ul>
+<li><code>fn __iadd__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __isub__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __imul__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __imatmul__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __itruediv__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __ifloordiv__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __imod__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __ipow__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __ilshift__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __irshift__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __iand__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __ior__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __ixor__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+</ul>
+<p>The following methods implement the unary arithmetic operations (<code>-</code>, <code>+</code>, <code>abs()</code> and <code>~</code>):</p>
+<ul>
+<li><code>fn __neg__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __pos__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __abs__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __invert__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+</ul>
+<p>Support for coercions:</p>
+<ul>
+<li><code>fn __complex__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __int__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __float__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+</ul>
+<p>Other:</p>
+<ul>
+<li><code>fn __index__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+<li><code>fn __round__(&amp;'p self, ndigits: Option&lt;impl FromPyObject&gt;) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
+</ul>
 <h3><a class="header" href="#garbage-collector-integration" id="garbage-collector-integration">Garbage Collector Integration</a></h3>
 <p>If your type owns references to other Python objects, you will need to
 integrate with Python's garbage collector so that the GC is aware of
