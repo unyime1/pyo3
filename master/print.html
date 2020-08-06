@@ -2248,7 +2248,7 @@ test_word_count_python_sequential                      27.3985 (15.82)    45.452
 </ul>
 <h1><a class="header" href="#building-and-distribution" id="building-and-distribution">Building and Distribution</a></h1>
 <h2><a class="header" href="#python-version" id="python-version">Python version</a></h2>
-<p>PyO3 uses a build script to determine the Python version and set the correct linker arguments. By default it uses the <code>python3</code> executable. You can override the Python interpreter by setting <code>PYTHON_SYS_EXECUTABLE</code>, e.g., <code>PYTHON_SYS_EXECUTABLE=python3.6</code>.</p>
+<p>PyO3 uses a build script to determine the Python version and set the correct linker arguments. By default it uses the <code>python3</code> executable. You can override the Python interpreter by setting <code>PYO3_PYTHON</code>, e.g., <code>PYO3_PYTHON=python3.6</code>.</p>
 <h2><a class="header" href="#linking" id="linking">Linking</a></h2>
 <p>Different linker arguments must be set for libraries/extension modules and binaries, which includes both standalone binaries and tests. (More specifically, binaries must be told where to find libpython and libraries must not link to libpython for <a href="https://www.python.org/dev/peps/pep-0513/">manylinux</a> compliance).</p>
 <p>Since PyO3's build script can't know whether you're building a binary or a library, you have to activate the <code>extension-module</code> feature to get the build options for a library, or it'll default to binary.</p>
@@ -2295,8 +2295,8 @@ cargo build --target armv7-unknown-linux-gnueabihf
 <p>Using PyPy is supported via cpyext.</p>
 <p>Support is only provided for building Rust extension for code running under PyPy. This means that PyPy <strong>cannot</strong> be called from rust via cpyext. Note that there some differences in the ffi module between PyPy and CPython.</p>
 <p>This is a limitation of cpyext and support for embedding cpyext is not planned.</p>
-<p>Compilation against PyPy is done by exporting the <code>PYTHON_SYS_EXECUTABLE</code> to point to a PyPy binary or by compiling in a PyPy virtualenv.</p>
-<p>For example, <code>PYTHON_SYS_EXECUTABLE=&quot;/path/to/pypy3&quot; /path/to/pypy3 setup.py install</code></p>
+<p>Compilation against PyPy is done by exporting <code>PYO3_PYTHON</code> to point to a PyPy binary or by compiling in a PyPy virtualenv.</p>
+<p>For example, <code>PYO3_PYTHON=&quot;/path/to/pypy3&quot; /path/to/pypy3 setup.py install</code></p>
 <h2><a class="header" href="#unsupported-features" id="unsupported-features">Unsupported features</a></h2>
 <p>These are features currently supported by PyO3, but not yet implemented in cpyext.</p>
 <ul>

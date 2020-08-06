@@ -157,7 +157,7 @@
                     <main>
                         <h1><a class="header" href="#building-and-distribution" id="building-and-distribution">Building and Distribution</a></h1>
 <h2><a class="header" href="#python-version" id="python-version">Python version</a></h2>
-<p>PyO3 uses a build script to determine the Python version and set the correct linker arguments. By default it uses the <code>python3</code> executable. You can override the Python interpreter by setting <code>PYTHON_SYS_EXECUTABLE</code>, e.g., <code>PYTHON_SYS_EXECUTABLE=python3.6</code>.</p>
+<p>PyO3 uses a build script to determine the Python version and set the correct linker arguments. By default it uses the <code>python3</code> executable. You can override the Python interpreter by setting <code>PYO3_PYTHON</code>, e.g., <code>PYO3_PYTHON=python3.6</code>.</p>
 <h2><a class="header" href="#linking" id="linking">Linking</a></h2>
 <p>Different linker arguments must be set for libraries/extension modules and binaries, which includes both standalone binaries and tests. (More specifically, binaries must be told where to find libpython and libraries must not link to libpython for <a href="https://www.python.org/dev/peps/pep-0513/">manylinux</a> compliance).</p>
 <p>Since PyO3's build script can't know whether you're building a binary or a library, you have to activate the <code>extension-module</code> feature to get the build options for a library, or it'll default to binary.</p>
