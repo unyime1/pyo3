@@ -416,7 +416,7 @@
     <span class="doccomment">/// # use pyo3::prelude::*;</span>
     <span class="doccomment">/// # use pyo3::types::PyByteArray;</span>
     <span class="doccomment">/// # use pyo3::types::IntoPyDict;</span>
-    <span class="doccomment">/// # let gil = GILGuard::acquire();</span>
+    <span class="doccomment">/// # let gil = Python::acquire_gil();</span>
     <span class="doccomment">/// # let py = gil.python();</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// let bytearray = PyByteArray::new(py, b&quot;Hello World.&quot;);</span>

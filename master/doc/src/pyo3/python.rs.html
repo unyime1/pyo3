@@ -576,6 +576,27 @@
 <span id="576">576</span>
 <span id="577">577</span>
 <span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -670,6 +691,18 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the Python runtime is not already initialized, this function will initialize it.</span>
     <span class="doccomment">/// See [prepare_freethreaded_python()](fn.prepare_freethreaded_python.html) for details.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Most users should not need to use this API directly, and should prefer one of two options:</span>
+    <span class="doccomment">/// 1. When implementing `#[pymethods]` or `#[pyfunction]` add a function argument</span>
+    <span class="doccomment">///    `py: Python` to receive access to the GIL context in which the function is running.</span>
+    <span class="doccomment">/// 2. Use [`Python::with_gil`](#method.with_gil) to run a closure with the GIL, acquiring</span>
+    <span class="doccomment">///    only if needed.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **Note:** This return type from this function, `GILGuard`, is implemented as a RAII guard</span>
+    <span class="doccomment">/// around the C-API Python_EnsureGIL. This means that multiple `acquire_gil()` calls are</span>
+    <span class="doccomment">/// allowed, and will not deadlock. However, `GILGuard`s must be dropped in the reverse order</span>
+    <span class="doccomment">/// to acquisition. If PyO3 detects this order is not maintained, it may be forced to begin</span>
+    <span class="doccomment">/// an irrecoverable panic.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">acquire_gil</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GILGuard</span> {
         <span class="ident">GILGuard</span>::<span class="ident">acquire</span>()
@@ -714,6 +747,11 @@
     <span class="doccomment">/// cannot be used in the closure.  This includes `&amp;PyAny` and all the</span>
     <span class="doccomment">/// concrete-typed siblings, like `&amp;PyString`.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// This is achieved via the `Send` bound on the closure and the return type. This is slightly</span>
+    <span class="doccomment">/// more restrictive than necessary, but it&#39;s the most fitting solution available in stable</span>
+    <span class="doccomment">/// Rust. In the future this bound may be relaxed by a new &quot;auto-trait&quot;, if auto-traits</span>
+    <span class="doccomment">/// become a stable feature of the Rust language.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// You can convert such references to e.g. `PyObject` or `Py&lt;PyString&gt;`,</span>
     <span class="doccomment">/// which makes them independent of the GIL lifetime.  However, you cannot</span>
     <span class="doccomment">/// do much with those without a `Python&lt;&#39;p&gt;` token, for which you&#39;d need to</span>
@@ -733,24 +771,28 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">allow_threads</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
     <span class="kw">where</span>
         <span class="ident">F</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">FnOnce</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>,
+        <span class="ident">T</span>: <span class="ident">Send</span>,
     {
         <span class="comment">// The `Send` bound on the closure prevents the user from</span>
         <span class="comment">// transferring the `Python` token into the closure.</span>
+        <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">gil</span>::<span class="ident">GIL_COUNT</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">replace</span>(<span class="number">0</span>));
+        <span class="kw">let</span> <span class="ident">tstate</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">PyEval_SaveThread</span>() };
+        <span class="comment">// Unwinding right here corrupts the Python interpreter state and leads to weird</span>
+        <span class="comment">// crashes such as stack overflows. We will catch the unwind and resume as soon as</span>
+        <span class="comment">// we&#39;ve restored the GIL state.</span>
+        <span class="comment">//</span>
+        <span class="comment">// Because we will resume unwinding as soon as the GIL state is fixed, we can assert</span>
+        <span class="comment">// that the closure is unwind safe.</span>
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">catch_unwind</span>(<span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">AssertUnwindSafe</span>(<span class="ident">f</span>));
+
+        <span class="comment">// Restore GIL state</span>
+        <span class="ident">gil</span>::<span class="ident">GIL_COUNT</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">set</span>(<span class="ident">count</span>));
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">gil</span>::<span class="ident">GIL_COUNT</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">replace</span>(<span class="number">0</span>));
-            <span class="kw">let</span> <span class="ident">save</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">PyEval_SaveThread</span>();
-            <span class="comment">// Unwinding right here corrupts the Python interpreter state and leads to weird</span>
-            <span class="comment">// crashes such as stack overflows. We will catch the unwind and resume as soon as</span>
-            <span class="comment">// we&#39;ve restored the GIL state.</span>
-            <span class="comment">//</span>
-            <span class="comment">// Because we will resume unwinding as soon as the GIL state is fixed, we can assert</span>
-            <span class="comment">// that the closure is unwind safe.</span>
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">catch_unwind</span>(<span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">AssertUnwindSafe</span>(<span class="ident">f</span>));
-            <span class="ident">ffi</span>::<span class="ident">PyEval_RestoreThread</span>(<span class="ident">save</span>);
-            <span class="ident">gil</span>::<span class="ident">GIL_COUNT</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">set</span>(<span class="ident">count</span>));
-            <span class="comment">// Now that the GIL state has been safely reset, we can unwind if a panic was caught.</span>
-            <span class="ident">result</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">payload</span><span class="op">|</span> <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">resume_unwind</span>(<span class="ident">payload</span>))
+            <span class="ident">ffi</span>::<span class="ident">PyEval_RestoreThread</span>(<span class="ident">tstate</span>);
         }
+
+        <span class="comment">// Now that the GIL state has been safely reset, we can unwind if a panic was caught.</span>
+        <span class="ident">result</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">payload</span><span class="op">|</span> <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">resume_unwind</span>(<span class="ident">payload</span>))
     }
 
     <span class="doccomment">/// Evaluates a Python expression in the given context and returns the result.</span>
