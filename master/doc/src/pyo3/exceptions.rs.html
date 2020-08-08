@@ -638,6 +638,8 @@
 <span id="638">638</span>
 <span id="639">639</span>
 <span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -1084,9 +1086,11 @@
 );
 <span class="macro">impl_native_exception</span><span class="macro">!</span>(<span class="ident">PyTimeoutError</span>, <span class="ident">TimeoutError</span>, <span class="ident">PyExc_TimeoutError</span>);
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">windows</span>, <span class="ident">PyPy</span>)))]</span>
 <span class="macro">impl_native_exception</span><span class="macro">!</span>(<span class="ident">PyEnvironmentError</span>, <span class="ident">EnvironmentError</span>, <span class="ident">PyExc_EnvironmentError</span>);
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">windows</span>, <span class="ident">PyPy</span>)))]</span>
 <span class="macro">impl_native_exception</span><span class="macro">!</span>(<span class="ident">PyIOError</span>, <span class="ident">IOError</span>, <span class="ident">PyExc_IOError</span>);
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">windows</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
 <span class="macro">impl_native_exception</span><span class="macro">!</span>(<span class="ident">PyWindowsError</span>, <span class="ident">WindowsError</span>, <span class="ident">PyExc_WindowsError</span>);
 
 <span class="kw">impl</span> <span class="ident">PyUnicodeDecodeError</span> {
