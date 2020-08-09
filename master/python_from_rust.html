@@ -159,7 +159,7 @@
 <p>These APIs work from Rust whenever you have a <code>Python</code> object handy, whether
 PyO3 is built for an extension module or not.</p>
 <h2><a class="header" href="#want-to-access-python-apis-then-use-pymoduleimport" id="want-to-access-python-apis-then-use-pymoduleimport">Want to access Python APIs? Then use <code>PyModule::import</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/types/struct.PyModule.html#method.import"><code>Pymodule::import</code></a> can
+<p><a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyModule.html#method.import"><code>Pymodule::import</code></a> can
 be used to get handle to a Python module from Rust. You can use this to import and use any Python
 module available in your environment.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
@@ -174,7 +174,7 @@ fn main() -&gt; PyResult&lt;()&gt; {
 }
 </code></pre></pre>
 <h2><a class="header" href="#want-to-run-just-an-expression-then-use-eval" id="want-to-run-just-an-expression-then-use-eval">Want to run just an expression? Then use <code>eval</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/struct.Python.html#method.eval"><code>Python::eval</code></a> is
+<p><a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.eval"><code>Python::eval</code></a> is
 a method to execute a <a href="https://docs.python.org/3.7/reference/expressions.html">Python expression</a>
 and return the evaluated value as a <code>&amp;PyAny</code> object.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
@@ -192,12 +192,12 @@ fn main() -&gt; Result&lt;(), ()&gt; {
 }
 </code></pre></pre>
 <h2><a class="header" href="#want-to-run-statements-then-use-run" id="want-to-run-statements-then-use-run">Want to run statements? Then use <code>run</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/struct.Python.html#method.run"><code>Python::run</code></a> is a method to execute one or more
+<p><a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.run"><code>Python::run</code></a> is a method to execute one or more
 <a href="https://docs.python.org/3.7/reference/simple_stmts.html">Python statements</a>.
 This method returns nothing (like any Python statement), but you can get
 access to manipulated objects via the <code>locals</code> dict.</p>
-<p>You can also use the <a href="https://pyo3.rs/master/doc/pyo3/macro.py_run.html"><code>py_run!</code></a> macro, which is a shorthand for <a href="https://pyo3.rs/master/doc/pyo3/struct.Python.html#method.run"><code>Python::run</code></a>.
-Since <a href="https://pyo3.rs/master/doc/pyo3/macro.py_run.html"><code>py_run!</code></a> panics on exceptions, we recommend you use this macro only for
+<p>You can also use the <a href="https://docs.rs/pyo3/latest/pyo3/macro.py_run.html"><code>py_run!</code></a> macro, which is a shorthand for <a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.run"><code>Python::run</code></a>.
+Since <a href="https://docs.rs/pyo3/latest/pyo3/macro.py_run.html"><code>py_run!</code></a> panics on exceptions, we recommend you use this macro only for
 quickly testing your Python extensions.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 use pyo3::{PyCell, PyObjectProtocol, py_run};
@@ -235,7 +235,7 @@ assert userdata.as_tuple() == userdata_as_tuple
 <span class="boring">}
 </span></code></pre></pre>
 <h2><a class="header" href="#you-have-a-python-file-or-python-function-then-use-pymodulefrom_code" id="you-have-a-python-file-or-python-function-then-use-pymodulefrom_code">You have a Python file or Python function? Then use <code>PyModule::from_code</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/types/struct.PyModule.html#method.from_code">PyModule::from_code</a>
+<p><a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyModule.html#method.from_code">PyModule::from_code</a>
 can be used to generate a Python module which can then be used just as if it was imported with
 <code>PyModule::import</code>.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::{prelude::*, types::{IntoPyDict, PyModule}};

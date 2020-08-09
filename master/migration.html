@@ -202,7 +202,7 @@ struct ThreadSafe {
 <span class="boring">}
 </span></code></pre></pre>
 <p>In situations where you cannot change your <code>#[pyclass]</code> to automatically implement <code>Send</code>
-(e.g., when it contains a raw pointer), you can use <code>unsafe impl Send</code>. 
+(e.g., when it contains a raw pointer), you can use <code>unsafe impl Send</code>.
 In such cases, care should be taken to ensure the struct is actually thread safe.
 See <a href="https://doc.rust-lang.org/nomicon/send-and-sync.html">the Rustnomicon</a> for more.</p>
 </li>
@@ -382,7 +382,7 @@ a <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyBorrowMutError.html"
 <p>In 0.8 object creation was done with <code>PyRef::new</code> and <code>PyRefMut::new</code>.
 In 0.9 these have both been removed.
 To upgrade code, please use
-<a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyCell.html#method.new"><code>PyCell::new</code></a> instead.
+<a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyCell.html#method.new"><code>PyCell::new</code></a> instead.
 If you need <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a> or <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRefMut</code></a>, just call <code>.borrow()</code> or <code>.borrow_mut()</code>
 on the newly-created <code>PyCell</code>.</p>
 <p>Before:</p>

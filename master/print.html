@@ -435,7 +435,7 @@ struct MyClass {
 <span class="boring">}
 </span></code></pre></pre>
 <p>Because Python objects are freely shared between threads by the Python interpreter, all structs annotated with <code>#[pyclass]</code> must implement <code>Send</code>.</p>
-<p>The above example generates implementations for <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeInfo.html"><code>PyTypeInfo</code></a>, <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeObject.html"><code>PyTypeObject</code></a>, and <a href="https://pyo3.rs/master/doc/pyo3/pyclass/trait.PyClass.html"><code>PyClass</code></a> for <code>MyClass</code>. To see these generated implementations, refer to the section <a href="class.html#how-methods-are-implemented">How methods are implemented</a> at the end of this chapter.</p>
+<p>The above example generates implementations for <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeInfo.html"><code>PyTypeInfo</code></a>, <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeObject.html"><code>PyTypeObject</code></a>, and <a href="https://docs.rs/pyo3/latest/pyo3/pyclass/trait.PyClass.html"><code>PyClass</code></a> for <code>MyClass</code>. To see these generated implementations, refer to the section <a href="class.html#how-methods-are-implemented">How methods are implemented</a> at the end of this chapter.</p>
 <h2><a class="header" href="#adding-the-class-to-a-module" id="adding-the-class-to-a-module">Adding the class to a module</a></h2>
 <p>Custom Python classes can then be added to a module using <code>add_class()</code>.</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -457,7 +457,7 @@ fn mymodule(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 <h2><a class="header" href="#pycell-and-interior-mutability" id="pycell-and-interior-mutability">PyCell and interior mutability</a></h2>
 <p>You sometimes need to convert your <code>pyclass</code> into a Python object and access it
 from Rust code (e.g., for testing it).
-<a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyCell.html"><code>PyCell</code></a> is the primary interface for that.</p>
+<a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyCell.html"><code>PyCell</code></a> is the primary interface for that.</p>
 <p><code>PyCell&lt;T: PyClass&gt;</code> is always allocated in the Python heap, so Rust doesn't have ownership of it.
 In other words, Rust code can only extract a <code>&amp;PyCell&lt;T&gt;</code>, not a <code>PyCell&lt;T&gt;</code>.</p>
 <p>Thus, to mutate data behind <code>&amp;PyCell</code> safely, PyO3 employs the
@@ -577,7 +577,7 @@ Consult the table below to determine which type your constructor should return:<
 <table><thead><tr><th></th><th><strong>Cannot fail</strong></th><th><strong>May fail</strong></th></tr></thead><tbody>
 <tr><td><strong>No inheritance</strong></td><td><code>T</code></td><td><code>PyResult&lt;T&gt;</code></td></tr>
 <tr><td><strong>Inheritance(T Inherits U)</strong></td><td><code>(T, U)</code></td><td><code>PyResult&lt;(T, U)&gt;</code></td></tr>
-<tr><td><strong>Inheritance(General Case)</strong></td><td><a href="https://pyo3.rs/master/doc/pyo3/pyclass_init/struct.PyClassInitializer.html"><code>PyClassInitializer&lt;T&gt;</code></a></td><td><code>PyResult&lt;PyClassInitializer&lt;T&gt;&gt;</code></td></tr>
+<tr><td><strong>Inheritance(General Case)</strong></td><td><a href="https://docs.rs/pyo3/latest/pyo3/pyclass_init/struct.PyClassInitializer.html"><code>PyClassInitializer&lt;T&gt;</code></a></td><td><code>PyResult&lt;PyClassInitializer&lt;T&gt;&gt;</code></td></tr>
 </tbody></table>
 <h2><a class="header" href="#inheritance" id="inheritance">Inheritance</a></h2>
 <p>By default, <code>PyAny</code> is used as the base class. To override this default,
@@ -586,8 +586,8 @@ use the <code>extends</code> parameter for <code>pyclass</code> with the full pa
 baseclass of <code>T</code>.
 But for more deeply nested inheritance, you have to return <code>PyClassInitializer&lt;T&gt;</code>
 explicitly.</p>
-<p>To get a parent class from a child, use <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a> instead of <code>&amp;self</code> for methods,
-or <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a> instead of <code>&amp;mut self</code>.
+<p>To get a parent class from a child, use <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a> instead of <code>&amp;self</code> for methods,
+or <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a> instead of <code>&amp;mut self</code>.
 Then you can access a parent class by <code>self_.as_ref()</code> as <code>&amp;Self::BaseClass</code>,
 or by <code>self_.into_super()</code> as <code>PyRef&lt;Self::BaseClass&gt;</code>.</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -656,7 +656,7 @@ impl SubSubClass {
 </span><span class="boring">}
 </span></code></pre></pre>
 <p>You can also inherit native types such as <code>PyDict</code>, if they implement
-<a href="https://pyo3.rs/master/doc/pyo3/type_object/trait.PySizedLayout.html"><code>PySizedLayout</code></a>.</p>
+<a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PySizedLayout.html"><code>PySizedLayout</code></a>.</p>
 <p>However, because of some technical problems, we don't currently provide safe upcasting methods for types
 that inherit native types. Even in such cases, you can unsafely get a base class by raw pointer conversion.</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -1540,8 +1540,8 @@ variety of Rust types, which you can check out in the implementor list of
 <p><a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> is also implemented for your own Rust types wrapped as Python
 objects (see <a href="class.html">the chapter about classes</a>).  There, in order to both be
 able to operate on mutable references <em>and</em> satisfy Rust's rules of non-aliasing
-mutable references, you have to extract the PyO3 reference wrappers <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
-and <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of
+mutable references, you have to extract the PyO3 reference wrappers <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
+and <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of
 <code>std::cell::RefCell</code> and ensure (at runtime) that Rust borrows are allowed.</p>
 <h3><a class="header" href="#the-topyobject-trait" id="the-topyobject-trait">The <code>ToPyObject</code> trait</a></h3>
 <p><a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.ToPyObject.html"><code>ToPyObject</code></a> is a conversion trait that allows various objects to be
@@ -1831,7 +1831,7 @@ defines exceptions for several standard library modules.</p>
 <p>These APIs work from Rust whenever you have a <code>Python</code> object handy, whether
 PyO3 is built for an extension module or not.</p>
 <h2><a class="header" href="#want-to-access-python-apis-then-use-pymoduleimport" id="want-to-access-python-apis-then-use-pymoduleimport">Want to access Python APIs? Then use <code>PyModule::import</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/types/struct.PyModule.html#method.import"><code>Pymodule::import</code></a> can
+<p><a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyModule.html#method.import"><code>Pymodule::import</code></a> can
 be used to get handle to a Python module from Rust. You can use this to import and use any Python
 module available in your environment.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
@@ -1846,7 +1846,7 @@ fn main() -&gt; PyResult&lt;()&gt; {
 }
 </code></pre></pre>
 <h2><a class="header" href="#want-to-run-just-an-expression-then-use-eval" id="want-to-run-just-an-expression-then-use-eval">Want to run just an expression? Then use <code>eval</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/struct.Python.html#method.eval"><code>Python::eval</code></a> is
+<p><a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.eval"><code>Python::eval</code></a> is
 a method to execute a <a href="https://docs.python.org/3.7/reference/expressions.html">Python expression</a>
 and return the evaluated value as a <code>&amp;PyAny</code> object.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
@@ -1864,12 +1864,12 @@ fn main() -&gt; Result&lt;(), ()&gt; {
 }
 </code></pre></pre>
 <h2><a class="header" href="#want-to-run-statements-then-use-run" id="want-to-run-statements-then-use-run">Want to run statements? Then use <code>run</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/struct.Python.html#method.run"><code>Python::run</code></a> is a method to execute one or more
+<p><a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.run"><code>Python::run</code></a> is a method to execute one or more
 <a href="https://docs.python.org/3.7/reference/simple_stmts.html">Python statements</a>.
 This method returns nothing (like any Python statement), but you can get
 access to manipulated objects via the <code>locals</code> dict.</p>
-<p>You can also use the <a href="https://pyo3.rs/master/doc/pyo3/macro.py_run.html"><code>py_run!</code></a> macro, which is a shorthand for <a href="https://pyo3.rs/master/doc/pyo3/struct.Python.html#method.run"><code>Python::run</code></a>.
-Since <a href="https://pyo3.rs/master/doc/pyo3/macro.py_run.html"><code>py_run!</code></a> panics on exceptions, we recommend you use this macro only for
+<p>You can also use the <a href="https://docs.rs/pyo3/latest/pyo3/macro.py_run.html"><code>py_run!</code></a> macro, which is a shorthand for <a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.run"><code>Python::run</code></a>.
+Since <a href="https://docs.rs/pyo3/latest/pyo3/macro.py_run.html"><code>py_run!</code></a> panics on exceptions, we recommend you use this macro only for
 quickly testing your Python extensions.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 use pyo3::{PyCell, PyObjectProtocol, py_run};
@@ -1907,7 +1907,7 @@ assert userdata.as_tuple() == userdata_as_tuple
 <span class="boring">}
 </span></code></pre></pre>
 <h2><a class="header" href="#you-have-a-python-file-or-python-function-then-use-pymodulefrom_code" id="you-have-a-python-file-or-python-function-then-use-pymodulefrom_code">You have a Python file or Python function? Then use <code>PyModule::from_code</code>.</a></h2>
-<p><a href="https://pyo3.rs/master/doc/pyo3/types/struct.PyModule.html#method.from_code">PyModule::from_code</a>
+<p><a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyModule.html#method.from_code">PyModule::from_code</a>
 can be used to generate a Python module which can then be used just as if it was imported with
 <code>PyModule::import</code>.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::{prelude::*, types::{IntoPyDict, PyModule}};
@@ -2011,7 +2011,7 @@ arguments and intermediate values.</p>
 <p>These types all implement <code>Deref&lt;Target = PyAny&gt;</code>, so they all expose the same
 methods which can be found on <code>PyAny</code>.</p>
 <p>To see all Python types exposed by <code>PyO3</code> you should consult the
-<a href="https://pyo3.rs/master/doc/pyo3/types/index.html"><code>pyo3::types</code></a> module.</p>
+<a href="https://docs.rs/pyo3/latest/pyo3/types/index.html"><code>pyo3::types</code></a> module.</p>
 <p><strong>Conversions:</strong></p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
@@ -2432,7 +2432,7 @@ struct ThreadSafe {
 <span class="boring">}
 </span></code></pre></pre>
 <p>In situations where you cannot change your <code>#[pyclass]</code> to automatically implement <code>Send</code>
-(e.g., when it contains a raw pointer), you can use <code>unsafe impl Send</code>. 
+(e.g., when it contains a raw pointer), you can use <code>unsafe impl Send</code>.
 In such cases, care should be taken to ensure the struct is actually thread safe.
 See <a href="https://doc.rust-lang.org/nomicon/send-and-sync.html">the Rustnomicon</a> for more.</p>
 </li>
@@ -2612,7 +2612,7 @@ a <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyBorrowMutError.html"
 <p>In 0.8 object creation was done with <code>PyRef::new</code> and <code>PyRefMut::new</code>.
 In 0.9 these have both been removed.
 To upgrade code, please use
-<a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyCell.html#method.new"><code>PyCell::new</code></a> instead.
+<a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyCell.html#method.new"><code>PyCell::new</code></a> instead.
 If you need <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a> or <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRefMut</code></a>, just call <code>.borrow()</code> or <code>.borrow_mut()</code>
 on the newly-created <code>PyCell</code>.</p>
 <p>Before:</p>

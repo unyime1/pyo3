@@ -245,8 +245,8 @@ variety of Rust types, which you can check out in the implementor list of
 <p><a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> is also implemented for your own Rust types wrapped as Python
 objects (see <a href="class.html">the chapter about classes</a>).  There, in order to both be
 able to operate on mutable references <em>and</em> satisfy Rust's rules of non-aliasing
-mutable references, you have to extract the PyO3 reference wrappers <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
-and <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of
+mutable references, you have to extract the PyO3 reference wrappers <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
+and <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of
 <code>std::cell::RefCell</code> and ensure (at runtime) that Rust borrows are allowed.</p>
 <h3><a class="header" href="#the-topyobject-trait" id="the-topyobject-trait">The <code>ToPyObject</code> trait</a></h3>
 <p><a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.ToPyObject.html"><code>ToPyObject</code></a> is a conversion trait that allows various objects to be

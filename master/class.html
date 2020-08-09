@@ -193,7 +193,7 @@ struct MyClass {
 <span class="boring">}
 </span></code></pre></pre>
 <p>Because Python objects are freely shared between threads by the Python interpreter, all structs annotated with <code>#[pyclass]</code> must implement <code>Send</code>.</p>
-<p>The above example generates implementations for <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeInfo.html"><code>PyTypeInfo</code></a>, <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeObject.html"><code>PyTypeObject</code></a>, and <a href="https://pyo3.rs/master/doc/pyo3/pyclass/trait.PyClass.html"><code>PyClass</code></a> for <code>MyClass</code>. To see these generated implementations, refer to the section <a href="#how-methods-are-implemented">How methods are implemented</a> at the end of this chapter.</p>
+<p>The above example generates implementations for <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeInfo.html"><code>PyTypeInfo</code></a>, <a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PyTypeObject.html"><code>PyTypeObject</code></a>, and <a href="https://docs.rs/pyo3/latest/pyo3/pyclass/trait.PyClass.html"><code>PyClass</code></a> for <code>MyClass</code>. To see these generated implementations, refer to the section <a href="#how-methods-are-implemented">How methods are implemented</a> at the end of this chapter.</p>
 <h2><a class="header" href="#adding-the-class-to-a-module" id="adding-the-class-to-a-module">Adding the class to a module</a></h2>
 <p>Custom Python classes can then be added to a module using <code>add_class()</code>.</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -215,7 +215,7 @@ fn mymodule(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 <h2><a class="header" href="#pycell-and-interior-mutability" id="pycell-and-interior-mutability">PyCell and interior mutability</a></h2>
 <p>You sometimes need to convert your <code>pyclass</code> into a Python object and access it
 from Rust code (e.g., for testing it).
-<a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyCell.html"><code>PyCell</code></a> is the primary interface for that.</p>
+<a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyCell.html"><code>PyCell</code></a> is the primary interface for that.</p>
 <p><code>PyCell&lt;T: PyClass&gt;</code> is always allocated in the Python heap, so Rust doesn't have ownership of it.
 In other words, Rust code can only extract a <code>&amp;PyCell&lt;T&gt;</code>, not a <code>PyCell&lt;T&gt;</code>.</p>
 <p>Thus, to mutate data behind <code>&amp;PyCell</code> safely, PyO3 employs the
@@ -335,7 +335,7 @@ Consult the table below to determine which type your constructor should return:<
 <table><thead><tr><th></th><th><strong>Cannot fail</strong></th><th><strong>May fail</strong></th></tr></thead><tbody>
 <tr><td><strong>No inheritance</strong></td><td><code>T</code></td><td><code>PyResult&lt;T&gt;</code></td></tr>
 <tr><td><strong>Inheritance(T Inherits U)</strong></td><td><code>(T, U)</code></td><td><code>PyResult&lt;(T, U)&gt;</code></td></tr>
-<tr><td><strong>Inheritance(General Case)</strong></td><td><a href="https://pyo3.rs/master/doc/pyo3/pyclass_init/struct.PyClassInitializer.html"><code>PyClassInitializer&lt;T&gt;</code></a></td><td><code>PyResult&lt;PyClassInitializer&lt;T&gt;&gt;</code></td></tr>
+<tr><td><strong>Inheritance(General Case)</strong></td><td><a href="https://docs.rs/pyo3/latest/pyo3/pyclass_init/struct.PyClassInitializer.html"><code>PyClassInitializer&lt;T&gt;</code></a></td><td><code>PyResult&lt;PyClassInitializer&lt;T&gt;&gt;</code></td></tr>
 </tbody></table>
 <h2><a class="header" href="#inheritance" id="inheritance">Inheritance</a></h2>
 <p>By default, <code>PyAny</code> is used as the base class. To override this default,
@@ -344,8 +344,8 @@ use the <code>extends</code> parameter for <code>pyclass</code> with the full pa
 baseclass of <code>T</code>.
 But for more deeply nested inheritance, you have to return <code>PyClassInitializer&lt;T&gt;</code>
 explicitly.</p>
-<p>To get a parent class from a child, use <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a> instead of <code>&amp;self</code> for methods,
-or <a href="https://pyo3.rs/master/doc/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a> instead of <code>&amp;mut self</code>.
+<p>To get a parent class from a child, use <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a> instead of <code>&amp;self</code> for methods,
+or <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a> instead of <code>&amp;mut self</code>.
 Then you can access a parent class by <code>self_.as_ref()</code> as <code>&amp;Self::BaseClass</code>,
 or by <code>self_.into_super()</code> as <code>PyRef&lt;Self::BaseClass&gt;</code>.</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -414,7 +414,7 @@ impl SubSubClass {
 </span><span class="boring">}
 </span></code></pre></pre>
 <p>You can also inherit native types such as <code>PyDict</code>, if they implement
-<a href="https://pyo3.rs/master/doc/pyo3/type_object/trait.PySizedLayout.html"><code>PySizedLayout</code></a>.</p>
+<a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PySizedLayout.html"><code>PySizedLayout</code></a>.</p>
 <p>However, because of some technical problems, we don't currently provide safe upcasting methods for types
 that inherit native types. Even in such cases, you can unsafely get a base class by raw pointer conversion.</p>
 <pre><pre class="playground"><code class="language-rust">
