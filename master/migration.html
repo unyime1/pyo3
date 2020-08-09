@@ -158,6 +158,57 @@
                         <h1><a class="header" href="#appendix-b-migrating-from-older-pyo3-versions" id="appendix-b-migrating-from-older-pyo3-versions">Appendix B: Migrating from older PyO3 versions</a></h1>
 <p>This guide can help you upgrade code through breaking changes from one PyO3 version to the next.
 For a detailed list of all changes, see <a href="https://github.com/PyO3/pyo3/blob/master/CHANGELOG.md">CHANGELOG.md</a></p>
+<h2><a class="header" href="#from-011-to-012" id="from-011-to-012">from 0.11.* to 0.12</a></h2>
+<h3><a class="header" href="#frompy-has-been-removed" id="frompy-has-been-removed"><code>FromPy</code> has been removed</a></h3>
+<p>To simplify the PyO3 public conversion trait hierarchy, the <code>FromPy</code> has been removed. In PyO3
+<code>0.11</code> there were two ways to define the to-Python conversion for a type: <code>FromPy&lt;T&gt; for PyObject</code>,
+and <code>IntoPy&lt;PyObject&gt; for T</code>.</p>
+<p>Now, the canonical implementation is always <code>IntoPy</code>, so downstream crates may need to adjust
+accordingly.</p>
+<p>Before:</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span>struct MyPyObjectWrapper(PyObject);
+
+impl FromPy&lt;MyPyObjectWrapper&gt; for PyObject {
+    fn from_py(other: MyPyObjectWrapper, _py: Python) -&gt; Self {
+        other.0
+    }
+}
+</code></pre>
+<p>After</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::prelude::*;
+</span>struct MyPyObjectWrapper(PyObject);
+
+impl IntoPy&lt;PyObject&gt; for MyPyObjectWrapper {
+    fn into_py(self, _py: Python) -&gt; PyObject {
+        self.0
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Similarly, code which was using the <code>FromPy</code> trait can be trivially rewritten to use <code>IntoPy</code>.</p>
+<p>Before:</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">Python::with_gil(|py| {
+</span>let obj = PyObject::from_py(1.234, py);
+<span class="boring">})
+</span></code></pre>
+<p>After:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">Python::with_gil(|py| {
+</span>let obj: PyObject = 1.234.into_py(py);
+<span class="boring">})
+</span><span class="boring">}
+</span></code></pre></pre>
+<h3><a class="header" href="#pyobject-is-now-a-type-alias-of-pypyany" id="pyobject-is-now-a-type-alias-of-pypyany"><code>PyObject</code> is now a type alias of <code>Py&lt;PyAny&gt;</code></a></h3>
+<p>This should change very little from a usage perspective. If you implemented traits for both
+<code>PyObject</code> and <code>Py&lt;T&gt;</code>, you may find you can just remove the <code>PyObject</code> implementation.</p>
 <h2><a class="header" href="#from-010-to-011" id="from-010-to-011">from 0.10.* to 0.11</a></h2>
 <h3><a class="header" href="#stable-rust" id="stable-rust">Stable Rust</a></h3>
 <p>PyO3 now supports the stable Rust toolchain. The minimum required version is 1.39.0.</p>

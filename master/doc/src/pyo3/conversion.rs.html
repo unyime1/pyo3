@@ -448,37 +448,16 @@
 <span id="448">448</span>
 <span id="449">449</span>
 <span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
-<span id="458">458</span>
-<span id="459">459</span>
-<span id="460">460</span>
-<span id="461">461</span>
-<span id="462">462</span>
-<span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
-<span id="466">466</span>
-<span id="467">467</span>
-<span id="468">468</span>
-<span id="469">469</span>
-<span id="470">470</span>
-<span id="471">471</span>
-<span id="472">472</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Conversions between various states of Rust and Python types and their wrappers.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">err</span>::{<span class="self">self</span>, <span class="ident">PyDowncastError</span>, <span class="ident">PyResult</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">object</span>::<span class="ident">PyObject</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">type_object</span>::<span class="ident">PyTypeInfo</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::<span class="ident">PyTuple</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">gil</span>, <span class="ident">Py</span>, <span class="ident">PyAny</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyRef</span>, <span class="ident">PyRefMut</span>, <span class="ident">Python</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">ffi</span>, <span class="ident">gil</span>, <span class="ident">Py</span>, <span class="ident">PyAny</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyObject</span>, <span class="ident">PyRef</span>, <span class="ident">PyRefMut</span>, <span class="ident">Python</span>,
+};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">NonNull</span>;
 
 <span class="doccomment">/// This trait represents that **we can do zero-cost conversion from the object</span>
@@ -605,42 +584,22 @@
     }
 }
 
-<span class="doccomment">/// Similar to [std::convert::From], just that it requires a gil token.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FromPy</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>: <span class="ident">Sized</span> {
-    <span class="doccomment">/// Performs the conversion.</span>
-    <span class="kw">fn</span> <span class="ident">from_py</span>(<span class="kw">_</span>: <span class="ident">T</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>;
-}
-
 <span class="doccomment">/// Similar to [std::convert::Into], just that it requires a gil token.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `IntoPy&lt;PyObject&gt;` (aka `IntoPy&lt;Py&lt;PyAny&gt;&gt;`) should be implemented to define a conversion from</span>
+<span class="doccomment">/// Rust to Python which can be used by most of PyO3&#39;s methods.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>: <span class="ident">Sized</span> {
     <span class="doccomment">/// Performs the conversion.</span>
     <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>;
 }
 
-<span class="comment">// From implies Into</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">U</span>: <span class="ident">FromPy</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-{
-    <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">U</span> {
-        <span class="ident">U</span>::<span class="ident">from_py</span>(<span class="self">self</span>, <span class="ident">py</span>)
-    }
-}
-
-<span class="comment">// From (and thus Into) is reflexive</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">FromPy</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">T</span> {
-    <span class="kw">fn</span> <span class="ident">from_py</span>(<span class="ident">t</span>: <span class="ident">T</span>, <span class="kw">_</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span> {
-        <span class="ident">t</span>
-    }
-}
-
 <span class="doccomment">/// `FromPyObject` is implemented by various types that can be extracted from</span>
 <span class="doccomment">/// a Python object reference.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Normal usage is through the helper methods `PyObject::extract` or</span>
-<span class="doccomment">/// `PyAny::extract`:</span>
+<span class="doccomment">/// Normal usage is through the helper methods `Py::extract` or `PyAny::extract`:</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// ```let obj: PyObject = ...;</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// let obj: Py&lt;PyAny&gt; = ...;</span>
 <span class="doccomment">/// let value: &amp;TargetType = obj.extract(py)?;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let any: &amp;PyAny = ...;</span>
@@ -656,9 +615,6 @@
 <span class="doccomment">/// will convert the string to UTF-8, and the resulting string slice will have lifetime `&#39;prepared`.</span>
 <span class="doccomment">/// Since which case applies depends on the runtime type of the Python object,</span>
 <span class="doccomment">/// both the `obj` and `prepared` variables must outlive the resulting string slice.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// In cases where the result does not depend on the `&#39;prepared` lifetime,</span>
-<span class="doccomment">/// the inherent method `PyObject::extract()` can be used.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The trait&#39;s conversion method takes a `&amp;PyAny` argument but is called</span>
 <span class="doccomment">/// `FromPyObject` for historical reasons.</span>
@@ -707,19 +663,19 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">FromPy</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PyObject</span> {
-    <span class="kw">fn</span> <span class="ident">from_py</span>(<span class="kw">_</span>: (), <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> () {
+    <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
         <span class="ident">py</span>.<span class="prelude-val">None</span>()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">FromPy</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PyObject</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">T</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">AsPyPointer</span>,
 {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">from_py</span>(<span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-        <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_borrowed_ptr</span>(<span class="ident">py</span>, <span class="ident">other</span>.<span class="ident">as_ptr</span>()) }
+    <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
+        <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_borrowed_ptr</span>(<span class="ident">py</span>, <span class="self">self</span>.<span class="ident">as_ptr</span>()) }
     }
 }
 
@@ -877,9 +833,9 @@
 }
 
 <span class="doccomment">/// Converts `()` to an empty Python tuple.</span>
-<span class="kw">impl</span> <span class="ident">FromPy</span><span class="op">&lt;</span>()<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyTuple</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from_py</span>(<span class="kw">_</span>: (), <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyTuple</span><span class="op">&gt;</span> {
-        <span class="ident">Py</span>::<span class="ident">from_py</span>(<span class="ident">PyTuple</span>::<span class="ident">empty</span>(<span class="ident">py</span>), <span class="ident">py</span>)
+<span class="kw">impl</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyTuple</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> () {
+    <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyTuple</span><span class="op">&gt;</span> {
+        <span class="ident">PyTuple</span>::<span class="ident">empty</span>(<span class="ident">py</span>).<span class="ident">into</span>()
     }
 }
 

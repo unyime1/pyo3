@@ -192,8 +192,8 @@
 <p>There are also a few special types related to the GIL and Rust-defined <code>#[pyclass]</code>es which may come in useful:</p>
 <table><thead><tr><th>What</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>Python</code></td><td>A GIL token, used to pass to PyO3 constructors to prove ownership of the GIL</td></tr>
-<tr><td><code>PyObject</code></td><td>A Python object isolated from the GIL lifetime. This can be sent to other threads. To call Python APIs using this object, it must be used with <code>AsPyRef::as_ref</code> to get a <code>&amp;PyAny</code> reference.</td></tr>
-<tr><td><code>Py&lt;T&gt;</code></td><td>Same as above, for a specific Python type or <code>#[pyclass]</code> T.</td></tr>
+<tr><td><code>Py&lt;T&gt;</code></td><td>A Python object isolated from the GIL lifetime. This can be sent to other threads. To call Python APIs using this object, it must be used with <code>AsPyRef::as_ref</code> to get an <code>&amp;T</code> reference bound to the GIL.</td></tr>
+<tr><td><code>PyObject</code></td><td>An alias for <code>Py&lt;PyAny&gt;</code></td></tr>
 <tr><td><code>&amp;PyCell&lt;T&gt;</code></td><td>A <code>#[pyclass]</code> value owned by Python.</td></tr>
 <tr><td><code>PyRef&lt;T&gt;</code></td><td>A <code>#[pyclass]</code> borrowed immutably.</td></tr>
 <tr><td><code>PyRefMut&lt;T&gt;</code></td><td>A <code>#[pyclass]</code> borrowed mutably.</td></tr>
@@ -248,9 +248,26 @@ able to operate on mutable references <em>and</em> satisfy Rust's rules of non-a
 mutable references, you have to extract the PyO3 reference wrappers <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
 and <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of
 <code>std::cell::RefCell</code> and ensure (at runtime) that Rust borrows are allowed.</p>
+<h3><a class="header" href="#intopyt" id="intopyt"><code>IntoPy&lt;T&gt;</code></a></h3>
+<p>This trait defines the to-python conversion for a Rust type. It is usually implemented as
+<code>IntoPy&lt;PyObject&gt;</code>, which is the trait needed for returning a value from <code>#[pyfunction]</code> and
+<code>#[pymethods]</code>.</p>
+<p>All types in PyO3 implement this trait, as does a <code>#[pyclass]</code> which doesn't use <code>extends</code>.</p>
+<p>Occasionally you may choose to implement this for custom types which are mapped to Python types
+<em>without</em> having a unique python type.</p>
+<pre><code>use pyo3::prelude::*;
+
+struct MyPyObjectWrapper(PyObject);
+
+impl IntoPy&lt;PyObject&gt; for MyPyObjectWrapper {
+    fn into_py(self, py: Python) -&gt; PyObject {
+        self.0
+    }
+}
+</code></pre>
 <h3><a class="header" href="#the-topyobject-trait" id="the-topyobject-trait">The <code>ToPyObject</code> trait</a></h3>
 <p><a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.ToPyObject.html"><code>ToPyObject</code></a> is a conversion trait that allows various objects to be
-converted into <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyObject.html"><code>PyObject</code></a>. <code>IntoPy&lt;PyObject&gt;</code> serves the
+converted into <a href="https://docs.rs/pyo3/latest/pyo3/type.PyObject.html"><code>PyObject</code></a>. <code>IntoPy&lt;PyObject&gt;</code> serves the
 same purpose, except that it consumes <code>self</code>.</p>
 <h3><a class="header" href="#args-and-kwargs-for-python-object-calls" id="args-and-kwargs-for-python-object-calls"><code>*args</code> and <code>**kwargs</code> for Python object calls</a></h3>
 <p>There are several ways how to pass positional and keyword arguments to a Python object call.
@@ -334,13 +351,6 @@ fn main() {
     obj.call(py, (), Some(kwargs.into_py_dict(py)));
 }
 </code></pre></pre>
-<h3><a class="header" href="#frompyt-and-intopyt" id="frompyt-and-intopyt"><code>FromPy&lt;T&gt;</code> and <code>IntoPy&lt;T&gt;</code></a></h3>
-<p>Many conversions in PyO3 can't use <code>std::convert::From</code> because they need a GIL token.
-The <a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPy.html"><code>FromPy</code></a> trait offers an <code>from_py</code> method that works just like <code>from</code>, except for taking a <code>Python&lt;'_&gt;</code> argument.
-I.e. <code>FromPy&lt;T&gt;</code> could be converting a Rust object into a Python object even though it is called <a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPy.html"><code>FromPy</code></a> - it doesn't say anything about which side of the conversion is a Python object.</p>
-<p>Just like <code>From&lt;T&gt;</code>, if you implement <code>FromPy&lt;T&gt;</code> you gain a blanket implementation of <a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.IntoPy.html"><code>IntoPy</code></a> for free.</p>
-<p>Eventually, traits such as <a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.ToPyObject.html"><code>ToPyObject</code></a> will be replaced by this trait and a <a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPy.html"><code>FromPy</code></a> trait will be added that will implement
-<a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.IntoPy.html"><code>IntoPy</code></a>, just like with <code>From</code> and <code>Into</code>.</p>
 <div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
 <p>Requires the <code>num-complex</code> optional feature.</p>
 </div>

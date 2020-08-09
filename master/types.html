@@ -175,7 +175,7 @@ that in PyO3.)</p>
 <li>It provides some global API for the Python interpreter, such as
 <a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.eval"><code>eval</code></a>.</li>
 <li>It can be passed to functions that require a proof of holding the GIL,
-such as <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyObject.html#method.clone_ref"><code>PyObject::clone_ref</code></a>.</li>
+such as <a href="https://docs.rs/pyo3/latest/pyo3/struct.Py.html#method.clone_ref"><code>Py::clone_ref</code></a>.</li>
 <li>Its lifetime can be used to create Rust references that implicitly guarantee
 holding the GIL, such as <a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyAny.html"><code>&amp;'py PyAny</code></a>.</li>
 </ul>
@@ -213,10 +213,7 @@ such as <code>getattr</code>, <code>setattr</code>, and <code>.call</code>.</p>
 // Convert to &amp;ConcreteType using PyAny::downcast
 let _: &amp;PyList = obj.downcast().unwrap();
 
-// Convert to PyObject using .into() or .to_object(py)
-let _: PyObject = obj.into();
-
-// Convert to Py&lt;PyAny&gt; using .into() or Py::from
+// Convert to Py&lt;PyAny&gt; (aka PyObject) using .into()
 let _: Py&lt;PyAny&gt; = obj.into();
 
 // Convert to Py&lt;ConcreteType&gt; using PyAny::extract
@@ -252,46 +249,21 @@ let _: &amp;PyAny = list;
 // For more explicit &amp;PyAny conversion, use .as_ref()
 let _: &amp;PyAny = list.as_ref();
 
-// To convert to PyObject use .into() or .to_object(py)
-let _: PyObject = list.into();
-
 // To convert to Py&lt;T&gt; use .into() or Py::from()
 let _: Py&lt;PyList&gt; = list.into();
+
+// To convert to PyObject use .into() or .to_object(py)
+let _: PyObject = list.into();
 <span class="boring">}
 </span></code></pre></pre>
-<h3><a class="header" href="#pyobject" id="pyobject"><code>PyObject</code></a></h3>
-<p><strong>Represents:</strong> a GIL independent reference to a Python object of unspecified
-type.</p>
-<p><strong>Used:</strong> Whenever you want to carry around references to &quot;some&quot; Python object,
-without caring about a GIL lifetime.  For example, storing Python object
-references in a Rust struct that outlives the Python-Rust FFI boundary,
-or returning objects from functions implemented in Rust back to Python.</p>
-<p>Can be cloned using Python reference counts with <code>.clone_ref()</code>.</p>
-<p><strong>Conversions:</strong></p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::types::PyList;
-</span><span class="boring">let gil = Python::acquire_gil();
-</span><span class="boring">let py = gil.python();
-</span>let obj: PyObject = PyList::empty(py).into();
-
-// Convert to &amp;PyAny using AsPyRef::as_ref
-let _: &amp;PyAny = obj.as_ref(py);
-
-// Convert to &amp;ConcreteType using PyObject::cast_as
-let _: &amp;PyList = obj.cast_as(py).unwrap();
-
-// Convert to Py&lt;ConcreteType&gt; using PyObject::extract
-let _: Py&lt;PyList&gt; = obj.extract(py).unwrap();
-<span class="boring">}
-</span></code></pre></pre>
-<h3><a class="header" href="#pysometype" id="pysometype"><code>Py&lt;SomeType&gt;</code></a></h3>
-<p><strong>Represents:</strong> a GIL independent reference to a Python object of known type.
-This can be a Python native type (like <code>PyTuple</code>), or a <code>pyclass</code> type
-implemented in Rust.</p>
-<p><strong>Used:</strong> Like <code>PyObject</code>, but with a known inner type.</p>
+<h3><a class="header" href="#pyt" id="pyt"><code>Py&lt;T&gt;</code></a></h3>
+<p><strong>Represents:</strong> a GIL independent reference to a Python object. This can be a Python native type
+(like <code>PyTuple</code>), or a <code>pyclass</code> type implemented in Rust. The most commonly-used variant,
+<code>Py&lt;PyAny&gt;</code>, is also known as <code>PyObject</code>.</p>
+<p><strong>Used:</strong> Whenever you want to carry around references to a Python object without caring about a
+GIL lifetime.  For example, storing Python object references in a Rust struct that outlives the
+Python-Rust FFI boundary, or returning objects from functions implemented in Rust back to Python.</p>
+<p>Can be cloned using Python reference counts with <code>.clone()</code>.</p>
 <p><strong>Conversions:</strong></p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
@@ -310,8 +282,6 @@ let _: &amp;PyList = list.as_ref(py);
 let _: PyObject = list.into();
 <span class="boring">}
 </span></code></pre></pre>
-<p><strong>Note:</strong> <code>PyObject</code> is semantically equivalent to <code>Py&lt;PyAny&gt;</code> and might be
-merged with it in the future.</p>
 <h3><a class="header" href="#pycellsometype" id="pycellsometype"><code>PyCell&lt;SomeType&gt;</code></a></h3>
 <p><strong>Represents:</strong> a reference to a Rust object (instance of <code>PyClass</code>) which is
 wrapped in a Python object.  The cell part is an analog to stdlib's

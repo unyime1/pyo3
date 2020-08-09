@@ -615,12 +615,6 @@
 <span id="615">615</span>
 <span id="616">616</span>
 <span id="617">617</span>
-<span id="618">618</span>
-<span id="619">619</span>
-<span id="620">620</span>
-<span id="621">621</span>
-<span id="622">622</span>
-<span id="623">623</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -674,7 +668,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// You can usually avoid directly working with this type</span>
 <span class="doccomment">/// by using [`ToPyObject`](trait.ToPyObject.html)</span>
-<span class="doccomment">/// and [extract](struct.PyObject.html#method.extract)</span>
+<span class="doccomment">/// and [extract](struct.PyAny.html#method.extract)</span>
 <span class="doccomment">/// with the primitive Rust integer types.</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyLong</span>(<span class="ident">PyAny</span>);
@@ -686,17 +680,13 @@
         <span class="kw">impl</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span> {
             <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">cast_lossless</span>))]</span>
             <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-                <span class="kw">unsafe</span> {
-                    <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">ffi</span>::<span class="ident">PyLong_FromLong</span>(<span class="kw-2">*</span><span class="self">self</span> <span class="kw">as</span> <span class="ident">c_long</span>))
-                }
+                <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">ffi</span>::<span class="ident">PyLong_FromLong</span>(<span class="kw-2">*</span><span class="self">self</span> <span class="kw">as</span> <span class="ident">c_long</span>)) }
             }
         }
         <span class="kw">impl</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span> {
             <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">cast_lossless</span>))]</span>
             <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-                <span class="kw">unsafe</span> {
-                    <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">ffi</span>::<span class="ident">PyLong_FromLong</span>(<span class="self">self</span> <span class="kw">as</span> <span class="ident">c_long</span>))
-                }
+                <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">ffi</span>::<span class="ident">PyLong_FromLong</span>(<span class="self">self</span> <span class="kw">as</span> <span class="ident">c_long</span>)) }
             }
         }
 
@@ -725,13 +715,13 @@
         <span class="kw">impl</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span> {
             <span class="attribute">#[<span class="ident">inline</span>]</span>
             <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-                <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pylong_from_ll_or_ull</span>(<span class="kw-2">*</span><span class="self">self</span>)) }
+                <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pylong_from_ll_or_ull</span>(<span class="kw-2">*</span><span class="self">self</span>)) }
             }
         }
         <span class="kw">impl</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span> {
             <span class="attribute">#[<span class="ident">inline</span>]</span>
             <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-                <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pylong_from_ll_or_ull</span>(<span class="self">self</span>)) }
+                <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pylong_from_ll_or_ull</span>(<span class="self">self</span>)) }
             }
         }
         <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_type</span> {
@@ -818,7 +808,7 @@
                             <span class="ident">IS_LITTLE_ENDIAN</span>,
                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">is_signed</span>,
                         );
-                        <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">obj</span>)
+                        <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">obj</span>)
                     }
                 }
             }
@@ -890,9 +880,7 @@
 
         <span class="attribute">#[<span class="ident">test</span>]</span>
         <span class="kw">fn</span> <span class="ident">test_u128_overflow</span>() {
-            <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">exceptions</span>;
-            <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>;
-            <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">object</span>::<span class="ident">PyObject</span>;
+            <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">exceptions</span>, <span class="ident">ffi</span>, <span class="ident">PyObject</span>};
             <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_uchar</span>;
             <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
             <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
@@ -904,7 +892,7 @@
                     <span class="kw">super</span>::<span class="ident">IS_LITTLE_ENDIAN</span>,
                     <span class="number">0</span>,
                 );
-                <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">obj</span>);
+                <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">obj</span>);
                 <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap_err</span>();
                 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">PyOverflowError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
             }
@@ -945,7 +933,7 @@
                             <span class="number">1</span>,
                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">is_signed</span>,
                         );
-                        <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">obj</span>)
+                        <span class="ident">PyObject</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">obj</span>)
                     }
                 }
             }

@@ -327,15 +327,12 @@ mod io {
     pyo3::import_exception!(io, UnsupportedOperation);
 }
 
-fn tell(file: PyObject) -&gt; PyResult&lt;u64&gt; {
+fn tell(file: &amp;PyAny) -&gt; PyResult&lt;u64&gt; {
     use pyo3::exceptions::*;
 
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-
-    match file.call_method0(py, &quot;tell&quot;) {
+    match file.call_method0(&quot;tell&quot;) {
         Err(_) =&gt; Err(io::UnsupportedOperation::py_err(&quot;not supported: tell&quot;)),
-        Ok(x) =&gt; x.extract::&lt;u64&gt;(py),
+        Ok(x) =&gt; x.extract::&lt;u64&gt;(),
     }
 }
 
