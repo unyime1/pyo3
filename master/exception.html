@@ -187,6 +187,20 @@ fn main() {
     py.run(&quot;assert CustomError('oops').args == ('oops',)&quot;, None, Some(&amp;ctx)).unwrap();
 }
 </code></pre></pre>
+<p>When using PyO3 to create an extension module, you can add the new exception to
+the module like this, so that it is importable from Python:</p>
+<pre><code class="language-rust ignore">
+create_exception!(mymodule, CustomError, PyException);
+
+#[pymodule]
+fn mymodule(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    // ... other elements added to module ...
+    m.add(&quot;CustomError&quot;, py.get_type::&lt;CustomError&gt;())?;
+
+    Ok(())
+}
+
+</code></pre>
 <h2><a class="header" href="#raising-an-exception" id="raising-an-exception">Raising an exception</a></h2>
 <p>To raise an exception, first you need to obtain an exception type and construct a new <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html"><code>PyErr</code></a>, then call the <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html#method.restore"><code>PyErr::restore</code></a> method to write the exception back to the Python interpreter's global state.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::{Python, PyErr};
