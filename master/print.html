@@ -1290,8 +1290,8 @@ struct MyIterator {
 
 #[pyproto]
 impl PyIterProtocol for MyIterator {
-    fn __iter__(slf: PyRef&lt;Self&gt;) -&gt; Py&lt;MyIterator&gt; {
-        slf.into()
+    fn __iter__(slf: PyRef&lt;Self&gt;) -&gt; PyRef&lt;Self&gt; {
+        slf
     }
     fn __next__(mut slf: PyRefMut&lt;Self&gt;) -&gt; Option&lt;PyObject&gt; {
         slf.iter.next()
@@ -1316,8 +1316,8 @@ struct Iter {
 
 #[pyproto]
 impl PyIterProtocol for Iter {
-    fn __iter__(slf: PyRefMut&lt;Self&gt;) -&gt; Py&lt;Iter&gt; {
-        slf.into()
+    fn __iter__(slf: PyRef&lt;Self&gt;) -&gt; PyRef&lt;Self&gt; {
+        slf
     }
 
     fn __next__(mut slf: PyRefMut&lt;Self&gt;) -&gt; Option&lt;usize&gt; {
@@ -1332,7 +1332,7 @@ struct Container {
 
 #[pyproto]
 impl PyIterProtocol for Container {
-    fn __iter__(slf: PyRefMut&lt;Self&gt;) -&gt; PyResult&lt;Py&lt;Iter&gt;&gt; {
+    fn __iter__(slf: PyRef&lt;Self&gt;) -&gt; PyResult&lt;Py&lt;Iter&gt;&gt; {
         let iter = Iter {
             inner: slf.iter.clone().into_iter(),
         };
