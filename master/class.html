@@ -279,7 +279,7 @@ fn return_myclass() -&gt; Py&lt;MyClass&gt; {
 }
 let gil = Python::acquire_gil();
 let obj = return_myclass();
-let cell = obj.as_ref(gil.python()); // AsPyRef::as_ref returns &amp;PyCell
+let cell = obj.as_ref(gil.python()); // Py&lt;MyClass&gt;::as_ref returns &amp;PyCell&lt;MyClass&gt;
 let obj_ref = cell.borrow(); // Get PyRef&lt;T&gt;
 assert_eq!(obj_ref.num, 1);
 <span class="boring">}

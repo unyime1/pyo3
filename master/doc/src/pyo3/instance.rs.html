@@ -607,6 +607,26 @@
 <span id="607">607</span>
 <span id="608">608</span>
 <span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">conversion</span>::{<span class="ident">PyTryFrom</span>, <span class="ident">ToBorrowedObject</span>};
@@ -643,16 +663,21 @@
     }
 }
 
-<span class="doccomment">/// A Python object of known type.</span>
+<span class="doccomment">/// A Python object of known type T.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Accessing this object is thread-safe, since any access to its API requires a</span>
-<span class="doccomment">/// `Python&lt;&#39;py&gt;` GIL token.</span>
+<span class="doccomment">/// Accessing this object is thread-safe, since any access to its API requires a `Python&lt;&#39;py&gt;` GIL</span>
+<span class="doccomment">/// token. There are a few different ways to use the Python object contained:</span>
+<span class="doccomment">///  - [`Py::as_ref`](#method.as_ref) to borrow a GIL-bound reference to the contained object.</span>
+<span class="doccomment">///  - [`Py::borrow`](#method.borrow), [`Py::try_borrow`](#method.try_borrow),</span>
+<span class="doccomment">///    [`Py::borrow_mut`](#method.borrow_mut), or [`Py::try_borrow_mut`](#method.try_borrow_mut),</span>
+<span class="doccomment">///    to directly access a `#[pyclass]` value (which has RefCell-like behavior, see</span>
+<span class="doccomment">///    [the `PyCell` guide entry](https://pyo3.rs/master/class.html#pycell-and-interior-mutability)</span>
+<span class="doccomment">///    ).</span>
+<span class="doccomment">///  - Use methods directly on `Py`, such as [`Py::call`](#method.call) and</span>
+<span class="doccomment">///    [`Py::call_method`](#method.call_method).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// See [the guide](https://pyo3.rs/master/types.html) for an explanation</span>
 <span class="doccomment">/// of the different Python object types.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Technically, it is a safe wrapper around `NonNull&lt;ffi::PyObject&gt;` with</span>
-<span class="doccomment">/// specified type information.</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">NonNull</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">PyObject</span><span class="op">&gt;</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 
@@ -673,7 +698,74 @@
         <span class="kw">let</span> <span class="ident">ob</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">Py</span>::<span class="ident">from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">obj</span> <span class="kw">as</span> <span class="kw">_</span>) };
         <span class="prelude-val">Ok</span>(<span class="ident">ob</span>)
     }
+}
 
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">PyTypeInfo</span>,
+{
+    <span class="doccomment">/// Borrows a GIL-bound reference to the contained `T`. By binding to the GIL lifetime, this</span>
+    <span class="doccomment">/// allows the GIL-bound reference to not require `Python` for any of its methods.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For native types, this reference is `&amp;T`. For pyclasses, this is `&amp;PyCell&lt;T&gt;`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">/// Get access to `&amp;PyList` from `Py&lt;PyList&gt;`:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use pyo3::prelude::*;</span>
+    <span class="doccomment">/// # use pyo3::types::PyList;</span>
+    <span class="doccomment">/// # Python::with_gil(|py| {</span>
+    <span class="doccomment">/// let list: Py&lt;PyList&gt; = PyList::empty(py).into();</span>
+    <span class="doccomment">/// let list: &amp;PyList = list.as_ref(py);</span>
+    <span class="doccomment">/// assert_eq!(list.len(), 0);</span>
+    <span class="doccomment">/// # });</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Get access to `&amp;PyCell&lt;MyClass&gt;` from `Py&lt;MyClass&gt;`:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use pyo3::prelude::*;</span>
+    <span class="doccomment">/// #[pyclass]</span>
+    <span class="doccomment">/// struct MyClass { }</span>
+    <span class="doccomment">/// # Python::with_gil(|py| {</span>
+    <span class="doccomment">/// let my_class: Py&lt;MyClass&gt; = Py::new(py, MyClass { }).unwrap();</span>
+    <span class="doccomment">/// let my_class_cell: &amp;PyCell&lt;MyClass&gt; = my_class.as_ref(py);</span>
+    <span class="doccomment">/// assert!(my_class_cell.try_borrow().is_ok());</span>
+    <span class="doccomment">/// # });</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_ref</span><span class="op">&lt;</span><span class="lifetime">&#39;py</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;py</span> <span class="self">self</span>, <span class="ident">_py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;py</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;py</span> <span class="ident">T</span>::<span class="ident">AsRefTarget</span> {
+        <span class="kw">let</span> <span class="ident">any</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">PyAny</span>;
+        <span class="kw">unsafe</span> { <span class="ident">PyNativeType</span>::<span class="ident">unchecked_downcast</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">any</span>) }
+    }
+
+    <span class="doccomment">/// Similar to [`as_ref`](#method.as_ref), and also consumes this `Py` and registers the</span>
+    <span class="doccomment">/// Python object reference in PyO3&#39;s object storage. The reference count for the Python</span>
+    <span class="doccomment">/// object will not be decreased until the GIL lifetime ends.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Useful when returning GIL-bound references from functions. In the snippet below, note that</span>
+    <span class="doccomment">/// the `&#39;py` lifetime of the input GIL lifetime is also given to the returned reference:</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use pyo3::prelude::*;</span>
+    <span class="doccomment">/// fn new_py_any&lt;&#39;py&gt;(py: Python&lt;&#39;py&gt;, value: impl IntoPy&lt;PyObject&gt;) -&gt; &amp;&#39;py PyAny {</span>
+    <span class="doccomment">///     let obj: PyObject = value.into_py(py);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///     // .as_ref(py) would not be suitable here, because a reference to `obj` may not be</span>
+    <span class="doccomment">///     // returned from the function.</span>
+    <span class="doccomment">///     obj.into_ref(py)</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_ref</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">T</span>::<span class="ident">AsRefTarget</span> {
+        <span class="kw">unsafe</span> { <span class="ident">py</span>.<span class="ident">from_owned_ptr</span>(<span class="self">self</span>.<span class="ident">into_ptr</span>()) }
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">PyClass</span>,
+{
     <span class="doccomment">/// Immutably borrows the value `T`. This borrow lasts untill the returned `PyRef` exists.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Equivalent to `self.as_ref(py).borrow()` -</span>
@@ -962,58 +1054,6 @@
         <span class="kw">let</span> <span class="ident">pointer</span> <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>;
         <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="self">self</span>);
         <span class="ident">pointer</span>
-    }
-}
-
-<span class="doccomment">/// Retrieves `&amp;&#39;py` types from `Py&lt;T&gt;` or `PyObject`.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// # Examples</span>
-<span class="doccomment">/// `PyObject::as_ref` returns `&amp;PyAny`.</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use pyo3::prelude::*;</span>
-<span class="doccomment">/// let obj: PyObject = {</span>
-<span class="doccomment">///     let gil = Python::acquire_gil();</span>
-<span class="doccomment">///     let py = gil.python();</span>
-<span class="doccomment">///     py.eval(&quot;[]&quot;, None, None).unwrap().to_object(py)</span>
-<span class="doccomment">/// };</span>
-<span class="doccomment">/// let gil = Python::acquire_gil();</span>
-<span class="doccomment">/// let py = gil.python();</span>
-<span class="doccomment">/// assert_eq!(obj.as_ref(py).len().unwrap(), 0);</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// `Py&lt;T&gt;::as_ref` returns `&amp;PyDict`, `&amp;PyList` or so for native types, and `&amp;PyCell&lt;T&gt;`</span>
-<span class="doccomment">/// for `#[pyclass]`.</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// # use pyo3::prelude::*;</span>
-<span class="doccomment">/// #[pyclass]</span>
-<span class="doccomment">/// struct Counter {</span>
-<span class="doccomment">///     count: usize,</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// let counter = {</span>
-<span class="doccomment">///     let gil = Python::acquire_gil();</span>
-<span class="doccomment">///     let py = gil.python();</span>
-<span class="doccomment">///     Py::new(py, Counter { count: 0}).unwrap()</span>
-<span class="doccomment">/// };</span>
-<span class="doccomment">/// let gil = Python::acquire_gil();</span>
-<span class="doccomment">/// let py = gil.python();</span>
-<span class="doccomment">/// let counter_cell: &amp;PyCell&lt;Counter&gt; = counter.as_ref(py);</span>
-<span class="doccomment">/// let counter_ref = counter_cell.borrow();</span>
-<span class="doccomment">/// assert_eq!(counter_ref.count, 0);</span>
-<span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AsPyRef</span>: <span class="ident">Sized</span> {
-    <span class="kw">type</span> <span class="ident">Target</span>;
-    <span class="doccomment">/// Return reference to object.</span>
-    <span class="kw">fn</span> <span class="ident">as_ref</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span>::<span class="ident">Target</span>;
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">AsPyRef</span> <span class="kw">for</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">PyTypeInfo</span>,
-{
-    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">AsRefTarget</span>;
-    <span class="kw">fn</span> <span class="ident">as_ref</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">self</span>, <span class="ident">_py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="self">Self</span>::<span class="ident">Target</span> {
-        <span class="kw">let</span> <span class="ident">any</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">PyAny</span>;
-        <span class="kw">unsafe</span> { <span class="ident">PyNativeType</span>::<span class="ident">unchecked_downcast</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">any</span>) }
     }
 }
 

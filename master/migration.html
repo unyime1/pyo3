@@ -209,6 +209,30 @@ impl IntoPy&lt;PyObject&gt; for MyPyObjectWrapper {
 <h3><a class="header" href="#pyobject-is-now-a-type-alias-of-pypyany" id="pyobject-is-now-a-type-alias-of-pypyany"><code>PyObject</code> is now a type alias of <code>Py&lt;PyAny&gt;</code></a></h3>
 <p>This should change very little from a usage perspective. If you implemented traits for both
 <code>PyObject</code> and <code>Py&lt;T&gt;</code>, you may find you can just remove the <code>PyObject</code> implementation.</p>
+<h3><a class="header" href="#aspyref-has-been-removed" id="aspyref-has-been-removed"><code>AsPyRef</code> has been removed</a></h3>
+<p>As <code>PyObject</code> has been changed to be just a type alias, the only remaining implementor of <code>AsPyRef</code>
+was <code>Py&lt;T&gt;</code>. This removed the need for a trait, so the <code>AsPyRef::as_ref</code> method has been moved to
+<code>Py::as_ref</code>.</p>
+<p>This should require no code changes except removing <code>use pyo3::AsPyRef</code> for code which did not use
+<code>pyo3::prelude::*</code>.</p>
+<p>Before:</p>
+<pre><code class="language-rust ignore">use pyo3::{AsPyRef, Py, types::PyList};
+<span class="boring">pyo3::Python::with_gil(|py| {
+</span>let list_py: Py&lt;PyList&gt; = PyList::empty(py).into();
+let list_ref: &amp;PyList = list_py.as_ref(py);
+<span class="boring">})
+</span></code></pre>
+<p>After:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use pyo3::{Py, types::PyList};
+<span class="boring">pyo3::Python::with_gil(|py| {
+</span>let list_py: Py&lt;PyList&gt; = PyList::empty(py).into();
+let list_ref: &amp;PyList = list_py.as_ref(py);
+<span class="boring">})
+</span><span class="boring">}
+</span></code></pre></pre>
 <h2><a class="header" href="#from-010-to-011" id="from-010-to-011">from 0.10.* to 0.11</a></h2>
 <h3><a class="header" href="#stable-rust" id="stable-rust">Stable Rust</a></h3>
 <p>PyO3 now supports the stable Rust toolchain. The minimum required version is 1.39.0.</p>

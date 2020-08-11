@@ -274,11 +274,19 @@ Python-Rust FFI boundary, or returning objects from functions implemented in Rus
 </span><span class="boring">let py = gil.python();
 </span>let list: Py&lt;PyList&gt; = PyList::empty(py).into();
 
-// Access the native type using AsPyRef::as_ref(py)
-// (For #[pyclass] types, as_ref() will return &amp;PyCell&lt;T&gt;)
+// Access to the native type using Py::as_ref(py) or Py::into_ref(py)
+// (For #[pyclass] types T, these will return &amp;PyCell&lt;T&gt;)
+
+// Py::as_ref() borrows the object
 let _: &amp;PyList = list.as_ref(py);
 
-// Convert to PyObject with .into()
+<span class="boring">let list_clone = list.clone(); // Just so that the .into() example for PyObject compiles.
+</span>// Py::into_ref() moves the reference into pyo3's &quot;object storage&quot;; useful for making APIs
+// which return gil-bound references.
+let _: &amp;PyList = list.into_ref(py);
+
+<span class="boring">let list = list_clone;
+</span>// Convert to PyObject with .into()
 let _: PyObject = list.into();
 <span class="boring">}
 </span></code></pre></pre>

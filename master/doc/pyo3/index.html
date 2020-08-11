@@ -129,7 +129,7 @@ exception newly defined in Rust code.</p>
 <table><tr class='module-item'><td><a class="struct" href="struct.GILGuard.html" title='pyo3::GILGuard struct'>GILGuard</a></td><td class='docblock-short'><p>RAII type that represents the Global Interpreter Lock acquisition. To get hold of a value
 of this type, see <a href="struct.Python.html#method.acquire_gil"><code>Python::acquire_gil</code></a>.</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.GILPool.html" title='pyo3::GILPool struct'>GILPool</a></td><td class='docblock-short'><p>A RAII pool which PyO3 uses to store owned Python references.</p>
-</td></tr><tr class='module-item'><td><a class="struct" href="struct.Py.html" title='pyo3::Py struct'>Py</a></td><td class='docblock-short'><p>A Python object of known type.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.Py.html" title='pyo3::Py struct'>Py</a></td><td class='docblock-short'><p>A Python object of known type T.</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.PyAny.html" title='pyo3::PyAny struct'>PyAny</a></td><td class='docblock-short'><p>A Python object with GIL lifetime</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.PyDowncastError.html" title='pyo3::PyDowncastError struct'>PyDowncastError</a></td><td class='docblock-short'><p>Marker type that indicates an error while downcasting</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.PyErr.html" title='pyo3::PyErr struct'>PyErr</a></td><td class='docblock-short'><p>Represents a Python exception that was raised.</p>
@@ -137,8 +137,7 @@ of this type, see <a href="struct.Python.html#method.acquire_gil"><code>Python::
 </td></tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table><tr class='module-item'><td><a class="enum" href="enum.PyErrValue.html" title='pyo3::PyErrValue enum'>PyErrValue</a></td><td class='docblock-short'><p>Represents a <code>PyErr</code> value.</p>
 </td></tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
-<table><tr class='module-item'><td><a class="trait" href="trait.AsPyRef.html" title='pyo3::AsPyRef trait'>AsPyRef</a></td><td class='docblock-short'><p>Retrieves <code>&amp;'py</code> types from <code>Py&lt;T&gt;</code> or <code>PyObject</code>.</p>
-</td></tr><tr class='module-item'><td><a class="trait" href="trait.PyErrArguments.html" title='pyo3::PyErrArguments trait'>PyErrArguments</a></td><td class='docblock-short'><p>Helper conversion trait that allows to use custom arguments for exception constructor.</p>
+<table><tr class='module-item'><td><a class="trait" href="trait.PyErrArguments.html" title='pyo3::PyErrArguments trait'>PyErrArguments</a></td><td class='docblock-short'><p>Helper conversion trait that allows to use custom arguments for exception constructor.</p>
 </td></tr><tr class='module-item'><td><a class="trait" href="trait.PyNativeType.html" title='pyo3::PyNativeType trait'>PyNativeType</a></td><td class='docblock-short'><p>Types that are built into the Python interpreter.</p>
 </td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table><tr class='module-item'><td><a class="fn" href="fn.prepare_freethreaded_python.html" title='pyo3::prepare_freethreaded_python fn'>prepare_freethreaded_python</a></td><td class='docblock-short'><p>Prepares the use of Python in a free-threaded context.</p>

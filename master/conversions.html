@@ -192,7 +192,7 @@
 <p>There are also a few special types related to the GIL and Rust-defined <code>#[pyclass]</code>es which may come in useful:</p>
 <table><thead><tr><th>What</th><th>Description</th></tr></thead><tbody>
 <tr><td><code>Python</code></td><td>A GIL token, used to pass to PyO3 constructors to prove ownership of the GIL</td></tr>
-<tr><td><code>Py&lt;T&gt;</code></td><td>A Python object isolated from the GIL lifetime. This can be sent to other threads. To call Python APIs using this object, it must be used with <code>AsPyRef::as_ref</code> to get an <code>&amp;T</code> reference bound to the GIL.</td></tr>
+<tr><td><code>Py&lt;T&gt;</code></td><td>A Python object isolated from the GIL lifetime. This can be sent to other threads.</td></tr>
 <tr><td><code>PyObject</code></td><td>An alias for <code>Py&lt;PyAny&gt;</code></td></tr>
 <tr><td><code>&amp;PyCell&lt;T&gt;</code></td><td>A <code>#[pyclass]</code> value owned by Python.</td></tr>
 <tr><td><code>PyRef&lt;T&gt;</code></td><td>A <code>#[pyclass]</code> borrowed immutably.</td></tr>
