@@ -2270,19 +2270,32 @@ pyo3 = &quot;0.6&quot;
 <li>A toolchain for your target.</li>
 <li>The appropriate options in your Cargo <code>.config</code> for the platform you're targeting and the toolchain you are using.</li>
 <li>A Python interpreter that's already been compiled for your target.</li>
+<li>A Python interpreter that is built for your host and available through the <code>PATH</code> or setting the <a href="building_and_distribution.html#python-version"><code>PYO3_PYTHON</code></a> variable.</li>
 <li>The headers that match the above interpreter.</li>
 </ul>
 <p>See https://github.com/japaric/rust-cross for a primer on cross compiling Rust in general.</p>
 <p>After you've obtained the above, you can build a cross compiled PyO3 module by setting a few extra environment variables:</p>
 <ul>
-<li><code>PYO3_CROSS_INCLUDE_DIR</code>: This variable must be set to the directory containing the headers for the target's Python interpreter.</li>
-<li><code>PYO3_CROSS_LIB_DIR</code>: This variable must be set to the directory containing the target's libpython DSO.</li>
+<li><code>PYO3_CROSS_INCLUDE_DIR</code>: This variable must be set to the directory containing the headers for the target's Python interpreter. <strong>It is only necessary if targeting Windows platforms</strong></li>
+<li><code>PYO3_CROSS_LIB_DIR</code>: This variable must be set to the directory containing the target's libpython DSO and the associated <code>_sysconfigdata*.py</code> file.</li>
+<li><code>PYO3_CROSS_PYTHON_VERSION</code>: This variable must be set if there are multiple versions of python compiled for a unix machine.</li>
 </ul>
 <p>An example might look like the following (assuming your target's sysroot is at <code>/home/pyo3/cross/sysroot</code> and that your target is <code>armv7</code>):</p>
-<pre><code class="language-sh">export PYO3_CROSS_INCLUDE_DIR=&quot;/home/pyo3/cross/sysroot/usr/include&quot;
+<pre><code class="language-sh">export PYO3_CROSS_LIB_DIR=&quot;/home/pyo3/cross/sysroot/usr/lib&quot;
+
+cargo build --target armv7-unknown-linux-gnueabihf
+</code></pre>
+<p>If there are multiple python versions at the cross lib directory and you cannot set a more precise location to include both the <code>libpython</code> DSO and <code>_sysconfigdata*.py</code> files, you can set the required version:</p>
+<pre><code class="language-sh">export PYO3_CROSS_PYTHON_VERSION=3.8
 export PYO3_CROSS_LIB_DIR=&quot;/home/pyo3/cross/sysroot/usr/lib&quot;
 
 cargo build --target armv7-unknown-linux-gnueabihf
+</code></pre>
+<p>Or another example with the same sys root but building for windows:</p>
+<pre><code class="language-sh">export PYO3_CROSS_INCLUDE_DIR=&quot;/home/pyo3/cross/sysroot/usr/include&quot;
+export PYO3_CROSS_LIB_DIR=&quot;/home/pyo3/cross/sysroot/usr/lib&quot;
+
+cargo build --target x86_64-pc-windows-gnu
 </code></pre>
 <h1><a class="header" href="#pypy-support" id="pypy-support">PyPy Support</a></h1>
 <p>Using PyPy is supported via cpyext.</p>
