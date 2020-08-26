@@ -2297,6 +2297,8 @@ export PYO3_CROSS_LIB_DIR=&quot;/home/pyo3/cross/sysroot/usr/lib&quot;
 
 cargo build --target x86_64-pc-windows-gnu
 </code></pre>
+<h2><a class="header" href="#bazel" id="bazel">Bazel</a></h2>
+<p>For an example of how to build python extensions using Bazel, see https://github.com/TheButlah/rules_pyo3</p>
 <h1><a class="header" href="#pypy-support" id="pypy-support">PyPy Support</a></h1>
 <p>Using PyPy is supported via cpyext.</p>
 <p>Support is only provided for building Rust extension for code running under PyPy. This means that PyPy <strong>cannot</strong> be called from rust via cpyext. Note that there some differences in the ffi module between PyPy and CPython.</p>
