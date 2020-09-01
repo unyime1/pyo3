@@ -1630,6 +1630,7 @@ impl pyo3::pyclass::PyClassSend for MyClass {
 <tr><td><code>typing.Optional[T]</code></td><td align="center"><code>Option&lt;T&gt;</code></td><td align="center">-</td></tr>
 <tr><td><code>typing.Sequence[T]</code></td><td align="center"><code>Vec&lt;T&gt;</code></td><td align="center"><code>&amp;PySequence</code></td></tr>
 <tr><td><code>typing.Iterator[Any]</code></td><td align="center">-</td><td align="center"><code>&amp;PyIterator</code></td></tr>
+<tr><td><code>typing.Union[...]</code></td><td align="center">See <a href="conversions.html#deriving-a-hrefhttpsdocsrspyo3latestpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums"><code>#[derive(FromPyObject)]</code></a></td><td align="center">-</td></tr>
 </tbody></table>
 <p>There are also a few special types related to the GIL and Rust-defined <code>#[pyclass]</code>es which may come in useful:</p>
 <table><thead><tr><th>What</th><th>Description</th></tr></thead><tbody>
@@ -1741,7 +1742,7 @@ struct RustyTuple(String, String);
 </code></pre>
 <p>Tuple structs with a single field are treated as wrapper types which are described in the
 following section. To override this behaviour and ensure that the input is in fact a tuple,
-specify the struct as </p>
+specify the struct as</p>
 <pre><code>use pyo3::prelude::*;
 
 #[derive(FromPyObject)]
@@ -1765,7 +1766,8 @@ struct RustyTransparentStruct {
 </code></pre>
 <h4><a class="header" href="#deriving-a-hrefhttpsdocsrspyo3latestpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums" id="deriving-a-hrefhttpsdocsrspyo3latestpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums">Deriving <a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> for enums</a></h4>
 <p>The <code>FromPyObject</code> derivation for enums generates code that tries to extract the variants in the
-order of the fields. As soon as a variant can be extracted succesfully, that variant is returned.</p>
+order of the fields. As soon as a variant can be extracted succesfully, that variant is returned.
+This makes it possible to extract Python types like <code>Union[str, int]</code>.</p>
 <p>The same customizations and restrictions described for struct derivations apply to enum variants,
 i.e. a tuple variant assumes that the input is a Python tuple, and a struct variant defaults to
 extracting fields as attributes but can be configured in the same manner. The <code>transparent</code>
@@ -1809,7 +1811,7 @@ enum RustyEnum {
 </code></pre>
 <p>If the input is neither a string nor an integer, the error message will be:
 <code>&quot;Can't convert &lt;INPUT&gt; to Union[str, int]&quot;</code>, where <code>&lt;INPUT&gt;</code> is replaced by the type name and
-<code>repr()</code> of the input object. </p>
+<code>repr()</code> of the input object.</p>
 <h4><a class="header" href="#derivefrompyobject-container-attributes" id="derivefrompyobject-container-attributes"><code>#[derive(FromPyObject)]</code> Container Attributes</a></h4>
 <ul>
 <li><code>pyo3(transparent)</code>
