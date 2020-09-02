@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="module.html"><strong aria-hidden="true">1.</strong> Python Modules</a></li><li class="chapter-item expanded "><a href="function.html"><strong aria-hidden="true">2.</strong> Python Functions</a></li><li class="chapter-item expanded "><a href="class.html"><strong aria-hidden="true">3.</strong> Python Classes</a></li><li class="chapter-item expanded "><a href="conversions.html"><strong aria-hidden="true">4.</strong> Type Conversions</a></li><li class="chapter-item expanded "><a href="exception.html"><strong aria-hidden="true">5.</strong> Python Exceptions</a></li><li class="chapter-item expanded "><a href="python_from_rust.html"><strong aria-hidden="true">6.</strong> Calling Python from Rust</a></li><li class="chapter-item expanded "><a href="types.html"><strong aria-hidden="true">7.</strong> GIL, mutability and object types</a></li><li class="chapter-item expanded "><a href="parallelism.html"><strong aria-hidden="true">8.</strong> Parallelism</a></li><li class="chapter-item expanded "><a href="debugging.html"><strong aria-hidden="true">9.</strong> Debugging</a></li><li class="chapter-item expanded "><a href="advanced.html"><strong aria-hidden="true">10.</strong> Advanced Topics</a></li><li class="chapter-item expanded "><a href="building_and_distribution.html"><strong aria-hidden="true">11.</strong> Building and Distribution</a></li><li class="chapter-item expanded "><a href="pypy.html"><strong aria-hidden="true">12.</strong> PyPy support</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">13.</strong> FAQ &amp; Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="rust_cpython.html">Appendix A: PyO3 and rust-cpython</a></li><li class="chapter-item expanded affix "><a href="migration.html">Appendix B: Migration Guide</a></li><li class="chapter-item expanded affix "><a href="trait_bounds.html">Appendix C: Trait bounds</a></li><li class="chapter-item expanded affix "><a href="logging.html">Appendix D: Logging</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="module.html"><strong aria-hidden="true">1.</strong> Python Modules</a></li><li class="chapter-item expanded "><a href="function.html"><strong aria-hidden="true">2.</strong> Python Functions</a></li><li class="chapter-item expanded "><a href="class.html"><strong aria-hidden="true">3.</strong> Python Classes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="class/protocols.html"><strong aria-hidden="true">3.1.</strong> Class customizations</a></li></ol></li><li class="chapter-item expanded "><a href="conversions.html"><strong aria-hidden="true">4.</strong> Type Conversions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conversions/tables.html"><strong aria-hidden="true">4.1.</strong> Mapping of Rust types to Python types</a></li><li class="chapter-item expanded "><a href="conversions/traits.html"><strong aria-hidden="true">4.2.</strong> Conversion traits</a></li></ol></li><li class="chapter-item expanded "><a href="exception.html"><strong aria-hidden="true">5.</strong> Python Exceptions</a></li><li class="chapter-item expanded "><a href="python_from_rust.html"><strong aria-hidden="true">6.</strong> Calling Python from Rust</a></li><li class="chapter-item expanded "><a href="types.html"><strong aria-hidden="true">7.</strong> GIL, mutability and object types</a></li><li class="chapter-item expanded "><a href="parallelism.html"><strong aria-hidden="true">8.</strong> Parallelism</a></li><li class="chapter-item expanded "><a href="debugging.html"><strong aria-hidden="true">9.</strong> Debugging</a></li><li class="chapter-item expanded "><a href="advanced.html"><strong aria-hidden="true">10.</strong> Advanced Topics</a></li><li class="chapter-item expanded "><a href="building_and_distribution.html"><strong aria-hidden="true">11.</strong> Building and Distribution</a></li><li class="chapter-item expanded "><a href="pypy.html"><strong aria-hidden="true">12.</strong> PyPy support</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">13.</strong> FAQ &amp; Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="rust_cpython.html">Appendix A: PyO3 and rust-cpython</a></li><li class="chapter-item expanded affix "><a href="migration.html">Appendix B: Migration Guide</a></li><li class="chapter-item expanded affix "><a href="trait_bounds.html">Appendix C: Trait bounds</a></li><li class="chapter-item expanded affix "><a href="logging.html">Appendix D: Logging</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -157,7 +157,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#the-pyo3-guide" id="the-pyo3-guide">The PyO3 Guide</a></h1>
+                        <h1><a class="header" href="#the-pyo3-user-guide" id="the-pyo3-user-guide">The PyO3 user guide</a></h1>
 <p>Welcome to the PyO3 user guide! This book is a companion to <a href="https://docs.rs/pyo3">PyO3's API docs</a>. It contains examples and documentation to explain all of PyO3's use cases in detail.</p>
 <p>Please choose from the chapters on the left to jump to individual topics, or continue below to start with PyO3's README.</p>
 <h1><a class="header" href="#pyo3" id="pyo3">PyO3</a></h1>
@@ -565,7 +565,7 @@ Type:      builtin_function_or_method
 <li><a href="class.html#method-arguments"><code>#[args]</code></a></li>
 </ul>
 </li>
-<li><a href="class.html#class-customizations"><code>#[pyproto]</code></a></li>
+<li><a href="class/protocols.html"><code>#[pyproto]</code></a></li>
 </ul>
 <h2><a class="header" href="#defining-a-new-class" id="defining-a-new-class">Defining a new class</a></h2>
 <p>To define a custom Python class, a Rust struct needs to be annotated with the
@@ -681,7 +681,7 @@ assert_eq!(obj_ref.num, 1);
 The performance improvement applies to types that are often created and deleted in a row,
 so that they can benefit from a freelist. <code>XXX</code> is a number of items for the free list.</li>
 <li><code>gc</code> - Classes with the <code>gc</code> parameter participate in Python garbage collection.
-If a custom class contains references to other Python objects that can be collected, the <a href="https://docs.rs/pyo3/latest/pyo3/class/gc/trait.PyGCProtocol.html"><code>PyGCProtocol</code></a> trait has to be implemented.</li>
+If a custom class contains references to other Python objects that can be collected, the [<code>PyGCProtocol</code>] trait has to be implemented.</li>
 <li><code>weakref</code> - Adds support for Python weak references.</li>
 <li><code>extends=BaseType</code> - Use a custom base class. The base <code>BaseType</code> must implement <code>PyTypeInfo</code>.</li>
 <li><code>subclass</code> - Allows Python classes to inherit from this class.</li>
@@ -1221,6 +1221,96 @@ py_args=(), py_kwargs=None, name=World, num=-1, debug=true
 num=44, debug=false
 num=-1, debug=false
 </code></pre>
+<h2><a class="header" href="#how-methods-are-implemented" id="how-methods-are-implemented">How methods are implemented</a></h2>
+<p>Users should be able to define a <code>#[pyclass]</code> with or without <code>#[pymethods]</code>, while PyO3 needs a
+trait with a function that returns all methods. Since it's impossible to make the code generation in
+pyclass dependent on whether there is an impl block, we'd need to implement the trait on
+<code>#[pyclass]</code> and override the implementation in <code>#[pymethods]</code>.
+To enable this, we use a static registry type provided by <a href="https://github.com/dtolnay/inventory">inventory</a>,
+which allows us to collect <code>impl</code>s from arbitrary source code by exploiting some binary trick.
+See <a href="https://github.com/dtolnay/inventory#how-it-works">inventory: how it works</a> and <code>pyo3_derive_backend::py_class</code> for more details.
+Also for <code>#[pyproto]</code>, we use a similar, but more task-specific registry and
+initialize it using the <a href="https://github.com/mmastrac/rust-ctor">ctor</a> crate.</p>
+<p>Specifically, the following implementation is generated:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use pyo3::prelude::*;
+
+/// Class for demonstration
+struct MyClass {
+    num: i32,
+    debug: bool,
+}
+
+impl pyo3::pyclass::PyClassAlloc for MyClass {}
+
+unsafe impl pyo3::PyTypeInfo for MyClass {
+    type Type = MyClass;
+    type BaseType = PyAny;
+    type BaseLayout = pyo3::pycell::PyCellBase&lt;PyAny&gt;;
+    type Layout = PyCell&lt;Self&gt;;
+    type Initializer = PyClassInitializer&lt;Self&gt;;
+    type AsRefTarget = PyCell&lt;Self&gt;;
+
+    const NAME: &amp;'static str = &quot;MyClass&quot;;
+    const MODULE: Option&lt;&amp;'static str&gt; = None;
+    const DESCRIPTION: &amp;'static str = &quot;Class for demonstration&quot;;
+    const FLAGS: usize = 0;
+
+    #[inline]
+    fn type_object_raw(py: pyo3::Python) -&gt; *mut pyo3::ffi::PyTypeObject {
+        use pyo3::type_object::LazyStaticType;
+        static TYPE_OBJECT: LazyStaticType = LazyStaticType::new();
+        TYPE_OBJECT.get_or_init::&lt;Self&gt;(py)
+    }
+}
+
+impl pyo3::pyclass::PyClass for MyClass {
+    type Dict = pyo3::pyclass_slots::PyClassDummySlot;
+    type WeakRef = pyo3::pyclass_slots::PyClassDummySlot;
+    type BaseNativeType = PyAny;
+}
+
+impl pyo3::IntoPy&lt;PyObject&gt; for MyClass {
+    fn into_py(self, py: pyo3::Python) -&gt; pyo3::PyObject {
+        pyo3::IntoPy::into_py(pyo3::Py::new(py, self).unwrap(), py)
+    }
+}
+
+pub struct Pyo3MethodsInventoryForMyClass {
+    methods: &amp;'static [pyo3::class::PyMethodDefType],
+}
+impl pyo3::class::methods::PyMethodsInventory for Pyo3MethodsInventoryForMyClass {
+    fn new(methods: &amp;'static [pyo3::class::PyMethodDefType]) -&gt; Self {
+        Self { methods }
+    }
+    fn get(&amp;self) -&gt; &amp;'static [pyo3::class::PyMethodDefType] {
+        self.methods
+    }
+}
+impl pyo3::class::methods::HasMethodsInventory for MyClass {
+    type Methods = Pyo3MethodsInventoryForMyClass;
+}
+pyo3::inventory::collect!(Pyo3MethodsInventoryForMyClass);
+
+impl pyo3::class::proto_methods::HasProtoRegistry for MyClass {
+    fn registry() -&gt; &amp;'static pyo3::class::proto_methods::PyProtoRegistry {
+        static REGISTRY: pyo3::class::proto_methods::PyProtoRegistry
+            = pyo3::class::proto_methods::PyProtoRegistry::new();
+        &amp;REGISTRY
+    }
+}
+
+impl pyo3::pyclass::PyClassSend for MyClass {
+    type ThreadChecker = pyo3::pyclass::ThreadCheckerStub&lt;MyClass&gt;;
+}
+<span class="boring">let gil = Python::acquire_gil();
+</span><span class="boring">let py = gil.python();
+</span><span class="boring">let cls = py.get_type::&lt;MyClass&gt;();
+</span><span class="boring">pyo3::py_run!(py, cls, &quot;assert cls.__name__ == 'MyClass'&quot;)
+</span><span class="boring">}
+</span></code></pre></pre>
 <h2><a class="header" href="#class-customizations" id="class-customizations">Class customizations</a></h2>
 <p>Python's object model defines several protocols for different object behavior, like sequence,
 mapping or number protocols. PyO3 defines separate traits for each of them. To provide specific
@@ -1507,96 +1597,6 @@ documentation</a>.</p>
 In Python a generator can also return a value. To express this in Rust, PyO3 provides the
 <a href="https://docs.rs/pyo3/latest/pyo3/class/iter/enum.IterNextOutput.html"><code>IterNextOutput</code></a> enum to
 both <code>Yield</code> values and <code>Return</code> a final value - see its docs for further details and an example.</p>
-<h2><a class="header" href="#how-methods-are-implemented" id="how-methods-are-implemented">How methods are implemented</a></h2>
-<p>Users should be able to define a <code>#[pyclass]</code> with or without <code>#[pymethods]</code>, while PyO3 needs a
-trait with a function that returns all methods. Since it's impossible to make the code generation in
-pyclass dependent on whether there is an impl block, we'd need to implement the trait on
-<code>#[pyclass]</code> and override the implementation in <code>#[pymethods]</code>.
-To enable this, we use a static registry type provided by <a href="https://github.com/dtolnay/inventory">inventory</a>,
-which allows us to collect <code>impl</code>s from arbitrary source code by exploiting some binary trick.
-See <a href="https://github.com/dtolnay/inventory#how-it-works">inventory: how it works</a> and <code>pyo3_derive_backend::py_class</code> for more details.
-Also for <code>#[pyproto]</code>, we use a similar, but more task-specific registry and
-initialize it using the <a href="https://github.com/mmastrac/rust-ctor">ctor</a> crate.</p>
-<p>Specifically, the following implementation is generated:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use pyo3::prelude::*;
-
-/// Class for demonstration
-struct MyClass {
-    num: i32,
-    debug: bool,
-}
-
-impl pyo3::pyclass::PyClassAlloc for MyClass {}
-
-unsafe impl pyo3::PyTypeInfo for MyClass {
-    type Type = MyClass;
-    type BaseType = PyAny;
-    type BaseLayout = pyo3::pycell::PyCellBase&lt;PyAny&gt;;
-    type Layout = PyCell&lt;Self&gt;;
-    type Initializer = PyClassInitializer&lt;Self&gt;;
-    type AsRefTarget = PyCell&lt;Self&gt;;
-
-    const NAME: &amp;'static str = &quot;MyClass&quot;;
-    const MODULE: Option&lt;&amp;'static str&gt; = None;
-    const DESCRIPTION: &amp;'static str = &quot;Class for demonstration&quot;;
-    const FLAGS: usize = 0;
-
-    #[inline]
-    fn type_object_raw(py: pyo3::Python) -&gt; *mut pyo3::ffi::PyTypeObject {
-        use pyo3::type_object::LazyStaticType;
-        static TYPE_OBJECT: LazyStaticType = LazyStaticType::new();
-        TYPE_OBJECT.get_or_init::&lt;Self&gt;(py)
-    }
-}
-
-impl pyo3::pyclass::PyClass for MyClass {
-    type Dict = pyo3::pyclass_slots::PyClassDummySlot;
-    type WeakRef = pyo3::pyclass_slots::PyClassDummySlot;
-    type BaseNativeType = PyAny;
-}
-
-impl pyo3::IntoPy&lt;PyObject&gt; for MyClass {
-    fn into_py(self, py: pyo3::Python) -&gt; pyo3::PyObject {
-        pyo3::IntoPy::into_py(pyo3::Py::new(py, self).unwrap(), py)
-    }
-}
-
-pub struct Pyo3MethodsInventoryForMyClass {
-    methods: &amp;'static [pyo3::class::PyMethodDefType],
-}
-impl pyo3::class::methods::PyMethodsInventory for Pyo3MethodsInventoryForMyClass {
-    fn new(methods: &amp;'static [pyo3::class::PyMethodDefType]) -&gt; Self {
-        Self { methods }
-    }
-    fn get(&amp;self) -&gt; &amp;'static [pyo3::class::PyMethodDefType] {
-        self.methods
-    }
-}
-impl pyo3::class::methods::HasMethodsInventory for MyClass {
-    type Methods = Pyo3MethodsInventoryForMyClass;
-}
-pyo3::inventory::collect!(Pyo3MethodsInventoryForMyClass);
-
-impl pyo3::class::proto_methods::HasProtoRegistry for MyClass {
-    fn registry() -&gt; &amp;'static pyo3::class::proto_methods::PyProtoRegistry {
-        static REGISTRY: pyo3::class::proto_methods::PyProtoRegistry
-            = pyo3::class::proto_methods::PyProtoRegistry::new();
-        &amp;REGISTRY
-    }
-}
-
-impl pyo3::pyclass::PyClassSend for MyClass {
-    type ThreadChecker = pyo3::pyclass::ThreadCheckerStub&lt;MyClass&gt;;
-}
-<span class="boring">let gil = Python::acquire_gil();
-</span><span class="boring">let py = gil.python();
-</span><span class="boring">let cls = py.get_type::&lt;MyClass&gt;();
-</span><span class="boring">pyo3::py_run!(py, cls, &quot;assert cls.__name__ == 'MyClass'&quot;)
-</span><span class="boring">}
-</span></code></pre></pre>
 <h1><a class="header" href="#type-conversions" id="type-conversions">Type Conversions</a></h1>
 <p>In this portion of the guide we'll talk about the mapping of Python types to Rust types offered by PyO3, as well as the traits available to perform conversions between them.</p>
 <h2><a class="header" href="#mapping-of-rust-types-to-python-types" id="mapping-of-rust-types-to-python-types">Mapping of Rust types to Python types</a></h2>
@@ -1630,7 +1630,7 @@ impl pyo3::pyclass::PyClassSend for MyClass {
 <tr><td><code>typing.Optional[T]</code></td><td align="center"><code>Option&lt;T&gt;</code></td><td align="center">-</td></tr>
 <tr><td><code>typing.Sequence[T]</code></td><td align="center"><code>Vec&lt;T&gt;</code></td><td align="center"><code>&amp;PySequence</code></td></tr>
 <tr><td><code>typing.Iterator[Any]</code></td><td align="center">-</td><td align="center"><code>&amp;PyIterator</code></td></tr>
-<tr><td><code>typing.Union[...]</code></td><td align="center">See <a href="conversions.html#deriving-a-hrefhttpsdocsrspyo3latestpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums"><code>#[derive(FromPyObject)]</code></a></td><td align="center">-</td></tr>
+<tr><td><code>typing.Union[...]</code></td><td align="center">See <a href="conversions/traits.html#deriving-a-hrefhttpsdocsrspyo3latestpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums"><code>#[derive(FromPyObject)]</code></a></td><td align="center">-</td></tr>
 </tbody></table>
 <p>There are also a few special types related to the GIL and Rust-defined <code>#[pyclass]</code>es which may come in useful:</p>
 <table><thead><tr><th>What</th><th>Description</th></tr></thead><tbody>
@@ -1641,7 +1641,7 @@ impl pyo3::pyclass::PyClassSend for MyClass {
 <tr><td><code>PyRef&lt;T&gt;</code></td><td>A <code>#[pyclass]</code> borrowed immutably.</td></tr>
 <tr><td><code>PyRefMut&lt;T&gt;</code></td><td>A <code>#[pyclass]</code> borrowed mutably.</td></tr>
 </tbody></table>
-<p>For more detail on accepting <code>#[pyclass]</code> values as function arguments, see <a href="class.html">the section of this guide on Python Classes</a>.</p>
+<p>For more detail on accepting <code>#[pyclass]</code> values as function arguments, see <a href="conversions/class.html">the section of this guide on Python Classes</a>.</p>
 <h4><a class="header" href="#using-rust-library-types-vs-python-native-types" id="using-rust-library-types-vs-python-native-types">Using Rust library types vs Python-native types</a></h4>
 <p>Using Rust library types as function arguments will incur a conversion cost compared to using the Python-native types. Using the Python-native types is almost zero-cost (they just require a type check similar to the Python builtin function <code>isinstance()</code>).</p>
 <p>However, once that conversion cost has been paid, the Rust standard library types offer a number of benefits:</p>
@@ -1674,7 +1674,13 @@ impl pyo3::pyclass::PyClassSend for MyClass {
 <tr><td><code>PyRef&lt;T: PyClass&gt;</code></td><td align="center"><code>T</code></td></tr>
 <tr><td><code>PyRefMut&lt;T: PyClass&gt;</code></td><td align="center"><code>T</code></td></tr>
 </tbody></table>
-<h2><a class="header" href="#traits" id="traits">Traits</a></h2>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>Requires the <code>num-complex</code> optional feature.</p>
+</div>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p>Requires the <code>hashbrown</code> optional feature.</p>
+</div>
+<h2><a class="header" href="#conversion-traits" id="conversion-traits">Conversion traits</a></h2>
 <p>PyO3 provides some handy traits to convert between Python types and Rust types.</p>
 <h3><a class="header" href="#extract-and-the-frompyobject-trait" id="extract-and-the-frompyobject-trait"><code>.extract()</code> and the <code>FromPyObject</code> trait</a></h3>
 <p>The easiest way to convert a Python object to a Rust value is using
@@ -1686,7 +1692,7 @@ fails, so usually you will use something like</p>
 variety of Rust types, which you can check out in the implementor list of
 <a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a>.</p>
 <p><a href="https://docs.rs/pyo3/latest/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> is also implemented for your own Rust types wrapped as Python
-objects (see <a href="class.html">the chapter about classes</a>).  There, in order to both be
+objects (see <a href="conversions/class.html">the chapter about classes</a>).  There, in order to both be
 able to operate on mutable references <em>and</em> satisfy Rust's rules of non-aliasing
 mutable references, you have to extract the PyO3 reference wrappers <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
 and <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of
@@ -1948,10 +1954,6 @@ fn main() {
     obj.call(py, (), Some(kwargs.into_py_dict(py)));
 }
 </code></pre></pre>
-<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
-<p>Requires the <code>num-complex</code> optional feature.
-<sup class="footnote-reference"><a href="#2">2</a></sup>: Requires the <code>hashbrown</code> optional feature.</p>
-</div>
 <h1><a class="header" href="#python-exceptions" id="python-exceptions">Python Exceptions</a></h1>
 <h2><a class="header" href="#defining-a-new-exception" id="defining-a-new-exception">Defining a new exception</a></h2>
 <p>You can use the <a href="https://docs.rs/pyo3/latest/pyo3/macro.create_exception.html"><code>create_exception!</code></a> macro to define a new exception type:</p>
@@ -2955,7 +2957,7 @@ impl MyClass {
 <span class="boring">}
 </span></code></pre></pre>
 <p>Basically you can return <code>Self</code> or <code>Result&lt;Self&gt;</code> directly.
-For more, see <a href="https://pyo3.rs/master/class.html#constructor">the constructor section</a> of this guide.</p>
+For more, see <a href="class.html#constructor">the constructor section</a> of this guide.</p>
 <h3><a class="header" href="#pycell" id="pycell">PyCell</a></h3>
 <p>PyO3 0.9 introduces <a href="https://docs.rs/pyo3/latest/pyo3/pycell/struct.PyCell.html"><code>PyCell</code></a>, which is a <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html"><code>RefCell</code></a>-like object wrapper
 for ensuring Rust's rules regarding aliasing of references are upheld.
@@ -3111,7 +3113,7 @@ impl PySequenceProtocol for ByteSequence {
 <span class="boring">}
 </span></code></pre></pre>
 <h1><a class="header" href="#using-in-python-a-rust-function-with-trait-bounds" id="using-in-python-a-rust-function-with-trait-bounds">Using in Python a Rust function with trait bounds</a></h1>
-<p>PyO3 allows for easy conversion from Rust to Python for certain functions and classes (see the <a href="https://pyo3.rs/master/conversions.html">conversion table</a>).
+<p>PyO3 allows for easy conversion from Rust to Python for certain functions and classes (see the <a href="conversions/tables.html">conversion table</a>.
 However, it is not always straightforward to convert Rust code that requires a given trait implementation as an argument.</p>
 <p>This tutorial explains how to convert a Rust function that takes a trait as argument for use in Python with classes implementing the same methods as the trait.</p>
 <p>Why is this useful?</p>
