@@ -430,7 +430,7 @@
 <span class="doccomment">//! #[pymodule]</span>
 <span class="doccomment">//! /// A Python module implemented in Rust.</span>
 <span class="doccomment">//! fn string_sum(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {</span>
-<span class="doccomment">//!     m.add_wrapped(wrap_pyfunction!(sum_as_string))?;</span>
+<span class="doccomment">//!     m.add_function(wrap_pyfunction!(sum_as_string))?;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!     Ok(())</span>
 <span class="doccomment">//! }</span>

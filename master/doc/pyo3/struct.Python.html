@@ -82,7 +82,7 @@ an irrecoverable panic.</p>
 <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
 <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
 <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="ident">PyModule</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="string">&quot;pcount&quot;</span>).<span class="ident">unwrap</span>();
-<span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">parallel_count</span>)).<span class="ident">unwrap</span>();
+<span class="ident">m</span>.<span class="ident">add_function</span>(<span class="macro">wrap_pyfunction</span><span class="macro">!</span>(<span class="ident">parallel_count</span>)).<span class="ident">unwrap</span>();
 <span class="kw">let</span> <span class="ident">locals</span> <span class="op">=</span> [(<span class="string">&quot;pcount&quot;</span>, <span class="ident">m</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>);
 <span class="ident">py</span>.<span class="ident">run</span>(<span class="string">r#&quot;
    s = [&quot;Flow&quot;, &quot;my&quot;, &quot;tears&quot;, &quot;the&quot;, &quot;Policeman&quot;, &quot;Said&quot;]

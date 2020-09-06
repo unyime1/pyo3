@@ -185,19 +185,26 @@ fn sum_as_string(a: i64, b: i64) -&gt; String {
 
 <span class="boring">fn main() {}
 </span></code></pre></pre>
-<p>The <code>#[pymodule]</code> procedural macro attribute takes care of exporting the initialization function of your module to Python. It can take as an argument the name of your module, which must be the name of the <code>.so</code> or <code>.pyd</code> file; the default is the Rust function's name.</p>
-<p>If the name of the module (the default being the function name) does not match the name of the <code>.so</code> or <code>.pyd</code> file, you will get an import error in Python with the following message:
+<p>The <code>#[pymodule]</code> procedural macro attribute takes care of exporting the initialization function of your 
+module to Python. It can take as an argument the name of your module, which must be the name of the <code>.so</code>
+or <code>.pyd</code> file; the default is the Rust function's name.</p>
+<p>If the name of the module (the default being the function name) does not match the name of the <code>.so</code> or
+<code>.pyd</code> file, you will get an import error in Python with the following message:
 <code>ImportError: dynamic module does not define module export function (PyInit_name_of_your_module)</code></p>
-<p>To import the module, either copy the shared library as described in <a href="https://github.com/PyO3/pyo3">the README</a> or use a tool, e.g. <code>maturin develop</code> with <a href="https://github.com/PyO3/maturin">maturin</a> or <code>python setup.py develop</code> with <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>.</p>
+<p>To import the module, either copy the shared library as described in <a href="https://github.com/PyO3/pyo3">the README</a>
+or use a tool, e.g. <code>maturin develop</code> with <a href="https://github.com/PyO3/maturin">maturin</a> or 
+<code>python setup.py develop</code> with <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>.</p>
 <h2><a class="header" href="#documentation" id="documentation">Documentation</a></h2>
-<p>The <a href="https://doc.rust-lang.org/stable/book/first-edition/comments.html">Rust doc comments</a> of the module initialization function will be applied automatically as the Python docstring of your module.</p>
+<p>The <a href="https://doc.rust-lang.org/stable/book/first-edition/comments.html">Rust doc comments</a> of the module
+initialization function will be applied automatically as the Python docstring of your module.</p>
 <pre><code class="language-python">import rust2py
 
 print(rust2py.__doc__)
 </code></pre>
 <p>Which means that the above Python code will print <code>This module is implemented in Rust.</code>.</p>
 <h2><a class="header" href="#modules-as-objects" id="modules-as-objects">Modules as objects</a></h2>
-<p>In Python, modules are first class objects. This means that you can store them as values or add them to dicts or other modules:</p>
+<p>In Python, modules are first class objects. This means that you can store them as values or add them to
+dicts or other modules:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -210,15 +217,16 @@ fn subfunction() -&gt; String {
     &quot;Subfunction&quot;.to_string()
 }
 
-#[pymodule]
-fn submodule(_py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    module.add_wrapped(wrap_pyfunction!(subfunction))?;
+fn init_submodule(module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    module.add_function(wrap_pyfunction!(subfunction))?;
     Ok(())
 }
 
 #[pymodule]
-fn supermodule(_py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    module.add_wrapped(wrap_pymodule!(submodule))?;
+fn supermodule(py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    let submod = PyModule::new(py, &quot;submodule&quot;)?;
+    init_submodule(submod)?;
+    module.add_submodule(submod)?;
     Ok(())
 }
 
@@ -231,6 +239,7 @@ fn supermodule(_py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 </span><span class="boring">}
 </span></code></pre></pre>
 <p>This way, you can create a module hierarchy within a single extension module.</p>
+<p>It is not necessary to add <code>#[pymodule]</code> on nested modules, this is only required on the top-level module.</p>
 
                     </main>
 

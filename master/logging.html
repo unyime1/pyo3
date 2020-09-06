@@ -188,7 +188,7 @@ fn my_module(_py: Python&lt;'_&gt;, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
     // A good place to install the Rust -&gt; Python logger.
     pyo3_log::init();
 
-    m.add_wrapped(wrap_pyfunction!(log_something))?;
+    m.add_function(wrap_pyfunction!(log_something))?;
     Ok(())
 }
 <span class="boring">}
