@@ -280,12 +280,6 @@
 <span id="280">280</span>
 <span id="281">281</span>
 <span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -298,8 +292,8 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">instance</span>::<span class="ident">PyNativeType</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass</span>::<span class="ident">PyClass</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">type_object</span>::<span class="ident">PyTypeObject</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::<span class="ident">PyTuple</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">PyAny</span>, <span class="ident">PyDict</span>, <span class="ident">PyList</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">PyCFunction</span>, <span class="ident">PyTuple</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">AsPyPointer</span>, <span class="ident">IntoPy</span>, <span class="ident">Py</span>, <span class="ident">PyObject</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::{<span class="ident">CStr</span>, <span class="ident">CString</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_char</span>;
@@ -547,7 +541,7 @@
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// #[pymodule]</span>
     <span class="doccomment">/// fn double_mod(_py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {</span>
-    <span class="doccomment">///     module.add_function(pyo3::wrap_pyfunction!(double))</span>
+    <span class="doccomment">///     module.add_function(pyo3::wrap_pyfunction!(double, module)?)</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -561,18 +555,12 @@
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// #[pymodule]</span>
     <span class="doccomment">/// fn double_mod(_py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {</span>
-    <span class="doccomment">///     module.add(&quot;also_double&quot;, pyo3::wrap_pyfunction!(double)(module)?)</span>
+    <span class="doccomment">///     module.add(&quot;also_double&quot;, pyo3::wrap_pyfunction!(double, module)?)</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_function</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-        <span class="ident">wrapper</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">py</span>();
-        <span class="kw">let</span> <span class="ident">function</span> <span class="op">=</span> <span class="ident">wrapper</span>(<span class="self">self</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">function</span>.<span class="ident">getattr</span>(<span class="ident">py</span>, <span class="string">&quot;__name__&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">extract</span>(<span class="ident">py</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">add</span>(<span class="ident">name</span>, <span class="ident">function</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_function</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">fun</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyCFunction</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">fun</span>.<span class="ident">getattr</span>(<span class="string">&quot;__name__&quot;</span>)<span class="question-mark">?</span>.<span class="ident">extract</span>()<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="ident">add</span>(<span class="ident">name</span>, <span class="ident">fun</span>)
     }
 }
 </pre></div>

@@ -219,7 +219,7 @@ fn sum_as_string(a: usize, b: usize) -&gt; PyResult&lt;String&gt; {
 /// A Python module implemented in Rust.
 #[pymodule]
 fn string_sum(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(sum_as_string))?;
+    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
 
     Ok(())
 }
@@ -367,7 +367,7 @@ fn subfunction() -&gt; String {
 }
 
 fn init_submodule(module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    module.add_function(wrap_pyfunction!(subfunction))?;
+    module.add_function(wrap_pyfunction!(subfunction, module)?)?;
     Ok(())
 }
 
@@ -420,7 +420,7 @@ fn double(x: usize) -&gt; usize {
 
 #[pymodule]
 fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(double)).unwrap();
+    m.add_function(wrap_pyfunction!(double, m)?).unwrap();
 
     Ok(())
 }
@@ -445,7 +445,7 @@ fn num_kwds(kwds: Option&lt;&amp;PyDict&gt;) -&gt; usize {
 
 #[pymodule]
 fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(num_kwds)).unwrap();
+    m.add_function(wrap_pyfunction!(num_kwds, m)?).unwrap();
     Ok(())
 }
 
@@ -566,7 +566,7 @@ fn pyfunction_with_module(module: &amp;PyModule) -&gt; PyResult&lt;&amp;str&gt; 
 
 #[pymodule]
 fn module_with_fn(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(pyfunction_with_module))
+    m.add_function(wrap_pyfunction!(pyfunction_with_module, m)?)
 }
 
 <span class="boring">fn main() {}
@@ -3681,7 +3681,7 @@ pub struct UserModel {
 #[pymodule]
 fn trait_exposure(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
     m.add_class::&lt;UserModel&gt;()?;
-    m.add_function(wrap_pyfunction!(solve_wrapper))?;
+    m.add_function(wrap_pyfunction!(solve_wrapper, m)?)?;
     Ok(())
 }
 
@@ -3822,6 +3822,8 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add macro attribute to <code>#[pyfn]</code> and <code>#[pyfunction]</code> to pass the module of a Python function to the function
 body. <a href="https://github.com/PyO3/pyo3/pull/1143">#1143</a></li>
 <li>Add <code>add_function()</code> and <code>add_submodule()</code> functions to <code>PyModule</code> <a href="https://github.com/PyO3/pyo3/pull/1143">#1143</a></li>
+<li>Add native <code>PyCFunction</code> and <code>PyFunction</code> types, change <code>add_function</code> to take a wrapper returning
+a <code>&amp;PyCFunction</code>instead of <code>PyObject</code>. <a href="https://github.com/PyO3/pyo3/pull/1163">#1163</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>

@@ -186,7 +186,7 @@ fn double(x: usize) -&gt; usize {
 
 #[pymodule]
 fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(double)).unwrap();
+    m.add_function(wrap_pyfunction!(double, m)?).unwrap();
 
     Ok(())
 }
@@ -211,7 +211,7 @@ fn num_kwds(kwds: Option&lt;&amp;PyDict&gt;) -&gt; usize {
 
 #[pymodule]
 fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(num_kwds)).unwrap();
+    m.add_function(wrap_pyfunction!(num_kwds, m)?).unwrap();
     Ok(())
 }
 
@@ -332,7 +332,7 @@ fn pyfunction_with_module(module: &amp;PyModule) -&gt; PyResult&lt;&amp;str&gt; 
 
 #[pymodule]
 fn module_with_fn(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(pyfunction_with_module))
+    m.add_function(wrap_pyfunction!(pyfunction_with_module, m)?)
 }
 
 <span class="boring">fn main() {}

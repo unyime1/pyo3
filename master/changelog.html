@@ -174,6 +174,8 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add macro attribute to <code>#[pyfn]</code> and <code>#[pyfunction]</code> to pass the module of a Python function to the function
 body. <a href="https://github.com/PyO3/pyo3/pull/1143">#1143</a></li>
 <li>Add <code>add_function()</code> and <code>add_submodule()</code> functions to <code>PyModule</code> <a href="https://github.com/PyO3/pyo3/pull/1143">#1143</a></li>
+<li>Add native <code>PyCFunction</code> and <code>PyFunction</code> types, change <code>add_function</code> to take a wrapper returning
+a <code>&amp;PyCFunction</code>instead of <code>PyObject</code>. <a href="https://github.com/PyO3/pyo3/pull/1163">#1163</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
