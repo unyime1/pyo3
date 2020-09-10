@@ -724,7 +724,7 @@
     <span class="doccomment">///             .collect();</span>
     <span class="doccomment">///         let mut sum = 0;</span>
     <span class="doccomment">///         for t in threads {</span>
-    <span class="doccomment">///             sum += t.join().map_err(|_| PyErr::new::&lt;PyRuntimeError, _&gt;(()))?;</span>
+    <span class="doccomment">///             sum += t.join().map_err(|_| PyRuntimeError::new_err(()))?;</span>
     <span class="doccomment">///         }</span>
     <span class="doccomment">///         Ok(sum)</span>
     <span class="doccomment">///     })</span>

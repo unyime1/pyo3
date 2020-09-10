@@ -295,7 +295,7 @@
 <span class="doccomment">//! [typeobj docs](https://docs.python.org/3/c-api/typeobj.html)</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">callback</span>::{<span class="ident">HashCallbackOutput</span>, <span class="ident">IntoPyCallbackOutput</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">exceptions</span>, <span class="ident">ffi</span>, <span class="ident">FromPyObject</span>, <span class="ident">PyAny</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyErr</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">exceptions</span>, <span class="ident">ffi</span>, <span class="ident">FromPyObject</span>, <span class="ident">PyAny</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span>;
 
 <span class="doccomment">/// Operators for the __richcmp__ method</span>
@@ -546,7 +546,7 @@
             <span class="ident">ffi</span>::<span class="ident">Py_NE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Ne</span>),
             <span class="ident">ffi</span>::<span class="ident">Py_GT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Gt</span>),
             <span class="ident">ffi</span>::<span class="ident">Py_GE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Ge</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">new</span>::<span class="op">&lt;</span><span class="ident">exceptions</span>::<span class="ident">PyValueError</span>, <span class="kw">_</span><span class="op">&gt;</span>(
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">exceptions</span>::<span class="ident">PyValueError</span>::<span class="ident">new_err</span>(
                 <span class="string">&quot;tp_richcompare called with invalid comparison operator&quot;</span>,
             )),
         }

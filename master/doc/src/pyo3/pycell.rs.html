@@ -1491,7 +1491,7 @@
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PyBorrowError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PyErr</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">PyBorrowError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">PyRuntimeError</span>::<span class="ident">py_err</span>(<span class="ident">other</span>.<span class="ident">to_string</span>())
+        <span class="ident">PyRuntimeError</span>::<span class="ident">new_err</span>(<span class="ident">other</span>.<span class="ident">to_string</span>())
     }
 }
 
@@ -1516,7 +1516,7 @@
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PyBorrowMutError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PyErr</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">PyBorrowMutError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">PyRuntimeError</span>::<span class="ident">py_err</span>(<span class="ident">other</span>.<span class="ident">to_string</span>())
+        <span class="ident">PyRuntimeError</span>::<span class="ident">new_err</span>(<span class="ident">other</span>.<span class="ident">to_string</span>())
     }
 }
 </pre></div>

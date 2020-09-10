@@ -602,7 +602,7 @@
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
         <span class="kw">let</span> <span class="ident">py_bytearray_result</span> <span class="op">=</span> <span class="ident">PyByteArray</span>::<span class="ident">new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">_b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">PyValueError</span>::<span class="ident">py_err</span>(<span class="string">&quot;Hello Crustaceans!&quot;</span>))
+            <span class="prelude-val">Err</span>(<span class="ident">PyValueError</span>::<span class="ident">new_err</span>(<span class="string">&quot;Hello Crustaceans!&quot;</span>))
         });
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">py_bytearray_result</span>.<span class="ident">is_err</span>());
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">py_bytearray_result</span>

@@ -279,7 +279,7 @@
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">IterANextOutput</span>::<span class="ident">Yield</span>(<span class="ident">o</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">o</span>.<span class="ident">into_ptr</span>()),
             <span class="ident">IterANextOutput</span>::<span class="ident">Return</span>(<span class="ident">opt</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">PyStopAsyncIteration</span>::<span class="ident">py_err</span>((<span class="ident">opt</span>,)))
+                <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">PyStopAsyncIteration</span>::<span class="ident">new_err</span>((<span class="ident">opt</span>,)))
             }
         }
     }

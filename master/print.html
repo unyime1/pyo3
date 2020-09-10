@@ -2053,7 +2053,7 @@ use pyo3::exceptions::PyTypeError;
 fn main() {
     let gil = Python::acquire_gil();
     let py = gil.python();
-    PyErr::new::&lt;PyTypeError, _&gt;(&quot;Error&quot;).restore(py);
+    PyTypeError::new_err(&quot;Error&quot;).restore(py);
     assert!(PyErr::occurred(py));
     drop(PyErr::fetch(py));
 }
@@ -2063,7 +2063,7 @@ PyO3 will handle restoring the exception on the Python interpreter side.</p>
 <p>If you already have a Python exception instance, you can simply call <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html#method.from_instance"><code>PyErr::from_instance</code></a>.</p>
 <pre><code class="language-rust ignore">PyErr::from_instance(py, err).restore(py);
 </code></pre>
-<p>If a Rust type exists for the exception, then it is possible to use the <code>py_err</code> method.
+<p>If a Rust type exists for the exception, then it is possible to use the <code>new_err</code> method.
 For example, each standard exception defined in the <code>pyo3::exceptions</code> module
 has a corresponding Rust type, exceptions defined by <a href="https://docs.rs/pyo3/latest/pyo3/macro.create_exception.html"><code>create_exception!</code></a> and <a href="https://docs.rs/pyo3/latest/pyo3/macro.import_exception.html"><code>import_exception!</code></a> macro
 have Rust types as well.</p>
@@ -2075,7 +2075,7 @@ have Rust types as well.</p>
 </span><span class="boring">fn check_for_error() -&gt; bool {false}
 </span>fn my_func(arg: PyObject) -&gt; PyResult&lt;()&gt; {
     if check_for_error() {
-        Err(PyValueError::py_err(&quot;argument is wrong&quot;))
+        Err(PyValueError::new_err(&quot;argument is wrong&quot;))
     } else {
         Ok(())
     }
@@ -2099,35 +2099,31 @@ fn main() {
 </code></pre></pre>
 <p><a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.is_instance"><code>Python::is_instance</code></a> calls the underlying <a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyType.html#method.is_instance"><code>PyType::is_instance</code></a>
 method to do the actual work.</p>
-<p>To check the type of an exception, you can simply do:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">use pyo3::exceptions::PyTypeError;
-</span><span class="boring">use pyo3::prelude::*;
+<p>To check the type of an exception, you can similarly do:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::exceptions::PyTypeError;
+</span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">let gil = Python::acquire_gil();
 </span><span class="boring">let py = gil.python();
-</span><span class="boring">let err = PyTypeError::py_err(());
+</span><span class="boring">let err = PyTypeError::new_err(());
 </span>err.is_instance::&lt;PyTypeError&gt;(py);
 <span class="boring">}
 </span></code></pre></pre>
 <h2><a class="header" href="#handling-rust-errors" id="handling-rust-errors">Handling Rust errors</a></h2>
-<p>The vast majority of operations in this library will return <a href="https://docs.rs/pyo3/latest/pyo3/prelude/type.PyResult.html"><code>PyResult&lt;T&gt;</code></a>,
+<p>The vast majority of operations in this library will return
+<a href="https://docs.rs/pyo3/latest/pyo3/prelude/type.PyResult.html"><code>PyResult&lt;T&gt;</code></a>,
 which is an alias for the type <code>Result&lt;T, PyErr&gt;</code>.</p>
-<p>A <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html"><code>PyErr</code></a> represents a Python exception.
-Errors within the PyO3 library are also exposed as Python exceptions.</p>
-<p>The PyO3 library handles Python exceptions in two stages. During the first stage, a <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html"><code>PyErr</code></a> instance is
-created. At this stage, holding Python's GIL is not required. During the second stage, an actual Python
-exception instance is created and set active in the Python interpreter.</p>
-<p>In simple cases, for custom errors adding an implementation of <code>std::convert::From&lt;T&gt;</code> trait
-for this custom error is enough. <code>PyErr::new</code> accepts an argument in the form
-of <code>ToPyObject + 'static</code>. If the <code>'static</code> constraint can not be satisfied or
-more complex arguments are required, the
-<a href="https://docs.rs/pyo3/latest/pyo3/trait.PyErrArguments.html"><code>PyErrArguments</code></a>
-trait can be implemented. In that case, actual exception argument creation is delayed
-until a <code>Python</code> object is available.</p>
+<p>A <a href="https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html"><code>PyErr</code></a> represents a Python exception. Errors within the PyO3 library are also exposed as
+Python exceptions.</p>
+<p>If your code has a custom error type e.g. <code>MyError</code>, adding an implementation of
+<code>std::convert::From&lt;MyError&gt; for PyErr</code> is usually enough. PyO3 will then automatically convert
+your error to a Python exception when needed.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span><span class="boring">use pyo3::{PyErr, PyResult};
+</span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">use pyo3::exceptions::PyOSError;
 </span><span class="boring">use std::error::Error;
 </span><span class="boring">use std::fmt;
@@ -2148,11 +2144,12 @@ until a <code>Python</code> object is available.</p>
 </span><span class="boring">}
 </span>impl std::convert::From&lt;CustomIOError&gt; for PyErr {
     fn from(err: CustomIOError) -&gt; PyErr {
-        PyOSError::py_err(err.to_string())
+        PyOSError::new_err(err.to_string())
     }
 }
 
-fn connect(s: String) -&gt; PyResult&lt;bool&gt; {
+#[pyfunction]
+fn connect(s: String) -&gt; Result&lt;bool, CustomIOError&gt; {
     bind(&quot;127.0.0.1:80&quot;)?;
     Ok(true)
 }
@@ -2172,6 +2169,10 @@ fn parse_int(s: String) -&gt; PyResult&lt;usize&gt; {
 <span class="boring">}
 </span></code></pre></pre>
 <p>The code snippet above will raise a <code>ValueError</code> in Python if <code>String::parse()</code> returns an error.</p>
+<p>If lazy construction of the Python exception instance is desired, the
+<a href="https://docs.rs/pyo3/latest/pyo3/trait.PyErrArguments.html"><code>PyErrArguments</code></a>
+trait can be implemented. In that case, actual exception argument creation is delayed
+until the <code>PyErr</code> is needed.</p>
 <h2><a class="header" href="#using-exceptions-defined-in-python-code" id="using-exceptions-defined-in-python-code">Using exceptions defined in Python code</a></h2>
 <p>It is possible to use an exception defined in Python code as a native Rust type.
 The <code>import_exception!</code> macro allows importing a specific exception class and defines a Rust type
@@ -2189,7 +2190,7 @@ fn tell(file: &amp;PyAny) -&gt; PyResult&lt;u64&gt; {
     use pyo3::exceptions::*;
 
     match file.call_method0(&quot;tell&quot;) {
-        Err(_) =&gt; Err(io::UnsupportedOperation::py_err(&quot;not supported: tell&quot;)),
+        Err(_) =&gt; Err(io::UnsupportedOperation::new_err(&quot;not supported: tell&quot;)),
         Ok(x) =&gt; x.extract::&lt;u64&gt;(),
     }
 }
@@ -2763,12 +2764,66 @@ default = [&quot;extension-module&quot;]
 <p>This guide can help you upgrade code through breaking changes from one PyO3 version to the next.
 For a detailed list of all changes, see the <a href="changelog.html">CHANGELOG</a>.</p>
 <h2><a class="header" href="#from-011-to-012" id="from-011-to-012">from 0.11.* to 0.12</a></h2>
+<h3><a class="header" href="#pyerr-has-been-reworked" id="pyerr-has-been-reworked"><code>PyErr</code> has been reworked</a></h3>
+<p>In PyO3 <code>0.12</code> the <code>PyErr</code> type has been re-implemented to be significantly more compatible with
+the standard Rust error handling ecosystem. Specificially <code>PyErr</code> now implements
+<code>Error + Send + Sync</code>, which are the standard traits used for error types.</p>
+<p>While this has necessitated the removal of a number of APIs, the resulting <code>PyErr</code> type should now
+be much more easier to work with. The following sections list the changes in detail and how to
+migrate to the new APIs.</p>
+<h4><a class="header" href="#pyerrnew-and-pyerrfrom_type-now-require-send--sync-for-their-argument" id="pyerrnew-and-pyerrfrom_type-now-require-send--sync-for-their-argument"><code>PyErr::new</code> and <code>PyErr::from_type</code> now require <code>Send + Sync</code> for their argument</a></h4>
+<p>For most uses no change will be needed. If you are trying to construct <code>PyErr</code> from a value that is
+not <code>Send + Sync</code>, you will need to first create the Python object and then use
+<code>PyErr::from_instance</code>.</p>
+<p>Similarly, any types which implemented <code>PyErrArguments</code> will now need to be <code>Send + Sync</code>.</p>
+<h4><a class="header" href="#pyerrs-contents-are-now-private" id="pyerrs-contents-are-now-private"><code>PyErr</code>'s contents are now private</a></h4>
+<p>It is no longer possible to access the fields <code>.ptype</code>, <code>.pvalue</code> and <code>.ptraceback</code> of a <code>PyErr</code>.
+You should instead now use the new methods <code>PyErr::ptype()</code>, <code>PyErr::pvalue()</code> and <code>PyErr::ptraceback()</code>.</p>
+<h4><a class="header" href="#pyerrvalue-and-pyerrfrom_value-have-been-removed" id="pyerrvalue-and-pyerrfrom_value-have-been-removed"><code>PyErrValue</code> and <code>PyErr::from_value</code> have been removed</a></h4>
+<p>As these were part the internals of <code>PyErr</code> which have been reworked, these APIs no longer exist.</p>
+<p>If you used this API, it is recommended to use <code>PyException::new_err</code> (see <a href="migration.html#exception-types-have-been-reworked">the section on
+Exception types</a>).</p>
+<h4><a class="header" href="#intopyresultt-for-pyerr-has-been-removed" id="intopyresultt-for-pyerr-has-been-removed"><code>Into&lt;PyResult&lt;T&gt;&gt;</code> for <code>PyErr</code> has been removed</a></h4>
+<p>This implementation was redundant. Just construct the <code>Result::Err</code> variant directly.</p>
+<p>Before:</p>
+<pre><code class="language-rust ignore">let result: PyResult&lt;()&gt; = PyErr::new::&lt;TypeError, _&gt;(&quot;error message&quot;).into();
+</code></pre>
+<p>After (also using the new reworked exception types; see the following section):</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::{PyErr, PyResult, exceptions::PyTypeError};
+</span>let result: PyResult&lt;()&gt; = Err(PyTypeError::new_err(&quot;error message&quot;));
+<span class="boring">}
+</span></code></pre></pre>
+<h3><a class="header" href="#exception-types-have-been-reworked" id="exception-types-have-been-reworked">Exception types have been reworked</a></h3>
+<p>Previously exception types were zero-sized marker types purely used to construct <code>PyErr</code>. In PyO3
+0.12, these types have been replaced with full definitions and are usable in the same way as <code>PyAny</code>, <code>PyDict</code> etc. This
+makes it possible to interact with Python exception objects.</p>
+<p>The new types also have names starting with the &quot;Py&quot; prefix. For example, before:</p>
+<pre><code class="language-rust ignore">let err: PyErr = TypeError::py_err(&quot;error message&quot;);
+</code></pre>
+<p>After:</p>
+<pre><code># use pyo3::{PyErr, PyResult, Python, type_object::PyTypeObject};
+# use pyo3::exceptions::{PyBaseException, PyTypeError};
+# Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+let err: PyErr = PyTypeError::new_err(&quot;error message&quot;);
+
+// Uses Display for PyErr, new for PyO3 0.12
+assert_eq!(err.to_string(), &quot;TypeError: error message&quot;);
+
+// Now possible to interact with exception instances, new for PyO3 0.12
+let instance: &amp;PyBaseException = err.instance(py);
+assert_eq!(instance.getattr(&quot;__class__&quot;)?, PyTypeError::type_object(py).as_ref());
+# Ok(())
+# }).unwrap();
+</code></pre>
 <h3><a class="header" href="#frompy-has-been-removed" id="frompy-has-been-removed"><code>FromPy</code> has been removed</a></h3>
-<p>To simplify the PyO3 public conversion trait hierarchy, the <code>FromPy</code> has been removed. In PyO3
-<code>0.11</code> there were two ways to define the to-Python conversion for a type: <code>FromPy&lt;T&gt; for PyObject</code>,
-and <code>IntoPy&lt;PyObject&gt; for T</code>.</p>
-<p>Now, the canonical implementation is always <code>IntoPy</code>, so downstream crates may need to adjust
-accordingly.</p>
+<p>To simplify the PyO3 conversion traits, the <code>FromPy</code> trait has been removed. Previously there were
+two ways to define the to-Python conversion for a type:
+<code>FromPy&lt;T&gt; for PyObject</code> and <code>IntoPy&lt;PyObject&gt; for T</code>.</p>
+<p>Now there is only one way to define the conversion, <code>IntoPy</code>, so downstream crates may need to
+adjust accordingly.</p>
 <p>Before:</p>
 <pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
 </span>struct MyPyObjectWrapper(PyObject);
@@ -3804,7 +3859,8 @@ possible to satisfy, read the documentation about <a href="https://docs.rs/pyo3-
 should be possible. If interested, the <code>pyo3</code> community would be happy to
 provide guidance.</p>
 <h1><a class="header" href="#changelog" id="changelog">Changelog</a></h1>
-<p>All notable changes to this project will be documented in this file.</p>
+<p>All notable changes to this project will be documented in this file. For help with updating to new
+PyO3 versions, please see the <a href="https://pyo3.rs/master/migration.html">migration guide</a>.</p>
 <p>The format is based on <a href="http://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
 and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0111headunreleaseda" id="a-hrefhttpsgithubcompyo3pyo3comparev0111headunreleaseda"><a href="https://github.com/pyo3/pyo3/compare/v0.11.1...HEAD">Unreleased</a></a></h2>
@@ -3827,7 +3883,13 @@ a <code>&amp;PyCFunction</code>instead of <code>PyObject</code>. <a href="https:
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
-<li>Exception types have been renamed from e.g. <code>RuntimeError</code> to <code>PyRuntimeError</code>, and are now only accessible by <code>&amp;T</code> or <code>Py&lt;T&gt;</code> similar to other Python-native types. The old names continue to exist but are deprecated. <a href="https://github.com/PyO3/pyo3/pull/1024">#1024</a></li>
+<li>Exception types have been renamed from e.g. <code>RuntimeError</code> to <code>PyRuntimeError</code>, and are now accessible by <code>&amp;T</code> or <code>Py&lt;T&gt;</code> similar to other Python-native types. The old names continue to exist but are deprecated. <a href="https://github.com/PyO3/pyo3/pull/1024">#1024</a> <a href="https://github.com/PyO3/pyo3/pull/1115">#1115</a>
+<ul>
+<li>Rename <code>PyException::py_err()</code> to <code>PyException::new_err()</code>.</li>
+<li>Rename <code>PyUnicodeDecodeErr::new_err()</code> to <code>PyUnicodeDecodeErr::new()</code>.</li>
+<li>Remove <code>PyStopIteration::stop_iteration()</code>.</li>
+</ul>
+</li>
 <li>Correct FFI definitions <code>Py_SetProgramName</code> and <code>Py_SetPythonHome</code> to take <code>*const</code> argument instead of <code>*mut</code>. <a href="https://github.com/PyO3/pyo3/pull/1021">#1021</a></li>
 <li>Rename <code>PyString::to_string</code> to <code>to_str</code>, change return type <code>Cow&lt;str&gt;</code> to <code>&amp;str</code>. <a href="https://github.com/PyO3/pyo3/pull/1023">#1023</a></li>
 <li>Correct FFI definition <code>_PyLong_AsByteArray</code> <code>*mut c_uchar</code> argument instead of <code>*const c_uchar</code>. <a href="https://github.com/PyO3/pyo3/pull/1029">#1029</a></li>
@@ -3837,7 +3899,16 @@ a <code>&amp;PyCFunction</code>instead of <code>PyObject</code>. <a href="https:
 <li>Change <code>PyIterator::from_object</code> to return <code>PyResult&lt;PyIterator&gt;</code> instead of <code>Result&lt;PyIterator, PyDowncastError&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1051">#1051</a></li>
 <li><code>IntoPy</code> is no longer implied by <code>FromPy</code>. <a href="https://github.com/PyO3/pyo3/pull/1063">#1063</a></li>
 <li><code>PyObject</code> is now just a type alias for <code>Py&lt;PyAny&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1063">#1063</a></li>
-<li>Implement <code>Send + Sync</code> for <code>PyErr</code>. <code>PyErr::new</code>, <code>PyErr::from_type</code>, <code>PyException::py_err</code> and <code>PyException::into</code> have had these bounds added to their arguments. <a href="https://github.com/PyO3/pyo3/pull/1067">#1067</a></li>
+<li>Rework PyErr to be compatible with the <code>std::error::Error</code> trait: <a href="https://github.com/PyO3/pyo3/pull/1067">#1067</a> <a href="https://github.com/PyO3/pyo3/pull/1115">#1115</a>
+<ul>
+<li>Implement <code>Display</code>, <code>Error</code>, <code>Send</code> and <code>Sync</code> for <code>PyErr</code> and <code>PyErrArguments</code>.</li>
+<li>Add <code>PyErr::instance()</code> which returns <code>&amp;PyBaseException</code>.</li>
+<li><code>PyErr</code>'s fields are now an implementation detail. The equivalent values can be accessed with <code>PyErr::ptype()</code>, <code>PyErr::pvalue()</code> and <code>PyErr::ptraceback()</code>.</li>
+<li>Change <code>PyErr::print()</code> and <code>PyErr::print_and_set_sys_last_vars()</code> to take <code>&amp;self</code> instead of <code>self</code>.</li>
+<li>Remove <code>PyErrValue</code>, <code>PyErr::from_value</code>, <code>PyErr::into_normalized()</code>, and <code>PyErr::normalize()</code>.</li>
+<li>Remove <code>PyException::into()</code> and <code>Into&lt;PyResult&lt;T&gt;&gt;</code> for <code>PyErr</code> and <code>PyException</code>.</li>
+</ul>
+</li>
 <li>Change <code>#[pyproto]</code> to return NotImplemented for operators for which Python can try a reversed operation. #<a href="https://github.com/PyO3/pyo3/pull/1072">1072</a></li>
 <li><code>PyModule::add</code> now uses <code>IntoPy&lt;PyObject&gt;</code> instead of <code>ToPyObject</code>. #<a href="https://github.com/PyO3/pyo3/pull/1124">1124</a></li>
 <li>Add nested modules as <code>&amp;PyModule</code> instead of using the wrapper generated by <code>#[pymodule]</code>. <a href="https://github.com/PyO3/pyo3/pull/1143">#1143</a></li>

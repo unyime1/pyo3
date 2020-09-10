@@ -156,7 +156,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#changelog" id="changelog">Changelog</a></h1>
-<p>All notable changes to this project will be documented in this file.</p>
+<p>All notable changes to this project will be documented in this file. For help with updating to new
+PyO3 versions, please see the <a href="https://pyo3.rs/master/migration.html">migration guide</a>.</p>
 <p>The format is based on <a href="http://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
 and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0111headunreleaseda" id="a-hrefhttpsgithubcompyo3pyo3comparev0111headunreleaseda"><a href="https://github.com/pyo3/pyo3/compare/v0.11.1...HEAD">Unreleased</a></a></h2>
@@ -179,7 +180,13 @@ a <code>&amp;PyCFunction</code>instead of <code>PyObject</code>. <a href="https:
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
-<li>Exception types have been renamed from e.g. <code>RuntimeError</code> to <code>PyRuntimeError</code>, and are now only accessible by <code>&amp;T</code> or <code>Py&lt;T&gt;</code> similar to other Python-native types. The old names continue to exist but are deprecated. <a href="https://github.com/PyO3/pyo3/pull/1024">#1024</a></li>
+<li>Exception types have been renamed from e.g. <code>RuntimeError</code> to <code>PyRuntimeError</code>, and are now accessible by <code>&amp;T</code> or <code>Py&lt;T&gt;</code> similar to other Python-native types. The old names continue to exist but are deprecated. <a href="https://github.com/PyO3/pyo3/pull/1024">#1024</a> <a href="https://github.com/PyO3/pyo3/pull/1115">#1115</a>
+<ul>
+<li>Rename <code>PyException::py_err()</code> to <code>PyException::new_err()</code>.</li>
+<li>Rename <code>PyUnicodeDecodeErr::new_err()</code> to <code>PyUnicodeDecodeErr::new()</code>.</li>
+<li>Remove <code>PyStopIteration::stop_iteration()</code>.</li>
+</ul>
+</li>
 <li>Correct FFI definitions <code>Py_SetProgramName</code> and <code>Py_SetPythonHome</code> to take <code>*const</code> argument instead of <code>*mut</code>. <a href="https://github.com/PyO3/pyo3/pull/1021">#1021</a></li>
 <li>Rename <code>PyString::to_string</code> to <code>to_str</code>, change return type <code>Cow&lt;str&gt;</code> to <code>&amp;str</code>. <a href="https://github.com/PyO3/pyo3/pull/1023">#1023</a></li>
 <li>Correct FFI definition <code>_PyLong_AsByteArray</code> <code>*mut c_uchar</code> argument instead of <code>*const c_uchar</code>. <a href="https://github.com/PyO3/pyo3/pull/1029">#1029</a></li>
@@ -189,7 +196,16 @@ a <code>&amp;PyCFunction</code>instead of <code>PyObject</code>. <a href="https:
 <li>Change <code>PyIterator::from_object</code> to return <code>PyResult&lt;PyIterator&gt;</code> instead of <code>Result&lt;PyIterator, PyDowncastError&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1051">#1051</a></li>
 <li><code>IntoPy</code> is no longer implied by <code>FromPy</code>. <a href="https://github.com/PyO3/pyo3/pull/1063">#1063</a></li>
 <li><code>PyObject</code> is now just a type alias for <code>Py&lt;PyAny&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1063">#1063</a></li>
-<li>Implement <code>Send + Sync</code> for <code>PyErr</code>. <code>PyErr::new</code>, <code>PyErr::from_type</code>, <code>PyException::py_err</code> and <code>PyException::into</code> have had these bounds added to their arguments. <a href="https://github.com/PyO3/pyo3/pull/1067">#1067</a></li>
+<li>Rework PyErr to be compatible with the <code>std::error::Error</code> trait: <a href="https://github.com/PyO3/pyo3/pull/1067">#1067</a> <a href="https://github.com/PyO3/pyo3/pull/1115">#1115</a>
+<ul>
+<li>Implement <code>Display</code>, <code>Error</code>, <code>Send</code> and <code>Sync</code> for <code>PyErr</code> and <code>PyErrArguments</code>.</li>
+<li>Add <code>PyErr::instance()</code> which returns <code>&amp;PyBaseException</code>.</li>
+<li><code>PyErr</code>'s fields are now an implementation detail. The equivalent values can be accessed with <code>PyErr::ptype()</code>, <code>PyErr::pvalue()</code> and <code>PyErr::ptraceback()</code>.</li>
+<li>Change <code>PyErr::print()</code> and <code>PyErr::print_and_set_sys_last_vars()</code> to take <code>&amp;self</code> instead of <code>self</code>.</li>
+<li>Remove <code>PyErrValue</code>, <code>PyErr::from_value</code>, <code>PyErr::into_normalized()</code>, and <code>PyErr::normalize()</code>.</li>
+<li>Remove <code>PyException::into()</code> and <code>Into&lt;PyResult&lt;T&gt;&gt;</code> for <code>PyErr</code> and <code>PyException</code>.</li>
+</ul>
+</li>
 <li>Change <code>#[pyproto]</code> to return NotImplemented for operators for which Python can try a reversed operation. #<a href="https://github.com/PyO3/pyo3/pull/1072">1072</a></li>
 <li><code>PyModule::add</code> now uses <code>IntoPy&lt;PyObject&gt;</code> instead of <code>ToPyObject</code>. #<a href="https://github.com/PyO3/pyo3/pull/1124">1124</a></li>
 <li>Add nested modules as <code>&amp;PyModule</code> instead of using the wrapper generated by <code>#[pymodule]</code>. <a href="https://github.com/PyO3/pyo3/pull/1143">#1143</a></li>
