@@ -636,6 +636,7 @@
 <span id="636">636</span>
 <span id="637">637</span>
 <span id="638">638</span>
+<span id="639">639</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -645,6 +646,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CStr</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_char</span>;
 
 <span class="doccomment">/// The boilerplate to convert between a Rust type and a Python exception.</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
@@ -1084,7 +1086,7 @@
         <span class="kw">unsafe</span> {
             <span class="ident">py</span>.<span class="ident">from_owned_ptr_or_err</span>(<span class="ident">ffi</span>::<span class="ident">PyUnicodeDecodeError_Create</span>(
                 <span class="ident">encoding</span>.<span class="ident">as_ptr</span>(),
-                <span class="ident">input</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">i8</span>,
+                <span class="ident">input</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
                 <span class="ident">input</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">ffi</span>::<span class="ident">Py_ssize_t</span>,
                 <span class="ident">range</span>.<span class="ident">start</span> <span class="kw">as</span> <span class="ident">ffi</span>::<span class="ident">Py_ssize_t</span>,
                 <span class="ident">range</span>.<span class="ident">end</span> <span class="kw">as</span> <span class="ident">ffi</span>::<span class="ident">Py_ssize_t</span>,
