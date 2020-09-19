@@ -88,6 +88,8 @@
 <span id="88">88</span>
 <span id="89">89</span>
 <span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::{<span class="ident">CStr</span>, <span class="ident">CString</span>};
 
@@ -104,6 +106,8 @@
 
 <span class="kw">impl</span> <span class="ident">PyCFunction</span> {
     <span class="doccomment">/// Create a new built-in function with keywords.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See [raw_pycfunction] for documentation on how to get the `fun` argument.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_keywords</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="ident">fun</span>: <span class="ident">ffi</span>::<span class="ident">PyCFunctionWithKeywords</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
