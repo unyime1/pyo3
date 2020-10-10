@@ -199,10 +199,13 @@ makes it possible to interact with Python exception objects.</p>
 <pre><code class="language-rust ignore">let err: PyErr = TypeError::py_err(&quot;error message&quot;);
 </code></pre>
 <p>After:</p>
-<pre><code># use pyo3::{PyErr, PyResult, Python, type_object::PyTypeObject};
-# use pyo3::exceptions::{PyBaseException, PyTypeError};
-# Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
-let err: PyErr = PyTypeError::new_err(&quot;error message&quot;);
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::{PyErr, PyResult, Python, type_object::PyTypeObject};
+</span><span class="boring">use pyo3::exceptions::{PyBaseException, PyTypeError};
+</span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+</span>let err: PyErr = PyTypeError::new_err(&quot;error message&quot;);
 
 // Uses Display for PyErr, new for PyO3 0.12
 assert_eq!(err.to_string(), &quot;TypeError: error message&quot;);
@@ -210,9 +213,10 @@ assert_eq!(err.to_string(), &quot;TypeError: error message&quot;);
 // Now possible to interact with exception instances, new for PyO3 0.12
 let instance: &amp;PyBaseException = err.instance(py);
 assert_eq!(instance.getattr(&quot;__class__&quot;)?, PyTypeError::type_object(py).as_ref());
-# Ok(())
-# }).unwrap();
-</code></pre>
+<span class="boring">Ok(())
+</span><span class="boring">}).unwrap();
+</span><span class="boring">}
+</span></code></pre></pre>
 <h3><a class="header" href="#frompy-has-been-removed" id="frompy-has-been-removed"><code>FromPy</code> has been removed</a></h3>
 <p>To simplify the PyO3 conversion traits, the <code>FromPy</code> trait has been removed. Previously there were
 two ways to define the to-Python conversion for a type:
