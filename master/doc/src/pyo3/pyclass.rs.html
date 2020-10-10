@@ -373,12 +373,6 @@
 <span id="373">373</span>
 <span id="374">374</span>
 <span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! `PyClass` and related traits.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">class</span>::<span class="ident">methods</span>::{<span class="ident">PyClassAttributeDef</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyMethods</span>};
@@ -388,7 +382,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass_slots</span>::{<span class="ident">PyClassDict</span>, <span class="ident">PyClassWeakRef</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">type_object</span>::{<span class="ident">type_flags</span>, <span class="ident">PyLayout</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::<span class="ident">PyAny</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">class</span>, <span class="ident">ffi</span>, <span class="ident">PyCell</span>, <span class="ident">PyErr</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyResult</span>, <span class="ident">PyTypeInfo</span>, <span class="ident">Python</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">PyCell</span>, <span class="ident">PyErr</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyResult</span>, <span class="ident">PyTypeInfo</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CString</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_void</span>;
@@ -621,7 +615,7 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">py_class_attributes</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyMethods</span><span class="op">&gt;</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">PyClassAttributeDef</span><span class="op">&gt;</span> {
     <span class="ident">T</span>::<span class="ident">py_methods</span>().<span class="ident">into_iter</span>().<span class="ident">filter_map</span>(<span class="op">|</span><span class="ident">def</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">def</span> {
-        <span class="ident">PyMethodDefType</span>::<span class="ident">ClassAttribute</span>(<span class="ident">attr</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">attr</span>),
+        <span class="ident">PyMethodDefType</span>::<span class="ident">ClassAttribute</span>(<span class="ident">attr</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">attr</span>.<span class="ident">to_owned</span>()),
         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
     })
 }
@@ -638,16 +632,12 @@
     <span class="kw">for</span> <span class="ident">def</span> <span class="kw">in</span> <span class="ident">T</span>::<span class="ident">py_methods</span>() {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">def</span> {
             <span class="ident">PyMethodDefType</span>::<span class="ident">New</span>(<span class="kw-2">ref</span> <span class="ident">def</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">class</span>::<span class="ident">methods</span>::<span class="ident">PyMethodType</span>::<span class="ident">PyNewFunc</span>(<span class="ident">meth</span>) <span class="op">=</span> <span class="ident">def</span>.<span class="ident">ml_meth</span> {
-                    <span class="ident">new</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">meth</span>)
-                }
+                <span class="ident">new</span> <span class="op">=</span> <span class="ident">def</span>.<span class="ident">get_new_func</span>();
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">new</span>.<span class="ident">is_some</span>());
             }
             <span class="ident">PyMethodDefType</span>::<span class="ident">Call</span>(<span class="kw-2">ref</span> <span class="ident">def</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">class</span>::<span class="ident">methods</span>::<span class="ident">PyMethodType</span>::<span class="ident">PyCFunctionWithKeywords</span>(<span class="ident">meth</span>) <span class="op">=</span> <span class="ident">def</span>.<span class="ident">ml_meth</span> {
-                    <span class="ident">call</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">meth</span>)
-                } <span class="kw">else</span> {
-                    <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Method type is not supoorted by tp_call slot&quot;</span>)
-                }
+                <span class="ident">call</span> <span class="op">=</span> <span class="ident">def</span>.<span class="ident">get_cfunction_with_keywords</span>();
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">call</span>.<span class="ident">is_some</span>());
             }
             <span class="ident">PyMethodDefType</span>::<span class="ident">Method</span>(<span class="kw-2">ref</span> <span class="ident">def</span>)
             <span class="op">|</span> <span class="ident">PyMethodDefType</span>::<span class="ident">Class</span>(<span class="kw-2">ref</span> <span class="ident">def</span>)
@@ -667,19 +657,17 @@
     <span class="kw">for</span> <span class="ident">def</span> <span class="kw">in</span> <span class="ident">T</span>::<span class="ident">py_methods</span>() {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">def</span> {
             <span class="ident">PyMethodDefType</span>::<span class="ident">Getter</span>(<span class="kw-2">ref</span> <span class="ident">getter</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">getter</span>.<span class="ident">name</span>.<span class="ident">to_string</span>();
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>) {
-                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="ident">getter</span>.<span class="ident">name</span>) {
+                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">getter</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
                 }
-                <span class="kw">let</span> <span class="ident">def</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to call get_mut&quot;</span>);
+                <span class="kw">let</span> <span class="ident">def</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">get_mut</span>(<span class="ident">getter</span>.<span class="ident">name</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to call get_mut&quot;</span>);
                 <span class="ident">getter</span>.<span class="ident">copy_to</span>(<span class="ident">def</span>);
             }
             <span class="ident">PyMethodDefType</span>::<span class="ident">Setter</span>(<span class="kw-2">ref</span> <span class="ident">setter</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">setter</span>.<span class="ident">name</span>.<span class="ident">to_string</span>();
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>) {
-                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="ident">setter</span>.<span class="ident">name</span>) {
+                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">setter</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
                 }
-                <span class="kw">let</span> <span class="ident">def</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to call get_mut&quot;</span>);
+                <span class="kw">let</span> <span class="ident">def</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">get_mut</span>(<span class="ident">setter</span>.<span class="ident">name</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to call get_mut&quot;</span>);
                 <span class="ident">setter</span>.<span class="ident">copy_to</span>(<span class="ident">def</span>);
             }
             <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
