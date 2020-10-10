@@ -617,7 +617,7 @@
 <span class="doccomment">/// Represents the result of a Python call.</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">PyErr</span><span class="op">&gt;</span>;
 
-<span class="doccomment">/// Marker type that indicates an error while downcasting</span>
+<span class="doccomment">/// Error that indicates a failure to convert a PyAny to a more specific Python type.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyDowncastError</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyAny</span>,
