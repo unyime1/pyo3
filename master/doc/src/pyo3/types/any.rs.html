@@ -880,7 +880,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is typically a new iterator but if the argument is an iterator,</span>
     <span class="doccomment">/// this returns itself.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyIterator</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyIterator</span><span class="op">&gt;</span> {
         <span class="ident">PyIterator</span>::<span class="ident">from_object</span>(<span class="self">self</span>.<span class="ident">py</span>(), <span class="self">self</span>)
     }
 
