@@ -572,9 +572,6 @@
 <span id="571">571</span>
 <span id="572">572</span>
 <span id="573">573</span>
-<span id="574">574</span>
-<span id="575">575</span>
-<span id="576">576</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -1068,11 +1065,8 @@
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">write</span><span class="macro">!</span>(
             <span class="ident">f</span>,
-            <span class="string">&quot;Can&#39;t convert {} to {}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">from</span>
-                .<span class="ident">repr</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_string_lossy</span>())
-                .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">from</span>.<span class="ident">get_type</span>().<span class="ident">name</span>()),
+            <span class="string">&quot;&#39;{}&#39; object cannot be converted to &#39;{}&#39;&quot;</span>,
+            <span class="self">self</span>.<span class="ident">from</span>.<span class="ident">get_type</span>().<span class="ident">name</span>(),
             <span class="self">self</span>.<span class="ident">to</span>
         )
     }

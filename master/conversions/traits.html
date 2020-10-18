@@ -291,8 +291,7 @@ enum RustyEnum {
 }
 </code></pre>
 <p>If the input is neither a string nor an integer, the error message will be:
-<code>&quot;Can't convert &lt;INPUT&gt; to Union[str, int]&quot;</code>, where <code>&lt;INPUT&gt;</code> is replaced by the type name and
-<code>repr()</code> of the input object.</p>
+<code>&quot;'&lt;INPUT_TYPE&gt;' cannot be converted to 'Union[str, int]'&quot;</code>.</p>
 <h4><a class="header" href="#derivefrompyobject-container-attributes" id="derivefrompyobject-container-attributes"><code>#[derive(FromPyObject)]</code> Container Attributes</a></h4>
 <ul>
 <li><code>pyo3(transparent)</code>
