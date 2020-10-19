@@ -637,7 +637,6 @@
 <span id="636">636</span>
 <span id="637">637</span>
 <span id="638">638</span>
-<span id="639">639</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -949,7 +948,6 @@
 <span class="macro">impl_native_exception</span><span class="macro">!</span>(<span class="ident">PyOSError</span>, <span class="ident">OSError</span>, <span class="ident">PyExc_OSError</span>, <span class="ident">ffi</span>::<span class="ident">PyOSErrorObject</span>);
 <span class="macro">impl_native_exception</span><span class="macro">!</span>(<span class="ident">PyImportError</span>, <span class="ident">ImportError</span>, <span class="ident">PyExc_ImportError</span>);
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
 <span class="macro">impl_native_exception</span><span class="macro">!</span>(
     <span class="ident">PyModuleNotFoundError</span>,
     <span class="ident">ModuleNotFoundError</span>,

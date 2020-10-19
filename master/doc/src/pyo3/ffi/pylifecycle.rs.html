@@ -52,7 +52,6 @@
 <span id="51">51</span>
 <span id="52">52</span>
 <span id="53">53</span>
-<span id="54">54</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">pystate</span>::<span class="ident">PyThreadState</span>;
 <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">wchar_t</span>;
@@ -62,7 +61,6 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_Initialize</span>();
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_InitializeEx</span>(<span class="ident">arg1</span>: <span class="ident">c_int</span>);
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_Finalize</span>();
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_FinalizeEx</span>() <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPy_IsInitialized&quot;</span>)]</span>

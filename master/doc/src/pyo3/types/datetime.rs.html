@@ -379,8 +379,6 @@
 <span id="378">378</span>
 <span id="379">379</span>
 <span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Safe Rust wrappers for types defined in the Python `datetime` library</span>
 <span class="doccomment">//!</span>
@@ -395,7 +393,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">datetime</span>::{<span class="ident">PyDateTime_FromTimestamp</span>, <span class="ident">PyDate_FromTimestamp</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">PyDateTimeAPI</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::{<span class="ident">PyDateTime_Check</span>, <span class="ident">PyDate_Check</span>, <span class="ident">PyDelta_Check</span>, <span class="ident">PyTZInfo_Check</span>, <span class="ident">PyTime_Check</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_6</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::{<span class="ident">PyDateTime_DATE_GET_FOLD</span>, <span class="ident">PyDateTime_TIME_GET_FOLD</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::{
     <span class="ident">PyDateTime_DATE_GET_HOUR</span>, <span class="ident">PyDateTime_DATE_GET_MICROSECOND</span>, <span class="ident">PyDateTime_DATE_GET_MINUTE</span>,
@@ -441,7 +439,7 @@
     <span class="kw">fn</span> <span class="ident">get_minute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span>;
     <span class="kw">fn</span> <span class="ident">get_second</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span>;
     <span class="kw">fn</span> <span class="ident">get_microsecond</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_6</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">fn</span> <span class="ident">get_fold</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span>;
 }
 
@@ -607,7 +605,7 @@
         <span class="kw">unsafe</span> { <span class="ident">PyDateTime_DATE_GET_MICROSECOND</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) <span class="kw">as</span> <span class="ident">u32</span> }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_6</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">fn</span> <span class="ident">get_fold</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
         <span class="kw">unsafe</span> { <span class="ident">PyDateTime_DATE_GET_FOLD</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) <span class="kw">as</span> <span class="ident">u8</span> }
     }
@@ -646,10 +644,8 @@
         }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="doccomment">/// Alternate constructor that takes a `fold` argument</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// First available in Python 3.6.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_fold</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>(
         <span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
         <span class="ident">hour</span>: <span class="ident">u8</span>,
@@ -691,7 +687,7 @@
         <span class="kw">unsafe</span> { <span class="ident">PyDateTime_TIME_GET_MICROSECOND</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) <span class="kw">as</span> <span class="ident">u32</span> }
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_6</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">fn</span> <span class="ident">get_fold</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
         <span class="kw">unsafe</span> { <span class="ident">PyDateTime_TIME_GET_FOLD</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) <span class="kw">as</span> <span class="ident">u8</span> }
     }

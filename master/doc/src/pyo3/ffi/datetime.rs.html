@@ -577,7 +577,7 @@
     <span class="kw">pub</span> <span class="ident">TimeType</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>,
     <span class="kw">pub</span> <span class="ident">DeltaType</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>,
     <span class="kw">pub</span> <span class="ident">TZInfoType</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_7</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
     <span class="kw">pub</span> <span class="ident">TimeZone_UTC</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;_PyPyDate_FromDate&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">Date_FromDate</span>: <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(
@@ -615,7 +615,7 @@
         <span class="ident">normalize</span>: <span class="ident">c_int</span>,
         <span class="ident">cls</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>,
     ) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_7</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
     <span class="kw">pub</span> <span class="ident">TimeZone_FromTimeZone</span>:
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(<span class="ident">offset</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>, <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
 
@@ -628,7 +628,7 @@
     <span class="comment">// Defined for PyPy as `PyDate_FromTimestamp`</span>
     <span class="kw">pub</span> <span class="ident">Date_FromTimestamp</span>:
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(<span class="ident">cls</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>, <span class="ident">args</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">DateTime_FromDateAndTimeAndFold</span>: <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(
         <span class="ident">year</span>: <span class="ident">c_int</span>,
         <span class="ident">month</span>: <span class="ident">c_int</span>,
@@ -641,7 +641,7 @@
         <span class="ident">fold</span>: <span class="ident">c_int</span>,
         <span class="ident">cls</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>,
     ) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">Time_FromTimeAndFold</span>: <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(
         <span class="ident">hour</span>: <span class="ident">c_int</span>,
         <span class="ident">minute</span>: <span class="ident">c_int</span>,
@@ -702,6 +702,7 @@
 <span class="doccomment">/// Structure representing a `datetime.date`</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyDateTime_Date</span> {
     <span class="kw">pub</span> <span class="ident">ob_base</span>: <span class="ident">PyObject</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">hashcode</span>: <span class="ident">Py_hash_t</span>,
     <span class="kw">pub</span> <span class="ident">hastzinfo</span>: <span class="ident">c_char</span>,
     <span class="kw">pub</span> <span class="ident">data</span>: [<span class="ident">c_uchar</span>; <span class="ident">_PyDateTime_DATE_DATASIZE</span>],
@@ -712,10 +713,12 @@
 <span class="doccomment">/// Structure representing a `datetime.time`</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyDateTime_Time</span> {
     <span class="kw">pub</span> <span class="ident">ob_base</span>: <span class="ident">PyObject</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">hashcode</span>: <span class="ident">Py_hash_t</span>,
     <span class="kw">pub</span> <span class="ident">hastzinfo</span>: <span class="ident">c_char</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">data</span>: [<span class="ident">c_uchar</span>; <span class="ident">_PyDateTime_TIME_DATASIZE</span>],
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">fold</span>: <span class="ident">c_uchar</span>,
     <span class="kw">pub</span> <span class="ident">tzinfo</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
 }
@@ -725,10 +728,12 @@
 <span class="doccomment">/// Structure representing a `datetime.datetime`</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyDateTime_DateTime</span> {
     <span class="kw">pub</span> <span class="ident">ob_base</span>: <span class="ident">PyObject</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">hashcode</span>: <span class="ident">Py_hash_t</span>,
     <span class="kw">pub</span> <span class="ident">hastzinfo</span>: <span class="ident">c_char</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">data</span>: [<span class="ident">c_uchar</span>; <span class="ident">_PyDateTime_DATETIME_DATASIZE</span>],
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">fold</span>: <span class="ident">c_uchar</span>,
     <span class="kw">pub</span> <span class="ident">tzinfo</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
 }
@@ -738,6 +743,7 @@
 <span class="doccomment">/// Structure representing a `datetime.timedelta`</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyDateTime_Delta</span> {
     <span class="kw">pub</span> <span class="ident">ob_base</span>: <span class="ident">PyObject</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="ident">hashcode</span>: <span class="ident">Py_hash_t</span>,
     <span class="kw">pub</span> <span class="ident">days</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">seconds</span>: <span class="ident">c_int</span>,
@@ -929,7 +935,6 @@
     };
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">_PyDateTime_GET_FOLD</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">o</span>: <span class="ident">expr</span>) <span class="op">=&gt;</span> {
@@ -977,13 +982,10 @@
     <span class="macro">_PyDateTime_GET_MICROSECOND</span><span class="macro">!</span>((<span class="ident">o</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyDateTime_DateTime</span>), <span class="ident">_PyDateTime_DATE_DATASIZE</span>)
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="doccomment">/// Retrieve the fold component of a `PyDateTime_DateTime`.</span>
 <span class="doccomment">/// Returns a signed integer in the interval `[0, 1]`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Added in version Python 3.6</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">PyDateTime_DATE_GET_FOLD</span>(<span class="ident">o</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-&gt;</span> <span class="ident">c_uchar</span> {
     <span class="macro">_PyDateTime_GET_FOLD</span><span class="macro">!</span>(<span class="ident">o</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyDateTime_DateTime</span>)
 }
@@ -1030,12 +1032,10 @@
     <span class="macro">_PyDateTime_GET_MICROSECOND</span><span class="macro">!</span>((<span class="ident">o</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyDateTime_Time</span>), <span class="number">0</span>)
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_6</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="doccomment">/// Retrieve the fold component of a `PyDateTime_Time`.</span>
 <span class="doccomment">/// Returns a signed integer in the interval `[0, 1]`</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Added in version Python 3.6</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">PyDateTime_TIME_GET_FOLD</span>(<span class="ident">o</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-&gt;</span> <span class="ident">c_uchar</span> {
     <span class="macro">_PyDateTime_GET_FOLD</span><span class="macro">!</span>(<span class="ident">o</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyDateTime_Time</span>)
 }

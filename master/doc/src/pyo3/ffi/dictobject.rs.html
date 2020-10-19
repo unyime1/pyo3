@@ -134,7 +134,6 @@
 <span id="133">133</span>
 <span id="134">134</span>
 <span id="135">135</span>
-<span id="136">136</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">object</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">pyport</span>::<span class="ident">Py_ssize_t</span>;
@@ -168,7 +167,6 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyDictObject</span> {
     <span class="kw">pub</span> <span class="ident">ob_base</span>: <span class="ident">PyObject</span>,
     <span class="kw">pub</span> <span class="ident">ma_used</span>: <span class="ident">Py_ssize_t</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
     <span class="kw">pub</span> <span class="ident">ma_version_tag</span>: <span class="ident">u64</span>,
     <span class="kw">pub</span> <span class="ident">ma_keys</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyDictKeysObject</span>,
     <span class="kw">pub</span> <span class="ident">ma_values</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
