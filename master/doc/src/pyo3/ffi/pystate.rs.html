@@ -68,8 +68,17 @@
 <span id="67">67</span>
 <span id="68">68</span>
 <span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">ceval</span>::<span class="ident">_PyFrameEvalFunction</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">frameobject</span>::<span class="ident">PyFrameObject</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">moduleobject</span>::<span class="ident">PyModuleDef</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">object</span>::<span class="ident">PyObject</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::{<span class="ident">c_int</span>, <span class="ident">c_long</span>};
@@ -138,5 +147,12 @@
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">PyThreadState_GET</span>() <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyThreadState</span> {
     <span class="ident">PyThreadState_Get</span>()
 }
+
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Py_tracefunc</span> <span class="op">=</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(
+    <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
+    <span class="ident">frame</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyFrameObject</span>,
+    <span class="ident">what</span>: <span class="ident">c_int</span>,
+    <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
+) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "pyo3";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
