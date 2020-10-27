@@ -812,7 +812,7 @@ or by <code>self_.into_super()</code> as <code>PyRef&lt;Self::BaseClass&gt;</cod
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
 </span>
-#[pyclass]
+#[pyclass(subclass)]
 struct BaseClass {
     val1: usize,
 }
@@ -829,7 +829,7 @@ impl BaseClass {
     }
 }
 
-#[pyclass(extends=BaseClass)]
+#[pyclass(extends=BaseClass, subclass)]
 struct SubClass {
     val2: usize,
 }
@@ -873,12 +873,11 @@ impl SubSubClass {
 </span><span class="boring">}
 </span></code></pre></pre>
 <p>You can also inherit native types such as <code>PyDict</code>, if they implement
-<a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PySizedLayout.html"><code>PySizedLayout</code></a>.</p>
+<a href="https://docs.rs/pyo3/latest/pyo3/type_object/trait.PySizedLayout.html"><code>PySizedLayout</code></a>. However, this is not supported when building for the Python limited API (aka the <code>abi3</code> feature of PyO3).</p>
 <p>However, because of some technical problems, we don't currently provide safe upcasting methods for types
 that inherit native types. Even in such cases, you can unsafely get a base class by raw pointer conversion.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#[cfg(Py_LIMITED_API)] fn main() {}
+</span><span class="boring">#[cfg(not(Py_LIMITED_API))] fn main() {
 </span><span class="boring">use pyo3::prelude::*;
 </span>use pyo3::types::PyDict;
 use pyo3::{AsPyPointer, PyNativeType};
@@ -1364,13 +1363,23 @@ impl pyo3::class::methods::HasMethodsInventory for MyClass {
 }
 pyo3::inventory::collect!(Pyo3MethodsInventoryForMyClass);
 
-impl pyo3::class::proto_methods::HasProtoRegistry for MyClass {
-    fn registry() -&gt; &amp;'static pyo3::class::proto_methods::PyProtoRegistry {
-        static REGISTRY: pyo3::class::proto_methods::PyProtoRegistry
-            = pyo3::class::proto_methods::PyProtoRegistry::new();
-        &amp;REGISTRY
+
+pub struct Pyo3ProtoInventoryForMyClass {
+    def: pyo3::class::proto_methods::PyProtoMethodDef,
+}
+impl pyo3::class::proto_methods::PyProtoInventory for Pyo3ProtoInventoryForMyClass {
+    fn new(def: pyo3::class::proto_methods::PyProtoMethodDef) -&gt; Self {
+        Self { def }
+    }
+    fn get(&amp;'static self) -&gt; &amp;'static pyo3::class::proto_methods::PyProtoMethodDef {
+        &amp;self.def
     }
 }
+impl pyo3::class::proto_methods::HasProtoInventory for MyClass {
+    type ProtoMethods = Pyo3ProtoInventoryForMyClass;
+}
+pyo3::inventory::collect!(Pyo3ProtoInventoryForMyClass);
+
 
 impl pyo3::pyclass::PyClassSend for MyClass {
     type ThreadChecker = pyo3::pyclass::ThreadCheckerStub&lt;MyClass&gt;;
@@ -2725,7 +2734,26 @@ pyo3 = &quot;0.6&quot;
 </code></pre>
 <p>On Linux/macOS you might have to change <code>LD_LIBRARY_PATH</code> to include libpython, while on windows you might need to set <code>LIB</code> to include <code>pythonxy.lib</code> (where x and y are major and minor version), which is normally either in the <code>libs</code> or <code>Lib</code> folder of a Python installation.</p>
 <h2><a class="header" href="#distribution" id="distribution">Distribution</a></h2>
-<p>There are two ways to distribute your module as a Python package: The old, <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>, and the new, <a href="https://github.com/pyo3/maturin">maturin</a>. setuptools-rust needs several configuration files (<code>setup.py</code>, <code>MANIFEST.in</code>, <code>build-wheels.sh</code>, etc.). maturin doesn't need any configuration files, however it does not support some functionality of setuptools such as package data (<a href="https://github.com/PyO3/maturin/issues/258">pyo3/maturin#258</a>) and requires a rigid project structure, while setuptools-rust allows (and sometimes requires) configuration with python code.</p>
+<p>There are two ways to distribute your module as a Python package: The old, <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>, and the new, <a href="https://github.com/PyO3/maturin">maturin</a>. setuptools-rust needs several configuration files (<code>setup.py</code>, <code>MANIFEST.in</code>, <code>build-wheels.sh</code>, etc.). maturin doesn't need any configuration files, however it does not support some functionality of setuptools such as package data (<a href="https://github.com/PyO3/maturin/issues/258">pyo3/maturin#258</a>) and requires a rigid project structure, while setuptools-rust allows (and sometimes requires) configuration with python code.</p>
+<h2><a class="header" href="#py_limited_apiabi3" id="py_limited_apiabi3"><code>Py_LIMITED_API</code>/<code>abi3</code></a></h2>
+<p>By default, Python extension modules can only be used with the same Python version they were compiled against -- if you build an extension module with Python 3.5, you can't import it using Python 3.8. <a href="https://www.python.org/dev/peps/pep-0384/">PEP 384</a> introduced the idea of the limited Python API, which would have a stable ABI enabling extension modules built with it to be used against multiple Python versions. This is also known as <code>abi3</code>.</p>
+<p>Note that <a href="https://github.com/PyO3/maturin">maturin</a> &gt;= 0.9.0 or <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a> &gt;= 0.12.0 is going to support <code>abi3</code> wheels.
+See the <a href="https://github.com/PyO3/maturin/pull/353">corresponding</a> <a href="https://github.com/PyO3/setuptools-rust/pull/82">PRs</a> for more.</p>
+<p>There are three steps involved in making use of <code>abi3</code> when building Python packages as wheels:</p>
+<ol>
+<li>Enable the <code>abi3</code> feature in <code>pyo3</code>. This ensures <code>pyo3</code> only calls Python C-API functions which are part of the stable API, and on Windows also ensures that the project links against the correct shared object (no special behavior is required on other platforms):</li>
+</ol>
+<pre><code class="language-toml">[dependencies]
+pyo3 = { version = &quot;...&quot;, features = [&quot;abi3&quot;]}
+</code></pre>
+<ol start="2">
+<li>
+<p>Ensure that the built shared objects are correctly marked as <code>abi3</code>. This is accomplished by telling your build system that you're using the limited API.</p>
+</li>
+<li>
+<p>Ensure that the <code>.whl</code> is correctly marked as <code>abi3</code>. For projects using <code>setuptools</code>, this is accomplished by passing <code>--py-limited-api=cp3x</code> (where <code>x</code> is the minimum Python version supported by the wheel, e.g. <code>--py-limited-api=cp35</code> for Python 3.5) to <code>setup.py bdist_wheel</code>.</p>
+</li>
+</ol>
 <h2><a class="header" href="#cross-compiling" id="cross-compiling">Cross Compiling</a></h2>
 <p>Cross compiling PyO3 modules is relatively straightforward and requires a few pieces of software:</p>
 <ul>
@@ -2799,6 +2827,15 @@ default = [&quot;extension-module&quot;]
 <h1><a class="header" href="#migrating-from-older-pyo3-versions" id="migrating-from-older-pyo3-versions">Migrating from older PyO3 versions</a></h1>
 <p>This guide can help you upgrade code through breaking changes from one PyO3 version to the next.
 For a detailed list of all changes, see the <a href="changelog.html">CHANGELOG</a>.</p>
+<h2><a class="header" href="#from-012-to-013" id="from-012-to-013">from 0.12.* to 0.13</a></h2>
+<h3><a class="header" href="#runtime-changes-to-support-the-cpython-limited-api" id="runtime-changes-to-support-the-cpython-limited-api">Runtime changes to support the CPython limited API</a></h3>
+<p>In PyO3 <code>0.13</code> support was added for compiling against the CPython limited API. This had a number of implications for <em>all</em> PyO3 users, described here.</p>
+<p>The largest of these is that all types created from PyO3 are what CPython calls &quot;heap&quot; types. The specific implications of this are:</p>
+<ul>
+<li>If you wish to subclass one of these types <em>from Rust</em> you must mark it <code>#[pyclass(subclass)]</code>, as you would if you wished to allow subclassing it from Python code.</li>
+<li>Type objects are now mutable - Python code can set attributes on them.</li>
+<li><code>__module__</code> on types without <code>#[pyclass(module=&quot;mymodule&quot;)]</code> no longer returns <code>builtins</code>, it now raises <code>AttributeError</code>.</li>
+</ul>
 <h2><a class="header" href="#from-011-to-012" id="from-011-to-012">from 0.11.* to 0.12</a></h2>
 <h3><a class="header" href="#pyerr-has-been-reworked" id="pyerr-has-been-reworked"><code>PyErr</code> has been reworked</a></h3>
 <p>In PyO3 <code>0.12</code> the <code>PyErr</code> type has been re-implemented to be significantly more compatible with
@@ -3702,8 +3739,8 @@ impl Model for UserModel {
                 .call_method(&quot;get_results&quot;, (), None)
                 .unwrap();
 
-            if py_result.get_type().name() != &quot;list&quot; {
-                panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name());
+            if py_result.get_type().name().unwrap() != &quot;list&quot; {
+                panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name().unwrap());
             }
             py_result.extract()
         })
@@ -3824,8 +3861,8 @@ impl Model for UserModel {
                 .call_method(&quot;get_results&quot;, (), None)
                 .unwrap();
 
-            if py_result.get_type().name() != &quot;list&quot; {
-                panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name());
+            if py_result.get_type().name().unwrap() != &quot;list&quot; {
+                panic!(&quot;Expected a list for the get_results() method signature, got {}&quot;, py_result.get_type().name().unwrap());
             }
             py_result.extract()
         })
@@ -3914,12 +3951,15 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 </ul>
 <h3><a class="header" href="#added" id="added">Added</a></h3>
 <ul>
+<li>Add support for building for CPython limited API. This required a few minor changes to runtime behaviour of of pyo3 <code>#[pyclass]</code> types. See the migration guide for full details. <a href="https://github.com/PyO3/pyo3/pull/1152">#1152</a></li>
 <li>Add argument names to <code>TypeError</code> messages generated by pymethod wrappers. <a href="https://github.com/PyO3/pyo3/pull/1212">#1212</a></li>
 <li>Add <code>PyEval_SetProfile</code> and <code>PyEval_SetTrace</code> to FFI. <a href="https://github.com/PyO3/pyo3/pull/1255">#1255</a></li>
 <li>Add context.h functions (<code>PyContext_New</code>, etc) to FFI. <a href="https://github.com/PyO3/pyo3/pull/1259">#1259</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
+<li>Change return type <code>PyType::name()</code> from <code>Cow&lt;str&gt;</code> to <code>PyResult&lt;&amp;str&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1152">#1152</a></li>
+<li><code>#[pyclass(subclass)]</code> is now required for subclassing from Rust (was previously just required for subclassing from Python). <a href="https://github.com/PyO3/pyo3/pull/1152">#1152</a></li>
 <li>Change <code>PyIterator</code> to be consistent with other native types: it is now used as <code>&amp;PyIterator</code> instead of <code>PyIterator&lt;'a&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1176">#1176</a></li>
 <li>Change formatting of <code>PyDowncastError</code> messages to be closer to Python's builtin error messages. <a href="https://github.com/PyO3/pyo3/pull/1212">#1212</a></li>
 </ul>

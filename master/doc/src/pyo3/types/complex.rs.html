@@ -313,10 +313,10 @@
 <span id="312">312</span>
 <span id="313">313</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>), <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">instance</span>::<span class="ident">PyNativeType</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">PyAny</span>, <span class="ident">Python</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>), <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_double</span>;
 

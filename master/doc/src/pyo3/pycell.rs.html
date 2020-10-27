@@ -759,6 +759,12 @@
 <span id="758">758</span>
 <span id="759">759</span>
 <span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Includes `PyCell` implementation.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">conversion</span>::{<span class="ident">AsPyPointer</span>, <span class="ident">FromPyPointer</span>, <span class="ident">ToPyObject</span>};
@@ -770,9 +776,9 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::<span class="ident">PyAny</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">IntoPy</span>, <span class="ident">PyErr</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::{<span class="ident">Cell</span>, <span class="ident">UnsafeCell</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">ManuallyDrop</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>, <span class="ident">mem</span>};
 
 <span class="doccomment">/// Base layout of PyCell.</span>
 <span class="doccomment">/// This is necessary for sharing BorrowFlag between parents and children.</span>
@@ -932,20 +938,26 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Get the offset of the dictionary from the start of the struct in bytes.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">dict_offset</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">T</span>::<span class="ident">Dict</span>::<span class="ident">IS_DUMMY</span> {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>() <span class="op">-</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Dict</span><span class="op">&gt;</span>() <span class="op">-</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">WeakRef</span><span class="op">&gt;</span>())
+            <span class="prelude-val">Some</span>(
+                <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>()
+                    <span class="op">-</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Dict</span><span class="op">&gt;</span>()
+                    <span class="op">-</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">WeakRef</span><span class="op">&gt;</span>(),
+            )
         }
     }
 
     <span class="doccomment">/// Get the offset of the weakref list from the start of the struct in bytes.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">weakref_offset</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">T</span>::<span class="ident">WeakRef</span>::<span class="ident">IS_DUMMY</span> {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>() <span class="op">-</span> <span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">WeakRef</span><span class="op">&gt;</span>())
+            <span class="prelude-val">Some</span>(<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>() <span class="op">-</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">WeakRef</span><span class="op">&gt;</span>())
         }
     }
 }
@@ -1217,7 +1229,7 @@
 <span class="doccomment">/// - You want to get super class.</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// # use pyo3::prelude::*;</span>
-<span class="doccomment">/// #[pyclass]</span>
+<span class="doccomment">/// #[pyclass(subclass)]</span>
 <span class="doccomment">/// struct Parent {</span>
 <span class="doccomment">///     basename: &amp;&#39;static str,</span>
 <span class="doccomment">/// }</span>
@@ -1278,11 +1290,11 @@
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use pyo3::prelude::*;</span>
-    <span class="doccomment">/// #[pyclass]</span>
+    <span class="doccomment">/// #[pyclass(subclass)]</span>
     <span class="doccomment">/// struct Base1 {</span>
     <span class="doccomment">///     name1: &amp;&#39;static str,</span>
     <span class="doccomment">/// }</span>
-    <span class="doccomment">/// #[pyclass(extends=Base1)]</span>
+    <span class="doccomment">/// #[pyclass(extends=Base1, subclass)]</span>
     <span class="doccomment">/// struct Base2 {</span>
     <span class="doccomment">///     name2: &amp;&#39;static str,</span>
     <span class="doccomment">///  }</span>

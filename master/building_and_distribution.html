@@ -179,7 +179,26 @@ pyo3 = &quot;0.6&quot;
 </code></pre>
 <p>On Linux/macOS you might have to change <code>LD_LIBRARY_PATH</code> to include libpython, while on windows you might need to set <code>LIB</code> to include <code>pythonxy.lib</code> (where x and y are major and minor version), which is normally either in the <code>libs</code> or <code>Lib</code> folder of a Python installation.</p>
 <h2><a class="header" href="#distribution" id="distribution">Distribution</a></h2>
-<p>There are two ways to distribute your module as a Python package: The old, <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>, and the new, <a href="https://github.com/pyo3/maturin">maturin</a>. setuptools-rust needs several configuration files (<code>setup.py</code>, <code>MANIFEST.in</code>, <code>build-wheels.sh</code>, etc.). maturin doesn't need any configuration files, however it does not support some functionality of setuptools such as package data (<a href="https://github.com/PyO3/maturin/issues/258">pyo3/maturin#258</a>) and requires a rigid project structure, while setuptools-rust allows (and sometimes requires) configuration with python code.</p>
+<p>There are two ways to distribute your module as a Python package: The old, <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>, and the new, <a href="https://github.com/PyO3/maturin">maturin</a>. setuptools-rust needs several configuration files (<code>setup.py</code>, <code>MANIFEST.in</code>, <code>build-wheels.sh</code>, etc.). maturin doesn't need any configuration files, however it does not support some functionality of setuptools such as package data (<a href="https://github.com/PyO3/maturin/issues/258">pyo3/maturin#258</a>) and requires a rigid project structure, while setuptools-rust allows (and sometimes requires) configuration with python code.</p>
+<h2><a class="header" href="#py_limited_apiabi3" id="py_limited_apiabi3"><code>Py_LIMITED_API</code>/<code>abi3</code></a></h2>
+<p>By default, Python extension modules can only be used with the same Python version they were compiled against -- if you build an extension module with Python 3.5, you can't import it using Python 3.8. <a href="https://www.python.org/dev/peps/pep-0384/">PEP 384</a> introduced the idea of the limited Python API, which would have a stable ABI enabling extension modules built with it to be used against multiple Python versions. This is also known as <code>abi3</code>.</p>
+<p>Note that <a href="https://github.com/PyO3/maturin">maturin</a> &gt;= 0.9.0 or <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a> &gt;= 0.12.0 is going to support <code>abi3</code> wheels.
+See the <a href="https://github.com/PyO3/maturin/pull/353">corresponding</a> <a href="https://github.com/PyO3/setuptools-rust/pull/82">PRs</a> for more.</p>
+<p>There are three steps involved in making use of <code>abi3</code> when building Python packages as wheels:</p>
+<ol>
+<li>Enable the <code>abi3</code> feature in <code>pyo3</code>. This ensures <code>pyo3</code> only calls Python C-API functions which are part of the stable API, and on Windows also ensures that the project links against the correct shared object (no special behavior is required on other platforms):</li>
+</ol>
+<pre><code class="language-toml">[dependencies]
+pyo3 = { version = &quot;...&quot;, features = [&quot;abi3&quot;]}
+</code></pre>
+<ol start="2">
+<li>
+<p>Ensure that the built shared objects are correctly marked as <code>abi3</code>. This is accomplished by telling your build system that you're using the limited API.</p>
+</li>
+<li>
+<p>Ensure that the <code>.whl</code> is correctly marked as <code>abi3</code>. For projects using <code>setuptools</code>, this is accomplished by passing <code>--py-limited-api=cp3x</code> (where <code>x</code> is the minimum Python version supported by the wheel, e.g. <code>--py-limited-api=cp35</code> for Python 3.5) to <code>setup.py bdist_wheel</code>.</p>
+</li>
+</ol>
 <h2><a class="header" href="#cross-compiling" id="cross-compiling">Cross Compiling</a></h2>
 <p>Cross compiling PyO3 modules is relatively straightforward and requires a few pieces of software:</p>
 <ul>

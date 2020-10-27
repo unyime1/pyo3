@@ -242,6 +242,8 @@
 <span id="241">241</span>
 <span id="242">242</span>
 <span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -351,6 +353,8 @@
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">pyobject_native_type_sized</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>: <span class="ident">path</span> $(,<span class="macro-nonterminal">$</span><span class="macro-nonterminal">type_param</span>: <span class="ident">ident</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> {
+        <span class="comment">// To prevent inheriting native types with ABI3</span>
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">type_object</span>::<span class="ident">PySizedLayout</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span> {}
         <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">type_param</span>,)<span class="kw-2">*</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">derive_utils</span>::<span class="ident">PyBaseTypeUtils</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
             <span class="kw">type</span> <span class="ident">Dict</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">pyclass_slots</span>::<span class="ident">PyClassDummySlot</span>;

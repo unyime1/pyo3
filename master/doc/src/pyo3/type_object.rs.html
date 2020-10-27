@@ -238,18 +238,13 @@
 <span id="237">237</span>
 <span id="238">238</span>
 <span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="doccomment">//! Python type object information</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">conversion</span>::<span class="ident">IntoPyPointer</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">once_cell</span>::<span class="ident">GILOnceCell</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass</span>::{<span class="ident">initialize_type_object</span>, <span class="ident">py_class_attributes</span>, <span class="ident">PyClass</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass</span>::{<span class="ident">create_type_object</span>, <span class="ident">py_class_attributes</span>, <span class="ident">PyClass</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">pyclass_init</span>::<span class="ident">PyObjectInit</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">PyAny</span>, <span class="ident">PyType</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">PyErr</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>};
@@ -403,12 +398,10 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_or_init</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyTypeObject</span> {
         <span class="kw">let</span> <span class="ident">type_object</span> <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">value</span>.<span class="ident">get_or_init</span>(<span class="ident">py</span>, <span class="op">||</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">type_object</span> <span class="op">=</span> <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">ffi</span>::<span class="ident">PyTypeObject_INIT</span>);
-            <span class="ident">initialize_type_object</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">py</span>, <span class="ident">T</span>::<span class="ident">MODULE</span>, <span class="ident">type_object</span>.<span class="ident">as_mut</span>()).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+            <span class="ident">create_type_object</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">py</span>, <span class="ident">T</span>::<span class="ident">MODULE</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
                 <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>);
                 <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;An error occurred while initializing class {}&quot;</span>, <span class="ident">T</span>::<span class="ident">NAME</span>)
-            });
-            <span class="ident">Box</span>::<span class="ident">into_raw</span>(<span class="ident">type_object</span>)
+            })
         });
 
         <span class="comment">// We might want to fill the `tp_dict` with python instances of `T`</span>
@@ -450,10 +443,7 @@
         <span class="comment">// Now we hold the GIL and we can assume it won&#39;t be released until we</span>
         <span class="comment">// return from the function.</span>
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tp_dict_filled</span>.<span class="ident">get_or_init</span>(<span class="ident">py</span>, <span class="kw">move</span> <span class="op">||</span> {
-            <span class="kw">let</span> <span class="ident">tp_dict</span> <span class="op">=</span> <span class="kw">unsafe</span> { (<span class="kw-2">*</span><span class="ident">type_object</span>).<span class="ident">tp_dict</span> };
-            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">initialize_tp_dict</span>(<span class="ident">py</span>, <span class="ident">tp_dict</span>, <span class="ident">items</span>);
-            <span class="comment">// See discussion on #982 for why we need this.</span>
-            <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">PyType_Modified</span>(<span class="ident">type_object</span>) };
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">initialize_tp_dict</span>(<span class="ident">py</span>, <span class="ident">type_object</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>, <span class="ident">items</span>);
 
             <span class="comment">// Initialization successfully complete, can clear the thread list.</span>
             <span class="comment">// (No further calls to get_or_init() will try to init, on any thread.)</span>
@@ -472,13 +462,13 @@
 
 <span class="kw">fn</span> <span class="ident">initialize_tp_dict</span>(
     <span class="ident">py</span>: <span class="ident">Python</span>,
-    <span class="ident">tp_dict</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+    <span class="ident">type_object</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
     <span class="ident">items</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">std</span>::<span class="ident">ffi</span>::<span class="ident">CStr</span>, <span class="ident">PyObject</span>)<span class="op">&gt;</span>,
 ) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="comment">// We hold the GIL: the dictionary update can be considered atomic from</span>
     <span class="comment">// the POV of other threads.</span>
     <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">val</span>) <span class="kw">in</span> <span class="ident">items</span> {
-        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">PyDict_SetItemString</span>(<span class="ident">tp_dict</span>, <span class="ident">key</span>.<span class="ident">as_ptr</span>(), <span class="ident">val</span>.<span class="ident">into_ptr</span>()) };
+        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">PyObject_SetAttrString</span>(<span class="ident">type_object</span>, <span class="ident">key</span>.<span class="ident">as_ptr</span>(), <span class="ident">val</span>.<span class="ident">into_ptr</span>()) };
         <span class="kw">if</span> <span class="ident">ret</span> <span class="op">&lt;</span> <span class="number">0</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>));
         }

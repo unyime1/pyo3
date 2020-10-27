@@ -574,11 +574,36 @@
 <span id="573">573</span>
 <span id="574">574</span>
 <span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">err</span>::{<span class="self">self</span>, <span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::<span class="ident">PyIterator</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">FromPyObject</span>, <span class="ident">IntoPy</span>, <span class="ident">PyAny</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyObject</span>, <span class="ident">Python</span>,
     <span class="ident">ToBorrowedObject</span>, <span class="ident">ToPyObject</span>,
@@ -687,12 +712,32 @@
     <span class="doccomment">/// Returns an iterator of values in this set.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note that it can be unsafe to use when the set might be changed by other code.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">PySetIterator</span> {
+        <span class="ident">PySetIterator</span>::<span class="ident">new</span>(<span class="self">self</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PySetIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {
+    <span class="ident">it</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="ident">PyIterator</span>,
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
+<span class="kw">impl</span> <span class="ident">PySetIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">set</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">PySetIterator</span> {
         <span class="ident">PySetIterator</span> {
-            <span class="ident">set</span>: <span class="self">self</span>.<span class="ident">as_ref</span>(),
-            <span class="ident">pos</span>: <span class="number">0</span>,
+            <span class="ident">it</span>: <span class="ident">PyIterator</span>::<span class="ident">from_object</span>(<span class="ident">set</span>.<span class="ident">py</span>(), <span class="ident">set</span>).<span class="ident">unwrap</span>(),
         }
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;py</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">PySetIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;py</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;py</span> <span class="kw">super</span>::<span class="ident">PyAny</span>;
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">unwrap</span>())
     }
 }
 
@@ -700,6 +745,13 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PySetIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;py</span><span class="op">&gt;</span> {
     <span class="ident">set</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;py</span> <span class="kw">super</span>::<span class="ident">PyAny</span>,
     <span class="ident">pos</span>: <span class="ident">isize</span>,
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+<span class="kw">impl</span> <span class="ident">PySetIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">set</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">PySetIterator</span> {
+        <span class="ident">PySetIterator</span> { <span class="ident">set</span>, <span class="ident">pos</span>: <span class="number">0</span> }
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
@@ -722,7 +774,6 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PySet</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyAny</span>;
     <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">PySetIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
@@ -858,22 +909,17 @@
     <span class="doccomment">/// Returns an iterator of values in this frozen set.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Note that it can be unsafe to use when the set might be changed by other code.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">PySetIterator</span> {
-        <span class="self">self</span>.<span class="ident">into_iter</span>()
+        <span class="ident">PySetIterator</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">as_ref</span>())
     }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">IntoIterator</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyFrozenSet</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyAny</span>;
     <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">PySetIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
 
     <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">IntoIter</span> {
-        <span class="ident">PySetIterator</span> {
-            <span class="ident">set</span>: <span class="self">self</span>.<span class="ident">as_ref</span>(),
-            <span class="ident">pos</span>: <span class="number">0</span>,
-        }
+        <span class="self">self</span>.<span class="ident">iter</span>()
     }
 }
 

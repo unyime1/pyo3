@@ -295,12 +295,22 @@
 <span id="294">294</span>
 <span id="295">295</span>
 <span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Python Sequence Interface</span>
 <span class="doccomment">//! Trait and support implementation for implementing sequence</span>
 
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">proto_methods</span>::<span class="ident">TypedSlot</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">callback</span>::<span class="ident">IntoPyCallbackOutput</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">conversion</span>::{<span class="ident">FromPyObject</span>, <span class="ident">IntoPy</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">err</span>::<span class="ident">PyErr</span>;
@@ -426,88 +436,52 @@
     <span class="kw">type</span> <span class="prelude-ty">Result</span>: <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
 }
 
+<span class="doccomment">/// Extension trait for proc-macro backend.</span>
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">impl</span> <span class="ident">ffi</span>::<span class="ident">PySequenceMethods</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_len</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PySequenceSlots</span> {
+    <span class="kw">fn</span> <span class="ident">get_len</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">lenfunc</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceLenProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceLenProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
     {
-        <span class="self">self</span>.<span class="ident">sq_length</span> <span class="op">=</span> <span class="macro">py_len_func</span><span class="macro">!</span>(<span class="ident">PySequenceLenProtocol</span>, <span class="ident">T</span>::<span class="ident">__len__</span>);
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_concat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceConcatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_concat</span> <span class="op">=</span> <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="ident">PySequenceConcatProtocol</span>, <span class="ident">T</span>::<span class="ident">__concat__</span>);
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_repeat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceRepeatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_repeat</span> <span class="op">=</span> <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(<span class="ident">PySequenceRepeatProtocol</span>, <span class="ident">T</span>::<span class="ident">__repeat__</span>);
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_getitem</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceGetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_item</span> <span class="op">=</span> <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(<span class="ident">PySequenceGetItemProtocol</span>, <span class="ident">T</span>::<span class="ident">__getitem__</span>);
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_setitem</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceSetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_ass_item</span> <span class="op">=</span> <span class="ident">sq_ass_item_impl</span>::<span class="ident">set_item</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_delitem</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceDelItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_ass_item</span> <span class="op">=</span> <span class="ident">sq_ass_item_impl</span>::<span class="ident">del_item</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_setdelitem</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceDelItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceSetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_ass_item</span> <span class="op">=</span> <span class="ident">sq_ass_item_impl</span>::<span class="ident">set_del_item</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>();
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_contains</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceContainsProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_contains</span> <span class="op">=</span> <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="ident">PySequenceContainsProtocol</span>, <span class="ident">T</span>::<span class="ident">__contains__</span>, <span class="ident">c_int</span>);
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_inplace_concat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceInplaceConcatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="self">self</span>.<span class="ident">sq_inplace_concat</span> <span class="op">=</span> <span class="macro">py_binary_func</span><span class="macro">!</span>(
-            <span class="ident">PySequenceInplaceConcatProtocol</span>,
-            <span class="ident">T</span>::<span class="ident">__inplace_concat__</span>,
-            <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
-            <span class="ident">call_mut</span>
+        <span class="ident">TypedSlot</span>(
+            <span class="ident">ffi</span>::<span class="ident">Py_sq_length</span>,
+            <span class="macro">py_len_func</span><span class="macro">!</span>(<span class="ident">PySequenceLenProtocol</span>, <span class="self">Self</span>::<span class="ident">__len__</span>),
         )
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_inplace_repeat</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>)
+
+    <span class="kw">fn</span> <span class="ident">get_concat</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">binaryfunc</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceInplaceRepeatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceConcatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
     {
-        <span class="self">self</span>.<span class="ident">sq_inplace_repeat</span> <span class="op">=</span> <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(
-            <span class="ident">PySequenceInplaceRepeatProtocol</span>,
-            <span class="ident">T</span>::<span class="ident">__inplace_repeat__</span>,
-            <span class="ident">call_mut</span>
+        <span class="ident">TypedSlot</span>(
+            <span class="ident">ffi</span>::<span class="ident">Py_sq_concat</span>,
+            <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="ident">PySequenceConcatProtocol</span>, <span class="self">Self</span>::<span class="ident">__concat__</span>),
         )
     }
-}
 
-<span class="doccomment">/// It can be possible to delete and set items (PySequenceSetItemProtocol and</span>
-<span class="doccomment">/// PySequenceDelItemProtocol implemented), only to delete (PySequenceDelItemProtocol implemented)</span>
-<span class="doccomment">/// or no deleting or setting is possible</span>
-<span class="kw">mod</span> <span class="ident">sq_ass_item_impl</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">set_item</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeobjargproc</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">get_repeat</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeargfunc</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceSetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceRepeatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+    {
+        <span class="ident">TypedSlot</span>(
+            <span class="ident">ffi</span>::<span class="ident">Py_sq_repeat</span>,
+            <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(<span class="ident">PySequenceRepeatProtocol</span>, <span class="self">Self</span>::<span class="ident">__repeat__</span>),
+        )
+    }
+
+    <span class="kw">fn</span> <span class="ident">get_getitem</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeargfunc</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceGetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+    {
+        <span class="ident">TypedSlot</span>(
+            <span class="ident">ffi</span>::<span class="ident">Py_sq_item</span>,
+            <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(<span class="ident">PySequenceGetItemProtocol</span>, <span class="self">Self</span>::<span class="ident">__getitem__</span>),
+        )
+    }
+
+    <span class="kw">fn</span> <span class="ident">get_setitem</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeobjargproc</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceSetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
     {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
@@ -533,12 +507,13 @@
                 <span class="kw">crate</span>::<span class="ident">callback</span>::<span class="ident">convert</span>(<span class="ident">py</span>, <span class="ident">slf</span>.<span class="ident">__setitem__</span>(<span class="ident">key</span>.<span class="ident">into</span>(), <span class="ident">value</span>))
             })
         }
-        <span class="prelude-val">Some</span>(<span class="ident">wrap</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)
+
+        <span class="ident">TypedSlot</span>(<span class="ident">ffi</span>::<span class="ident">Py_sq_ass_item</span>, <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">del_item</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeobjargproc</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">get_delitem</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeobjargproc</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceDelItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceDelItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
     {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
@@ -561,12 +536,13 @@
                 }
             })
         }
-        <span class="prelude-val">Some</span>(<span class="ident">wrap</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)
+
+        <span class="ident">TypedSlot</span>(<span class="ident">ffi</span>::<span class="ident">Py_sq_ass_item</span>, <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">set_del_item</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeobjargproc</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">get_setdelitem</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeobjargproc</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceSetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceDelItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceDelItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceSetItemProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
     {
         <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
@@ -589,8 +565,50 @@
                 }
             })
         }
-        <span class="prelude-val">Some</span>(<span class="ident">wrap</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)
+
+        <span class="ident">TypedSlot</span>(<span class="ident">ffi</span>::<span class="ident">Py_sq_ass_item</span>, <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">get_contains</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">objobjproc</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceContainsProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+    {
+        <span class="ident">TypedSlot</span>(
+            <span class="ident">ffi</span>::<span class="ident">Py_sq_contains</span>,
+            <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="ident">PySequenceContainsProtocol</span>, <span class="self">Self</span>::<span class="ident">__contains__</span>, <span class="ident">c_int</span>),
+        )
+    }
+
+    <span class="kw">fn</span> <span class="ident">get_inplace_concat</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">binaryfunc</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceInplaceConcatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+    {
+        <span class="ident">TypedSlot</span>(
+            <span class="ident">ffi</span>::<span class="ident">Py_sq_inplace_concat</span>,
+            <span class="macro">py_binary_func</span><span class="macro">!</span>(
+                <span class="ident">PySequenceInplaceConcatProtocol</span>,
+                <span class="self">Self</span>::<span class="ident">__inplace_concat__</span>,
+                <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+                <span class="ident">call_mut</span>
+            ),
+        )
+    }
+
+    <span class="kw">fn</span> <span class="ident">get_inplace_repeat</span>() <span class="op">-&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">ssizeargfunc</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PySequenceInplaceRepeatProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+    {
+        <span class="ident">TypedSlot</span>(
+            <span class="ident">ffi</span>::<span class="ident">Py_sq_inplace_repeat</span>,
+            <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(
+                <span class="ident">PySequenceInplaceRepeatProtocol</span>,
+                <span class="self">Self</span>::<span class="ident">__inplace_repeat__</span>,
+                <span class="ident">call_mut</span>
+            ),
+        )
     }
 }
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">PySequenceSlots</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">PySequenceProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {}
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "pyo3";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

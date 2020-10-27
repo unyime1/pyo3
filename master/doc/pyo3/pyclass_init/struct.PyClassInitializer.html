@@ -3,12 +3,12 @@
 <p>You can use this type to initalize complicatedly nested <code>#[pyclass]</code>.</p>
 <h1 id="example" class="section-header"><a href="#example">Example</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="attribute">#[<span class="ident">pyclass</span>]</span>
+<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">subclass</span>)]</span>
 <span class="kw">struct</span> <span class="ident">BaseClass</span> {
     <span class="attribute">#[<span class="ident">pyo3</span>(<span class="ident">get</span>)]</span>
     <span class="ident">basename</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
 }
-<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">extends</span><span class="op">=</span><span class="ident">BaseClass</span>)]</span>
+<span class="attribute">#[<span class="ident">pyclass</span>(<span class="ident">extends</span><span class="op">=</span><span class="ident">BaseClass</span>, <span class="ident">subclass</span>)]</span>
 <span class="kw">struct</span> <span class="ident">SubClass</span> {
     <span class="attribute">#[<span class="ident">pyo3</span>(<span class="ident">get</span>)]</span>
     <span class="ident">subname</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,

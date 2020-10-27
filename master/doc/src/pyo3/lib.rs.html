@@ -384,6 +384,7 @@
 <span id="383">383</span>
 <span id="384">384</span>
 <span id="385">385</span>
+<span id="386">386</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">specialization</span>))]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">missing_safety_doc</span>)]</span> <span class="comment">// FIXME (#698)</span>
@@ -571,6 +572,7 @@
 <span class="kw">mod</span> <span class="ident">instance</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">internal_tricks</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">marshal</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">once_cell</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">panic</span>;

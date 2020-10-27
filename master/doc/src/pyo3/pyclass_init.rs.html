@@ -229,12 +229,12 @@
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// # use pyo3::prelude::*;</span>
 <span class="doccomment">/// # use pyo3::py_run;</span>
-<span class="doccomment">/// #[pyclass]</span>
+<span class="doccomment">/// #[pyclass(subclass)]</span>
 <span class="doccomment">/// struct BaseClass {</span>
 <span class="doccomment">///     #[pyo3(get)]</span>
 <span class="doccomment">///     basename: &amp;&#39;static str,</span>
 <span class="doccomment">/// }</span>
-<span class="doccomment">/// #[pyclass(extends=BaseClass)]</span>
+<span class="doccomment">/// #[pyclass(extends=BaseClass, subclass)]</span>
 <span class="doccomment">/// struct SubClass {</span>
 <span class="doccomment">///     #[pyo3(get)]</span>
 <span class="doccomment">///     subname: &amp;&#39;static str,</span>
