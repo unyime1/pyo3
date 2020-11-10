@@ -167,6 +167,9 @@
 <span id="166">166</span>
 <span id="167">167</span>
 <span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>, <span class="ident">non_snake_case</span>, <span class="ident">non_upper_case_globals</span>)]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">allow</span>(<span class="ident">unused_imports</span>))]</span>
@@ -193,6 +196,8 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">funcobject</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">genobject</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">import</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">PY_LIMITED_API</span>, <span class="ident">PyPy</span>))))]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">initconfig</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">intrcheck</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">iterobject</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">listobject</span>::<span class="kw-2">*</span>;
@@ -237,12 +242,13 @@
 <span class="comment">// [cfg(not(Py_LIMITED_API))]</span>
 <span class="comment">// mod pytime; contains nothing of interest</span>
 
-<span class="kw">mod</span> <span class="ident">pymem</span>;
-
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">PY_LIMITED_API</span>, <span class="ident">PyPy</span>))))]</span>
+<span class="kw">mod</span> <span class="ident">initconfig</span>;
 <span class="kw">mod</span> <span class="ident">object</span>;
 <span class="kw">mod</span> <span class="ident">objimpl</span>;
 <span class="kw">mod</span> <span class="ident">pydebug</span>;
 <span class="kw">mod</span> <span class="ident">pyhash</span>;
+<span class="kw">mod</span> <span class="ident">pymem</span>;
 <span class="kw">mod</span> <span class="ident">typeslots</span>;
 
 <span class="kw">mod</span> <span class="ident">bytearrayobject</span>;
