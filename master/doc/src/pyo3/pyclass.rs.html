@@ -768,18 +768,18 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new</span> <span class="op">=</span> <span class="ident">fallback_new</span>();
 
     <span class="kw">for</span> <span class="ident">def</span> <span class="kw">in</span> <span class="ident">T</span>::<span class="ident">py_methods</span>() {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">def</span> {
-            <span class="ident">PyMethodDefType</span>::<span class="ident">New</span>(<span class="kw-2">ref</span> <span class="ident">def</span>) <span class="op">=&gt;</span> {
+        <span class="kw">match</span> <span class="ident">def</span> {
+            <span class="ident">PyMethodDefType</span>::<span class="ident">New</span>(<span class="ident">def</span>) <span class="op">=&gt;</span> {
                 <span class="ident">new</span> <span class="op">=</span> <span class="ident">def</span>.<span class="ident">get_new_func</span>();
                 <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">new</span>.<span class="ident">is_some</span>());
             }
-            <span class="ident">PyMethodDefType</span>::<span class="ident">Call</span>(<span class="kw-2">ref</span> <span class="ident">def</span>) <span class="op">=&gt;</span> {
+            <span class="ident">PyMethodDefType</span>::<span class="ident">Call</span>(<span class="ident">def</span>) <span class="op">=&gt;</span> {
                 <span class="ident">call</span> <span class="op">=</span> <span class="ident">def</span>.<span class="ident">get_cfunction_with_keywords</span>();
                 <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">call</span>.<span class="ident">is_some</span>());
             }
-            <span class="ident">PyMethodDefType</span>::<span class="ident">Method</span>(<span class="kw-2">ref</span> <span class="ident">def</span>)
-            <span class="op">|</span> <span class="ident">PyMethodDefType</span>::<span class="ident">Class</span>(<span class="kw-2">ref</span> <span class="ident">def</span>)
-            <span class="op">|</span> <span class="ident">PyMethodDefType</span>::<span class="ident">Static</span>(<span class="kw-2">ref</span> <span class="ident">def</span>) <span class="op">=&gt;</span> {
+            <span class="ident">PyMethodDefType</span>::<span class="ident">Method</span>(<span class="ident">def</span>)
+            <span class="op">|</span> <span class="ident">PyMethodDefType</span>::<span class="ident">Class</span>(<span class="ident">def</span>)
+            <span class="op">|</span> <span class="ident">PyMethodDefType</span>::<span class="ident">Static</span>(<span class="ident">def</span>) <span class="op">=&gt;</span> {
                 <span class="ident">defs</span>.<span class="ident">push</span>(<span class="ident">def</span>.<span class="ident">as_method_def</span>());
             }
             <span class="kw">_</span> <span class="op">=&gt;</span> (),
@@ -797,15 +797,15 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">defs</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>::<span class="ident">new</span>();
 
     <span class="kw">for</span> <span class="ident">def</span> <span class="kw">in</span> <span class="ident">T</span>::<span class="ident">py_methods</span>() {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">def</span> {
-            <span class="ident">PyMethodDefType</span>::<span class="ident">Getter</span>(<span class="kw-2">ref</span> <span class="ident">getter</span>) <span class="op">=&gt;</span> {
+        <span class="kw">match</span> <span class="ident">def</span> {
+            <span class="ident">PyMethodDefType</span>::<span class="ident">Getter</span>(<span class="ident">getter</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="ident">getter</span>.<span class="ident">name</span>) {
                     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">getter</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
                 }
                 <span class="kw">let</span> <span class="ident">def</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">get_mut</span>(<span class="ident">getter</span>.<span class="ident">name</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to call get_mut&quot;</span>);
                 <span class="ident">getter</span>.<span class="ident">copy_to</span>(<span class="ident">def</span>);
             }
-            <span class="ident">PyMethodDefType</span>::<span class="ident">Setter</span>(<span class="kw-2">ref</span> <span class="ident">setter</span>) <span class="op">=&gt;</span> {
+            <span class="ident">PyMethodDefType</span>::<span class="ident">Setter</span>(<span class="ident">setter</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="ident">setter</span>.<span class="ident">name</span>) {
                     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">setter</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
                 }

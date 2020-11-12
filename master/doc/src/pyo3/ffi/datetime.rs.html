@@ -870,7 +870,7 @@
 <span class="doccomment">/// Accessor functions</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">_access_field</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">obj</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>:<span class="ident">tt</span>) <span class="op">=&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">obj</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="kw">type</span>: <span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> {
         (<span class="kw-2">*</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">type</span>)).<span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>
     };
 }
@@ -1052,7 +1052,7 @@
 <span class="comment">// Accessor functions for PyDateTime_Delta</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">_access_delta_field</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">obj</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>:<span class="ident">tt</span>) <span class="op">=&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">obj</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> {
         <span class="macro">_access_field</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">obj</span>, <span class="ident">PyDateTime_Delta</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">field</span>)
     };
 }
