@@ -1101,7 +1101,6 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">PyErrState</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">exceptions</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">panic</span>::<span class="ident">PanicException</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PyErr</span>, <span class="ident">Python</span>};
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1115,23 +1114,24 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">fetching_panic_exception_panics</span>() {
-        <span class="comment">// If -Cpanic=abort is specified, we can&#39;t catch panic.</span>
-        <span class="kw">if</span> <span class="macro">option_env</span><span class="macro">!</span>(<span class="string">&quot;RUSTFLAGS&quot;</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">contains</span>(<span class="string">&quot;-Cpanic=abort&quot;</span>))
-            .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
-        {
-            <span class="kw">return</span>;
+    <span class="attribute">#[<span class="ident">should_panic</span>(<span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;new panic&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">fetching_panic_exception_resumes_unwind</span>() {
+        <span class="comment">// TODO replace with #[cfg(panic = &quot;unwind&quot;)] once stable</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="kw">crate</span>::<span class="ident">cfg_panic_unwind</span>() {
+            <span class="comment">// panic to meet the expected abort in panic=abort :-/</span>
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;new panic&quot;</span>);
         }
+
+        <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">panic</span>::<span class="ident">PanicException</span>;
 
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
         <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">PyErr</span> <span class="op">=</span> <span class="ident">PanicException</span>::<span class="ident">new_err</span>(<span class="string">&quot;new panic&quot;</span>);
         <span class="ident">err</span>.<span class="ident">restore</span>(<span class="ident">py</span>);
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">PyErr</span>::<span class="ident">occurred</span>(<span class="ident">py</span>));
-        <span class="kw">let</span> <span class="ident">started_unwind</span> <span class="op">=</span>
-            <span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">catch_unwind</span>(<span class="ident">std</span>::<span class="ident">panic</span>::<span class="ident">AssertUnwindSafe</span>(<span class="op">||</span> <span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>))).<span class="ident">is_err</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">started_unwind</span>);
+
+        <span class="comment">// should resume unwind</span>
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

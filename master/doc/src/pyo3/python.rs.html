@@ -613,9 +613,6 @@
 <span id="612">612</span>
 <span id="613">613</span>
 <span id="614">614</span>
-<span id="615">615</span>
-<span id="616">616</span>
-<span id="617">617</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -1207,11 +1204,8 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_allow_threads_panics_safely</span>() {
-        <span class="comment">// If -Cpanic=abort is specified, we can&#39;t catch panic.</span>
-        <span class="kw">if</span> <span class="macro">option_env</span><span class="macro">!</span>(<span class="string">&quot;RUSTFLAGS&quot;</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">contains</span>(<span class="string">&quot;-Cpanic=abort&quot;</span>))
-            .<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>)
-        {
+        <span class="comment">// TODO replace with #[cfg(panic = &quot;unwind&quot;)] once stable</span>
+        <span class="kw">if</span> <span class="op">!</span><span class="kw">crate</span>::<span class="ident">cfg_panic_unwind</span>() {
             <span class="kw">return</span>;
         }
 

@@ -385,6 +385,12 @@
 <span id="384">384</span>
 <span id="385">385</span>
 <span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">specialization</span>))]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">missing_safety_doc</span>)]</span> <span class="comment">// FIXME (#698)</span>
@@ -771,6 +777,12 @@
     <span class="macro">doctest</span><span class="macro">!</span>(<span class="string">&quot;../guide/src/rust_cpython.md&quot;</span>, <span class="ident">guide_rust_cpython_md</span>);
     <span class="macro">doctest</span><span class="macro">!</span>(<span class="string">&quot;../guide/src/types.md&quot;</span>, <span class="ident">guide_types_md</span>);
     <span class="macro">doctest</span><span class="macro">!</span>(<span class="string">&quot;../guide/src/trait_bounds.md&quot;</span>, <span class="ident">guide_trait_bounds_md</span>);
+}
+
+<span class="comment">// interim helper until #[cfg(panic = ...)] is stable</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">fn</span> <span class="ident">cfg_panic_unwind</span>() <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="macro">option_env</span><span class="macro">!</span>(<span class="string">&quot;RUSTFLAGS&quot;</span>).<span class="ident">map_or</span>(<span class="bool-val">true</span>, <span class="op">|</span><span class="ident">var</span><span class="op">|</span> <span class="op">!</span><span class="ident">var</span>.<span class="ident">contains</span>(<span class="string">&quot;-Cpanic=abort&quot;</span>))
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "pyo3";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
