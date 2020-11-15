@@ -3962,6 +3962,8 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li><code>#[pyclass(subclass)]</code> is now required for subclassing from Rust (was previously just required for subclassing from Python). <a href="https://github.com/PyO3/pyo3/pull/1152">#1152</a></li>
 <li>Change <code>PyIterator</code> to be consistent with other native types: it is now used as <code>&amp;PyIterator</code> instead of <code>PyIterator&lt;'a&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1176">#1176</a></li>
 <li>Change formatting of <code>PyDowncastError</code> messages to be closer to Python's builtin error messages. <a href="https://github.com/PyO3/pyo3/pull/1212">#1212</a></li>
+<li>Change <code>Debug</code> and <code>Display</code> impls for <code>PyException</code> to be consistent with <code>PyAny</code>. <a href="https://github.com/PyO3/pyo3/pull/1275">#1275</a></li>
+<li>Change <code>Debug</code> impl of <code>PyErr</code> to output more helpful information (acquiring the GIL if necessary). <a href="https://github.com/PyO3/pyo3/pull/1275">#1275</a></li>
 </ul>
 <h3><a class="header" href="#removed" id="removed">Removed</a></h3>
 <ul>
