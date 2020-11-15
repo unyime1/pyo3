@@ -431,7 +431,7 @@
             }
 
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_unsafe</span>)]</span>
-            <span class="kw">fn</span> <span class="ident">is_instance</span>(<span class="ident">ptr</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="kw">fn</span> <span class="ident">is_type_of</span>(<span class="ident">ptr</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">AsPyPointer</span>;
                 <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">checkfunction</span>(<span class="ident">ptr</span>.<span class="ident">as_ptr</span>()) <span class="op">&gt;</span> <span class="number">0</span> }
             }
