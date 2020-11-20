@@ -474,9 +474,6 @@
 <span id="473">473</span>
 <span id="474">474</span>
 <span id="475">475</span>
-<span id="476">476</span>
-<span id="477">477</span>
-<span id="478">478</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -654,10 +651,7 @@
 
 <span class="doccomment">/// Identity conversion: allows using existing `PyObject` instances where</span>
 <span class="doccomment">/// `T: ToPyObject` is expected.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">ToPyObject</span>,
-{
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">ToPyObject</span><span class="op">&gt;</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">T</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-&gt;</span> <span class="ident">PyObject</span> {
         <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">ToPyObject</span><span class="op">&gt;</span>::<span class="ident">to_object</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="ident">py</span>)

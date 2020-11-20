@@ -258,6 +258,56 @@
 <span id="257">257</span>
 <span id="258">258</span>
 <span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -402,6 +452,19 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="ident">char</span> {
+    <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-&gt;</span> <span class="ident">PyObject</span> {
+        <span class="self">self</span>.<span class="ident">into_py</span>(<span class="ident">py</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">char</span> {
+    <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-&gt;</span> <span class="ident">PyObject</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">4</span>];
+        <span class="ident">PyString</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="self">self</span>.<span class="ident">encode_utf8</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bytes</span>)).<span class="ident">into</span>()
+    }
+}
+
 <span class="kw">impl</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
     <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-&gt;</span> <span class="ident">PyObject</span> {
         <span class="ident">PyString</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span><span class="self">self</span>).<span class="ident">into</span>()
@@ -417,7 +480,7 @@
 
 <span class="doccomment">/// Allows extracting strings from Python objects.</span>
 <span class="doccomment">/// Accepts Python `str` and `unicode` objects.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="kw">crate</span>::<span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident">str</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident">str</span> {
     <span class="kw">fn</span> <span class="ident">extract</span>(<span class="ident">ob</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">ob</span>)<span class="question-mark">?</span>.<span class="ident">to_str</span>()
     }
@@ -425,11 +488,25 @@
 
 <span class="doccomment">/// Allows extracting strings from Python objects.</span>
 <span class="doccomment">/// Accepts Python `str` and `unicode` objects.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;source</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
-    <span class="kw">fn</span> <span class="ident">extract</span>(<span class="ident">obj</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">String</span> {
+    <span class="kw">fn</span> <span class="ident">extract</span>(<span class="ident">obj</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>)<span class="question-mark">?</span>
             .<span class="ident">to_str</span>()
             .<span class="ident">map</span>(<span class="ident">ToOwned</span>::<span class="ident">to_owned</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">char</span> {
+    <span class="kw">fn</span> <span class="ident">extract</span>(<span class="ident">obj</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">PyString</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>)<span class="question-mark">?</span>.<span class="ident">to_str</span>()<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">chars</span>();
+        <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">ch</span>), <span class="prelude-val">None</span>) <span class="op">=</span> (<span class="ident">iter</span>.<span class="ident">next</span>(), <span class="ident">iter</span>.<span class="ident">next</span>()) {
+            <span class="prelude-val">Ok</span>(<span class="ident">ch</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">exceptions</span>::<span class="ident">PyValueError</span>::<span class="ident">new_err</span>(
+                <span class="string">&quot;expected a string of length 1&quot;</span>,
+            ))
+        }
     }
 }
 
@@ -441,81 +518,104 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_non_bmp</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;\u{1F30F}&quot;</span>;
-        <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">py_string</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>());
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;\u{1F30F}&quot;</span>;
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">py_string</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>());
+        })
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_extract_str</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Hello Python&quot;</span>;
-        <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Hello Python&quot;</span>;
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
 
-        <span class="kw">let</span> <span class="ident">s2</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="ident">FromPyObject</span>::<span class="ident">extract</span>(<span class="ident">py_string</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">s2</span>);
+            <span class="kw">let</span> <span class="ident">s2</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="ident">FromPyObject</span>::<span class="ident">extract</span>(<span class="ident">py_string</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">s2</span>);
+        })
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_extract_char</span>() {
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">ch</span> <span class="op">=</span> <span class="string">&#39;😃&#39;</span>;
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="ident">ch</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">ch2</span>: <span class="ident">char</span> <span class="op">=</span> <span class="ident">FromPyObject</span>::<span class="ident">extract</span>(<span class="ident">py_string</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ch</span>, <span class="ident">ch2</span>);
+        })
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_extract_char_err</span>() {
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Hello Python&quot;</span>;
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">err</span>: <span class="kw">crate</span>::<span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">FromPyObject</span>::<span class="ident">extract</span>(<span class="ident">py_string</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>));
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>
+                .<span class="ident">unwrap_err</span>()
+                .<span class="ident">to_string</span>()
+                .<span class="ident">contains</span>(<span class="string">&quot;expected a string of length 1&quot;</span>));
+        })
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_to_str_ascii</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;ascii 🐈&quot;</span>;
-        <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyString</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="ident">s</span>).<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">py_string</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>());
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;ascii 🐈&quot;</span>;
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyString</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="ident">s</span>).<span class="ident">into</span>();
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">py_string</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>());
+        })
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_to_str_surrogate</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">r#&quot;&#39;\ud800&#39;&quot;#</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">py_string</span>.<span class="ident">to_str</span>().<span class="ident">is_err</span>());
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">r#&quot;&#39;\ud800&#39;&quot;#</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>().<span class="ident">into</span>();
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">py_string</span>.<span class="ident">to_str</span>().<span class="ident">is_err</span>());
+        })
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_to_str_unicode</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;哈哈🐈&quot;</span>;
-        <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyString</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="ident">s</span>).<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">py_string</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>());
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;哈哈🐈&quot;</span>;
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyString</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="ident">s</span>).<span class="ident">into</span>();
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>, <span class="ident">py_string</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>());
+        })
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_to_string_lossy</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">eval</span>(<span class="string">r#&quot;&#39;🐈 Hello \ud800World&#39;&quot;#</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">py_string</span>.<span class="ident">to_string_lossy</span>(), <span class="string">&quot;🐈 Hello ���World&quot;</span>);
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">eval</span>(<span class="string">r#&quot;&#39;🐈 Hello \ud800World&#39;&quot;#</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+                .<span class="ident">unwrap</span>()
+                .<span class="ident">into</span>();
+            <span class="kw">let</span> <span class="ident">py_string</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">py_string</span>.<span class="ident">to_string_lossy</span>(), <span class="string">&quot;🐈 Hello ���World&quot;</span>);
+        })
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_debug_string</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="string">&quot;Hello\n&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">v</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">s</span>), <span class="string">&quot;&#39;Hello\\n&#39;&quot;</span>);
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="string">&quot;Hello\n&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">v</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">s</span>), <span class="string">&quot;&#39;Hello\\n&#39;&quot;</span>);
+        })
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_display_string</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="string">&quot;Hello\n&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">v</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">s</span>), <span class="string">&quot;Hello\n&quot;</span>);
+        <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="string">&quot;Hello\n&quot;</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span>::<span class="ident">try_from</span>(<span class="ident">v</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">s</span>), <span class="string">&quot;Hello\n&quot;</span>);
+        })
     }
 }
 </pre></div>
