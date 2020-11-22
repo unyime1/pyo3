@@ -2034,21 +2034,21 @@ have Rust types as well.</p>
 <span class="boring">}
 </span></code></pre></pre>
 <h2><a class="header" href="#checking-exception-types" id="checking-exception-types">Checking exception types</a></h2>
-<p>Python has an <a href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance</code></a> method to check an object's type,
-in PyO3 there is a <a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.is_instance"><code>Python::is_instance</code></a> method which does the same thing.</p>
+<p>Python has an <a href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance</code></a> method to check an object's type.
+In PyO3 every native type has access to the [<code>PyAny::is_instance</code>] method which does the same thing.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::Python;
 use pyo3::types::{PyBool, PyList};
 
 fn main() {
     let gil = Python::acquire_gil();
     let py = gil.python();
-    assert!(py.is_instance::&lt;PyBool, _&gt;(PyBool::new(py, true)).unwrap());
+    assert!(PyBool::new(py, true).is_instance::&lt;PyBool&gt;().unwrap());
     let list = PyList::new(py, &amp;[1, 2, 3, 4]);
-    assert!(!py.is_instance::&lt;PyBool, _&gt;(list.as_ref()).unwrap());
-    assert!(py.is_instance::&lt;PyList, _&gt;(list.as_ref()).unwrap());
+    assert!(!list.is_instance::&lt;PyBool&gt;().unwrap());
+    assert!(list.is_instance::&lt;PyList&gt;().unwrap());
 }
 </code></pre></pre>
-<p><a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.is_instance"><code>Python::is_instance</code></a> calls the underlying <a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyType.html#method.is_instance"><code>PyType::is_instance</code></a>
+<p>[<code>PyAny::is_instance</code>] calls the underlying <a href="https://docs.rs/pyo3/latest/pyo3/types/struct.PyType.html#method.is_instance"><code>PyType::is_instance</code></a>
 method to do the actual work.</p>
 <p>To check the type of an exception, you can similarly do:</p>
 <pre><pre class="playground"><code class="language-rust">
@@ -3955,6 +3955,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add FFI definitions for PEP 587 &quot;Python Initialization Configuration&quot;. <a href="https://github.com/PyO3/pyo3/pull/1247">#1247</a></li>
 <li>Add <code>PyEval_SetProfile</code> and <code>PyEval_SetTrace</code> to FFI. <a href="https://github.com/PyO3/pyo3/pull/1255">#1255</a></li>
 <li>Add context.h functions (<code>PyContext_New</code>, etc) to FFI. <a href="https://github.com/PyO3/pyo3/pull/1259">#1259</a></li>
+<li>Add <code>PyAny::is_instance()</code> method. <a href="https://github.com/PyO3/pyo3/pull/1276">#1276</a></li>
 <li>Add support for conversion between <code>char</code> and <code>PyString</code>. <a href="https://github.com/PyO3/pyo3/pull/1282">#1282</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
