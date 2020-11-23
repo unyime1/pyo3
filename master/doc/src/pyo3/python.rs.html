@@ -613,6 +613,13 @@
 <span id="612">612</span>
 <span id="613">613</span>
 <span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -688,21 +695,6 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Retrieves a Python instance under the assumption that the GIL is already</span>
-    <span class="doccomment">/// acquired at this point, and stays acquired for the lifetime `&#39;p`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Because the output lifetime `&#39;p` is not connected to any input parameter,</span>
-    <span class="doccomment">/// care must be taken that the compiler infers an appropriate lifetime for `&#39;p`</span>
-    <span class="doccomment">/// when calling this function.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Safety</span>
-    <span class="doccomment">/// The lifetime `&#39;p` must be shorter than the period you *assume* that you have GIL.</span>
-    <span class="doccomment">/// I.e., `Python&lt;&#39;static&gt;` is always *really* unsafe.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_gil_acquired</span>() <span class="op">-&gt;</span> <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {
-        <span class="ident">Python</span>(<span class="ident">PhantomData</span>)
-    }
-
     <span class="doccomment">/// Acquires the global interpreter lock, which allows access to the Python runtime.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the Python runtime is not already initialized, this function will initialize it.</span>
@@ -919,24 +911,6 @@
         <span class="ident">PyModule</span>::<span class="ident">import</span>(<span class="self">self</span>, <span class="ident">name</span>)
     }
 
-    <span class="doccomment">/// Checks whether `obj` is an instance of type `T`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is equivalent to the Python `isinstance` function.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_instance</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyTypeObject</span>, <span class="ident">V</span>: <span class="ident">AsPyPointer</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">obj</span>: <span class="kw-2">&amp;</span><span class="ident">V</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
-        <span class="ident">T</span>::<span class="ident">type_object</span>(<span class="self">self</span>).<span class="ident">is_instance</span>(<span class="ident">obj</span>)
-    }
-
-    <span class="doccomment">/// Checks whether type `T` is subclass of type `U`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This is equivalent to the Python `issubclass` function.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_subclass</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">T</span>: <span class="ident">PyTypeObject</span>,
-        <span class="ident">U</span>: <span class="ident">PyTypeObject</span>,
-    {
-        <span class="ident">T</span>::<span class="ident">type_object</span>(<span class="self">self</span>).<span class="ident">is_subclass</span>::<span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>()
-    }
-
     <span class="doccomment">/// Gets the Python builtin value `None`.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span> <span class="comment">// the Python keyword starts with uppercase</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -951,64 +925,6 @@
         <span class="kw">unsafe</span> { <span class="ident">PyObject</span>::<span class="ident">from_borrowed_ptr</span>(<span class="self">self</span>, <span class="ident">ffi</span>::<span class="ident">Py_NotImplemented</span>()) }
     }
 
-    <span class="doccomment">/// Create a new pool for managing PyO3&#39;s owned references.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// When this `GILPool` is dropped, all PyO3 owned references created after this `GILPool` will</span>
-    <span class="doccomment">/// all have their Python reference counts decremented, potentially allowing Python to drop</span>
-    <span class="doccomment">/// the corresponding Python objects.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Typical usage of PyO3 will not need this API, as `Python::acquire_gil` automatically</span>
-    <span class="doccomment">/// creates a `GILPool` where appropriate.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Advanced uses of PyO3 which perform long-running tasks which never free the GIL may need</span>
-    <span class="doccomment">/// to use this API to clear memory, as PyO3 usually does not clear memory until the GIL is</span>
-    <span class="doccomment">/// released.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// # use pyo3::prelude::*;</span>
-    <span class="doccomment">/// let gil = Python::acquire_gil();</span>
-    <span class="doccomment">/// let py = gil.python();</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// // Some long-running process like a webserver, which never releases the GIL.</span>
-    <span class="doccomment">/// loop {</span>
-    <span class="doccomment">///     // Create a new pool, so that PyO3 can clear memory at the end of the loop.</span>
-    <span class="doccomment">///     let pool = unsafe { py.new_pool() };</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     // It is recommended to *always* immediately set py to the pool&#39;s Python, to help</span>
-    <span class="doccomment">///     // avoid creating references with invalid lifetimes.</span>
-    <span class="doccomment">///     let py = unsafe { pool.python() };</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">///     // do stuff...</span>
-    <span class="doccomment">/// # break;  // Exit the loop so that doctest terminates!</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Safety</span>
-    <span class="doccomment">/// Extreme care must be taken when using this API, as misuse can lead to accessing invalid</span>
-    <span class="doccomment">/// memory. In addition, the caller is responsible for guaranteeing that the GIL remains held</span>
-    <span class="doccomment">/// for the entire lifetime of the returned `GILPool`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Two best practices are required when using this API:</span>
-    <span class="doccomment">/// - From the moment `new_pool()` is called, only the `Python` token from the returned</span>
-    <span class="doccomment">///   `GILPool` (accessible using `.python()`) should be used in PyO3 APIs. All other older</span>
-    <span class="doccomment">///   `Python` tokens with longer lifetimes are unsafe to use until the `GILPool` is dropped,</span>
-    <span class="doccomment">///   because they can be used to create PyO3 owned references which have lifetimes which</span>
-    <span class="doccomment">///   outlive the `GILPool`.</span>
-    <span class="doccomment">/// - Similarly, methods on existing owned references will implicitly refer back to the</span>
-    <span class="doccomment">///   `Python` token which that reference was originally created with. If the returned values</span>
-    <span class="doccomment">///   from these methods are owned references they will inherit the same lifetime. As a result,</span>
-    <span class="doccomment">///   Rust&#39;s lifetime rules may allow them to outlive the `GILPool`, even though this is not</span>
-    <span class="doccomment">///   safe for reasons discussed above. Care must be taken to never access these return values</span>
-    <span class="doccomment">///   after the `GILPool` is dropped, unless they are converted to `Py&lt;T&gt;` *before* the pool</span>
-    <span class="doccomment">///   is dropped.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_pool</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">GILPool</span> {
-        <span class="ident">GILPool</span>::<span class="ident">new</span>()
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Registers the object in the release pool, and tries to downcast to specific type.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">checked_cast_as</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">obj</span>: <span class="ident">PyObject</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="ident">T</span>, <span class="ident">PyDowncastError</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;&gt;</span>
     <span class="kw">where</span>
@@ -1095,8 +1011,32 @@
         <span class="ident">FromPyPointer</span>::<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="self">self</span>, <span class="ident">ptr</span>)
     }
 
+    <span class="doccomment">/// Checks whether `obj` is an instance of type `T`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is equivalent to the Python `isinstance` function.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.13.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please use obj.is_instance::&lt;T&gt;() instead&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_instance</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyTypeObject</span>, <span class="ident">V</span>: <span class="ident">AsPyPointer</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">obj</span>: <span class="kw-2">&amp;</span><span class="ident">V</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
+        <span class="ident">T</span>::<span class="ident">type_object</span>(<span class="self">self</span>).<span class="ident">is_instance</span>(<span class="ident">obj</span>)
+    }
+
+    <span class="doccomment">/// Checks whether type `T` is subclass of type `U`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is equivalent to the Python `issubclass` function.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(
+        <span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.13.0&quot;</span>,
+        <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please use T::type_object(py).is_subclass::&lt;U&gt;() instead&quot;</span>
+    )]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_subclass</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">PyTypeObject</span>,
+        <span class="ident">U</span>: <span class="ident">PyTypeObject</span>,
+    {
+        <span class="ident">T</span>::<span class="ident">type_object</span>(<span class="self">self</span>).<span class="ident">is_subclass</span>::<span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>()
+    }
+
     <span class="doccomment">/// Releases a PyObject reference.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.13.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please just drop ob instead&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">release</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">ob</span>: <span class="ident">T</span>)
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">IntoPyPointer</span>,
@@ -1111,6 +1051,7 @@
 
     <span class="doccomment">/// Releases a `ffi::PyObject` pointer.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.13.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;Please just drop obj instead&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">xdecref</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">IntoPyPointer</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">ptr</span>: <span class="ident">T</span>) {
         <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">Py_XDECREF</span>(<span class="ident">ptr</span>.<span class="ident">into_ptr</span>()) };
     }
@@ -1133,6 +1074,77 @@
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(())
         }
+    }
+
+    <span class="doccomment">/// Retrieves a Python instance under the assumption that the GIL is already</span>
+    <span class="doccomment">/// acquired at this point, and stays acquired for the lifetime `&#39;p`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Because the output lifetime `&#39;p` is not connected to any input parameter,</span>
+    <span class="doccomment">/// care must be taken that the compiler infers an appropriate lifetime for `&#39;p`</span>
+    <span class="doccomment">/// when calling this function.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">/// The lifetime `&#39;p` must be shorter than the period you *assume* that you have GIL.</span>
+    <span class="doccomment">/// I.e., `Python&lt;&#39;static&gt;` is always *really* unsafe.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">assume_gil_acquired</span>() <span class="op">-&gt;</span> <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {
+        <span class="ident">Python</span>(<span class="ident">PhantomData</span>)
+    }
+
+    <span class="doccomment">/// Create a new pool for managing PyO3&#39;s owned references.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// When this `GILPool` is dropped, all PyO3 owned references created after this `GILPool` will</span>
+    <span class="doccomment">/// all have their Python reference counts decremented, potentially allowing Python to drop</span>
+    <span class="doccomment">/// the corresponding Python objects.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Typical usage of PyO3 will not need this API, as `Python::acquire_gil` automatically</span>
+    <span class="doccomment">/// creates a `GILPool` where appropriate.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Advanced uses of PyO3 which perform long-running tasks which never free the GIL may need</span>
+    <span class="doccomment">/// to use this API to clear memory, as PyO3 usually does not clear memory until the GIL is</span>
+    <span class="doccomment">/// released.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # use pyo3::prelude::*;</span>
+    <span class="doccomment">/// let gil = Python::acquire_gil();</span>
+    <span class="doccomment">/// let py = gil.python();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // Some long-running process like a webserver, which never releases the GIL.</span>
+    <span class="doccomment">/// loop {</span>
+    <span class="doccomment">///     // Create a new pool, so that PyO3 can clear memory at the end of the loop.</span>
+    <span class="doccomment">///     let pool = unsafe { py.new_pool() };</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///     // It is recommended to *always* immediately set py to the pool&#39;s Python, to help</span>
+    <span class="doccomment">///     // avoid creating references with invalid lifetimes.</span>
+    <span class="doccomment">///     let py = unsafe { pool.python() };</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///     // do stuff...</span>
+    <span class="doccomment">/// # break;  // Exit the loop so that doctest terminates!</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">/// Extreme care must be taken when using this API, as misuse can lead to accessing invalid</span>
+    <span class="doccomment">/// memory. In addition, the caller is responsible for guaranteeing that the GIL remains held</span>
+    <span class="doccomment">/// for the entire lifetime of the returned `GILPool`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Two best practices are required when using this API:</span>
+    <span class="doccomment">/// - From the moment `new_pool()` is called, only the `Python` token from the returned</span>
+    <span class="doccomment">///   `GILPool` (accessible using `.python()`) should be used in PyO3 APIs. All other older</span>
+    <span class="doccomment">///   `Python` tokens with longer lifetimes are unsafe to use until the `GILPool` is dropped,</span>
+    <span class="doccomment">///   because they can be used to create PyO3 owned references which have lifetimes which</span>
+    <span class="doccomment">///   outlive the `GILPool`.</span>
+    <span class="doccomment">/// - Similarly, methods on existing owned references will implicitly refer back to the</span>
+    <span class="doccomment">///   `Python` token which that reference was originally created with. If the returned values</span>
+    <span class="doccomment">///   from these methods are owned references they will inherit the same lifetime. As a result,</span>
+    <span class="doccomment">///   Rust&#39;s lifetime rules may allow them to outlive the `GILPool`, even though this is not</span>
+    <span class="doccomment">///   safe for reasons discussed above. Care must be taken to never access these return values</span>
+    <span class="doccomment">///   after the `GILPool` is dropped, unless they are converted to `Py&lt;T&gt;` *before* the pool</span>
+    <span class="doccomment">///   is dropped.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_pool</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">GILPool</span> {
+        <span class="ident">GILPool</span>::<span class="ident">new</span>()
     }
 }
 
@@ -1183,6 +1195,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
     <span class="kw">fn</span> <span class="ident">test_is_instance</span>() {
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
@@ -1195,6 +1208,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
     <span class="kw">fn</span> <span class="ident">test_is_subclass</span>() {
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
