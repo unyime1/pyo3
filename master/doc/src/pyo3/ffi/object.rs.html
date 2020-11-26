@@ -1664,7 +1664,7 @@
 
 <span class="doccomment">/// Set if the type implements the vectorcall protocol (PEP 590)</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">_Py_TPFLAGS_HAVE_VECTORCALL</span>: <span class="ident">c_ulong</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="number">11</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_TPFLAGS_HAVE_VECTORCALL</span>: <span class="ident">c_ulong</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="number">11</span>;
 
 <span class="doccomment">/// Set if the type is &#39;ready&#39; -- fully initialized</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_TPFLAGS_READY</span>: <span class="ident">c_ulong</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="number">12</span>;

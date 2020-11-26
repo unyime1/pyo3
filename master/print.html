@@ -3957,6 +3957,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add context.h functions (<code>PyContext_New</code>, etc) to FFI. <a href="https://github.com/PyO3/pyo3/pull/1259">#1259</a></li>
 <li>Add <code>PyAny::is_instance()</code> method. <a href="https://github.com/PyO3/pyo3/pull/1276">#1276</a></li>
 <li>Add support for conversion between <code>char</code> and <code>PyString</code>. <a href="https://github.com/PyO3/pyo3/pull/1282">#1282</a></li>
+<li>Add FFI definitions for <code>PyBuffer_SizeFromFormat</code>, <code>PyObject_LengthHint</code>, <code>PyObject_CallNoArgs</code>, <code>PyObject_CallOneArg</code>, <code>PyObject_CallMethodNoArgs</code>, <code>PyObject_CallMethodOneArg</code>, <code>PyObject_VectorcallDict</code>, and <code>PyObject_VectorcallMethod</code>. <a href="https://github.com/PyO3/pyo3/pull/1287">#1287</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
@@ -3967,6 +3968,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Change <code>Debug</code> and <code>Display</code> impls for <code>PyException</code> to be consistent with <code>PyAny</code>. <a href="https://github.com/PyO3/pyo3/pull/1275">#1275</a></li>
 <li>Change <code>Debug</code> impl of <code>PyErr</code> to output more helpful information (acquiring the GIL if necessary). <a href="https://github.com/PyO3/pyo3/pull/1275">#1275</a></li>
 <li>Rename <code>PyTypeInfo::is_instance</code> and <code>PyTypeInfo::is_exact_instance</code> to <code>PyTypeInfo::is_type_of</code> and <code>PyTypeInfo::is_exact_type_of</code>. <a href="https://github.com/PyO3/pyo3/pull/1278">#1278</a></li>
+<li>Optimize <code>PyAny::call0</code>, <code>Py::call0</code> and <code>PyAny::call_method0</code> and <code>Py::call_method0</code> on Python 3.9 and up. <a href="https://github.com/PyO3/pyo3/pull/1285">#1287</a></li>
 <li>Deprecate <code>Python::is_instance</code>, <code>Python::is_subclass</code>, <code>Python::release</code>, and <code>Python::xdecref</code>. <a href="https://github.com/PyO3/pyo3/pull/1292">#1292</a></li>
 </ul>
 <h3><a class="header" href="#removed" id="removed">Removed</a></h3>
@@ -3979,6 +3981,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Fix missing field in <code>PyCodeObject</code> struct (<code>co_posonlyargcount</code>) - caused invalid access to other fields in Python &gt;3.7. <a href="https://github.com/PyO3/pyo3/pull/1260">#1260</a></li>
 <li>Fix building for <code>x86_64-unknown-linux-musl</code> target from <code>x86_65-unknown-linux-gnu</code> host. <a href="https://github.com/PyO3/pyo3/pull/1267">#1267</a></li>
 <li>Fix <code>#[text_signature]</code> interacting badly with rust <code>r#raw_identifiers</code>. <a href="https://github.com/PyO3/pyo3/pull/1286">#1286</a></li>
+<li>Fix FFI definitions for <code>PyObject_Vectorcall</code> and <code>PyVectorcall_Call</code>. <a href="https://github.com/PyO3/pyo3/pull/1285">#1287</a></li>
 <li>Fix building with Anaconda python inside a virtualenv. <a href="https://github.com/PyO3/pyo3/pull/1290">#1290</a></li>
 </ul>
 <h2><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0122v01230123a---2020-10-12" id="a-hrefhttpsgithubcompyo3pyo3comparev0122v01230123a---2020-10-12"><a href="https://github.com/pyo3/pyo3/compare/v0.12.2...v0.12.3">0.12.3</a> - 2020-10-12</a></h2>
