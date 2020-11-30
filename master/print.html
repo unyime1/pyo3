@@ -2825,6 +2825,9 @@ version = &quot;*&quot;
 extension-module = [&quot;pyo3/extension-module&quot;]
 default = [&quot;extension-module&quot;]
 </code></pre>
+<h2><a class="header" href="#ctrl-c-doesnt-do-anything-while-my-rust-code-is-executing" id="ctrl-c-doesnt-do-anything-while-my-rust-code-is-executing">Ctrl-C doesn't do anything while my Rust code is executing!</a></h2>
+<p>This is because Ctrl-C raises a SIGINT signal, which is handled by the calling Python process by simply setting a flag to action upon later. This flag isn't checked while Rust code called from Python is executing, only once control returns to the Python interpreter.</p>
+<p>You can give the Python interpreter a chance to process the signal properly by calling <code>Python::check_signals</code>. It's good practice to call this function regularly if you have a long-running Rust function so that your users can cancel it.</p>
 <h1><a class="header" href="#migrating-from-older-pyo3-versions" id="migrating-from-older-pyo3-versions">Migrating from older PyO3 versions</a></h1>
 <p>This guide can help you upgrade code through breaking changes from one PyO3 version to the next.
 For a detailed list of all changes, see the <a href="changelog.html">CHANGELOG</a>.</p>
@@ -3960,6 +3963,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add support for conversion between <code>char</code> and <code>PyString</code>. <a href="https://github.com/PyO3/pyo3/pull/1282">#1282</a></li>
 <li>Add FFI definitions for <code>PyBuffer_SizeFromFormat</code>, <code>PyObject_LengthHint</code>, <code>PyObject_CallNoArgs</code>, <code>PyObject_CallOneArg</code>, <code>PyObject_CallMethodNoArgs</code>, <code>PyObject_CallMethodOneArg</code>, <code>PyObject_VectorcallDict</code>, and <code>PyObject_VectorcallMethod</code>. <a href="https://github.com/PyO3/pyo3/pull/1287">#1287</a></li>
 <li>Allow the use of a string literal in <code>#[pyclass(name = &quot;string literal&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1295">#1295</a></li>
+<li>Add section about Python::check_signals to the FAQ page of the user guide. <a href="https://github.com/PyO3/pyo3/pull/1301">#1301</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
