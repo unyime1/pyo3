@@ -206,6 +206,14 @@ If you set more that one of these api version feature flags the highest version 
 PyO3 is only able to link your extension module to api3 version up to and including your host Python version. E.g., if you set <code>abi3-py38</code> and try to compile the crate with a host of Python 3.6, the build will fail.</p>
 <p>As an advanced feature, you can build PyO3 wheel without calling Python interpreter with
 the environment variable <code>PYO3_NO_PYTHON</code> set, but this only works on *NIX.</p>
+<h3><a class="header" href="#missing-features" id="missing-features">Missing features</a></h3>
+<p>Due to limitations in the Python API, there are a few <code>pyo3</code> features that do
+not work when compiling for <code>abi3</code>. These are:</p>
+<ul>
+<li><code>#[text_signature]</code> does not work on classes until Python 3.10 or greater.</li>
+<li>The <code>dict</code> and <code>weakref</code> options on classes are not supported.</li>
+<li>The buffer API is not supported.</li>
+</ul>
 <h2><a class="header" href="#cross-compiling" id="cross-compiling">Cross Compiling</a></h2>
 <p>Cross compiling PyO3 modules is relatively straightforward and requires a few pieces of software:</p>
 <ul>
