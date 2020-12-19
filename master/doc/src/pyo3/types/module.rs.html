@@ -498,7 +498,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// **This function will be deprecated in the next release. Please use the specific</span>
-    <span class="doccomment">/// [add_function] and [add_submodule] functions instead.**</span>
+    <span class="doccomment">/// [PyModule::add_function] and [PyModule::add_submodule] functions instead.**</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_wrapped</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">wrapper</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">Fn</span>(<span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">T</span>: <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span>,
