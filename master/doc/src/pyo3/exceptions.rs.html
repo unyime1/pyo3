@@ -603,43 +603,6 @@
 <span id="600">600</span>
 <span id="601">601</span>
 <span id="602">602</span>
-<span id="603">603</span>
-<span id="604">604</span>
-<span id="605">605</span>
-<span id="606">606</span>
-<span id="607">607</span>
-<span id="608">608</span>
-<span id="609">609</span>
-<span id="610">610</span>
-<span id="611">611</span>
-<span id="612">612</span>
-<span id="613">613</span>
-<span id="614">614</span>
-<span id="615">615</span>
-<span id="616">616</span>
-<span id="617">617</span>
-<span id="618">618</span>
-<span id="619">619</span>
-<span id="620">620</span>
-<span id="621">621</span>
-<span id="622">622</span>
-<span id="623">623</span>
-<span id="624">624</span>
-<span id="625">625</span>
-<span id="626">626</span>
-<span id="627">627</span>
-<span id="628">628</span>
-<span id="629">629</span>
-<span id="630">630</span>
-<span id="631">631</span>
-<span id="632">632</span>
-<span id="633">633</span>
-<span id="634">634</span>
-<span id="635">635</span>
-<span id="636">636</span>
-<span id="637">637</span>
-<span id="638">638</span>
-<span id="639">639</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -655,8 +618,6 @@
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">impl_exception_boilerplate</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro">pyobject_native_type_fmt</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>);
-
         <span class="kw">impl</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyErr</span> {
             <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyErr</span> {
                 <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">PyErr</span>::<span class="ident">from_instance</span>(<span class="ident">err</span>)
@@ -731,22 +692,10 @@
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>,
             <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyBaseExceptionObject</span>,
             <span class="kw-2">*</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>::<span class="ident">type_object_raw</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Python</span>::<span class="ident">assume_gil_acquired</span>()),
-            <span class="prelude-val">Some</span>(<span class="macro">stringify</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">module</span>)),
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>::<span class="ident">check</span>
+            <span class="prelude-val">Some</span>(<span class="macro">stringify</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">module</span>))
         );
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="doccomment">/// Check if a python object is an instance of this exception.</span>
-            <span class="doccomment">///</span>
-            <span class="doccomment">/// # Safety</span>
-            <span class="doccomment">/// `ptr` must be a valid pointer to a Python object</span>
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">libc</span>::<span class="ident">c_int</span> {
-                <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject_TypeCheck</span>(
-                    <span class="ident">ptr</span>,
-                    <span class="self">Self</span>::<span class="ident">type_object_raw</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Python</span>::<span class="ident">assume_gil_acquired</span>()) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                )
-            }
-
             <span class="kw">fn</span> <span class="ident">type_object_raw</span>(<span class="ident">py</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyTypeObject</span> {
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">once_cell</span>::<span class="ident">GILOnceCell</span>;
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">AsPyPointer</span>;
@@ -834,22 +783,10 @@
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>,
             <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyBaseExceptionObject</span>,
             <span class="kw-2">*</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>::<span class="ident">type_object_raw</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Python</span>::<span class="ident">assume_gil_acquired</span>()),
-            <span class="prelude-val">Some</span>(<span class="macro">stringify</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">module</span>)),
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>::<span class="ident">check</span>
+            <span class="prelude-val">Some</span>(<span class="macro">stringify</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">module</span>))
         );
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="doccomment">/// Check if a python object is an instance of this exception.</span>
-            <span class="doccomment">///</span>
-            <span class="doccomment">/// # Safety</span>
-            <span class="doccomment">/// `ptr` must be a valid pointer to a Python object</span>
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">libc</span>::<span class="ident">c_int</span> {
-                <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject_TypeCheck</span>(
-                    <span class="ident">ptr</span>,
-                    <span class="self">Self</span>::<span class="ident">type_object_raw</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Python</span>::<span class="ident">assume_gil_acquired</span>()) <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>,
-                )
-            }
-
             <span class="kw">fn</span> <span class="ident">type_object_raw</span>(<span class="ident">py</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyTypeObject</span> {
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">once_cell</span>::<span class="ident">GILOnceCell</span>;
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">AsPyPointer</span>;
@@ -883,18 +820,7 @@
         <span class="kw">pub</span> <span class="kw">type</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">legacy_name</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Py</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span>;
 
         <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro">impl_exception_boilerplate</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>);
-
-        <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="doccomment">/// Check if a python object is an instance of this exception.</span>
-            <span class="doccomment">///</span>
-            <span class="doccomment">/// # Safety</span>
-            <span class="doccomment">/// `ptr` must be a valid pointer to a Python object</span>
-            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">check</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">libc</span>::<span class="ident">c_int</span> {
-                <span class="ident">ffi</span>::<span class="ident">PyObject_TypeCheck</span>(<span class="ident">ptr</span>, <span class="ident">ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>)
-            }
-        }
-
-        <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro">pyobject_native_type_core</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>, <span class="kw-2">*</span>(<span class="ident">ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyTypeObject</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;builtins&quot;</span>), <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>::<span class="ident">check</span>);
+        <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro">pyobject_native_type_core</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>, <span class="kw-2">*</span>(<span class="ident">ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyTypeObject</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;builtins&quot;</span>));
     );
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">legacy_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> (
         <span class="macro">impl_native_exception</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">legacy_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>, <span class="ident">ffi</span>::<span class="ident">PyBaseExceptionObject</span>);
