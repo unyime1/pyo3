@@ -702,9 +702,6 @@
 <span id="699">699</span>
 <span id="700">700</span>
 <span id="701">701</span>
-<span id="702">702</span>
-<span id="703">703</span>
-<span id="704">704</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -772,13 +769,8 @@
         <span class="kw">if</span> <span class="ident">ffi</span>::<span class="ident">Py_IsInitialized</span>() <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
             <span class="comment">// If Python is already initialized, we expect Python threading to also be initialized,</span>
             <span class="comment">// as we can&#39;t make the existing Python main thread acquire the GIL.</span>
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_7</span>))]</span>
             <span class="macro">assert_ne</span><span class="macro">!</span>(<span class="ident">ffi</span>::<span class="ident">PyEval_ThreadsInitialized</span>(), <span class="number">0</span>);
         } <span class="kw">else</span> {
-            <span class="comment">// If Python isn&#39;t initialized yet, we expect that Python threading</span>
-            <span class="comment">// isn&#39;t initialized either.</span>
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_7</span>))]</span>
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ffi</span>::<span class="ident">PyEval_ThreadsInitialized</span>(), <span class="number">0</span>);
             <span class="comment">// Initialize Python.</span>
             <span class="comment">// We use Py_InitializeEx() with initsigs=0 to disable Python signal handling.</span>
             <span class="comment">// Signal handling depends on the notion of a &#39;main thread&#39;, which doesn&#39;t exist in this case.</span>
@@ -805,7 +797,9 @@
             <span class="comment">// &gt; Changed in version 3.7: This function is now called by Py_Initialize(), so you don’t have</span>
             <span class="comment">// &gt; to call it yourself anymore.</span>
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_7</span>))]</span>
-            <span class="ident">ffi</span>::<span class="ident">PyEval_InitThreads</span>();
+            <span class="kw">if</span> <span class="ident">ffi</span>::<span class="ident">PyEval_ThreadsInitialized</span>() <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
+                <span class="ident">ffi</span>::<span class="ident">PyEval_InitThreads</span>();
+            }
             <span class="comment">// PyEval_InitThreads() will acquire the GIL,</span>
             <span class="comment">// but we don&#39;t want to hold it at this point</span>
             <span class="comment">// (it&#39;s not acquired in the other code paths)</span>

@@ -248,6 +248,7 @@
 <span id="245">245</span>
 <span id="246">246</span>
 <span id="247">247</span>
+<span id="248">248</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -258,9 +259,9 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bytearray</span>::<span class="ident">PyByteArray</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bytes</span>::<span class="ident">PyBytes</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">complex</span>::<span class="ident">PyComplex</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">datetime</span>::<span class="ident">PyDeltaAccess</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">datetime</span>::{
-    <span class="ident">PyDate</span>, <span class="ident">PyDateAccess</span>, <span class="ident">PyDateTime</span>, <span class="ident">PyDelta</span>, <span class="ident">PyTime</span>, <span class="ident">PyTimeAccess</span>, <span class="ident">PyTzInfo</span>,
+    <span class="ident">PyDate</span>, <span class="ident">PyDateAccess</span>, <span class="ident">PyDateTime</span>, <span class="ident">PyDelta</span>, <span class="ident">PyDeltaAccess</span>, <span class="ident">PyTime</span>, <span class="ident">PyTimeAccess</span>, <span class="ident">PyTzInfo</span>,
 };
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">dict</span>::{<span class="ident">IntoPyDict</span>, <span class="ident">PyDict</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">floatob</span>::<span class="ident">PyFloat</span>;
@@ -482,6 +483,7 @@
 <span class="kw">mod</span> <span class="ident">bytearray</span>;
 <span class="kw">mod</span> <span class="ident">bytes</span>;
 <span class="kw">mod</span> <span class="ident">complex</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">mod</span> <span class="ident">datetime</span>;
 <span class="kw">mod</span> <span class="ident">dict</span>;
 <span class="kw">mod</span> <span class="ident">floatob</span>;
