@@ -229,6 +229,12 @@ rustflags = [
   &quot;-C&quot;, &quot;link-arg=-undefined&quot;,
   &quot;-C&quot;, &quot;link-arg=dynamic_lookup&quot;,
 ]
+
+[target.aarch64-apple-darwin]
+rustflags = [
+  &quot;-C&quot;, &quot;link-arg=-undefined&quot;,
+  &quot;-C&quot;, &quot;link-arg=dynamic_lookup&quot;,
+]
 </code></pre>
 <p>While developing, you can symlink (or copy) and rename the shared library from the target folder: On MacOS, rename <code>libstring_sum.dylib</code> to <code>string_sum.so</code>, on Windows <code>libstring_sum.dll</code> to <code>string_sum.pyd</code>, and on Linux <code>libstring_sum.so</code> to <code>string_sum.so</code>. Then open a Python shell in the same folder and you'll be able to <code>import string_sum</code>.</p>
 <p>Adding the <code>cdylib</code> arguments in the <code>Cargo.toml</code> files changes the way your crate is compiled.
