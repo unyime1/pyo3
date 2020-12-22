@@ -81,9 +81,17 @@
 <span id="78">78</span>
 <span id="79">79</span>
 <span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span>;
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_bf_getbuffer</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_bf_releasebuffer</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">2</span>;
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_mp_ass_subscript</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">3</span>;
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_mp_length</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">4</span>;
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_mp_subscript</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">5</span>;

@@ -1374,23 +1374,31 @@ impl pyo3::class::methods::HasMethodsInventory for MyClass {
 }
 pyo3::inventory::collect!(Pyo3MethodsInventoryForMyClass);
 
-
-pub struct Pyo3ProtoInventoryForMyClass {
-    def: pyo3::class::proto_methods::PyProtoMethodDef,
-}
-impl pyo3::class::proto_methods::PyProtoInventory for Pyo3ProtoInventoryForMyClass {
-    fn new(def: pyo3::class::proto_methods::PyProtoMethodDef) -&gt; Self {
-        Self { def }
+impl pyo3::class::proto_methods::PyProtoMethods for MyClass {
+    fn for_each_proto_slot&lt;Visitor: FnMut(pyo3::ffi::PyType_Slot)&gt;(visitor: Visitor) {
+        // Implementation which uses dtolnay specialization to load all slots.
+        use pyo3::class::proto_methods::*;
+        let protocols = PyClassProtocols::&lt;MyClass&gt;::new();
+        protocols.object_protocol_slots()
+            .iter()
+            .chain(protocols.number_protocol_slots())
+            .chain(protocols.iter_protocol_slots())
+            .chain(protocols.gc_protocol_slots())
+            .chain(protocols.descr_protocol_slots())
+            .chain(protocols.mapping_protocol_slots())
+            .chain(protocols.sequence_protocol_slots())
+            .chain(protocols.async_protocol_slots())
+            .chain(protocols.buffer_protocol_slots())
+            .cloned()
+            .for_each(visitor);
     }
-    fn get(&amp;'static self) -&gt; &amp;'static pyo3::class::proto_methods::PyProtoMethodDef {
-        &amp;self.def
+
+    fn get_buffer() -&gt; Option&lt;&amp;'static pyo3::class::proto_methods::PyBufferProcs&gt; {
+        use pyo3::class::proto_methods::*;
+        let protocols = PyClassProtocols::&lt;MyClass&gt;::new();
+        protocols.buffer_procs()
     }
 }
-impl pyo3::class::proto_methods::HasProtoInventory for MyClass {
-    type ProtoMethods = Pyo3ProtoInventoryForMyClass;
-}
-pyo3::inventory::collect!(Pyo3ProtoInventoryForMyClass);
-
 
 impl pyo3::pyclass::PyClassSend for MyClass {
     type ThreadChecker = pyo3::pyclass::ThreadCheckerStub&lt;MyClass&gt;;

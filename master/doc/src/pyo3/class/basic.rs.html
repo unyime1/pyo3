@@ -206,84 +206,6 @@
 <span id="203">203</span>
 <span id="204">204</span>
 <span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
-<span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
-<span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
-<span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
-<span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -295,9 +217,8 @@
 <span class="doccomment">//! Parts of the documentation are copied from the respective methods from the</span>
 <span class="doccomment">//! [typeobj docs](https://docs.python.org/3/c-api/typeobj.html)</span>
 
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">proto_methods</span>::<span class="ident">TypedSlot</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">callback</span>::{<span class="ident">HashCallbackOutput</span>, <span class="ident">IntoPyCallbackOutput</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">exceptions</span>, <span class="ident">ffi</span>, <span class="ident">FromPyObject</span>, <span class="ident">PyAny</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">exceptions</span>, <span class="ident">ffi</span>, <span class="ident">FromPyObject</span>, <span class="ident">PyAny</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyObject</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span>;
 
 <span class="doccomment">/// Operators for the __richcmp__ method</span>
@@ -421,152 +342,75 @@
     <span class="kw">type</span> <span class="prelude-ty">Result</span>: <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span>;
 }
 
-<span class="doccomment">/// Extension trait for proc-macro backend.</span>
+<span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">str</span>, <span class="ident">PyObjectStrProtocol</span>, <span class="ident">T</span>::<span class="ident">__str__</span>);
+<span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">repr</span>, <span class="ident">PyObjectReprProtocol</span>, <span class="ident">T</span>::<span class="ident">__repr__</span>);
+<span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">hash</span>, <span class="ident">PyObjectHashProtocol</span>, <span class="ident">T</span>::<span class="ident">__hash__</span>, <span class="ident">ffi</span>::<span class="ident">Py_hash_t</span>);
+
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PyBasicSlots</span> {
-    <span class="kw">fn</span> <span class="ident">get_str</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">reprfunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectStrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="ident">TypedSlot</span>(
-            <span class="ident">ffi</span>::<span class="ident">Py_tp_str</span>,
-            <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">PyObjectStrProtocol</span>, <span class="self">Self</span>::<span class="ident">__str__</span>),
-        )
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_repr</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">reprfunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectReprProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="ident">TypedSlot</span>(
-            <span class="ident">ffi</span>::<span class="ident">Py_tp_repr</span>,
-            <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">PyObjectReprProtocol</span>, <span class="self">Self</span>::<span class="ident">__repr__</span>),
-        )
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_hash</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">hashfunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectHashProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="ident">TypedSlot</span>(
-            <span class="ident">ffi</span>::<span class="ident">Py_tp_hash</span>,
-            <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">PyObjectHashProtocol</span>, <span class="self">Self</span>::<span class="ident">__hash__</span>, <span class="ident">ffi</span>::<span class="ident">Py_hash_t</span>),
-        )
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_getattr</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">getattrofunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectGetAttrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
-            <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
-            <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
-        ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>
-        <span class="kw">where</span>
-            <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectGetAttrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-        {
-            <span class="kw">crate</span>::<span class="macro">callback_body</span><span class="macro">!</span>(<span class="ident">py</span>, {
-                <span class="comment">// Behave like python&#39;s __getattr__ (as opposed to __getattribute__) and check</span>
-                <span class="comment">// for existing fields and methods first</span>
-                <span class="kw">let</span> <span class="ident">existing</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">PyObject_GenericGetAttr</span>(<span class="ident">slf</span>, <span class="ident">arg</span>);
-                <span class="kw">if</span> <span class="ident">existing</span>.<span class="ident">is_null</span>() {
-                    <span class="comment">// PyObject_HasAttr also tries to get an object and clears the error if it fails</span>
-                    <span class="ident">ffi</span>::<span class="ident">PyErr_Clear</span>();
-                } <span class="kw">else</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">existing</span>);
-                }
-
-                <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
-                <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyAny</span><span class="op">&gt;</span>(<span class="ident">arg</span>);
-                <span class="macro">call_ref</span><span class="macro">!</span>(<span class="ident">slf</span>, <span class="ident">__getattr__</span>, <span class="ident">arg</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
-            })
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">getattr</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+    <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectGetAttrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+{
+    <span class="kw">crate</span>::<span class="macro">callback_body</span><span class="macro">!</span>(<span class="ident">py</span>, {
+        <span class="comment">// Behave like python&#39;s __getattr__ (as opposed to __getattribute__) and check</span>
+        <span class="comment">// for existing fields and methods first</span>
+        <span class="kw">let</span> <span class="ident">existing</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">PyObject_GenericGetAttr</span>(<span class="ident">slf</span>, <span class="ident">arg</span>);
+        <span class="kw">if</span> <span class="ident">existing</span>.<span class="ident">is_null</span>() {
+            <span class="comment">// PyObject_HasAttr also tries to get an object and clears the error if it fails</span>
+            <span class="ident">ffi</span>::<span class="ident">PyErr_Clear</span>();
+        } <span class="kw">else</span> {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">existing</span>);
         }
-        <span class="ident">TypedSlot</span>(<span class="ident">ffi</span>::<span class="ident">Py_tp_getattro</span>, <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>)
-    }
 
-    <span class="kw">fn</span> <span class="ident">get_richcmp</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">richcmpfunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectRichcmpProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="kw">fn</span> <span class="ident">extract_op</span>(<span class="ident">op</span>: <span class="ident">c_int</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">CompareOp</span><span class="op">&gt;</span> {
-            <span class="kw">match</span> <span class="ident">op</span> {
-                <span class="ident">ffi</span>::<span class="ident">Py_LT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Lt</span>),
-                <span class="ident">ffi</span>::<span class="ident">Py_LE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Le</span>),
-                <span class="ident">ffi</span>::<span class="ident">Py_EQ</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Eq</span>),
-                <span class="ident">ffi</span>::<span class="ident">Py_NE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Ne</span>),
-                <span class="ident">ffi</span>::<span class="ident">Py_GT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Gt</span>),
-                <span class="ident">ffi</span>::<span class="ident">Py_GE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">CompareOp</span>::<span class="ident">Ge</span>),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">exceptions</span>::<span class="ident">PyValueError</span>::<span class="ident">new_err</span>(
-                    <span class="string">&quot;tp_richcompare called with invalid comparison operator&quot;</span>,
-                )),
-            }
-        }
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
-            <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
-            <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
-            <span class="ident">op</span>: <span class="ident">c_int</span>,
-        ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>
-        <span class="kw">where</span>
-            <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectRichcmpProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-        {
-            <span class="kw">crate</span>::<span class="macro">callback_body</span><span class="macro">!</span>(<span class="ident">py</span>, {
-                <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
-                <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="macro">extract_or_return_not_implemented</span><span class="macro">!</span>(<span class="ident">py</span>, <span class="ident">arg</span>);
-                <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">extract_op</span>(<span class="ident">op</span>)<span class="question-mark">?</span>;
-
-                <span class="ident">slf</span>.<span class="ident">try_borrow</span>()<span class="question-mark">?</span>.<span class="ident">__richcmp__</span>(<span class="ident">arg</span>, <span class="ident">op</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
-            })
-        }
-        <span class="ident">TypedSlot</span>(<span class="ident">ffi</span>::<span class="ident">Py_tp_richcompare</span>, <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_setattr</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">setattrofunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectSetAttrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="ident">TypedSlot</span>(
-            <span class="ident">ffi</span>::<span class="ident">Py_tp_setattro</span>,
-            <span class="macro">py_func_set</span><span class="macro">!</span>(<span class="ident">PyObjectSetAttrProtocol</span>, <span class="self">Self</span>::<span class="ident">__setattr__</span>),
-        )
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_delattr</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">setattrofunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectDelAttrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="ident">TypedSlot</span>(
-            <span class="ident">ffi</span>::<span class="ident">Py_tp_setattro</span>,
-            <span class="macro">py_func_del</span><span class="macro">!</span>(<span class="ident">PyObjectDelAttrProtocol</span>, <span class="self">Self</span>::<span class="ident">__delattr__</span>),
-        )
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_setdelattr</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">setattrofunc</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectSetAttrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectDelAttrProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="ident">TypedSlot</span>(
-            <span class="ident">ffi</span>::<span class="ident">Py_tp_setattro</span>,
-            <span class="macro">py_func_set_del</span><span class="macro">!</span>(
-                <span class="ident">PyObjectSetAttrProtocol</span>,
-                <span class="ident">PyObjectDelAttrProtocol</span>,
-                <span class="self">Self</span>,
-                <span class="ident">__setattr__</span>,
-                <span class="ident">__delattr__</span>
-            ),
-        )
-    }
-
-    <span class="kw">fn</span> <span class="ident">get_bool</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">TypedSlot</span><span class="op">&lt;</span><span class="ident">ffi</span>::<span class="ident">inquiry</span><span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectBoolProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
-    {
-        <span class="ident">TypedSlot</span>(
-            <span class="ident">ffi</span>::<span class="ident">Py_nb_bool</span>,
-            <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">PyObjectBoolProtocol</span>, <span class="self">Self</span>::<span class="ident">__bool__</span>, <span class="ident">c_int</span>),
-        )
-    }
+        <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
+        <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyAny</span><span class="op">&gt;</span>(<span class="ident">arg</span>);
+        <span class="macro">call_ref</span><span class="macro">!</span>(<span class="ident">slf</span>, <span class="ident">__getattr__</span>, <span class="ident">arg</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
+    })
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">PyBasicSlots</span> <span class="kw">for</span> <span class="ident">T</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">PyObjectProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {}
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">richcmp</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+    <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+    <span class="ident">op</span>: <span class="ident">c_int</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyObjectRichcmpProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
+{
+    <span class="kw">crate</span>::<span class="macro">callback_body</span><span class="macro">!</span>(<span class="ident">py</span>, {
+        <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
+        <span class="kw">let</span> <span class="ident">arg</span> <span class="op">=</span> <span class="macro">extract_or_return_not_implemented</span><span class="macro">!</span>(<span class="ident">py</span>, <span class="ident">arg</span>);
+        <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">op</span> {
+            <span class="ident">ffi</span>::<span class="ident">Py_LT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CompareOp</span>::<span class="ident">Lt</span>,
+            <span class="ident">ffi</span>::<span class="ident">Py_LE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CompareOp</span>::<span class="ident">Le</span>,
+            <span class="ident">ffi</span>::<span class="ident">Py_EQ</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CompareOp</span>::<span class="ident">Eq</span>,
+            <span class="ident">ffi</span>::<span class="ident">Py_NE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CompareOp</span>::<span class="ident">Ne</span>,
+            <span class="ident">ffi</span>::<span class="ident">Py_GT</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CompareOp</span>::<span class="ident">Gt</span>,
+            <span class="ident">ffi</span>::<span class="ident">Py_GE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CompareOp</span>::<span class="ident">Ge</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">exceptions</span>::<span class="ident">PyValueError</span>::<span class="ident">new_err</span>(
+                    <span class="string">&quot;tp_richcompare called with invalid comparison operator&quot;</span>,
+                ))
+            }
+        };
+
+        <span class="ident">slf</span>.<span class="ident">try_borrow</span>()<span class="question-mark">?</span>.<span class="ident">__richcmp__</span>(<span class="ident">arg</span>, <span class="ident">op</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
+    })
+}
+
+<span class="macro">py_func_set</span><span class="macro">!</span>(<span class="ident">setattr</span>, <span class="ident">PyObjectSetAttrProtocol</span>, <span class="ident">T</span>::<span class="ident">__setattr__</span>);
+<span class="macro">py_func_del</span><span class="macro">!</span>(<span class="ident">delattr</span>, <span class="ident">PyObjectDelAttrProtocol</span>, <span class="ident">T</span>::<span class="ident">__delattr__</span>);
+<span class="macro">py_func_set_del</span><span class="macro">!</span>(
+    <span class="ident">setdelattr</span>,
+    <span class="ident">PyObjectSetAttrProtocol</span>,
+    <span class="ident">PyObjectDelAttrProtocol</span>,
+    <span class="self">Self</span>,
+    <span class="ident">__setattr__</span>,
+    <span class="ident">__delattr__</span>
+);
+<span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="ident">bool</span>, <span class="ident">PyObjectBoolProtocol</span>, <span class="ident">T</span>::<span class="ident">__bool__</span>, <span class="ident">c_int</span>);
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "pyo3";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

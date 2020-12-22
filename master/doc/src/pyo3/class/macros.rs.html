@@ -362,12 +362,21 @@
 <span id="359">359</span>
 <span id="360">360</span>
 <span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_unary_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>: <span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">call</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>: <span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">call</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>: <span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>
         <span class="kw">where</span>
             <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">trait</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
         {
@@ -376,20 +385,28 @@
                 <span class="macro-nonterminal">$</span><span class="macro">call</span><span class="macro">!</span>(<span class="macro-nonterminal">slf</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
-    <span class="comment">// Use call_ref! by default</span>
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="ident">call_ref</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>);
     };
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="ident">call_ref</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>);
+    <span class="comment">// Use call_ref! by default</span>
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="ident">call_ref</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ret_type</span>);
+    };
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">py_unary_func</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>,
+            <span class="macro-nonterminal">$</span><span class="kw">trait</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>,
+            <span class="ident">call_ref</span>,
+            <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
+        );
     };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_unarys_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+            <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
+        ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
         <span class="kw">where</span>
             <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">trait</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
         {
@@ -402,20 +419,23 @@
                 <span class="ident">T</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="ident">borrow</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_len_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">Py_ssize_t</span>)
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">py_unary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">Py_ssize_t</span>);
     };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_binary_func</span> {
     <span class="comment">// Use call_ref! by default</span>
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">return</span>:<span class="macro-nonterminal">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">call</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>, <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">return</span>
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">return</span>:<span class="macro-nonterminal">ty</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">call</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+            <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+            <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
+        ) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">return</span>
         <span class="kw">where</span>
             <span class="macro-nonterminal">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="kw">trait</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
         {
@@ -425,19 +445,19 @@
                 <span class="macro-nonterminal">$</span><span class="macro">call</span><span class="macro">!</span>(<span class="macro-nonterminal">slf</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="ident">arg</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">return</span>:<span class="macro-nonterminal">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="macro-nonterminal">$</span><span class="kw">return</span>, <span class="macro-nonterminal">call_ref</span>)
     };
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>)
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">return</span>:<span class="macro-nonterminal">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="macro-nonterminal">$</span><span class="kw">return</span>, <span class="macro-nonterminal">call_ref</span>);
+    };
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">py_binary_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>);
     };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_binary_num_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">lhs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">rhs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
         ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
@@ -450,13 +470,13 @@
                 <span class="ident">T</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="ident">lhs</span>.<span class="ident">extract</span>()<span class="question-mark">?</span>, <span class="ident">rhs</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_binary_reversed_num_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">lhs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">rhs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
         ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
@@ -470,13 +490,13 @@
                 <span class="ident">T</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">slf</span>.<span class="ident">try_borrow</span>()<span class="question-mark">?</span>, <span class="ident">arg</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_binary_fallback_num_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lop_trait</span>: <span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lop</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rop_trait</span>: <span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rop</span>: <span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lop_trait</span>: <span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lop</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rop_trait</span>: <span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">rop</span>: <span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">lhs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">rhs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
         ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
@@ -498,14 +518,14 @@
                 }
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="comment">// NOTE(kngwyu): This macro is used only for inplace operations, so I used call_mut here.</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_binary_self_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
         ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
@@ -520,17 +540,17 @@
                 <span class="prelude-val">Ok</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">err</span>::<span class="ident">PyErr</span><span class="op">&gt;</span>(<span class="ident">slf</span>)
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_ssizearg_func</span> {
     <span class="comment">// Use call_ref! by default</span>
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="ident">call_ref</span>)
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">py_ssizearg_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="ident">call_ref</span>);
     };
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">call</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">call</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">arg</span>: <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">Py_ssize_t</span>,
         ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>
@@ -542,13 +562,13 @@
                 <span class="macro-nonterminal">$</span><span class="macro">call</span><span class="macro">!</span>(<span class="macro-nonterminal">slf</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>; <span class="ident">arg</span>.<span class="ident">into</span>()).<span class="ident">convert</span>(<span class="ident">py</span>)
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_ternarys_func</span> {
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">return_type</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">return_type</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">arg1</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">arg2</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
@@ -571,17 +591,16 @@
                 <span class="ident">T</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>(<span class="ident">slf</span>, <span class="ident">arg1</span>, <span class="ident">arg2</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
             })
         }
-
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
-    (<span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro">py_ternarys_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>);
+    };
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="macro">py_ternarys_func</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="kw">trait</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">f</span>, <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>);
     };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_func_set</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_set</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_set</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">value</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
@@ -604,14 +623,13 @@
                 }
             })
         }
-
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_func_del</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_del</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span> :: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_del</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">value</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
@@ -633,14 +651,13 @@
                 }
             })
         }
-
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">py_func_set_del</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait1</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait2</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_set</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_del</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait1</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trait2</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_set</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fn_del</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
             <span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
             <span class="ident">value</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ffi</span>::<span class="ident">PyObject</span>,
@@ -660,8 +677,7 @@
                 }
             })
         }
-        <span class="ident">wrap</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">class</span><span class="op">&gt;</span>
-    }};
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">extract_or_return_not_implemented</span> {

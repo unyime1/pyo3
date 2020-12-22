@@ -438,6 +438,9 @@
 <span id="435">435</span>
 <span id="436">436</span>
 <span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! `PyClass` and related traits.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">class</span>::<span class="ident">methods</span>::{<span class="ident">PyClassAttributeDef</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyMethods</span>};
@@ -632,11 +635,11 @@
 
     <span class="comment">// protocol methods</span>
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">has_gc_methods</span> <span class="op">=</span> <span class="bool-val">false</span>;
-    <span class="kw">for</span> <span class="ident">slot</span> <span class="kw">in</span> <span class="ident">T</span>::<span class="ident">get_type_slots</span>() {
+    <span class="ident">T</span>::<span class="ident">for_each_proto_slot</span>(<span class="op">|</span><span class="ident">slot</span><span class="op">|</span> {
         <span class="ident">has_gc_methods</span> <span class="op">|</span><span class="op">=</span> <span class="ident">slot</span>.<span class="ident">slot</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">Py_tp_clear</span>;
         <span class="ident">has_gc_methods</span> <span class="op">|</span><span class="op">=</span> <span class="ident">slot</span>.<span class="ident">slot</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">Py_tp_traverse</span>;
         <span class="ident">slots</span>.<span class="number">0</span>.<span class="ident">push</span>(<span class="ident">slot</span>);
-    }
+    });
 
     <span class="ident">slots</span>.<span class="ident">push</span>(<span class="number">0</span>, <span class="ident">ptr</span>::<span class="ident">null_mut</span>());
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">spec</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">PyType_Spec</span> {
@@ -679,6 +682,9 @@
         }
     }
 
+    <span class="comment">// Setting buffer protocols via slots doesn&#39;t work until Python 3.9, so on older versions we</span>
+    <span class="comment">// must manually fixup the type object.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_9</span>))]</span>
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">buffer</span>) <span class="op">=</span> <span class="ident">T</span>::<span class="ident">get_buffer</span>() {
         <span class="kw">unsafe</span> {
             (<span class="kw-2">*</span>(<span class="kw-2">*</span><span class="ident">type_object</span>).<span class="ident">tp_as_buffer</span>).<span class="ident">bf_getbuffer</span> <span class="op">=</span> <span class="ident">buffer</span>.<span class="ident">bf_getbuffer</span>;
