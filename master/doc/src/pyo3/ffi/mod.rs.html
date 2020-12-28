@@ -215,12 +215,6 @@
 <span id="212">212</span>
 <span id="213">213</span>
 <span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>, <span class="ident">non_snake_case</span>, <span class="ident">non_upper_case_globals</span>)]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">allow</span>(<span class="ident">unused_imports</span>))]</span>
@@ -254,7 +248,6 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">eval</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">fileobject</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">floatobject</span>::<span class="kw-2">*</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">frameobject</span>::<span class="ident">PyFrameObject</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">funcobject</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">genobject</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">import</span>::<span class="kw-2">*</span>;
@@ -277,6 +270,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pycapsule</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pydebug</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pyerrors</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pyframe</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pyhash</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pylifecycle</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">pymem</span>::<span class="kw-2">*</span>;
@@ -303,22 +297,37 @@
 <span class="comment">// skipped asdl.h</span>
 <span class="comment">// skipped ast.h</span>
 <span class="kw">mod</span> <span class="ident">bltinmodule</span>;
-<span class="kw">mod</span> <span class="ident">boolobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
+<span class="kw">mod</span> <span class="ident">boolobject</span>; <span class="comment">// TODO supports PEP-384 only</span>
 <span class="kw">mod</span> <span class="ident">bytearrayobject</span>;
 <span class="kw">mod</span> <span class="ident">bytesobject</span>;
 <span class="comment">// skipped cellobject.h</span>
-<span class="kw">mod</span> <span class="ident">ceval</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
+<span class="kw">mod</span> <span class="ident">ceval</span>; <span class="comment">// TODO supports PEP-384 only</span>
 
 <span class="comment">// skipped classobject.h</span>
 <span class="kw">mod</span> <span class="ident">code</span>;
-<span class="kw">mod</span> <span class="ident">codecs</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
+<span class="kw">mod</span> <span class="ident">codecs</span>; <span class="comment">// TODO supports PEP-384 only</span>
 <span class="kw">mod</span> <span class="ident">compile</span>; <span class="comment">// TODO: incomplete</span>
-<span class="kw">mod</span> <span class="ident">complexobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
-
+<span class="kw">mod</span> <span class="ident">complexobject</span>; <span class="comment">// TODO supports PEP-384 only</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
+<span class="kw">mod</span> <span class="ident">context</span>; <span class="comment">// It&#39;s actually 3.7.1, but no cfg for patches.</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))))]</span>
+<span class="kw">mod</span> <span class="ident">context</span> {}
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">datetime</span>;
+<span class="kw">mod</span> <span class="ident">descrobject</span>; <span class="comment">// TODO supports PEP-384 only</span>
+<span class="kw">mod</span> <span class="ident">dictobject</span>;
 <span class="comment">// skipped dynamic_annotations.h</span>
+<span class="kw">mod</span> <span class="ident">enumobject</span>;
 <span class="comment">// skipped errcode.h</span>
+<span class="kw">mod</span> <span class="ident">eval</span>; <span class="comment">// TODO supports PEP-384 only</span>
+
 <span class="comment">// skipped exports.h</span>
+<span class="kw">mod</span> <span class="ident">fileobject</span>; <span class="comment">// TODO: incomplete</span>
+
 <span class="comment">// skipped fileutils.h</span>
+<span class="kw">mod</span> <span class="ident">floatobject</span>; <span class="comment">// TODO supports PEP-384 only</span>
+
+<span class="comment">// skipped empty frameobject.h</span>
 <span class="comment">// skipped genericaliasobject.h</span>
 <span class="comment">// skipped interpreteridobject.h</span>
 <span class="comment">// skipped longintrepr.h</span>
@@ -335,7 +344,8 @@
 <span class="comment">// skipped pydtrace.h</span>
 <span class="comment">// skipped pyexpat.h</span>
 <span class="comment">// skipped pyfpe.h</span>
-<span class="comment">// skipped pyframe.h</span>
+<span class="kw">mod</span> <span class="ident">pyframe</span>; <span class="comment">// TODO: incomplete</span>
+
 <span class="comment">// skipped pymacconfig.h</span>
 <span class="comment">// skipped pymacro.h</span>
 <span class="comment">// skipped pymath.h</span>
@@ -366,25 +376,20 @@
 <span class="kw">mod</span> <span class="ident">longobject</span>;
 <span class="kw">mod</span> <span class="ident">unicodeobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
                    <span class="comment">// mod longintrepr; TODO excluded by PEP-384</span>
-<span class="kw">mod</span> <span class="ident">dictobject</span>;
-<span class="kw">mod</span> <span class="ident">floatobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">listobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">memoryobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">rangeobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">tupleobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
                  <span class="comment">// mod odictobject; TODO new in 3.5</span>
-<span class="kw">mod</span> <span class="ident">enumobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">methodobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">moduleobject</span>;
 <span class="kw">mod</span> <span class="ident">setobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
                <span class="comment">// mod funcobject; TODO excluded by PEP-384</span>
                <span class="comment">// mod classobject; TODO excluded by PEP-384</span>
-<span class="kw">mod</span> <span class="ident">fileobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">pycapsule</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">sliceobject</span>;
 <span class="kw">mod</span> <span class="ident">traceback</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
                <span class="comment">// mod cellobject; TODO excluded by PEP-384</span>
-<span class="kw">mod</span> <span class="ident">descrobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">genobject</span>; <span class="comment">// TODO excluded by PEP-384</span>
 <span class="kw">mod</span> <span class="ident">iterobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">structseq</span>;
@@ -409,14 +414,6 @@
 
 <span class="kw">mod</span> <span class="ident">objectabstract</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
-<span class="kw">mod</span> <span class="ident">context</span>; <span class="comment">// It&#39;s actually 3.7.1, but no cfg for patches.</span>
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))))]</span>
-<span class="kw">mod</span> <span class="ident">context</span> {}
-
-<span class="kw">mod</span> <span class="ident">eval</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
-
 <span class="comment">// mod pyctype; TODO excluded by PEP-384</span>
 <span class="kw">mod</span> <span class="ident">pystrtod</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
               <span class="comment">// mod pystrcmp; TODO nothing interesting for Rust?</span>
@@ -427,15 +424,6 @@
 <span class="comment">// Additional headers that are not exported by Python.h</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">structmember</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">frameobject</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">frameobject</span> {
-    <span class="macro">opaque_struct</span><span class="macro">!</span>(<span class="ident">PyFrameObject</span>);
-}
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">datetime</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">marshal</span>;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">funcobject</span>;

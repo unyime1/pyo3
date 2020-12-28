@@ -502,6 +502,8 @@
 <span id="499">499</span>
 <span id="500">500</span>
 <span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! `PyClass` and related traits.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">class</span>::<span class="ident">methods</span>::{<span class="ident">PyClassAttributeDef</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyMethods</span>};
@@ -896,6 +898,7 @@
         <span class="kw">match</span> <span class="ident">def</span> {
             <span class="ident">PyMethodDefType</span>::<span class="ident">Getter</span>(<span class="ident">getter</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="ident">getter</span>.<span class="ident">name</span>) {
+                    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
                     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">getter</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
                 }
                 <span class="kw">let</span> <span class="ident">def</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">get_mut</span>(<span class="ident">getter</span>.<span class="ident">name</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to call get_mut&quot;</span>);
@@ -903,6 +906,7 @@
             }
             <span class="ident">PyMethodDefType</span>::<span class="ident">Setter</span>(<span class="ident">setter</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">contains_key</span>(<span class="ident">setter</span>.<span class="ident">name</span>) {
+                    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
                     <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">insert</span>(<span class="ident">setter</span>.<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="ident">ffi</span>::<span class="ident">PyGetSetDef_INIT</span>);
                 }
                 <span class="kw">let</span> <span class="ident">def</span> <span class="op">=</span> <span class="ident">defs</span>.<span class="ident">get_mut</span>(<span class="ident">setter</span>.<span class="ident">name</span>).<span class="ident">expect</span>(<span class="string">&quot;Failed to call get_mut&quot;</span>);
