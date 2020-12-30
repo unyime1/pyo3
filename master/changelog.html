@@ -164,16 +164,22 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <h3><a class="header" href="#added" id="added">Added</a></h3>
 <ul>
 <li>Add support for <code>#[pyclass(dict)]</code> and <code>#[pyclass(weakref)]</code> with the <code>abi3</code> feature on Python 3.9 and up. <a href="https://github.com/PyO3/pyo3/pull/1342">#1342</a></li>
+<li>Add FFI definitions <code>PyOS_BeforeFork</code>, <code>PyOS_AfterFork_Parent</code>, <code>PyOS_AfterFork_Child</code> for Python 3.7 and up. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
 <li>Deprecate FFI definitions <code>PyEval_CallObjectWithKeywords</code>, <code>PyEval_CallObject</code>, <code>PyEval_CallFunction</code>, <code>PyEval_CallMethod</code> when building for Python 3.9. <a href="https://github.com/PyO3/pyo3/pull/1338">#1338</a></li>
 <li>Deprecate FFI definitions <code>PyGetSetDef_DICT</code> and <code>PyGetSetDef_INIT</code> which have never been in the Python API. <a href="https://github.com/PyO3/pyo3/pull/1341">#1341</a></li>
+<li>Deprecate FFI definitions <code>PyGen_NeedsFinalizing</code>, <code>PyImport_Cleanup</code> (removed in 3.9), and <code>PyOS_InitInterrupts</code> (3.10). <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
+<li>Deprecate FFI definition <code>PyOS_AfterFork</code> for Python 3.7 and up. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
+<li>Deprecate FFI definition <code>PyCoro_Check</code> and <code>PyAsyncGen_Check</code> in favor of <code>PyCoro_CheckExact</code> and <code>PyAsyncGen_CheckExact</code> respectively to mirror Python API. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
+<li>Deprecate FFI definition <code>PyCoroWrapper_Check</code> which has never been in the Python API. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
 </ul>
 <h3><a class="header" href="#removed" id="removed">Removed</a></h3>
 <ul>
 <li>Remove FFI definition <code>PyFrame_ClearFreeList</code> when building for Python 3.9. <a href="https://github.com/PyO3/pyo3/pull/1341">#1341</a></li>
 <li>Remove FFI definition <code>_PyDict_Contains</code> when building for Python 3.10. <a href="https://github.com/PyO3/pyo3/pull/1341">#1341</a></li>
+<li>Remove FFI definitions <code>PyGen_NeedsFinalizing</code>, <code>PyImport_Cleanup</code> (for 3.9 and up), and <code>PyOS_InitInterrupts</code> (3.10). <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
 </ul>
 <h3><a class="header" href="#fixed" id="fixed">Fixed</a></h3>
 <ul>
