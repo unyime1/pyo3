@@ -287,7 +287,7 @@ assert_eq!(obj_ref.num, 1);
 <h2><a class="header" href="#customizing-the-class" id="customizing-the-class">Customizing the class</a></h2>
 <p>The <code>#[pyclass]</code> macro accepts the following parameters:</p>
 <ul>
-<li><code>name=XXX</code> - Set the class name shown in Python code. By default, the struct name is used as the class name.</li>
+<li><code>name=&quot;XXX&quot;</code> - Set the class name shown in Python code. By default, the struct name is used as the class name.</li>
 <li><code>freelist=XXX</code> - The <code>freelist</code> parameter adds support of free allocation list to custom class.
 The performance improvement applies to types that are often created and deleted in a row,
 so that they can benefit from a freelist. <code>XXX</code> is a number of items for the free list.</li>
