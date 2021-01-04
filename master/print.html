@@ -91,7 +91,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="module.html"><strong aria-hidden="true">1.</strong> Python Modules</a></li><li class="chapter-item expanded "><a href="function.html"><strong aria-hidden="true">2.</strong> Python Functions</a></li><li class="chapter-item expanded "><a href="class.html"><strong aria-hidden="true">3.</strong> Python Classes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="class/protocols.html"><strong aria-hidden="true">3.1.</strong> Class customizations</a></li></ol></li><li class="chapter-item expanded "><a href="conversions.html"><strong aria-hidden="true">4.</strong> Type Conversions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conversions/tables.html"><strong aria-hidden="true">4.1.</strong> Mapping of Rust types to Python types</a></li><li class="chapter-item expanded "><a href="conversions/traits.html"><strong aria-hidden="true">4.2.</strong> Conversion traits</a></li></ol></li><li class="chapter-item expanded "><a href="exception.html"><strong aria-hidden="true">5.</strong> Python Exceptions</a></li><li class="chapter-item expanded "><a href="python_from_rust.html"><strong aria-hidden="true">6.</strong> Calling Python from Rust</a></li><li class="chapter-item expanded "><a href="types.html"><strong aria-hidden="true">7.</strong> GIL, mutability and object types</a></li><li class="chapter-item expanded "><a href="parallelism.html"><strong aria-hidden="true">8.</strong> Parallelism</a></li><li class="chapter-item expanded "><a href="debugging.html"><strong aria-hidden="true">9.</strong> Debugging</a></li><li class="chapter-item expanded "><a href="advanced.html"><strong aria-hidden="true">10.</strong> Advanced Topics</a></li><li class="chapter-item expanded "><a href="building_and_distribution.html"><strong aria-hidden="true">11.</strong> Building and Distribution</a></li><li class="chapter-item expanded "><a href="pypy.html"><strong aria-hidden="true">12.</strong> PyPy support</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">13.</strong> FAQ &amp; Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="migration.html">Appendix A: Migration Guide</a></li><li class="chapter-item expanded affix "><a href="rust_cpython.html">Appendix B: PyO3 and rust-cpython</a></li><li class="chapter-item expanded affix "><a href="trait_bounds.html">Appendix C: Trait bounds</a></li><li class="chapter-item expanded affix "><a href="logging.html">Appendix D: Logging</a></li><li class="chapter-item expanded affix "><a href="changelog.html">CHANGELOG</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Introduction</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="module.html"><strong aria-hidden="true">1.</strong> Python Modules</a></li><li class="chapter-item expanded "><a href="function.html"><strong aria-hidden="true">2.</strong> Python Functions</a></li><li class="chapter-item expanded "><a href="class.html"><strong aria-hidden="true">3.</strong> Python Classes</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="class/protocols.html"><strong aria-hidden="true">3.1.</strong> Class customizations</a></li></ol></li><li class="chapter-item expanded "><a href="conversions.html"><strong aria-hidden="true">4.</strong> Type Conversions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="conversions/tables.html"><strong aria-hidden="true">4.1.</strong> Mapping of Rust types to Python types</a></li><li class="chapter-item expanded "><a href="conversions/traits.html"><strong aria-hidden="true">4.2.</strong> Conversion traits</a></li></ol></li><li class="chapter-item expanded "><a href="exception.html"><strong aria-hidden="true">5.</strong> Python Exceptions</a></li><li class="chapter-item expanded "><a href="python_from_rust.html"><strong aria-hidden="true">6.</strong> Calling Python from Rust</a></li><li class="chapter-item expanded "><a href="types.html"><strong aria-hidden="true">7.</strong> GIL, mutability and object types</a></li><li class="chapter-item expanded "><a href="parallelism.html"><strong aria-hidden="true">8.</strong> Parallelism</a></li><li class="chapter-item expanded "><a href="debugging.html"><strong aria-hidden="true">9.</strong> Debugging</a></li><li class="chapter-item expanded "><a href="features.html"><strong aria-hidden="true">10.</strong> Features Reference</a></li><li class="chapter-item expanded "><a href="advanced.html"><strong aria-hidden="true">11.</strong> Advanced Topics</a></li><li class="chapter-item expanded "><a href="building_and_distribution.html"><strong aria-hidden="true">12.</strong> Building and Distribution</a></li><li class="chapter-item expanded "><a href="pypy.html"><strong aria-hidden="true">13.</strong> PyPy support</a></li><li class="chapter-item expanded "><a href="faq.html"><strong aria-hidden="true">14.</strong> FAQ &amp; Troubleshooting</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="migration.html">Appendix A: Migration Guide</a></li><li class="chapter-item expanded affix "><a href="rust_cpython.html">Appendix B: PyO3 and rust-cpython</a></li><li class="chapter-item expanded affix "><a href="trait_bounds.html">Appendix C: Trait bounds</a></li><li class="chapter-item expanded affix "><a href="logging.html">Appendix D: Logging</a></li><li class="chapter-item expanded affix "><a href="changelog.html">CHANGELOG</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -247,8 +247,9 @@ Another possibility is to create a new crate to perform the binding.</p>
 <h2><a class="header" href="#using-python-from-rust" id="using-python-from-rust">Using Python from Rust</a></h2>
 <p>If you want your Rust application to create a Python interpreter internally and
 use it to run Python code, add <code>pyo3</code> to your <code>Cargo.toml</code> like this:</p>
-<pre><code class="language-toml">[dependencies]
-pyo3 = &quot;0.13.0&quot;
+<pre><code class="language-toml">[dependencies.pyo3]
+version = &quot;0.13.0&quot;
+features = [&quot;auto-initialize&quot;]
 </code></pre>
 <p>Example program displaying the value of <code>sys.version</code> and the current user name:</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
@@ -2714,6 +2715,50 @@ test_word_count_python_sequential                      27.3985 (15.82)    45.452
 <li>Enter <code>r</code> to run</li>
 <li>After the crash occurred, enter <code>bt</code> or <code>bt full</code> to print the stacktrace</li>
 </ul>
+<h1><a class="header" href="#features-reference" id="features-reference">Features Reference</a></h1>
+<p>PyO3 provides a number of Cargo features to customise functionality. This chapter of the guide provides detail on each of them.</p>
+<p>By default, the <code>macros</code> and <code>auto-initialize</code> features are enabled.</p>
+<h2><a class="header" href="#features-for-extension-module-authors" id="features-for-extension-module-authors">Features for extension module authors</a></h2>
+<h3><a class="header" href="#extension-module" id="extension-module"><code>extension-module</code></a></h3>
+<p>This feature is required when building a Python extension module using PyO3.</p>
+<p>It tells PyO3's build script to skip linking against <code>libpython.so</code> on Unix platforms, where this must not be done.</p>
+<p>See the <a href="building_and_distribution.html#linking">building and distribution</a> section for further detail.</p>
+<h3><a class="header" href="#abi3" id="abi3"><code>abi3</code></a></h3>
+<p>This feature is used when building Python extension modules to create wheels which are compatible with multiple Python versions.</p>
+<p>It restricts PyO3's API to a subset of the full Python API which is guaranteed by <a href="https://www.python.org/dev/peps/pep-0384/">PEP 384</a> to be forwards-compatible with future Python versions.</p>
+<p>See the <a href="building_and_distribution.html#py_limited_apiabi3">building and distribution</a> section for further detail.</p>
+<h3><a class="header" href="#abi3-py36--abi3-py37--abi3-py38--abi3-py39" id="abi3-py36--abi3-py37--abi3-py38--abi3-py39"><code>abi3-py36</code> / <code>abi3-py37</code> / <code>abi3-py38</code> / <code>abi3-py39</code></a></h3>
+<p>These features are an extension of the <code>abi3</code> feature to specify the exact minimum Python version which the multiple-version-wheel will support.</p>
+<p>See the <a href="building_and_distribution.html#minimum-python-version-for-abi3">building and distribution</a> section for further detail.</p>
+<h2><a class="header" href="#features-for-embedding-python-in-rust" id="features-for-embedding-python-in-rust">Features for embedding Python in Rust</a></h2>
+<h3><a class="header" href="#auto-initalize" id="auto-initalize"><code>auto-initalize</code></a></h3>
+<p>This feature changes <a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.with_gil"><code>Python::with_gil</code></a> and <a href="https://docs.rs/pyo3/latest/pyo3/struct.Python.html#method.acquire_gil"><code>Python::acquire_gil</code></a> to automatically initialize a Python interpreter (by calling <a href="https://docs.rs/pyo3/latest/pyo3/fn.prepare_freethreaded_python.html"><code>prepare_freethreaded_python</code></a>) if needed.</p>
+<p>This feature is not needed for extension modules, but for compatibility it is enabled by default until at least the PyO3 0.14 release.</p>
+<blockquote>
+<p>This feature is enabled by default. To disable it, set <code>default-features = false</code> for the <code>pyo3</code> entry in your Cargo.toml.</p>
+</blockquote>
+<h2><a class="header" href="#advanced-features" id="advanced-features">Advanced Features</a></h2>
+<h3><a class="header" href="#macros-1" id="macros-1"><code>macros</code></a></h3>
+<p>This feature enables a dependency on the <code>pyo3-macros</code> crate, which provides the procedural macros portion of PyO3's API:</p>
+<ul>
+<li><code>#[pymodule]</code></li>
+<li><code>#[pyfunction]</code></li>
+<li><code>#[pyclass]</code></li>
+<li><code>#[pymethods]</code></li>
+<li><code>#[pyproto]</code></li>
+<li><code>#[derive(FromPyObject)]</code></li>
+</ul>
+<p>It also provides the <code>py_run!</code> macro.</p>
+<p>These macros require a number of dependencies which may not be needed by users who just need PyO3 for Python FFI. Disabling this feature enables faster builds for those users, as these dependencies will not be built if this feature is disabled.</p>
+<blockquote>
+<p>This feature is enabled by default. To disable it, set <code>default-features = false</code> for the <code>pyo3</code> entry in your Cargo.toml.</p>
+</blockquote>
+<h3><a class="header" href="#nightly" id="nightly"><code>nightly</code></a></h3>
+<p>The <code>nightly</code> feature needs the nightly Rust compiler. This allows PyO3 to use Rust's unstable specialization feature to apply the following optimizations:</p>
+<ul>
+<li><code>FromPyObject</code> for <code>Vec</code> and <code>[T;N]</code> can perform a <code>memcpy</code> when the object supports the Python buffer protocol.</li>
+<li><code>ToBorrowedObject</code> can skip a reference count increase when the provided object is a Python native type.</li>
+</ul>
 <h1><a class="header" href="#advanced-topics" id="advanced-topics">Advanced topics</a></h1>
 <h2><a class="header" href="#ffi" id="ffi">FFI</a></h2>
 <p>PyO3 exposes much of Python's C API through the <code>ffi</code> module.</p>
@@ -2723,12 +2768,6 @@ test_word_count_python_sequential                      27.3985 (15.82)    45.452
 <p>The caveat to these &quot;owned references&quot; is that Rust references do not normally convey ownership (they are always <code>Copy</code>, and cannot implement <code>Drop</code>). Whenever a PyO3 API returns an owned reference, PyO3 stores it internally, so that PyO3 can decrease the reference count just before PyO3 releases the GIL.</p>
 <p>For most use cases this behaviour is invisible. Occasionally, however, users may need to clear memory usage sooner than PyO3 usually does. PyO3 exposes this functionality with the  the <code>GILPool</code> struct. When a <code>GILPool</code> is dropped, <em><strong>all</strong></em> owned references created after the <code>GILPool</code> was created will be cleared.</p>
 <p>The unsafe function <code>Python::new_pool</code> allows you to create a new <code>GILPool</code>. When doing this, you must be very careful to ensure that once the <code>GILPool</code> is dropped you do not retain access any owned references created after the <code>GILPool</code> was created.</p>
-<h2><a class="header" href="#the-nightly-feature" id="the-nightly-feature">The <code>nightly</code> feature</a></h2>
-<p>The <code>pyo3/nightly</code> feature needs the nightly Rust compiler. This allows PyO3 to use Rust's unstable specialization feature to apply the following optimizations:</p>
-<ul>
-<li><code>FromPyObject</code> for <code>Vec</code> and <code>[T;N]</code> can perform a <code>memcpy</code> when the object is a <code>PyBuffer</code></li>
-<li><code>ToBorrowedObject</code> can skip a reference count increase when the provided object is a Python native type.</li>
-</ul>
 <h1><a class="header" href="#building-and-distribution" id="building-and-distribution">Building and Distribution</a></h1>
 <h2><a class="header" href="#python-version" id="python-version">Python version</a></h2>
 <p>PyO3 uses a build script to determine the Python version and set the correct linker arguments. By default it uses the <code>python3</code> executable. You can override the Python interpreter by setting <code>PYO3_PYTHON</code>, e.g., <code>PYO3_PYTHON=python3.6</code>.</p>
@@ -2756,7 +2795,7 @@ pyo3 = &quot;0.6&quot;
 <p>There are two ways to distribute your module as a Python package: The old, <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>, and the new, <a href="https://github.com/PyO3/maturin">maturin</a>. setuptools-rust needs several configuration files (<code>setup.py</code>, <code>MANIFEST.in</code>, <code>build-wheels.sh</code>, etc.). maturin doesn't need any configuration files, however it does not support some functionality of setuptools such as package data (<a href="https://github.com/PyO3/maturin/issues/258">pyo3/maturin#258</a>) and requires a rigid project structure, while setuptools-rust allows (and sometimes requires) configuration with python code.</p>
 <h2><a class="header" href="#py_limited_apiabi3" id="py_limited_apiabi3"><code>Py_LIMITED_API</code>/<code>abi3</code></a></h2>
 <p>By default, Python extension modules can only be used with the same Python version they were compiled against -- if you build an extension module with Python 3.5, you can't import it using Python 3.8. <a href="https://www.python.org/dev/peps/pep-0384/">PEP 384</a> introduced the idea of the limited Python API, which would have a stable ABI enabling extension modules built with it to be used against multiple Python versions. This is also known as <code>abi3</code>.</p>
-<p>Note that <a href="https://github.com/PyO3/maturin">maturin</a> &gt;= 0.9.0 or <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a> &gt;= 0.12.0 is going to support <code>abi3</code> wheels.
+<p>Note that <a href="https://github.com/PyO3/maturin">maturin</a> &gt;= 0.9.0 or <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a> &gt;= 0.11.4 support <code>abi3</code> wheels.
 See the <a href="https://github.com/PyO3/maturin/pull/353">corresponding</a> <a href="https://github.com/PyO3/setuptools-rust/pull/82">PRs</a> for more.</p>
 <p>There are three steps involved in making use of <code>abi3</code> when building Python packages as wheels:</p>
 <ol>
@@ -3345,7 +3384,7 @@ impl PySequenceProtocol for ByteSequence {
 </span></code></pre></pre>
 <h1><a class="header" href="#pyo3-and-rust-cpython" id="pyo3-and-rust-cpython">PyO3 and rust-cpython</a></h1>
 <p>PyO3 began as fork of <a href="https://github.com/dgrunwald/rust-cpython">rust-cpython</a> when rust-cpython wasn't maintained. Over time PyO3 has become fundamentally different from rust-cpython.</p>
-<h2><a class="header" href="#macros-1" id="macros-1">Macros</a></h2>
+<h2><a class="header" href="#macros-2" id="macros-2">Macros</a></h2>
 <p>While rust-cpython has a <code>macro_rules!</code> based dsl for declaring modules and classes, PyO3 uses proc macros. PyO3 also doesn't change your struct and functions so you can still use them as normal Rust functions.</p>
 <p><strong>rust-cpython</strong></p>
 <pre><code class="language-rust ignore">py_class!(class MyClass |py| {
@@ -3989,6 +4028,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <ul>
 <li>Add support for <code>#[pyclass(dict)]</code> and <code>#[pyclass(weakref)]</code> with the <code>abi3</code> feature on Python 3.9 and up. <a href="https://github.com/PyO3/pyo3/pull/1342">#1342</a></li>
 <li>Add FFI definitions <code>PyOS_BeforeFork</code>, <code>PyOS_AfterFork_Parent</code>, <code>PyOS_AfterFork_Child</code> for Python 3.7 and up. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
+<li>Add <code>auto-initialize</code> feature to control whether PyO3 should automatically initialize an embedded Python interpreter. For compatibility this feature is enabled by default in PyO3 0.13.1, but is planned to become opt-in from PyO3 0.14.0. <a href="https://github.com/PyO3/pyo3/pull/1347">#1347</a></li>
 <li>Add support for cross-compiling to Windows without needing <code>PYO3_CROSS_INCLUDE_DIR</code>. <a href="https://github.com/PyO3/pyo3/pull/1350">#1350</a></li>
 </ul>
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
