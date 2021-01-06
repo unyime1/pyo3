@@ -205,6 +205,11 @@ edition = &quot;2018&quot;
 
 [lib]
 name = &quot;string_sum&quot;
+# &quot;cdylib&quot; is necessary to produce a shared library for Python to import from.
+#
+# Downstream Rust code (including code in `bin/`, `examples/`, and `tests/`) will not be able
+# to `use string_sum;` unless the &quot;rlib&quot; or &quot;lib&quot; crate type is also included, e.g.:
+# crate-type = [&quot;cdylib&quot;, &quot;rlib&quot;]
 crate-type = [&quot;cdylib&quot;]
 
 [dependencies.pyo3]
@@ -247,10 +252,6 @@ rustflags = [
 ]
 </code></pre>
 <p>While developing, you can symlink (or copy) and rename the shared library from the target folder: On MacOS, rename <code>libstring_sum.dylib</code> to <code>string_sum.so</code>, on Windows <code>libstring_sum.dll</code> to <code>string_sum.pyd</code>, and on Linux <code>libstring_sum.so</code> to <code>string_sum.so</code>. Then open a Python shell in the same folder and you'll be able to <code>import string_sum</code>.</p>
-<p>Adding the <code>cdylib</code> arguments in the <code>Cargo.toml</code> files changes the way your crate is compiled.
-Other Rust projects using your crate will have to link against the <code>.so</code> or <code>.pyd</code> file rather than include your library directly as normal.
-In order to make available your crate in the usual way for Rust user, you you might want to consider using both <code>crate-type = [&quot;cdylib&quot;, &quot;rlib&quot;]</code> so that Rust users can use the <code>rlib</code> (the default lib crate type).
-Another possibility is to create a new crate to perform the binding.</p>
 <p>To build, test and publish your crate as a Python module, you can use <a href="https://github.com/PyO3/maturin">maturin</a> or <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>. You can find an example for setuptools-rust in <a href="https://github.com/PyO3/pyo3/tree/master/examples/word-count">examples/word-count</a>, while maturin should work on your crate without any configuration.</p>
 <h2><a class="header" href="#using-python-from-rust" id="using-python-from-rust">Using Python from Rust</a></h2>
 <p>If you want your Rust application to create a Python interpreter internally and
@@ -2909,6 +2910,21 @@ version = &quot;*&quot;
 [features]
 extension-module = [&quot;pyo3/extension-module&quot;]
 default = [&quot;extension-module&quot;]
+</code></pre>
+<h2><a class="header" href="#i-cant-run-cargo-test-my-crate-cannot-be-found-for-tests-in-tests-directory" id="i-cant-run-cargo-test-my-crate-cannot-be-found-for-tests-in-tests-directory">I can't run <code>cargo test</code>: my crate cannot be found for tests in <code>tests/</code> directory!</a></h2>
+<p>The Rust book suggests to <a href="https://doc.rust-lang.org/book/ch11-03-test-organization.html#integration-tests">put integration tests inside a <code>tests/</code> directory</a>.</p>
+<p>For a PyO3 <code>extension-module</code> project where the <code>crate-type</code> is set to <code>&quot;cdylib&quot;</code> in your <code>Cargo.toml</code>,
+the compiler won't be able to find your crate and will display errors such as <code>E0432</code> or <code>E0463</code>:</p>
+<pre><code>error[E0432]: unresolved import `my_crate`
+ --&gt; tests/test_my_crate.rs:1:5
+  |
+1 | use my_crate;
+  |     ^^^^^^^^^^^^ no external crate `my_crate`
+</code></pre>
+<p>The best solution is to make your crate types include both <code>rlib</code> and <code>cdylib</code>:</p>
+<pre><code># Cargo.toml
+[lib]
+crate-type = [&quot;cdylib&quot;, &quot;rlib&quot;]
 </code></pre>
 <h2><a class="header" href="#ctrl-c-doesnt-do-anything-while-my-rust-code-is-executing" id="ctrl-c-doesnt-do-anything-while-my-rust-code-is-executing">Ctrl-C doesn't do anything while my Rust code is executing!</a></h2>
 <p>This is because Ctrl-C raises a SIGINT signal, which is handled by the calling Python process by simply setting a flag to action upon later. This flag isn't checked while Rust code called from Python is executing, only once control returns to the Python interpreter.</p>

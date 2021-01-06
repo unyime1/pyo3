@@ -401,6 +401,11 @@
 <span id="398">398</span>
 <span id="399">399</span>
 <span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">specialization</span>))]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">missing_safety_doc</span>)]</span> <span class="comment">// FIXME (#698)</span>
@@ -453,6 +458,11 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [lib]</span>
 <span class="doccomment">//! name = &quot;string_sum&quot;</span>
+<span class="doccomment">//! # &quot;cdylib&quot; is necessary to produce a shared library for Python to import from.</span>
+<span class="doccomment">//! #</span>
+<span class="doccomment">//! # Downstream Rust code (including code in `bin/`, `examples/`, and `tests/`) will not be able</span>
+<span class="doccomment">//! # to `use string_sum;` unless the &quot;rlib&quot; or &quot;lib&quot; crate type is also included, e.g.:</span>
+<span class="doccomment">//! # crate-type = [&quot;cdylib&quot;, &quot;rlib&quot;]</span>
 <span class="doccomment">//! crate-type = [&quot;cdylib&quot;]</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [dependencies.pyo3]</span>

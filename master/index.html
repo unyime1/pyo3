@@ -203,6 +203,11 @@ edition = &quot;2018&quot;
 
 [lib]
 name = &quot;string_sum&quot;
+# &quot;cdylib&quot; is necessary to produce a shared library for Python to import from.
+#
+# Downstream Rust code (including code in `bin/`, `examples/`, and `tests/`) will not be able
+# to `use string_sum;` unless the &quot;rlib&quot; or &quot;lib&quot; crate type is also included, e.g.:
+# crate-type = [&quot;cdylib&quot;, &quot;rlib&quot;]
 crate-type = [&quot;cdylib&quot;]
 
 [dependencies.pyo3]
@@ -245,10 +250,6 @@ rustflags = [
 ]
 </code></pre>
 <p>While developing, you can symlink (or copy) and rename the shared library from the target folder: On MacOS, rename <code>libstring_sum.dylib</code> to <code>string_sum.so</code>, on Windows <code>libstring_sum.dll</code> to <code>string_sum.pyd</code>, and on Linux <code>libstring_sum.so</code> to <code>string_sum.so</code>. Then open a Python shell in the same folder and you'll be able to <code>import string_sum</code>.</p>
-<p>Adding the <code>cdylib</code> arguments in the <code>Cargo.toml</code> files changes the way your crate is compiled.
-Other Rust projects using your crate will have to link against the <code>.so</code> or <code>.pyd</code> file rather than include your library directly as normal.
-In order to make available your crate in the usual way for Rust user, you you might want to consider using both <code>crate-type = [&quot;cdylib&quot;, &quot;rlib&quot;]</code> so that Rust users can use the <code>rlib</code> (the default lib crate type).
-Another possibility is to create a new crate to perform the binding.</p>
 <p>To build, test and publish your crate as a Python module, you can use <a href="https://github.com/PyO3/maturin">maturin</a> or <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>. You can find an example for setuptools-rust in <a href="https://github.com/PyO3/pyo3/tree/master/examples/word-count">examples/word-count</a>, while maturin should work on your crate without any configuration.</p>
 <h2><a class="header" href="#using-python-from-rust" id="using-python-from-rust">Using Python from Rust</a></h2>
 <p>If you want your Rust application to create a Python interpreter internally and

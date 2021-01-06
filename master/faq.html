@@ -184,6 +184,21 @@ version = &quot;*&quot;
 extension-module = [&quot;pyo3/extension-module&quot;]
 default = [&quot;extension-module&quot;]
 </code></pre>
+<h2><a class="header" href="#i-cant-run-cargo-test-my-crate-cannot-be-found-for-tests-in-tests-directory" id="i-cant-run-cargo-test-my-crate-cannot-be-found-for-tests-in-tests-directory">I can't run <code>cargo test</code>: my crate cannot be found for tests in <code>tests/</code> directory!</a></h2>
+<p>The Rust book suggests to <a href="https://doc.rust-lang.org/book/ch11-03-test-organization.html#integration-tests">put integration tests inside a <code>tests/</code> directory</a>.</p>
+<p>For a PyO3 <code>extension-module</code> project where the <code>crate-type</code> is set to <code>&quot;cdylib&quot;</code> in your <code>Cargo.toml</code>,
+the compiler won't be able to find your crate and will display errors such as <code>E0432</code> or <code>E0463</code>:</p>
+<pre><code>error[E0432]: unresolved import `my_crate`
+ --&gt; tests/test_my_crate.rs:1:5
+  |
+1 | use my_crate;
+  |     ^^^^^^^^^^^^ no external crate `my_crate`
+</code></pre>
+<p>The best solution is to make your crate types include both <code>rlib</code> and <code>cdylib</code>:</p>
+<pre><code># Cargo.toml
+[lib]
+crate-type = [&quot;cdylib&quot;, &quot;rlib&quot;]
+</code></pre>
 <h2><a class="header" href="#ctrl-c-doesnt-do-anything-while-my-rust-code-is-executing" id="ctrl-c-doesnt-do-anything-while-my-rust-code-is-executing">Ctrl-C doesn't do anything while my Rust code is executing!</a></h2>
 <p>This is because Ctrl-C raises a SIGINT signal, which is handled by the calling Python process by simply setting a flag to action upon later. This flag isn't checked while Rust code called from Python is executing, only once control returns to the Python interpreter.</p>
 <p>You can give the Python interpreter a chance to process the signal properly by calling <code>Python::check_signals</code>. It's good practice to call this function regularly if you have a long-running Rust function so that your users can cancel it.</p>
