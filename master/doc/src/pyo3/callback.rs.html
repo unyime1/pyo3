@@ -287,7 +287,7 @@
     <span class="kw">const</span> <span class="ident">ERR_VALUE</span>: <span class="self">Self</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>();
 }
 
-<span class="kw">impl</span> <span class="ident">PyCallbackOutput</span> <span class="kw">for</span> <span class="ident">libc</span>::<span class="ident">c_int</span> {
+<span class="kw">impl</span> <span class="ident">PyCallbackOutput</span> <span class="kw">for</span> <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span> {
     <span class="kw">const</span> <span class="ident">ERR_VALUE</span>: <span class="self">Self</span> <span class="op">=</span> <span class="op">-</span><span class="number">1</span>;
 }
 
@@ -329,14 +329,14 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span><span class="ident">libc</span>::<span class="ident">c_int</span><span class="op">&gt;</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">convert</span>(<span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">libc</span>::<span class="ident">c_int</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span><span class="op">&gt;</span> <span class="kw">for</span> () {
+    <span class="kw">fn</span> <span class="ident">convert</span>(<span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="number">0</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span><span class="ident">libc</span>::<span class="ident">c_int</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">bool</span> {
-    <span class="kw">fn</span> <span class="ident">convert</span>(<span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">libc</span>::<span class="ident">c_int</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">convert</span>(<span class="self">self</span>, <span class="kw">_</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_int</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span> <span class="kw">as</span> <span class="ident">c_int</span>)
     }
 }
