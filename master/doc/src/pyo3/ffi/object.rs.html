@@ -932,27 +932,27 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
-    <span class="ident">_ob_next</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
-    <span class="ident">_ob_prev</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">_ob_next</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">_ob_prev</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
     <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
-    <span class="ident">ob_type</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">ob_type</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
 };
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>))]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
     <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
-    <span class="ident">ob_type</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">ob_type</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
 };
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
-    <span class="ident">_ob_next</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
-    <span class="ident">_ob_prev</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">_ob_next</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">_ob_prev</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
     <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
     <span class="ident">ob_pypy_link</span>: <span class="number">0</span>,
-    <span class="ident">ob_type</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">ob_type</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
 };
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>))]</span>
@@ -960,7 +960,7 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
     <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
     <span class="ident">ob_pypy_link</span>: <span class="number">0</span>,
-    <span class="ident">ob_type</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">ob_type</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
 };
 
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
@@ -1316,7 +1316,7 @@
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_8</span>)]</span>
         <span class="kw">pub</span> <span class="ident">tp_vectorcall</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">object</span>::<span class="ident">vectorcallfunc</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
-        <span class="kw">pub</span> <span class="ident">tp_pypy_flags</span>: ::<span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_long</span>,
+        <span class="kw">pub</span> <span class="ident">tp_pypy_flags</span>: <span class="ident">std</span>::<span class="ident">os</span>::<span class="ident">raw</span>::<span class="ident">c_long</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;COUNT_ALLOCS&quot;</span>)]</span>
         <span class="kw">pub</span> <span class="ident">tp_allocs</span>: <span class="ident">Py_ssize_t</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;COUNT_ALLOCS&quot;</span>)]</span>

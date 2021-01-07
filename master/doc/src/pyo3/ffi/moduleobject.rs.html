@@ -160,7 +160,7 @@
     <span class="ident">ob_base</span>: <span class="ident">PyObject_HEAD_INIT</span>,
     <span class="ident">m_init</span>: <span class="prelude-val">None</span>,
     <span class="ident">m_index</span>: <span class="number">0</span>,
-    <span class="ident">m_copy</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">m_copy</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
 };
 
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
@@ -189,11 +189,11 @@
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyModuleDef_INIT</span>: <span class="ident">PyModuleDef</span> <span class="op">=</span> <span class="ident">PyModuleDef</span> {
     <span class="ident">m_base</span>: <span class="ident">PyModuleDef_HEAD_INIT</span>,
-    <span class="ident">m_name</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
-    <span class="ident">m_doc</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
+    <span class="ident">m_name</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
+    <span class="ident">m_doc</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
     <span class="ident">m_size</span>: <span class="number">0</span>,
-    <span class="ident">m_methods</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
-    <span class="ident">m_slots</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">m_methods</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+    <span class="ident">m_slots</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
     <span class="ident">m_traverse</span>: <span class="prelude-val">None</span>,
     <span class="ident">m_clear</span>: <span class="prelude-val">None</span>,
     <span class="ident">m_free</span>: <span class="prelude-val">None</span>,

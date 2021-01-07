@@ -162,10 +162,10 @@
 }
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyMethodDef_INIT</span>: <span class="ident">PyMethodDef</span> <span class="op">=</span> <span class="ident">PyMethodDef</span> {
-    <span class="ident">ml_name</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
+    <span class="ident">ml_name</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
     <span class="ident">ml_meth</span>: <span class="prelude-val">None</span>,
     <span class="ident">ml_flags</span>: <span class="number">0</span>,
-    <span class="ident">ml_doc</span>: ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
+    <span class="ident">ml_doc</span>: <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null</span>(),
 };
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">PyMethodDef</span> {

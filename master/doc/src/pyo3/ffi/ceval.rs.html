@@ -125,7 +125,7 @@
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">PyEval_CallObject</span>(<span class="ident">func</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>, <span class="ident">arg</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span> {
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
-    <span class="ident">PyEval_CallObjectWithKeywords</span>(<span class="ident">func</span>, <span class="ident">arg</span>, ::<span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>())
+    <span class="ident">PyEval_CallObjectWithKeywords</span>(<span class="ident">func</span>, <span class="ident">arg</span>, <span class="ident">std</span>::<span class="ident">ptr</span>::<span class="ident">null_mut</span>())
 }
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
