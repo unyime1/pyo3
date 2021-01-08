@@ -101,6 +101,8 @@
 <span id="98"> 98</span>
 <span id="99"> 99</span>
 <span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -180,6 +182,8 @@
         <span class="kw">if</span> <span class="ident">subtype</span> <span class="op">=</span><span class="op">=</span> <span class="self">Self</span>::<span class="ident">type_object_raw</span>(<span class="ident">py</span>) {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">obj</span>) <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">PyClassWithFreeList</span><span class="op">&gt;</span>::<span class="ident">get_free_list</span>(<span class="ident">py</span>).<span class="ident">pop</span>() {
                 <span class="ident">ffi</span>::<span class="ident">PyObject_Init</span>(<span class="ident">obj</span>, <span class="ident">subtype</span>);
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_8</span>))]</span>
+                <span class="kw">crate</span>::<span class="ident">pyclass</span>::<span class="ident">bpo_35810_workaround</span>(<span class="ident">py</span>, <span class="ident">subtype</span>);
                 <span class="kw">return</span> <span class="ident">obj</span> <span class="kw">as</span> <span class="kw">_</span>;
             }
         }
@@ -191,13 +195,13 @@
         <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">PyAny</span>::<span class="ident">from_borrowed_ptr_or_panic</span>(<span class="ident">py</span>, <span class="ident">self_</span> <span class="kw">as</span> <span class="kw">_</span>);
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">obj</span>) <span class="op">=</span> <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">PyClassWithFreeList</span><span class="op">&gt;</span>::<span class="ident">get_free_list</span>(<span class="ident">py</span>).<span class="ident">insert</span>(<span class="ident">obj</span>.<span class="ident">as_ptr</span>()) {
-            <span class="kw">match</span> <span class="ident">get_type_free</span>(<span class="ident">ffi</span>::<span class="ident">Py_TYPE</span>(<span class="ident">obj</span>)) {
-                <span class="prelude-val">Some</span>(<span class="ident">free</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">Py_TYPE</span>(<span class="ident">obj</span>);
-                    <span class="ident">free</span>(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>);
-                    <span class="ident">ffi</span>::<span class="ident">Py_DECREF</span>(<span class="ident">ty</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>);
-                }
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">tp_free_fallback</span>(<span class="ident">obj</span>),
+            <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">Py_TYPE</span>(<span class="ident">obj</span>);
+            <span class="kw">let</span> <span class="ident">free</span> <span class="op">=</span> <span class="ident">get_type_free</span>(<span class="ident">ty</span>).<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">tp_free_fallback</span>(<span class="ident">ty</span>));
+            <span class="ident">free</span>(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>);
+
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_8</span>)]</span>
+            <span class="kw">if</span> <span class="ident">ffi</span>::<span class="ident">PyType_HasFeature</span>(<span class="ident">ty</span>, <span class="ident">ffi</span>::<span class="ident">Py_TPFLAGS_HEAPTYPE</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+                <span class="ident">ffi</span>::<span class="ident">Py_DECREF</span>(<span class="ident">ty</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi</span>::<span class="ident">PyObject</span>);
             }
         }
     }
