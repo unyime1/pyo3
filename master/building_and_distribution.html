@@ -212,8 +212,7 @@ pyo3 = { version = &quot;...&quot;, features = [&quot;abi3&quot;]}
 For example, if you set the <code>abi3-py36</code> feature, your extension wheel can be used on all Python 3 versions from Python 3.6 and up. <code>maturin</code> and <code>setuptools-rust</code> will give the wheel a name like <code>my-extension-1.0-cp36-abi3-manylinux2020_x86_64.whl</code>.
 If you set more that one of these api version feature flags the highest version always wins. For example, with both <code>abi3-py36</code> and <code>abi3-py38</code> set, PyO3 would build a wheel which supports Python 3.8 and up.
 PyO3 is only able to link your extension module to api3 version up to and including your host Python version. E.g., if you set <code>abi3-py38</code> and try to compile the crate with a host of Python 3.6, the build will fail.</p>
-<p>As an advanced feature, you can build PyO3 wheel without calling Python interpreter with
-the environment variable <code>PYO3_NO_PYTHON</code> set, but this only works on *NIX.</p>
+<p>As an advanced feature, you can build PyO3 wheel without calling Python interpreter with the environment variable <code>PYO3_NO_PYTHON</code> set. On unix systems this works unconditionally; on Windows you must also set the <code>RUSTFLAGS</code> evironment variable to contain <code>-L native=/path/to/python/libs</code> so that the linker can find <code>python3.lib</code>.</p>
 <h3><a class="header" href="#missing-features" id="missing-features">Missing features</a></h3>
 <p>Due to limitations in the Python API, there are a few <code>pyo3</code> features that do
 not work when compiling for <code>abi3</code>. These are:</p>
