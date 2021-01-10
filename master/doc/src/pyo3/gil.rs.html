@@ -745,6 +745,10 @@
 <span id="742">742</span>
 <span id="743">743</span>
 <span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -899,7 +903,9 @@
                     <span class="string">&quot;statically instead of with a shared library.\n\n&quot;</span>,
                     <span class="string">&quot;Please disable the `auto-initialize` feature, for example by entering the following &quot;</span>,
                     <span class="string">&quot;in your cargo.toml:\n\n&quot;</span>,
-                    <span class="string">&quot;    pyo3 = { version = \&quot;0.13.0\&quot;, default-features = false }\n\n&quot;</span>,
+                    <span class="string">&quot;    pyo3 = { version = \&quot;&quot;</span>,
+                    <span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),
+                    <span class="string">&quot;\&quot;, default-features = false }\n\n&quot;</span>,
                     <span class="string">&quot;Alternatively, compile PyO3 using a Python distribution which contains a shared &quot;</span>,
                     <span class="string">&quot;libary.&quot;</span>
                 ));
@@ -908,7 +914,9 @@
                     <span class="string">&quot;The `auto-initialize` feature is not supported by PyPy.\n\n&quot;</span>,
                     <span class="string">&quot;Please disable the `auto-initialize` feature, for example by entering the following &quot;</span>,
                     <span class="string">&quot;in your cargo.toml:\n\n&quot;</span>,
-                    <span class="string">&quot;    pyo3 = { version = \&quot;0.13.0\&quot;, default-features = false }&quot;</span>,
+                    <span class="string">&quot;    pyo3 = { version = \&quot;&quot;</span>,
+                    <span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),
+                    <span class="string">&quot;\&quot;, default-features = false }\n\n&quot;</span>,
                 ));
             } <span class="kw">else</span> {
                 <span class="comment">// extension module feature enabled and PyPy or static linking</span>
