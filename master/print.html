@@ -213,7 +213,7 @@ name = &quot;string_sum&quot;
 crate-type = [&quot;cdylib&quot;]
 
 [dependencies.pyo3]
-version = &quot;0.13.0&quot;
+version = &quot;0.13.1&quot;
 features = [&quot;extension-module&quot;]
 </code></pre>
 <p><strong><code>src/lib.rs</code></strong></p>
@@ -257,7 +257,7 @@ rustflags = [
 <p>If you want your Rust application to create a Python interpreter internally and
 use it to run Python code, add <code>pyo3</code> to your <code>Cargo.toml</code> like this:</p>
 <pre><code class="language-toml">[dependencies.pyo3]
-version = &quot;0.13.0&quot;
+version = &quot;0.13.1&quot;
 features = [&quot;auto-initialize&quot;]
 </code></pre>
 <p>Example program displaying the value of <code>sys.version</code> and the current user name:</p>
@@ -4046,12 +4046,12 @@ provide guidance.</p>
 PyO3 versions, please see the <a href="https://pyo3.rs/master/migration.html">migration guide</a>.</p>
 <p>The format is based on <a href="http://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
 and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h2><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0130headunreleaseda" id="a-hrefhttpsgithubcompyo3pyo3comparev0130headunreleaseda"><a href="https://github.com/pyo3/pyo3/compare/v0.13.0...HEAD">Unreleased</a></a></h2>
+<h2><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0130v01310131a---2021-01-10" id="a-hrefhttpsgithubcompyo3pyo3comparev0130v01310131a---2021-01-10"><a href="https://github.com/pyo3/pyo3/compare/v0.13.0...v0.13.1">0.13.1</a> - 2021-01-10</a></h2>
 <h3><a class="header" href="#added" id="added">Added</a></h3>
 <ul>
 <li>Add support for <code>#[pyclass(dict)]</code> and <code>#[pyclass(weakref)]</code> with the <code>abi3</code> feature on Python 3.9 and up. <a href="https://github.com/PyO3/pyo3/pull/1342">#1342</a></li>
 <li>Add FFI definitions <code>PyOS_BeforeFork</code>, <code>PyOS_AfterFork_Parent</code>, <code>PyOS_AfterFork_Child</code> for Python 3.7 and up. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
-<li>Add <code>auto-initialize</code> feature to control whether PyO3 should automatically initialize an embedded Python interpreter. For compatibility this feature is enabled by default in PyO3 0.13.1, but is planned to become opt-in from PyO3 0.14.0. <a href="https://github.com/PyO3/pyo3/pull/1347">#1347</a></li>
+<li>Add an <code>auto-initialize</code> feature to control whether PyO3 should automatically initialize an embedded Python interpreter. For compatibility this feature is enabled by default in PyO3 0.13.1, but is planned to become opt-in from PyO3 0.14.0. <a href="https://github.com/PyO3/pyo3/pull/1347">#1347</a></li>
 <li>Add support for cross-compiling to Windows without needing <code>PYO3_CROSS_INCLUDE_DIR</code>. <a href="https://github.com/PyO3/pyo3/pull/1350">#1350</a></li>
 </ul>
 <h3><a class="header" href="#deprecated" id="deprecated">Deprecated</a></h3>
@@ -4060,15 +4060,14 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Deprecate FFI definitions <code>PyGetSetDef_DICT</code> and <code>PyGetSetDef_INIT</code> which have never been in the Python API. <a href="https://github.com/PyO3/pyo3/pull/1341">#1341</a></li>
 <li>Deprecate FFI definitions <code>PyGen_NeedsFinalizing</code>, <code>PyImport_Cleanup</code> (removed in 3.9), and <code>PyOS_InitInterrupts</code> (3.10). <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
 <li>Deprecate FFI definition <code>PyOS_AfterFork</code> for Python 3.7 and up. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
-<li>Deprecate FFI definition <code>PyCoro_Check</code> and <code>PyAsyncGen_Check</code> in favor of <code>PyCoro_CheckExact</code> and <code>PyAsyncGen_CheckExact</code> respectively to mirror Python API. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
-<li>Deprecate FFI definition <code>PyCoroWrapper_Check</code> which has never been in the Python API. <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
+<li>Deprecate FFI definitions <code>PyCoro_Check</code>, <code>PyAsyncGen_Check</code>, and <code>PyCoroWrapper_Check</code>, which have never been in the Python API (for the first two, it is possible to use <code>PyCoro_CheckExact</code> and <code>PyAsyncGen_CheckExact</code> instead; these are the actual functions provided by the Python API). <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
 <li>Deprecate FFI definitions for <code>PyUnicode_FromUnicode</code>, <code>PyUnicode_AsUnicode</code> and <code>PyUnicode_AsUnicodeAndSize</code>, which will be removed from 3.12 and up due to <a href="https://www.python.org/dev/peps/pep-0623/">PEP 613</a>. <a href="https://github.com/PyO3/pyo3/pull/1370">#1370</a></li>
 </ul>
 <h3><a class="header" href="#removed" id="removed">Removed</a></h3>
 <ul>
 <li>Remove FFI definition <code>PyFrame_ClearFreeList</code> when building for Python 3.9. <a href="https://github.com/PyO3/pyo3/pull/1341">#1341</a></li>
 <li>Remove FFI definition <code>_PyDict_Contains</code> when building for Python 3.10. <a href="https://github.com/PyO3/pyo3/pull/1341">#1341</a></li>
-<li>Remove FFI definitions <code>PyGen_NeedsFinalizing</code>, <code>PyImport_Cleanup</code> (for 3.9 and up), and <code>PyOS_InitInterrupts</code> (3.10). <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
+<li>Remove FFI definitions <code>PyGen_NeedsFinalizing</code> and <code>PyImport_Cleanup</code> (for 3.9 and up), and <code>PyOS_InitInterrupts</code> (3.10). <a href="https://github.com/PyO3/pyo3/pull/1348">#1348</a></li>
 </ul>
 <h3><a class="header" href="#fixed" id="fixed">Fixed</a></h3>
 <ul>
