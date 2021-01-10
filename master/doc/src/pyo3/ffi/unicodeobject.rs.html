@@ -471,6 +471,9 @@
 <span id="468">468</span>
 <span id="469">469</span>
 <span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">object</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">ffi</span>::<span class="ident">pyport</span>::<span class="ident">Py_ssize_t</span>;
@@ -532,7 +535,8 @@
         <span class="ident">length</span>: <span class="ident">Py_ssize_t</span>,
         <span class="ident">fill_char</span>: <span class="ident">Py_UCS4</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Py_ssize_t</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>), <span class="ident">not</span>(<span class="ident">Py_3_12</span>)))]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>]</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyUnicode_FromUnicode&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_FromUnicode</span>(<span class="ident">u</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Py_UNICODE</span>, <span class="ident">size</span>: <span class="ident">Py_ssize_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>;
 
@@ -559,10 +563,12 @@
         <span class="ident">copy_null</span>: <span class="ident">c_int</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Py_UCS4</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_AsUCS4Copy</span>(<span class="ident">unicode</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Py_UCS4</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>), <span class="ident">not</span>(<span class="ident">Py_3_12</span>)))]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>]</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyUnicode_AsUnicode&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_AsUnicode</span>(<span class="ident">unicode</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Py_UNICODE</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>), <span class="ident">not</span>(<span class="ident">Py_3_12</span>)))]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>]</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyUnicode_AsUnicodeAndSize&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_AsUnicodeAndSize</span>(
         <span class="ident">unicode</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
