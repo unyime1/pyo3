@@ -207,6 +207,27 @@
 <li><code>FromPyObject</code> for <code>Vec</code> and <code>[T;N]</code> can perform a <code>memcpy</code> when the object supports the Python buffer protocol.</li>
 <li><code>ToBorrowedObject</code> can skip a reference count increase when the provided object is a Python native type.</li>
 </ul>
+<h3><a class="header" href="#serde" id="serde"><code>serde</code></a></h3>
+<p>The <code>serde</code> feature enables (de)serialization of Py<T> objects via <a href="https://serde.rs/">serde</a>.<br />
+This allows to use <a href="https://serde.rs/derive.html"><code>#[derive(Serialize, Deserialize)</code></a> on structs that hold references to <code>#[pyclass]</code> instances</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span>
+<span class="boring">fn main() {
+</span>#[pyclass]
+#[derive(Serialize, Deserialize)]
+struct Permission {
+    name: String
+}
+
+#[pyclass]
+#[derive(Serialize, Deserialize)]
+struct User {
+    username: String,
+    permissions: Vec&lt;Py&lt;Permission&gt;&gt;
+}
+<span class="boring">}
+</span></code></pre></pre>
 
                     </main>
 
