@@ -216,8 +216,6 @@
 <span id="213">213</span>
 <span id="214">214</span>
 <span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>, <span class="ident">non_snake_case</span>, <span class="ident">non_upper_case_globals</span>)]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">allow</span>(<span class="ident">unused_imports</span>))]</span>
@@ -251,6 +249,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">eval</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">fileobject</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">floatobject</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">funcobject</span>::<span class="kw-2">*</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">genobject</span>::<span class="kw-2">*</span>;
@@ -332,6 +331,8 @@
 <span class="kw">mod</span> <span class="ident">floatobject</span>; <span class="comment">// TODO supports PEP-384 only</span>
 
 <span class="comment">// skipped empty frameobject.h</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">funcobject</span>;
 <span class="comment">// skipped genericaliasobject.h</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">mod</span> <span class="ident">genobject</span>; <span class="comment">// TODO: incomplete</span>
@@ -340,9 +341,11 @@
 <span class="comment">// skipped interpreteridobject.h</span>
 <span class="kw">mod</span> <span class="ident">intrcheck</span>; <span class="comment">// TODO supports PEP-384 only</span>
 <span class="kw">mod</span> <span class="ident">iterobject</span>;
-<span class="kw">mod</span> <span class="ident">listobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
-
+<span class="kw">mod</span> <span class="ident">listobject</span>;
 <span class="comment">// skipped longintrepr.h</span>
+<span class="kw">mod</span> <span class="ident">longobject</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">marshal</span>;
+<span class="kw">mod</span> <span class="ident">memoryobject</span>;
 <span class="comment">// skipped namespaceobject.h</span>
 <span class="comment">// skipped odictobject.h</span>
 <span class="comment">// skipped opcode.h</span>
@@ -385,17 +388,14 @@
 <span class="kw">mod</span> <span class="ident">pymem</span>;
 <span class="kw">mod</span> <span class="ident">typeslots</span>;
 
-<span class="kw">mod</span> <span class="ident">longobject</span>;
 <span class="kw">mod</span> <span class="ident">unicodeobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
                    <span class="comment">// mod longintrepr; TODO excluded by PEP-384</span>
-<span class="kw">mod</span> <span class="ident">memoryobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">rangeobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">tupleobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
                  <span class="comment">// mod odictobject; TODO new in 3.5</span>
 <span class="kw">mod</span> <span class="ident">methodobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">moduleobject</span>;
 <span class="kw">mod</span> <span class="ident">setobject</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
-               <span class="comment">// mod funcobject; TODO excluded by PEP-384</span>
                <span class="comment">// mod classobject; TODO excluded by PEP-384</span>
 <span class="kw">mod</span> <span class="ident">pycapsule</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
 <span class="kw">mod</span> <span class="ident">sliceobject</span>;
@@ -429,10 +429,6 @@
 
 <span class="comment">// Additional headers that are not exported by Python.h</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">structmember</span>; <span class="comment">// TODO supports PEP-384 only; needs adjustment for Python 3.3 and 3.5</span>
-
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">marshal</span>;
-
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">funcobject</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">mod</span> <span class="ident">cpython</span>;

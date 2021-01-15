@@ -4077,6 +4077,9 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <h3><a class="header" href="#changed" id="changed">Changed</a></h3>
 <ul>
 <li><code>prepare_freethreaded_python</code> will no longer register an <code>atexit</code> handler to call <code>Py_Finalize</code>. <a href="https://github.com/PyO3/pyo3/pull/1355">#1355</a></li>
+<li>Mark FFI definitions <code>PyMarshal_WriteObjectToString</code>, <code>PyMarshal_ReadObjectFromString</code> as available in limited API.</li>
+<li>Mark FFI definitions <code>PyListObject</code> and those from <code>funcobject.h</code> as requiring non-limited API.  <a href="https://github.com/PyO3/pyo3/pull/1387">#1387</a></li>
+<li>Fix typo in FFI definition <code>PyFunction_Code</code> to <code>PyFunction_GetCode</code>. <a href="https://github.com/PyO3/pyo3/pull/1387">#1387</a></li>
 </ul>
 <h3><a class="header" href="#fixed" id="fixed">Fixed</a></h3>
 <ul>
