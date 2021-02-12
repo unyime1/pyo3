@@ -56,7 +56,7 @@
     <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">PyContextVar_Type</span>: <span class="ident">PyTypeObject</span>;
     <span class="comment">// skipped non-limited opaque PyContextVar</span>
     <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">PyContextToken_Type</span>: <span class="ident">PyTypeObject</span>;
-<span class="comment">// skipped non-limited opaque PyContextToken</span>
+    <span class="comment">// skipped non-limited opaque PyContextToken</span>
 }
 
 <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -90,7 +90,7 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyContextVar_Set</span>(<span class="ident">var</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>, <span class="ident">value</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyContextVar_Reset</span>(<span class="ident">var</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>, <span class="ident">token</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
-<span class="comment">// skipped non-limited _PyContext_NewHamtForTests</span>
+    <span class="comment">// skipped non-limited _PyContext_NewHamtForTests</span>
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "pyo3";</script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>
