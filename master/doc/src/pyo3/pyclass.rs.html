@@ -527,6 +527,7 @@
 <span id="524">524</span>
 <span id="525">525</span>
 <span id="526">526</span>
+<span id="527">527</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! `PyClass` and related traits.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">class</span>::<span class="ident">methods</span>::{<span class="ident">PyClassAttributeDef</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyMethods</span>};
@@ -880,6 +881,7 @@
     }
 
     <span class="kw">if</span> <span class="op">!</span><span class="ident">defs</span>.<span class="ident">is_empty</span>() {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="ident">defs</span>.<span class="ident">push</span>(<span class="ident">ffi</span>::<span class="ident">PyMethodDef_INIT</span>);
     }
 
