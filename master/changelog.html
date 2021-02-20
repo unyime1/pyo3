@@ -180,15 +180,19 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Change <code>PyTimeAcces::get_fold()</code> to return a <code>bool</code> instead of a <code>u8</code>. <a href="https://github.com/PyO3/pyo3/pull/1397">#1397</a></li>
 <li>Deprecate FFI definition <code>PyCFunction_Call</code> for Python 3.9 and later. <a href="https://github.com/PyO3/pyo3/pull/1425">#1425</a></li>
 <li>Deprecate FFI definitions <code>PyModule_GetFilename</code>. <a href="https://github.com/PyO3/pyo3/pull/1425">#1425</a></li>
-<li>Deprecate FFI definitions <code>PyObject_Check</code>, <code>PySuper_Check</code>, <code>FreeFunc</code>. <a href="https://github.com/PyO3/pyo3/pull/1429">#1429</a></li>
 </ul>
 <h3><a class="header" href="#removed" id="removed">Removed</a></h3>
 <ul>
 <li>Remove deprecated exception names <code>BaseException</code> etc. <a href="https://github.com/PyO3/pyo3/pull/1426">#1426</a></li>
-<li>Remove deprecated ffi definitions <code>PyGetSetDef_INIT</code>, <code>PyGetSetDef_DICT</code>, <code>PyCoro_Check</code>, <code>PyCoroWrapper_Check</code>, and <code>PyAsyncGen_Check</code>. <a href="https://github.com/PyO3/pyo3/pull/1426">#1426</a></li>
 <li>Remove deprecated redundant methods <code>Python::is_instance</code>, <code>Python::is_subclass</code>, <code>Python::release</code>, <code>Python::xdecref</code>, and <code>Py::from_owned_ptr_or_panic</code>. <a href="https://github.com/PyO3/pyo3/pull/1426">#1426</a></li>
-<li>Remove ffi definition ``PyMethodDef_INIT`. <a href="https://github.com/PyO3/pyo3/pull/1426">#1426</a></li>
-<li>Remove FFI definition <code>PyTypeObject_INIT</code>. <a href="https://github.com/PyO3/pyo3/pull/1429">#1429</a></li>
+<li>Remove many ffi definitions which never existed in the Python C-API:
+<ul>
+<li>(previously deprecated) <code>PyGetSetDef_INIT</code>, <code>PyGetSetDef_DICT</code>, <code>PyCoro_Check</code>, <code>PyCoroWrapper_Check</code>, and <code>PyAsyncGen_Check</code> <a href="https://github.com/PyO3/pyo3/pull/1426">#1426</a></li>
+<li><code>PyMethodDef_INIT</code> <a href="https://github.com/PyO3/pyo3/pull/1426">#1426</a></li>
+<li><code>PyTypeObject_INIT</code> <a href="https://github.com/PyO3/pyo3/pull/1429">#1429</a></li>
+<li><code>PyObject_Check</code>, <code>PySuper_Check</code>, and <code>FreeFunc</code> <a href="https://github.com/PyO3/pyo3/pull/1438">#1438</a></li>
+</ul>
+</li>
 </ul>
 <h3><a class="header" href="#fixed" id="fixed">Fixed</a></h3>
 <ul>
