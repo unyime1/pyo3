@@ -219,7 +219,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker</span>::<span class="ident">PhantomData</span>, <span class="ident">thread</span>};
 
 <span class="doccomment">/// This type is used as a &quot;dummy&quot; type on which dtolnay specializations are</span>
-<span class="doccomment">/// applied to apply implementations from #[pymethods] &amp; #[pyproto]</span>
+<span class="doccomment">/// applied to apply implementations from `#[pymethods]` &amp; `#[pyproto]`</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyClassImplCollector</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">PyClassImplCollector</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
