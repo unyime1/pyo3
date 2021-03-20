@@ -794,7 +794,7 @@
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">PyErr</span>::<span class="ident">fetch</span>(<span class="ident">py</span>));
         }
         <span class="kw">let</span> <span class="ident">module</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_owned_ptr_or_err</span>::<span class="op">&lt;</span><span class="ident">PyModule</span><span class="op">&gt;</span>(<span class="ident">module</span>)<span class="question-mark">?</span>;
-        <span class="ident">module</span>.<span class="ident">add</span>(<span class="string">&quot;__doc__&quot;</span>, <span class="ident">doc</span>)<span class="question-mark">?</span>;
+        <span class="ident">module</span>.<span class="ident">setattr</span>(<span class="string">&quot;__doc__&quot;</span>, <span class="ident">doc</span>)<span class="question-mark">?</span>;
         <span class="ident">initializer</span>(<span class="ident">py</span>, <span class="ident">module</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="kw">crate</span>::<span class="ident">IntoPyPointer</span>::<span class="ident">into_ptr</span>(<span class="ident">module</span>))
     }
