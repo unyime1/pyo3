@@ -38,7 +38,7 @@ allows the GIL-bound reference to not require <code>Python</code> for any of its
 </div><h4 id="method.into_ref" class="method"><code>pub fn <a href="#method.into_ref" class="fnname">into_ref</a>(self, py: <a class="struct" href="../pyo3/prelude/struct.Python.html" title="struct pyo3::prelude::Python">Python</a>&lt;'_&gt;) -&gt; &amp;T::<a class="type" href="../pyo3/type_object/trait.PyTypeInfo.html#associatedtype.AsRefTarget" title="type pyo3::type_object::PyTypeInfo::AsRefTarget">AsRefTarget</a></code><a class="srclink" href="../src/pyo3/instance.rs.html#130-132" title="goto source code">[src]</a></h4><div class="docblock"><p>Similar to <a href="#method.as_ref"><code>as_ref</code></a>, and also consumes this <code>Py</code> and registers the
 Python object reference in PyO3's object storage. The reference count for the Python
 object will not be decreased until the GIL lifetime ends.</p>
-<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<h1 id="examples-1" class="section-header"><a href="#examples-1">Examples</a></h1>
 <p>Useful when returning GIL-bound references from functions. In the snippet below, note that
 the <code>'py</code> lifetime of the input GIL lifetime is also given to the returned reference:</p>
 

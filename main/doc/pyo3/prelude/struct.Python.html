@@ -36,7 +36,7 @@ initialized, this function will initialize it. See
 <li>If the <code>auto-initialize</code> feature is not enabled and the Python interpreter is not
 initialized.</li>
 </ul>
-<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
 <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -66,7 +66,7 @@ an irrecoverable panic.</p>
 initialized.</li>
 </ul>
 </div><h4 id="method.allow_threads" class="method"><code>pub fn <a href="#method.allow_threads" class="fnname">allow_threads</a>&lt;T, F&gt;(self, f: F) -&gt; T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; T,<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>,&nbsp;</span></code><a class="srclink" href="../../src/pyo3/python.rs.html#248-273" title="goto source code">[src]</a></h4><div class="docblock"><p>Temporarily releases the <code>GIL</code>, thus allowing other Python threads to run.</p>
-<h1 id="example-1" class="section-header"><a href="#example-1">Example</a></h1>
+<h1 id="examples-1" class="section-header"><a href="#examples-1">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">pyo3</span>::<span class="ident">exceptions</span>::<span class="ident">PyRuntimeError</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
@@ -107,7 +107,7 @@ become a stable feature of the Rust language.</p>
 which makes them independent of the GIL lifetime.  However, you cannot
 do much with those without a <code>Python&lt;'p&gt;</code> token, for which you'd need to
 reacquire the GIL.</p>
-<h1 id="example-2" class="section-header"><a href="#example-2">Example</a></h1>
+<h1 id="examples-2" class="section-header"><a href="#examples-2">Examples</a></h1>
 <div class='information'><div class='tooltip compile_fail'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered compile_fail">
 <span class="kw">fn</span> <span class="ident">parallel_print</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) {
     <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">PyString</span>::<span class="ident">new</span>(<span class="ident">py</span>, <span class="string">&quot;This object should not be shared &gt;_&lt;&quot;</span>);
@@ -118,7 +118,7 @@ reacquire the GIL.</p>
 </div><h4 id="method.eval" class="method"><code>pub fn <a href="#method.eval" class="fnname">eval</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;code: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;globals: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../../pyo3/types/struct.PyDict.html" title="struct pyo3::types::PyDict">PyDict</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;locals: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../../pyo3/types/struct.PyDict.html" title="struct pyo3::types::PyDict">PyDict</a>&gt;<br>) -&gt; <a class="type" href="../../pyo3/prelude/type.PyResult.html" title="type pyo3::prelude::PyResult">PyResult</a>&lt;&amp;'p <a class="struct" href="../../pyo3/prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a>&gt;</code><a class="srclink" href="../../src/pyo3/python.rs.html#289-296" title="goto source code">[src]</a></h4><div class="docblock"><p>Evaluates a Python expression in the given context and returns the result.</p>
 <p>If <code>globals</code> is <code>None</code>, it defaults to Python module <code>__main__</code>.
 If <code>locals</code> is <code>None</code>, it defaults to the value of <code>globals</code>.</p>
-<h1 id="example-3" class="section-header"><a href="#example-3">Example:</a></h1>
+<h1 id="examples-3" class="section-header"><a href="#examples-3">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;[i * 10 for i in range(5)]&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
 <span class="kw">let</span> <span class="ident">res</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">extract</span>().<span class="ident">unwrap</span>();
@@ -126,7 +126,7 @@ If <code>locals</code> is <code>None</code>, it defaults to the value of <code>g
 </div><h4 id="method.run" class="method"><code>pub fn <a href="#method.run" class="fnname">run</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;code: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;globals: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../../pyo3/types/struct.PyDict.html" title="struct pyo3::types::PyDict">PyDict</a>&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;locals: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../../pyo3/types/struct.PyDict.html" title="struct pyo3::types::PyDict">PyDict</a>&gt;<br>) -&gt; <a class="type" href="../../pyo3/prelude/type.PyResult.html" title="type pyo3::prelude::PyResult">PyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code><a class="srclink" href="../../src/pyo3/python.rs.html#322-332" title="goto source code">[src]</a></h4><div class="docblock"><p>Executes one or more Python statements in the given context.</p>
 <p>If <code>globals</code> is <code>None</code>, it defaults to Python module <code>__main__</code>.
 If <code>locals</code> is <code>None</code>, it defaults to the value of <code>globals</code>.</p>
-<h1 id="example-4" class="section-header"><a href="#example-4">Example:</a></h1>
+<h1 id="examples-4" class="section-header"><a href="#examples-4">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">pyo3</span>::{<span class="ident">types</span>::{<span class="ident">PyBytes</span>, <span class="ident">PyDict</span>}, <span class="ident">prelude</span>::<span class="kw-2">*</span>};
 <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">pyo3</span>::<span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
@@ -150,7 +150,7 @@ ret = base64.b64encode(s.encode(&#39;utf-8&#39;))
 </div><h4 id="method.NotImplemented" class="method"><code>pub fn <a href="#method.NotImplemented" class="fnname">NotImplemented</a>(self) -&gt; <a class="type" href="../../pyo3/prelude/type.PyObject.html" title="type pyo3::prelude::PyObject">PyObject</a></code><a class="srclink" href="../../src/pyo3/python.rs.html#393-395" title="goto source code">[src]</a></h4><div class="docblock"><p>Gets the Python builtin value <code>NotImplemented</code>.</p>
 </div><h4 id="method.version" class="method"><code>pub fn <a href="#method.version" class="fnname">version</a>(self) -&gt; &amp;'p <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code><a class="srclink" href="../../src/pyo3/python.rs.html#410-416" title="goto source code">[src]</a></h4><div class="docblock"><p>Gets the running Python interpreter version as a string.</p>
 <p>This is a wrapper around the ffi call Py_GetVersion.</p>
-<h1 id="example-5" class="section-header"><a href="#example-5">Example</a></h1>
+<h1 id="examples-5" class="section-header"><a href="#examples-5">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
     <span class="comment">// The full string could be, for example:</span>
@@ -159,7 +159,7 @@ ret = base64.b64encode(s.encode(&#39;utf-8&#39;))
 });</pre></div>
 </div><h4 id="method.version_info" class="method"><code>pub fn <a href="#method.version_info" class="fnname">version_info</a>(self) -&gt; <a class="struct" href="../../pyo3/struct.PythonVersionInfo.html" title="struct pyo3::PythonVersionInfo">PythonVersionInfo</a>&lt;'p&gt;</code><a class="srclink" href="../../src/pyo3/python.rs.html#430-438" title="goto source code">[src]</a></h4><div class="docblock"><p>Gets the running Python interpreter version as a struct similar to
 <code>sys.version_info</code>.</p>
-<h1 id="example-6" class="section-header"><a href="#example-6">Example</a></h1>
+<h1 id="examples-6" class="section-header"><a href="#examples-6">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
     <span class="comment">// PyO3 supports Python 3.6 and up.</span>
@@ -223,7 +223,7 @@ creates a <code>GILPool</code> where appropriate.</p>
 <p>Advanced uses of PyO3 which perform long-running tasks which never free the GIL may need
 to use this API to clear memory, as PyO3 usually does not clear memory until the GIL is
 released.</p>
-<h1 id="example-7" class="section-header"><a href="#example-7">Example</a></h1>
+<h1 id="examples-7" class="section-header"><a href="#examples-7">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python</span>::<span class="ident">acquire_gil</span>();
 <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();

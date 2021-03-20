@@ -9,7 +9,7 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">py</span>:<span class="ident">expr</span>, <span class="kw-2">*</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">dict</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">code</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> { ... };
 }</pre></div>
 </div><div class="docblock"><p>A convenient macro to execute a Python code snippet, with some local variables set.</p>
-<h1 id="example" class="section-header"><a href="#example">Example</a></h1>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">pyo3</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">py_run</span>, <span class="ident">types</span>::<span class="ident">PyList</span>};
 <span class="ident">Python</span>::<span class="ident">with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
@@ -17,7 +17,7 @@
     <span class="macro">py_run</span><span class="macro">!</span>(<span class="ident">py</span>, <span class="ident">list</span>, <span class="string">&quot;assert list == [1, 2, 3]&quot;</span>);
 });</pre></div>
 <p>You can use this macro to test pyfunctions or pyclasses quickly.</p>
-<h1 id="example-1" class="section-header"><a href="#example-1">Example</a></h1>
+<h1 id="examples-1" class="section-header"><a href="#examples-1">Examples</a></h1>
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">pyo3</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">py_run</span>, <span class="ident">PyCell</span>};
 <span class="attribute">#[<span class="ident">pyclass</span>]</span>

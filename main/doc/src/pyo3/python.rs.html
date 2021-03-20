@@ -898,7 +898,7 @@
     <span class="doccomment">/// - If the `auto-initialize` feature is not enabled and the Python interpreter is not</span>
     <span class="doccomment">///   initialized.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// use pyo3::prelude::*;</span>
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
@@ -945,7 +945,7 @@
 
     <span class="doccomment">/// Temporarily releases the `GIL`, thus allowing other Python threads to run.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use pyo3::prelude::*; use pyo3::types::IntoPyDict; use pyo3::wrap_pyfunction;</span>
     <span class="doccomment">/// use pyo3::exceptions::PyRuntimeError;</span>
@@ -992,7 +992,7 @@
     <span class="doccomment">/// do much with those without a `Python&lt;&#39;p&gt;` token, for which you&#39;d need to</span>
     <span class="doccomment">/// reacquire the GIL.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```compile_fail</span>
     <span class="doccomment">/// # use pyo3::prelude::*;</span>
     <span class="doccomment">/// # use pyo3::types::PyString;</span>
@@ -1035,7 +1035,7 @@
     <span class="doccomment">/// If `globals` is `None`, it defaults to Python module `__main__`.</span>
     <span class="doccomment">/// If `locals` is `None`, it defaults to the value of `globals`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example:</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use pyo3::{types::{PyBytes, PyDict}, prelude::*};</span>
     <span class="doccomment">/// # let gil = pyo3::Python::acquire_gil();</span>
@@ -1058,7 +1058,7 @@
     <span class="doccomment">/// If `globals` is `None`, it defaults to Python module `__main__`.</span>
     <span class="doccomment">/// If `locals` is `None`, it defaults to the value of `globals`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example:</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// use pyo3::{types::{PyBytes, PyDict}, prelude::*};</span>
     <span class="doccomment">/// let gil = pyo3::Python::acquire_gil();</span>
@@ -1156,7 +1156,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is a wrapper around the ffi call Py_GetVersion.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use pyo3::Python;</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>
@@ -1176,7 +1176,7 @@
     <span class="doccomment">/// Gets the running Python interpreter version as a struct similar to</span>
     <span class="doccomment">/// `sys.version_info`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use pyo3::Python;</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>
@@ -1357,7 +1357,7 @@
     <span class="doccomment">/// to use this API to clear memory, as PyO3 usually does not clear memory until the GIL is</span>
     <span class="doccomment">/// released.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use pyo3::prelude::*;</span>
     <span class="doccomment">/// let gil = Python::acquire_gil();</span>
