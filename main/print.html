@@ -3012,6 +3012,7 @@ not work when compiling for <code>abi3</code>. These are:</p>
 <p>See <a href="https://github.com/japaric/rust-cross">github.com/japaric/rust-cross</a> for a primer on cross compiling Rust in general.</p>
 <p>After you've obtained the above, you can build a cross compiled PyO3 module by setting a few extra environment variables:</p>
 <ul>
+<li><code>PYO3_CROSS</code>: If present this variable forces PyO3 to configure as a cross-compilation.</li>
 <li><code>PYO3_CROSS_LIB_DIR</code>: This variable must be set to the directory containing the target's libpython DSO and the associated <code>_sysconfigdata*.py</code> file for Unix-like targets, or the Python DLL import libraries for the Windows target.</li>
 <li><code>PYO3_CROSS_PYTHON_VERSION</code>: Major and minor version (e.g. 3.9) of the target Python installation. This variable is only needed if PyO3 cannot determine the version to target from <code>abi3-py3*</code> features, or if there are multiple versions of Python present in <code>PYO3_CROSS_LIB_DIR</code>.</li>
 </ul>
@@ -4529,7 +4530,8 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Fix use of Python argument for #[pymethods] inside macro expansions. <a href="https://github.com/PyO3/pyo3/pull/1505">#1505</a></li>
 <li>Always use cross-compiling configuration if any of the environment variables are set. <a href="https://github.com/PyO3/pyo3/pull/1514">#1514</a></li>
 <li>Support <code>EnvironmentError</code>, <code>IOError</code>, and <code>WindowsError</code> on PyPy. <a href="https://github.com/PyO3/pyo3/pull/1533">#1533</a></li>
-<li>Segfault when dereferencing <code>ffi::PyDateTimeAPI</code> without the GIL. <a href="https://github.com/PyO3/pyo3/pull/1563">#1563</a></li>
+<li>Fix unneccessary rebuilds when cycling between <code>cargo check</code> and <code>cargo clippy</code> in a Python virtualenv. <a href="https://github.com/PyO3/pyo3/pull/1557">#1557</a></li>
+<li>Fix segfault when dereferencing <code>ffi::PyDateTimeAPI</code> without the GIL. <a href="https://github.com/PyO3/pyo3/pull/1563">#1563</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0131v01320132a---2021-02-12"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0131v01320132a---2021-02-12"><a href="https://github.com/pyo3/pyo3/compare/v0.13.1...v0.13.2">0.13.2</a> - 2021-02-12</a></h2>
 <h3 id="packaging-1"><a class="header" href="#packaging-1">Packaging</a></h3>
