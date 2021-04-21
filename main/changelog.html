@@ -195,6 +195,16 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Deprecate <code>PyModule</code> methods <code>call</code>, <code>call0</code>, <code>call1</code> and <code>get</code>. <a href="https://github.com/PyO3/pyo3/pull/1492">#1492</a></li>
 <li>Add length information to <code>PyBufferError</code>s raised from <code>PyBuffer::copy_to_slice</code> and <code>PyBuffer::copy_from_slice</code>. <a href="https://github.com/PyO3/pyo3/pull/1534">#1534</a></li>
 <li>Automatically provide <code>-undefined</code> and <code>dynamic_lookup</code> linker arguments on macOS with <code>extension-module</code> feature. <a href="https://github.com/PyO3/pyo3/pull/1539">#1539</a></li>
+<li>Deprecate <code>#[pyproto]</code> methods which are easier to implement as <code>#[pymethods]</code>: <a href="https://github.com/PyO3/pyo3/pull/1560">#1560</a>
+<ul>
+<li><code>PyBasicProtocol::__bytes__</code> and <code>PyBasicProtocol::__format__</code></li>
+<li><code>PyContextProtocol::__enter__</code> and <code>PyContextProtocol::__exit__</code></li>
+<li><code>PyDescrProtocol::__delete__</code> and <code>PyDescrProtocol::__set_name__</code></li>
+<li><code>PyMappingProtocol::__reversed__</code></li>
+<li><code>PyNumberProtocol::__complex__</code> and <code>PyNumberProtocol::__round__</code></li>
+<li><code>PyAsyncProtocol::__aenter__</code> and <code>PyAsyncProtocol::__aexit__</code></li>
+</ul>
+</li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
