@@ -591,6 +591,7 @@
 <span id="588">588</span>
 <span id="589">589</span>
 <span id="590">590</span>
+<span id="591">591</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::class::basic::CompareOp</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::conversion</span>::{
@@ -1053,6 +1054,7 @@
     <span class="doccomment">/// Returns the length of the sequence or mapping.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is equivalent to the Python expression `len(self)`.</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::clippy::len_without_is_empty</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::PyObject_Size</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) };
         <span class="kw">if</span> <span class="ident">v</span> <span class="op">=</span><span class="op">=</span> <span class="op">-</span><span class="number">1</span> {
