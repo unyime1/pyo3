@@ -864,10 +864,6 @@ struct MyClass {
 impl pyo3::pyclass::PyClassAlloc for MyClass {}
 
 unsafe impl pyo3::PyTypeInfo for MyClass {
-    type BaseType = PyAny;
-    type BaseLayout = pyo3::pycell::PyCellBase&lt;PyAny&gt;;
-    type Layout = PyCell&lt;Self&gt;;
-    type Initializer = PyClassInitializer&lt;Self&gt;;
     type AsRefTarget = PyCell&lt;Self&gt;;
 
     const NAME: &amp;'static str = &quot;MyClass&quot;;
@@ -898,6 +894,8 @@ impl pyo3::class::impl_::PyClassImpl for MyClass {
     const IS_GC: bool = false;
     const IS_BASETYPE: bool = false;
     const IS_SUBCLASS: bool = false;
+    type Layout = PyCell&lt;MyClass&gt;;
+    type BaseType = PyAny;
     type ThreadChecker = pyo3::class::impl_::ThreadCheckerStub&lt;MyClass&gt;;
 
     fn for_each_method_def(visitor: impl FnMut(&amp;pyo3::class::PyMethodDefType)) {
