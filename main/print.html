@@ -4403,7 +4403,7 @@ pub fn solve&lt;T: Model&gt;(model: &amp;mut T) {
 }
 
 #[pyfunction]
-#[name = &quot;solve&quot;]
+#[pyo3(name = &quot;solve&quot;)]
 pub fn solve_wrapper(model: &amp;mut UserModel) {
     solve(model);
 }
@@ -4507,6 +4507,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add FFI definition <code>_Py_InitializeMain</code>. <a href="https://github.com/PyO3/pyo3/pull/1473">#1473</a></li>
 <li>Add FFI definitions from <code>cpython/import.h</code>.<a href="https://github.com/PyO3/pyo3/pull/1475">#1475</a></li>
 <li>Add tuple and unit struct support for <code>#[pyclass]</code> macro. <a href="https://github.com/PyO3/pyo3/pull/1504">#1504</a></li>
+<li>Add <code>#[pyo3(name = &quot;...&quot;)]</code> syntax for setting Python names. <a href="https://github.com/PyO3/pyo3/pull/1567">#1567</a></li>
 <li>Add FFI definition <code>PyDateTime_TimeZone_UTC</code>. <a href="https://github.com/PyO3/pyo3/pull/1572">#1572</a></li>
 <li>Add support for <code>#[pyclass(extends=Exception)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1591">#1591</a></li>
 </ul>
@@ -4530,6 +4531,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li><code>PyAsyncProtocol::__aenter__</code> and <code>PyAsyncProtocol::__aexit__</code></li>
 </ul>
 </li>
+<li>Deprecate <code>#[name = &quot;...&quot;]</code> attributes in favor of <code>#[pyo3(name = &quot;...&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1567">#1567</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>

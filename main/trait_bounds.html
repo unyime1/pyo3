@@ -600,7 +600,7 @@ pub fn solve&lt;T: Model&gt;(model: &amp;mut T) {
 }
 
 #[pyfunction]
-#[name = &quot;solve&quot;]
+#[pyo3(name = &quot;solve&quot;)]
 pub fn solve_wrapper(model: &amp;mut UserModel) {
     solve(model);
 }
