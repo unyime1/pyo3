@@ -754,6 +754,32 @@
 <span id="751">751</span>
 <span id="752">752</span>
 <span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -1313,17 +1339,41 @@
         <span class="ident">FromPyPointer::from_borrowed_ptr_or_opt</span>(<span class="self">self</span>, <span class="ident">ptr</span>)
     }
 
-    <span class="doccomment">/// Lets the Python interpreter check for pending signals and invoke the</span>
-    <span class="doccomment">/// corresponding signal handlers. This can run arbitrary Python code.</span>
+    <span class="doccomment">/// Lets the Python interpreter check and handle any pending signals. This will invoke the</span>
+    <span class="doccomment">/// corresponding signal handlers registered in Python (if any).</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// If an exception is raised by the signal handler, or the default signal</span>
-    <span class="doccomment">/// handler raises an exception (such as `KeyboardInterrupt` for `SIGINT`),</span>
-    <span class="doccomment">/// an `Err` is returned.</span>
+    <span class="doccomment">/// Returns `Err(PyErr)` if any signal handler raises an exception.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This is a wrapper of the C function `PyErr_CheckSignals()`. It is good</span>
-    <span class="doccomment">/// practice to call this regularly in a long-running calculation since</span>
-    <span class="doccomment">/// SIGINT and other signals handled by Python code are left pending for its</span>
-    <span class="doccomment">/// entire duration.</span>
+    <span class="doccomment">/// These signals include `SIGINT` (normally raised by CTRL + C), which by default raises</span>
+    <span class="doccomment">/// `KeyboardInterrupt`. For this reason it is good practice to call this function regularly</span>
+    <span class="doccomment">/// as part of long-running Rust functions so that users can cancel it.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use pyo3::prelude::*;</span>
+    <span class="doccomment">/// # fn main(){</span>
+    <span class="doccomment">/// #[pyfunction]</span>
+    <span class="doccomment">/// fn loop_forever(py: Python) -&gt; PyResult&lt;()&gt; {</span>
+    <span class="doccomment">///     loop {</span>
+    <span class="doccomment">///         // As this loop is infinite it should check for signals every once in a while.</span>
+    <span class="doccomment">///         // Using `?` causes any `PyErr` (potentially containing `KeyboardInterrupt`) to break out of the loop.</span>
+    <span class="doccomment">///         py.check_signals()?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///         // do work here</span>
+    <span class="doccomment">///         # break Ok(()) // don&#39;t actually loop forever</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Note</span>
+    <span class="doccomment">/// This function calls [`PyErr_CheckSignals()`][1] which in turn may call signal handlers.</span>
+    <span class="doccomment">/// As Python&#39;s [`signal`][2] API allows users to define custom signal handlers, calling this</span>
+    <span class="doccomment">/// function allows arbitary Python code inside signal handlers to run.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [1]: https://docs.python.org/3/c-api/exceptions.html?highlight=pyerr_checksignals#c.PyErr_CheckSignals</span>
+    <span class="doccomment">/// [2]: https://docs.python.org/3/library/signal.html</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_signals</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::PyErr_CheckSignals</span>() };
         <span class="kw">if</span> <span class="ident">v</span> <span class="op">=</span><span class="op">=</span> <span class="op">-</span><span class="number">1</span> {
@@ -1362,6 +1412,7 @@
     <span class="doccomment">/// released.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use pyo3::prelude::*;</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>
@@ -1381,6 +1432,7 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Extreme care must be taken when using this API, as misuse can lead to accessing invalid</span>
     <span class="doccomment">/// memory. In addition, the caller is responsible for guaranteeing that the GIL remains held</span>
     <span class="doccomment">/// for the entire lifetime of the returned `GILPool`.</span>

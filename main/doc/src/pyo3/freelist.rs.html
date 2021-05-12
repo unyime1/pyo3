@@ -106,10 +106,28 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
-<span class="doccomment">//! Free allocation list</span>
+<span class="doccomment">//! Support for [free allocation lists][1].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This can improve performance for types that are often created and deleted in quick succession.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Rather than implementing this manually,</span>
+<span class="doccomment">//! implement it by annotating a struct with `#[pyclass(freelist = N)]`,</span>
+<span class="doccomment">//! where `N` is the size of the freelist.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [1]: https://en.wikipedia.org/wiki/Free_list</span>
 
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::class::impl_::PyClassImpl</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::pyclass</span>::{<span class="ident">get_type_free</span>, <span class="ident">tp_free_fallback</span>, <span class="ident">PyClassAlloc</span>};
@@ -118,13 +136,15 @@
 <span class="kw">use</span> <span class="ident">std::mem</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw::c_void</span>;
 
-<span class="doccomment">/// Implementing this trait for custom class adds free allocation list to class.</span>
-<span class="doccomment">/// The performance improvement applies to types that are often created and deleted in a row,</span>
-<span class="doccomment">/// so that they can benefit from a freelist.</span>
+<span class="doccomment">/// Implements a freelist.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Do not implement this trait manually. Instead, use `#[pyclass(freelist = N)]`</span>
+<span class="doccomment">/// on a Rust struct to implement it.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PyClassWithFreeList</span> {
     <span class="kw">fn</span> <span class="ident">get_free_list</span>(<span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">FreeList</span><span class="op">&lt;</span><span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span><span class="op">&gt;</span>;
 }
 
+<span class="doccomment">/// Represents a slot of a [`FreeList`].</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Slot</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="ident">Empty</span>,
     <span class="ident">Filled</span>(<span class="ident">T</span>),
@@ -137,7 +157,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">FreeList</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Create new `FreeList` instance with specified capacity</span>
+    <span class="doccomment">/// Creates a new `FreeList` instance with specified capacity.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_capacity</span>(<span class="ident">capacity</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">FreeList</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">entries</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">capacity</span>).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Slot::Empty</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
 
@@ -148,7 +168,7 @@
         }
     }
 
-    <span class="doccomment">/// Pop first non empty item</span>
+    <span class="doccomment">/// Pops the first non empty item.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">idx</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">split</span>;
         <span class="kw">if</span> <span class="ident">idx</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
@@ -164,7 +184,7 @@
         }
     }
 
-    <span class="doccomment">/// Insert a value into the list</span>
+    <span class="doccomment">/// Inserts a value into the list. Returns `None` if the `FreeList` is full.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">split</span> <span class="op">+</span> <span class="number">1</span>;
         <span class="kw">if</span> <span class="ident">next</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">capacity</span> {
