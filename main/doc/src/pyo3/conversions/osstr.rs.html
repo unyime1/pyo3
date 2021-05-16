@@ -203,6 +203,14 @@
 <span id="200">200</span>
 <span id="201">201</span>
 <span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types::PyString</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
@@ -228,6 +236,9 @@
         <span class="comment">// https://doc.rust-lang.org/src/std/sys_common/mod.rs.html#59</span>
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
         {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;wasi&quot;</span>)]</span>
+            <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">std::os::wasi::ffi::OsStrExt::as_bytes</span>(<span class="self">self</span>);
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;wasi&quot;</span>))]</span>
             <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">std::os::unix::ffi::OsStrExt::as_bytes</span>(<span class="self">self</span>);
 
             <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>;
@@ -274,6 +285,11 @@
             };
 
             <span class="comment">// Create an OsStr view into the raw bytes from Python</span>
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;wasi&quot;</span>)]</span>
+            <span class="kw">let</span> <span class="ident">os_str</span>: <span class="kw-2">&amp;</span><span class="ident">OsStr</span> <span class="op">=</span> <span class="ident">std::os::wasi::ffi::OsStrExt::from_bytes</span>(
+                <span class="ident">fs_encoded_bytes</span>.<span class="ident">as_ref</span>(<span class="ident">ob</span>.<span class="ident">py</span>()).<span class="ident">as_bytes</span>(),
+            );
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;wasi&quot;</span>))]</span>
             <span class="kw">let</span> <span class="ident">os_str</span>: <span class="kw-2">&amp;</span><span class="ident">OsStr</span> <span class="op">=</span> <span class="ident">std::os::unix::ffi::OsStrExt::from_bytes</span>(
                 <span class="ident">fs_encoded_bytes</span>.<span class="ident">as_ref</span>(<span class="ident">ob</span>.<span class="ident">py</span>()).<span class="ident">as_bytes</span>(),
             );
