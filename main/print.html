@@ -1369,7 +1369,7 @@ impl pyo3::class::impl_::PyClassImpl for MyClass {
     type BaseType = PyAny;
     type ThreadChecker = pyo3::class::impl_::ThreadCheckerStub&lt;MyClass&gt;;
 
-    fn for_each_method_def(visitor: impl FnMut(&amp;pyo3::class::PyMethodDefType)) {
+    fn for_each_method_def(visitor: &amp;mut dyn FnMut(&amp;pyo3::class::PyMethodDefType)) {
         use pyo3::class::impl_::*;
         let collector = PyClassImplCollector::&lt;MyClass&gt;::new();
         collector.py_methods().iter()
@@ -1392,7 +1392,7 @@ impl pyo3::class::impl_::PyClassImpl for MyClass {
         let collector = PyClassImplCollector::&lt;Self&gt;::new();
         collector.call_impl()
     }
-    fn for_each_proto_slot(visitor: impl FnMut(&amp;pyo3::ffi::PyType_Slot)) {
+    fn for_each_proto_slot(visitor: &amp;mut dyn FnMut(&amp;pyo3::ffi::PyType_Slot)) {
         // Implementation which uses dtolnay specialization to load all slots.
         use pyo3::class::impl_::*;
         let collector = PyClassImplCollector::&lt;Self&gt;::new();
@@ -4532,6 +4532,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 </ul>
 </li>
 <li>Deprecate <code>#[name = &quot;...&quot;]</code> attributes in favor of <code>#[pyo3(name = &quot;...&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1567">#1567</a></li>
+<li>Improve compilation times for projects using PyO3 <a href="https://github.com/PyO3/pyo3/pull/1604">#1604</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>

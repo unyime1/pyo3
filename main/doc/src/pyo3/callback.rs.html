@@ -260,10 +260,6 @@
 <span id="257">257</span>
 <span id="258">258</span>
 <span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -272,11 +268,13 @@
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::err</span>::{<span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::exceptions::PyOverflowError</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi</span>::{<span class="self">self</span>, <span class="ident">Py_hash_t</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::IntoPyPointer</span>;
+<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::panic::PanicException</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">GILPool</span>, <span class="ident">IntoPyPointer</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">IntoPy</span>, <span class="ident">PyObject</span>, <span class="ident">Python</span>};
-<span class="kw">use</span> <span class="ident">std::isize</span>;
+<span class="kw">use</span> <span class="ident">std::any::Any</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw::c_int</span>;
-<span class="kw">use</span> <span class="ident">std::panic::UnwindSafe</span>;
+<span class="kw">use</span> <span class="ident">std::panic</span>::{<span class="ident">AssertUnwindSafe</span>, <span class="ident">UnwindSafe</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">isize</span>, <span class="ident">panic</span>};
 
 <span class="doccomment">/// A type which can be the return type of a python C-API callback</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PyCallbackOutput</span>: <span class="ident">Copy</span> {
@@ -440,15 +438,6 @@
     <span class="ident">value</span>.<span class="ident">convert</span>(<span class="ident">py</span>)
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">callback_error</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">PyCallbackOutput</span>,
-{
-    <span class="ident">T::ERR_VALUE</span>
-}
-
 <span class="doccomment">/// Use this macro for all internal callback functions which Python will call.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// It sets up the GILPool and converts the output into a Python object. It also restores</span>
@@ -501,31 +490,34 @@
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">handle_panic</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">body</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>
 <span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span><span class="ident">::PyResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">UnwindSafe</span>,
+    <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">UnwindSafe</span>,
     <span class="ident">R</span>: <span class="ident">PyCallbackOutput</span>,
 {
-    <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::GILPool::new</span>();
-    <span class="kw">let</span> <span class="ident">unwind_safe_py</span> <span class="op">=</span> <span class="ident">std::panic::AssertUnwindSafe</span>(<span class="ident">pool</span>.<span class="ident">python</span>());
-    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span>
-        <span class="kw">match</span> <span class="ident">std::panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="op">-</span><span class="op">&gt;</span> <span class="kw">crate</span><span class="ident">::PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> { <span class="ident">body</span>(<span class="kw-2">*</span><span class="ident">unwind_safe_py</span>) }) {
-            <span class="prelude-val">Ok</span>(<span class="ident">result</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">result</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="comment">// Try to format the error in the same way panic does</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">string</span>) <span class="op">=</span> <span class="ident">e</span>.<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>() {
-                    <span class="prelude-val">Err</span>(<span class="kw">crate</span><span class="ident">::panic::PanicException::new_err</span>((<span class="ident">string</span>.<span class="ident">clone</span>(),)))
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>) <span class="op">=</span> <span class="ident">e</span>.<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>() {
-                    <span class="prelude-val">Err</span>(<span class="kw">crate</span><span class="ident">::panic::PanicException::new_err</span>((<span class="ident">s</span>.<span class="ident">to_string</span>(),)))
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">Err</span>(<span class="kw">crate</span><span class="ident">::panic::PanicException::new_err</span>((
-                        <span class="string">&quot;panic from Rust code&quot;</span>,
-                    )))
-                }
-            }
-        };
+    <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident">GILPool::new</span>();
+    <span class="kw">let</span> <span class="ident">unwind_safe_py</span> <span class="op">=</span> <span class="ident">AssertUnwindSafe</span>(<span class="ident">pool</span>.<span class="ident">python</span>());
+    <span class="kw">let</span> <span class="ident">panic_result</span> <span class="op">=</span> <span class="ident">panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">unwind_safe_py</span>;
+        <span class="ident">body</span>(<span class="ident">py</span>)
+    });
 
-    <span class="ident">result</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-        <span class="ident">e</span>.<span class="ident">restore</span>(<span class="ident">pool</span>.<span class="ident">python</span>());
-        <span class="kw">crate</span><span class="ident">::callback::callback_error</span>()
+    <span class="ident">panic_result_into_callback_output</span>(<span class="ident">pool</span>.<span class="ident">python</span>(), <span class="ident">panic_result</span>)
+}
+
+<span class="kw">fn</span> <span class="ident">panic_result_into_callback_output</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
+    <span class="ident">py</span>: <span class="ident">Python</span>,
+    <span class="ident">panic_result</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>
+<span class="kw">where</span>
+    <span class="ident">R</span>: <span class="ident">PyCallbackOutput</span>,
+{
+    <span class="kw">let</span> <span class="ident">py_result</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">panic_result</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">py_result</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">py_result</span>,
+        <span class="prelude-val">Err</span>(<span class="ident">payload</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">PanicException::from_panic_payload</span>(<span class="ident">payload</span>)),
+    };
+
+    <span class="ident">py_result</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">py_err</span><span class="op">|</span> {
+        <span class="ident">py_err</span>.<span class="ident">restore</span>(<span class="ident">py</span>);
+        <span class="ident">R::ERR_VALUE</span>
     })
 }
 </pre></div>
