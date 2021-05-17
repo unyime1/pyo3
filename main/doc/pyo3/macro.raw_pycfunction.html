@@ -14,7 +14,7 @@
 <span class="kw">use</span> <span class="ident">pyo3::raw_pycfunction</span>;
 
 <span class="attribute">#[<span class="ident">pyfunction</span>]</span>
-<span class="kw">fn</span> <span class="ident">some_fun</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">some_fun</span>(<span class="ident">arg</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(())
 }
 
