@@ -561,7 +561,7 @@
 );
 
 <span class="kw">impl</span> <span class="ident">PyDateTime</span> {
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::clippy::too_many_arguments</span>)]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_arguments</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>(
         <span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
         <span class="ident">year</span>: <span class="ident">i32</span>,
@@ -592,7 +592,7 @@
     <span class="doccomment">/// Alternate constructor that takes a `fold` parameter. A `true` value for this parameter</span>
     <span class="doccomment">/// signifies a leap second</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::clippy::too_many_arguments</span>)]</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::too_many_arguments</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_with_fold</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>(
         <span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
         <span class="ident">year</span>: <span class="ident">i32</span>,
