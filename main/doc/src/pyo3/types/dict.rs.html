@@ -1366,8 +1366,8 @@
         <span class="ident">v</span>.<span class="ident">insert</span>(<span class="number">7</span>, <span class="number">32</span>);
         <span class="kw">let</span> <span class="ident">ob</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
         <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyDict</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">ob</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="bool-val">true</span>, <span class="ident">dict</span>.<span class="ident">contains</span>(<span class="number">7i32</span>).<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq!</span>(<span class="bool-val">false</span>, <span class="ident">dict</span>.<span class="ident">contains</span>(<span class="number">8i32</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert!</span>(<span class="ident">dict</span>.<span class="ident">contains</span>(<span class="number">7i32</span>).<span class="ident">unwrap</span>());
+        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">dict</span>.<span class="ident">contains</span>(<span class="number">8i32</span>).<span class="ident">unwrap</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
