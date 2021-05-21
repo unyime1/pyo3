@@ -789,19 +789,6 @@
 <span id="786">786</span>
 <span id="787">787</span>
 <span id="788">788</span>
-<span id="789">789</span>
-<span id="790">790</span>
-<span id="791">791</span>
-<span id="792">792</span>
-<span id="793">793</span>
-<span id="794">794</span>
-<span id="795">795</span>
-<span id="796">796</span>
-<span id="797">797</span>
-<span id="798">798</span>
-<span id="799">799</span>
-<span id="800">800</span>
-<span id="801">801</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::class::basic::CompareOp</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::conversion</span>::{
@@ -937,7 +924,7 @@
 
     <span class="doccomment">/// Deletes an attribute.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This is equivalent to the Python expression `del self.attr_name`.</span>
+    <span class="doccomment">/// This is equivalent to the Python statement `del self.attr_name`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delattr</span><span class="op">&lt;</span><span class="ident">N</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">attr_name</span>: <span class="ident">N</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="ident">N</span>: <span class="ident">ToPyObject</span>,
@@ -1072,24 +1059,6 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is equivalent to Python&#39;s [`callable()`][1] function.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This function returning `true` does not guarantee that a call will succeed.</span>
-    <span class="doccomment">/// For this reason, avoid calling potentially callable objects like this:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// if some_object.is_callable() {</span>
-    <span class="doccomment">///     let value = some_object.call0().unwrap();</span>
-    <span class="doccomment">/// };</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Instead, just attempt to call it and handle any errors:</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```ignore</span>
-    <span class="doccomment">/// match some_object.call0() {</span>
-    <span class="doccomment">///    Ok(value) =&gt; ...,</span>
-    <span class="doccomment">///    Err(e) =&gt; ...,</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">/// ```</span>
-    <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
@@ -1105,7 +1074,12 @@
     <span class="doccomment">/// # Ok(())}</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This is equivalent to the Python expression `assert callable(print)`.</span>
+    <span class="doccomment">/// This is equivalent to the Python statement `assert callable(print)`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that unless an API needs to distinguish between callable and</span>
+    <span class="doccomment">/// non-callable objects, there is no point in checking for callability.</span>
+    <span class="doccomment">/// Instead, it is better to just do the call and handle potential</span>
+    <span class="doccomment">/// exceptions.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [1]: https://docs.python.org/3/library/functions.html#callable</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_callable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
