@@ -1,1 +1,1 @@
-initSidebarItems({});
+initSidebarItems({"constant":[["NAME_ATTRIBUTE",""],["PYFN_NAME_ARGUMENT",""]]});

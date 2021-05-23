@@ -337,7 +337,8 @@ fn rust2py(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
     // Note that the `#[pyfn()]` annotation automatically converts the arguments from
     // Python objects to Rust values, and the Rust return value back into a Python object.
     // The `_py` argument represents that we're holding the GIL.
-    #[pyfn(m, &quot;sum_as_string&quot;)]
+    #[pyfn(m)]
+    #[pyo3(name = &quot;sum_as_string&quot;)]
     fn sum_as_string_py(_py: Python, a: i64, b: i64) -&gt; PyResult&lt;String&gt; {
         let out = sum_as_string(a, b);
         Ok(out)
@@ -353,14 +354,14 @@ fn sum_as_string(a: i64, b: i64) -&gt; String {
 
 <span class="boring">fn main() {}
 </span></code></pre></pre>
-<p>The <code>#[pymodule]</code> procedural macro attribute takes care of exporting the initialization function of your 
+<p>The <code>#[pymodule]</code> procedural macro attribute takes care of exporting the initialization function of your
 module to Python. It can take as an argument the name of your module, which must be the name of the <code>.so</code>
 or <code>.pyd</code> file; the default is the Rust function's name.</p>
 <p>If the name of the module (the default being the function name) does not match the name of the <code>.so</code> or
 <code>.pyd</code> file, you will get an import error in Python with the following message:
 <code>ImportError: dynamic module does not define module export function (PyInit_name_of_your_module)</code></p>
 <p>To import the module, either copy the shared library as described in <a href="https://github.com/PyO3/pyo3">the README</a>
-or use a tool, e.g. <code>maturin develop</code> with <a href="https://github.com/PyO3/maturin">maturin</a> or 
+or use a tool, e.g. <code>maturin develop</code> with <a href="https://github.com/PyO3/maturin">maturin</a> or
 <code>python setup.py develop</code> with <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>.</p>
 <h2 id="documentation"><a class="header" href="#documentation">Documentation</a></h2>
 <p>The <a href="https://doc.rust-lang.org/stable/book/first-edition/comments.html">Rust doc comments</a> of the module
@@ -409,26 +410,8 @@ fn supermodule(py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 <p>This way, you can create a module hierarchy within a single extension module.</p>
 <p>It is not necessary to add <code>#[pymodule]</code> on nested modules, this is only required on the top-level module.</p>
 <h1 id="python-functions"><a class="header" href="#python-functions">Python Functions</a></h1>
-<p>PyO3 supports two ways to define a free function in Python. Both require registering
-the function to a <a href="./module.html">module</a>.</p>
-<p>One way is defining the function in the module definition, annotated with <code>#[pyfn]</code>.</p>
-<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
-
-#[pymodule]
-fn rust2py(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-
-    #[pyfn(m, &quot;sum_as_string&quot;)]
-    fn sum_as_string_py(_py: Python, a:i64, b:i64) -&gt; PyResult&lt;String&gt; {
-        Ok(format!(&quot;{}&quot;, a + b))
-    }
-
-    Ok(())
-}
-
-<span class="boring">fn main() {}
-</span></code></pre></pre>
-<p>The other is annotating a function with <code>#[pyfunction]</code> and then adding it
-to the module using the <code>wrap_pyfunction!</code> macro.</p>
+<p>PyO3 supports two ways to define a free function in Python. Both require registering the function to a <a href="./module.html">module</a>.</p>
+<p>One way is annotating a function with <code>#[pyfunction]</code> and then adding it to the module using the <code>wrap_pyfunction!</code> macro.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
@@ -439,21 +422,80 @@ fn double(x: usize) -&gt; usize {
 
 #[pymodule]
 fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-    m.add_function(wrap_pyfunction!(double, m)?).unwrap();
+    m.add_function(wrap_pyfunction!(double, m)?)?;
+    Ok(())
+}
+
+<span class="boring">fn main() {}
+</span></code></pre></pre>
+<p>Alternatively there is a shorthand; the function can be placed inside the module definition and annotated with <code>#[pyfn]</code>, as below:</p>
+<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
+
+#[pymodule]
+fn rust2py(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+
+    #[pyfn(m)]
+    fn sum_as_string(_py: Python, a:i64, b:i64) -&gt; PyResult&lt;String&gt; {
+        Ok(format!(&quot;{}&quot;, a + b))
+    }
 
     Ok(())
 }
 
 <span class="boring">fn main() {}
 </span></code></pre></pre>
-<h2 id="argument-parsing"><a class="header" href="#argument-parsing">Argument parsing</a></h2>
-<p>Both the <code>#[pyfunction]</code> and <code>#[pyfn]</code> attributes support specifying details of
-argument parsing.  The details are given in the section &quot;Method arguments&quot; in
-the <a href="class.html">Classes</a> chapter.  Here is an example for a function that accepts
-arbitrary keyword arguments (<code>**kwargs</code> in Python syntax) and returns the number
-that was passed:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">extern crate pyo3;
+<p><code>#[pyfn(m)]</code> is just syntax sugar for <code>#[pyfunction]</code>, and takes all the same options documented in the rest of this chapter. The code above is expanded to the following:</p>
+<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
+
+#[pymodule]
+fn rust2py(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+
+    #[pyfunction]
+    fn sum_as_string(_py: Python, a:i64, b:i64) -&gt; PyResult&lt;String&gt; {
+        Ok(format!(&quot;{}&quot;, a + b))
+    }
+
+    m.add_function(pyo3::wrap_pyfunction!(sum_as_string, m)?)?;
+
+    Ok(())
+}
+
+<span class="boring">fn main() {}
+</span></code></pre></pre>
+<h2 id="function-options"><a class="header" href="#function-options">Function options</a></h2>
+<p>The <code>#[pyo3]</code> attribute can be used to modify properties of the generated Python function. It can take any combination of the following options:</p>
+<ul>
+<li>
+<p><code>#[pyo3(name = &quot;...&quot;)]</code></p>
+<p>Overrides the name generated in Python:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>use pyo3::prelude::*;
+use pyo3::wrap_pyfunction;
+
+#[pyfunction]
+#[pyo3(name = &quot;no_args&quot;)]
+fn no_args_py() -&gt; usize { 42 }
+
+#[pymodule]
+fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    m.add_function(wrap_pyfunction!(no_args_py, m)?)?;
+    Ok(())
+}
+
+<span class="boring">Python::with_gil(|py| {
+</span><span class="boring">    let m = pyo3::wrap_pymodule!(module_with_functions)(py);
+</span><span class="boring">    assert!(m.getattr(py, &quot;no_args&quot;).is_ok());
+</span><span class="boring">    assert!(m.getattr(py, &quot;no_args_py&quot;).is_err());
+</span><span class="boring">});
+</span><span class="boring">}
+</span></code></pre></pre>
+</li>
+</ul>
+<h2 id="argument-parsing"><a class="header" href="#argument-parsing">Argument parsing</a></h2>
+<p>The <code>#[pyfunction]</code> attribute supports specifying details of argument parsing. The details are given in the section <a href="class.html#method-arguments">&quot;Method arguments&quot; of the Classes chapter</a>.  Here is an example for a function that accepts arbitrary keyword arguments (<code>**kwargs</code> in Python syntax) and returns the number that was passed:</p>
+<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use pyo3::types::PyDict;
 
@@ -590,8 +632,7 @@ then use a <code>#[pyclass]</code> struct with that container as a field as a wa
 the FFI barrier. You can even make that class callable with <code>__call__</code> so it looks like a function
 in Python code.</p>
 <h3 id="accessing-the-module-of-a-function"><a class="header" href="#accessing-the-module-of-a-function">Accessing the module of a function</a></h3>
-<p>It is possible to access the module of a <code>#[pyfunction]</code> and <code>#[pyfn]</code> in the
-function body by passing the <code>pass_module</code> argument to the attribute:</p>
+<p>It is possible to access the module of a <code>#[pyfunction]</code> in the function body by passing the <code>pass_module</code> argument to the attribute:</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::wrap_pyfunction;
 use pyo3::prelude::*;
 
@@ -609,22 +650,6 @@ fn module_with_fn(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 </span></code></pre></pre>
 <p>If <code>pass_module</code> is set, the first argument <strong>must</strong> be the <code>&amp;PyModule</code>. It is then possible to use the module
 in the function body.</p>
-<p>The same works for <code>#[pyfn]</code>:</p>
-<pre><pre class="playground"><code class="language-rust">use pyo3::wrap_pyfunction;
-use pyo3::prelude::*;
-
-#[pymodule]
-fn module_with_fn(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
-
-    #[pyfn(m, &quot;module_name&quot;, pass_module)]
-    fn module_name(module: &amp;PyModule) -&gt; PyResult&lt;&amp;str&gt; {
-        module.name()
-    }
-    Ok(())
-}
-
-<span class="boring">fn main() {}
-</span></code></pre></pre>
 <h2 id="accessing-the-ffi-functions"><a class="header" href="#accessing-the-ffi-functions">Accessing the FFI functions</a></h2>
 <p>In order to make Rust functions callable from Python, PyO3 generates a
 <code>extern &quot;C&quot; Fn(slf: *mut PyObject, args: *mut PyObject, kwargs: *mut PyObject) -&gt; *mut Pyobject</code>
@@ -1654,9 +1679,7 @@ Example:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>extern crate pyo3;
-
-use pyo3::prelude::*;
+</span>use pyo3::prelude::*;
 use pyo3::PyTraverseError;
 use pyo3::gc::{PyGCProtocol, PyVisit};
 
@@ -4533,6 +4556,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 </li>
 <li>Deprecate <code>#[name = &quot;...&quot;]</code> attributes in favor of <code>#[pyo3(name = &quot;...&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1567">#1567</a></li>
 <li>Improve compilation times for projects using PyO3 <a href="https://github.com/PyO3/pyo3/pull/1604">#1604</a></li>
+<li>Deprecate string-literal second argument to <code>#[pyfn(m, &quot;name&quot;)]</code>.</li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>

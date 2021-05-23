@@ -177,7 +177,8 @@ fn rust2py(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
     // Note that the `#[pyfn()]` annotation automatically converts the arguments from
     // Python objects to Rust values, and the Rust return value back into a Python object.
     // The `_py` argument represents that we're holding the GIL.
-    #[pyfn(m, &quot;sum_as_string&quot;)]
+    #[pyfn(m)]
+    #[pyo3(name = &quot;sum_as_string&quot;)]
     fn sum_as_string_py(_py: Python, a: i64, b: i64) -&gt; PyResult&lt;String&gt; {
         let out = sum_as_string(a, b);
         Ok(out)
@@ -193,14 +194,14 @@ fn sum_as_string(a: i64, b: i64) -&gt; String {
 
 <span class="boring">fn main() {}
 </span></code></pre></pre>
-<p>The <code>#[pymodule]</code> procedural macro attribute takes care of exporting the initialization function of your 
+<p>The <code>#[pymodule]</code> procedural macro attribute takes care of exporting the initialization function of your
 module to Python. It can take as an argument the name of your module, which must be the name of the <code>.so</code>
 or <code>.pyd</code> file; the default is the Rust function's name.</p>
 <p>If the name of the module (the default being the function name) does not match the name of the <code>.so</code> or
 <code>.pyd</code> file, you will get an import error in Python with the following message:
 <code>ImportError: dynamic module does not define module export function (PyInit_name_of_your_module)</code></p>
 <p>To import the module, either copy the shared library as described in <a href="https://github.com/PyO3/pyo3">the README</a>
-or use a tool, e.g. <code>maturin develop</code> with <a href="https://github.com/PyO3/maturin">maturin</a> or 
+or use a tool, e.g. <code>maturin develop</code> with <a href="https://github.com/PyO3/maturin">maturin</a> or
 <code>python setup.py develop</code> with <a href="https://github.com/PyO3/setuptools-rust">setuptools-rust</a>.</p>
 <h2 id="documentation"><a class="header" href="#documentation">Documentation</a></h2>
 <p>The <a href="https://doc.rust-lang.org/stable/book/first-edition/comments.html">Rust doc comments</a> of the module
