@@ -192,6 +192,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
+<li>Allow only one <code>#[pymethods]</code> block per <code>#[pyclass]</code> by default, to simplify the proc macro implementations. Add <code>multiple-pymethods</code> feature to opt-in to the more complex full behavior. <a href="https://github.com/PyO3/pyo3/pull/1457">#1457</a></li>
 <li>Change <code>PyTimeAcces::get_fold()</code> to return a <code>bool</code> instead of a <code>u8</code>. <a href="https://github.com/PyO3/pyo3/pull/1397">#1397</a></li>
 <li>Deprecate FFI definition <code>PyCFunction_Call</code> for Python 3.9 and later. <a href="https://github.com/PyO3/pyo3/pull/1425">#1425</a></li>
 <li>Deprecate FFI definitions <code>PyModule_GetFilename</code>. <a href="https://github.com/PyO3/pyo3/pull/1425">#1425</a></li>
@@ -211,8 +212,8 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 </ul>
 </li>
 <li>Deprecate <code>#[name = &quot;...&quot;]</code> attributes in favor of <code>#[pyo3(name = &quot;...&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1567">#1567</a></li>
-<li>Improve compilation times for projects using PyO3 <a href="https://github.com/PyO3/pyo3/pull/1604">#1604</a></li>
-<li>Deprecate string-literal second argument to <code>#[pyfn(m, &quot;name&quot;)]</code>.</li>
+<li>Reduce LLVM line counts to improve compilation times. <a href="https://github.com/PyO3/pyo3/pull/1604">#1604</a></li>
+<li>Deprecate string-literal second argument to <code>#[pyfn(m, &quot;name&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1610">#1610</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
@@ -233,7 +234,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 </ul>
 </li>
 <li>Remove <code>__doc__</code> from module's <code>__all__</code>. <a href="https://github.com/PyO3/pyo3/pull/1509">#1509</a></li>
-<li>Remove <code>PYO3_CROSS_INCLUDE_DIR</code> environment variable and the associated C header parsing functionality.</li>
+<li>Remove <code>PYO3_CROSS_INCLUDE_DIR</code> environment variable and the associated C header parsing functionality. <a href="https://github.com/PyO3/pyo3/pull/1521">#1521</a></li>
 </ul>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <ul>
