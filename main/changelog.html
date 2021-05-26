@@ -214,6 +214,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Deprecate <code>#[name = &quot;...&quot;]</code> attributes in favor of <code>#[pyo3(name = &quot;...&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1567">#1567</a></li>
 <li>Reduce LLVM line counts to improve compilation times. <a href="https://github.com/PyO3/pyo3/pull/1604">#1604</a></li>
 <li>Deprecate string-literal second argument to <code>#[pyfn(m, &quot;name&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1610">#1610</a></li>
+<li>No longer call <code>PyEval_InitThreads()</code> in <code>#[pymodule]</code> init code. <a href="https://github.com/PyO3/pyo3/pull/1630">#1630</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
@@ -231,6 +232,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <ul>
 <li><code>Type</code>, <code>DESCRIPTION</code>, and <code>FLAGS</code> <a href="https://github.com/PyO3/pyo3/pull/1456">#1456</a></li>
 <li><code>BaseType</code>, <code>BaseLayout</code>, <code>Layout</code>, <code>Initializer</code> <a href="https://github.com/PyO3/pyo3/pull/1596">#1596</a></li>
+<li><code>PyModuleDef_INIT</code> <a href="https://github.com/PyO3/pyo3/pull/1630">#1630</a></li>
 </ul>
 </li>
 <li>Remove <code>__doc__</code> from module's <code>__all__</code>. <a href="https://github.com/PyO3/pyo3/pull/1509">#1509</a></li>
