@@ -698,6 +698,7 @@
 <span id="695">695</span>
 <span id="696">696</span>
 <span id="697">697</span>
+<span id="698">698</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -900,6 +901,7 @@
                             <span class="number">1</span>,
                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">is_signed</span>,
                         );
+                        <span class="ident">ffi::Py_DECREF</span>(<span class="ident">num</span>);
                         <span class="kw">if</span> <span class="ident">ok</span> <span class="op">=</span><span class="op">=</span> <span class="op">-</span><span class="number">1</span> {
                             <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">ob</span>.<span class="ident">py</span>()))
                         } <span class="kw">else</span> {
