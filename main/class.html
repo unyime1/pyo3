@@ -501,7 +501,7 @@ struct MyClass {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>The above would make the <code>num</code> property available for reading and writing from Python code as <code>self.num</code>.</p>
+<p>The above would make the <code>num</code> field available for reading and writing as a <code>self.num</code> Python property. To expose the property with a different name to the field, specify this alongside the rest of the options, e.g. <code>#[pyo3(get, set, name = &quot;custom_name&quot;)]</code>.</p>
 <p>Properties can be readonly or writeonly by using just <code>#[pyo3(get)]</code> or <code>#[pyo3(set)]</code> respectively.</p>
 <p>To use these annotations, your field type must implement some conversion traits:</p>
 <ul>
