@@ -386,11 +386,12 @@ then use a <code>#[pyclass]</code> struct with that container as a field as a wa
 the FFI barrier. You can even make that class callable with <code>__call__</code> so it looks like a function
 in Python code.</p>
 <h3 id="accessing-the-module-of-a-function"><a class="header" href="#accessing-the-module-of-a-function">Accessing the module of a function</a></h3>
-<p>It is possible to access the module of a <code>#[pyfunction]</code> in the function body by passing the <code>pass_module</code> argument to the attribute:</p>
+<p>It is possible to access the module of a <code>#[pyfunction]</code> in the function body by using <code>#[pyo3(pass_module)]</code> option:</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::wrap_pyfunction;
 use pyo3::prelude::*;
 
-#[pyfunction(pass_module)]
+#[pyfunction]
+#[pyo3(pass_module)]
 fn pyfunction_with_module(module: &amp;PyModule) -&gt; PyResult&lt;&amp;str&gt; {
     module.name()
 }
