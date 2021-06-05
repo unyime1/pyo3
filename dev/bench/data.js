@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622877789384,
+  "lastUpdate": 1622879886162,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -738,6 +738,86 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 3.1827610413624254e-8",
             "extra": "mean: 329.5078419063584 nsec\nrounds: 196079"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "messense@icloud.com",
+            "name": "messense",
+            "username": "messense"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f49f4440b46e479cbdc78daf26dea844043bcfc9",
+          "message": "Merge pull request #1654 from messense/pathlib\n\nAdd support for extracting PathBuf from pathlib.Path",
+          "timestamp": "2021-06-05T15:49:30+08:00",
+          "tree_id": "e2c481e19f9fa455e0db4289474f19e7032c89b0",
+          "url": "https://github.com/PyO3/pyo3/commit/f49f4440b46e479cbdc78daf26dea844043bcfc9"
+        },
+        "date": 1622879865813,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/test_benchmarks.py::test_args_and_kwargs",
+            "value": 1354744.9771175578,
+            "unit": "iter/sec",
+            "range": "stddev: 1.0510182216477157e-7",
+            "extra": "mean: 738.1463056815785 nsec\nrounds: 95239"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_and_kwargs_py",
+            "value": 2591697.5771573335,
+            "unit": "iter/sec",
+            "range": "stddev: 1.6805460713614043e-8",
+            "extra": "mean: 385.847488076234 nsec\nrounds: 200000"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_mixed_args",
+            "value": 1210709.7916000274,
+            "unit": "iter/sec",
+            "range": "stddev: 1.1223285230718124e-7",
+            "extra": "mean: 825.9617679959774 nsec\nrounds: 125000"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_mixed_args_py",
+            "value": 1915903.0856977606,
+            "unit": "iter/sec",
+            "range": "stddev: 2.665817331269742e-7",
+            "extra": "mean: 521.947068965002 nsec\nrounds: 178572"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_no_args",
+            "value": 9197032.63215519,
+            "unit": "iter/sec",
+            "range": "stddev: 2.1718638110038786e-9",
+            "extra": "mean: 108.7307221792456 nsec\nrounds: 44248"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_no_args_py",
+            "value": 8517220.29471164,
+            "unit": "iter/sec",
+            "range": "stddev: 1.709460617240748e-8",
+            "extra": "mean: 117.40919753128563 nsec\nrounds: 82645"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args",
+            "value": 1550398.720512912,
+            "unit": "iter/sec",
+            "range": "stddev: 9.74690418213532e-8",
+            "extra": "mean: 644.9953723318181 nsec\nrounds: 129871"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_py",
+            "value": 3706185.796902697,
+            "unit": "iter/sec",
+            "range": "stddev: 1.2055955339082257e-8",
+            "extra": "mean: 269.8191765875907 nsec\nrounds: 192308"
           }
         ]
       }
