@@ -268,7 +268,7 @@ fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; 
 </span></code></pre></pre>
 <h2 id="making-the-function-signature-available-to-python"><a class="header" href="#making-the-function-signature-available-to-python">Making the function signature available to Python</a></h2>
 <p>In order to make the function signature available to Python to be retrieved via
-<code>inspect.signature</code>, use the <code>#[text_signature]</code> annotation as in the example
+<code>inspect.signature</code>, use the <code>#[pyo3(text_signature)]</code> annotation as in the example
 below. The <code>/</code> signifies the end of positional-only arguments. (This
 is not a feature of this library in particular, but the general format used by
 CPython for annotating signatures of built-in functions.)</p>
@@ -279,7 +279,7 @@ CPython for annotating signatures of built-in functions.)</p>
 
 /// This function adds two unsigned 64-bit integers.
 #[pyfunction]
-#[text_signature = &quot;(a, b, /)&quot;]
+#[pyo3(text_signature = &quot;(a, b, /)&quot;)]
 fn add(a: u64, b: u64) -&gt; u64 {
     a + b
 }
@@ -295,7 +295,7 @@ use pyo3::types::PyType;
 // it works even if the item is not documented:
 
 #[pyclass]
-#[text_signature = &quot;(c, d, /)&quot;]
+#[pyo3(text_signature = &quot;(c, d, /)&quot;)]
 struct MyClass {}
 
 #[pymethods]
@@ -307,17 +307,17 @@ impl MyClass {
         Self {}
     }
     // the self argument should be written $self
-    #[text_signature = &quot;($self, e, f)&quot;]
+    #[pyo3(text_signature = &quot;($self, e, f)&quot;)]
     fn my_method(&amp;self, e: i32, f: i32) -&gt; i32 {
         e + f
     }
     #[classmethod]
-    #[text_signature = &quot;(cls, e, f)&quot;]
+    #[pyo3(text_signature = &quot;(cls, e, f)&quot;)]
     fn my_class_method(cls: &amp;PyType, e: i32, f: i32) -&gt; i32 {
         e + f
     }
     #[staticmethod]
-    #[text_signature = &quot;(e, f)&quot;]
+    #[pyo3(text_signature = &quot;(e, f)&quot;)]
     fn my_static_method(e: i32, f: i32) -&gt; i32 {
         e + f
     }
@@ -330,7 +330,7 @@ impl MyClass {
 <p>Alternatively, simply make sure the first line of your docstring is
 formatted like in the following example. Please note that the newline after the
 <code>--</code> is mandatory. The <code>/</code> signifies the end of positional-only arguments.</p>
-<p><code>#[text_signature]</code> should be preferred, since it will override automatically
+<p><code>#[pyo3(text_signature)]</code> should be preferred, since it will override automatically
 generated signatures when those are added in a future version of PyO3.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]

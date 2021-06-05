@@ -191,6 +191,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add FFI definition <code>PyDateTime_TimeZone_UTC</code>. <a href="https://github.com/PyO3/pyo3/pull/1572">#1572</a></li>
 <li>Add support for <code>#[pyclass(extends=Exception)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1591">#1591</a></li>
 <li>Add support for extracting <code>PathBuf</code> from <code>pathlib.Path</code>. <a href="https://github.com/PyO3/pyo3/pull/1654">#1654</a></li>
+<li>Add <code>#[pyo3(text_signature = &quot;...&quot;)]</code> syntax for setting text signature. <a href="https://github.com/PyO3/pyo3/pull/1658">#1658</a></li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
@@ -218,6 +219,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Deprecate string-literal second argument to <code>#[pyfn(m, &quot;name&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1610">#1610</a></li>
 <li>No longer call <code>PyEval_InitThreads()</code> in <code>#[pymodule]</code> init code. <a href="https://github.com/PyO3/pyo3/pull/1630">#1630</a></li>
 <li>Use <code>METH_FASTCALL</code> argument passing convention, when possible, to improve <code>#[pyfunction]</code> performance. <a href="https://github.com/PyO3/pyo3/pull/1619">#1619</a></li>
+<li>Deprecate <code>#[text_signature = &quot;...&quot;]</code> attributes in favor of <code>#[pyo3(text_signature = &quot;...&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1658">#1658</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
