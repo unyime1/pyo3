@@ -512,35 +512,6 @@
 <span id="509">509</span>
 <span id="510">510</span>
 <span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
 </pre><pre class="rust">
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">specialization</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">feature</span>(<span class="ident">doc_cfg</span>))]</span>
@@ -877,35 +848,6 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">function_name</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>: <span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="macro">pyo3::wrap_pyfunction!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">function_name</span>)(<span class="ident">pyo3::derive_utils::PyFunctionArguments::from</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>))
     };
-}
-
-<span class="doccomment">/// Returns the function that is called in the C-FFI.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Use this together with `#[pyfunction]` and [types::PyCFunction].</span>
-<span class="doccomment">/// ```</span>
-<span class="doccomment">/// use pyo3::prelude::*;</span>
-<span class="doccomment">/// use pyo3::types::PyCFunction;</span>
-<span class="doccomment">/// use pyo3::raw_pycfunction;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[pyfunction]</span>
-<span class="doccomment">/// fn some_fun(arg: i32) -&gt; PyResult&lt;()&gt; {</span>
-<span class="doccomment">///     Ok(())</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// #[pymodule]</span>
-<span class="doccomment">/// fn module(_py: Python, module: &amp;PyModule) -&gt; PyResult&lt;()&gt; {</span>
-<span class="doccomment">///     let ffi_wrapper_fun = raw_pycfunction!(some_fun);</span>
-<span class="doccomment">///     let docs = &quot;Some documentation string with null-termination\0&quot;;</span>
-<span class="doccomment">///     let py_cfunction =</span>
-<span class="doccomment">///         PyCFunction::new_with_keywords(ffi_wrapper_fun, &quot;function_name&quot;, docs, module.into())?;</span>
-<span class="doccomment">///     module.add_function(py_cfunction)</span>
-<span class="doccomment">/// }</span>
-<span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">macro_export</span>]</span>
-<span class="macro">macro_rules!</span> <span class="ident">raw_pycfunction</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">function_name</span>: <span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {{
-        <span class="macro">pyo3::paste::expr!</span> { [<span class="op">&lt;</span><span class="ident">__pyo3_raw_</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">function_name</span><span class="op">&gt;</span>] }
-    }};
 }
 
 <span class="doccomment">/// Returns a function that takes a [Python] instance and returns a Python module.</span>

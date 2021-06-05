@@ -651,12 +651,11 @@ fn module_with_fn(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 <p>If <code>pass_module</code> is set, the first argument <strong>must</strong> be the <code>&amp;PyModule</code>. It is then possible to use the module
 in the function body.</p>
 <h2 id="accessing-the-ffi-functions"><a class="header" href="#accessing-the-ffi-functions">Accessing the FFI functions</a></h2>
-<p>In order to make Rust functions callable from Python, PyO3 generates a
-<code>extern &quot;C&quot; Fn(slf: *mut PyObject, args: *mut PyObject, kwargs: *mut PyObject) -&gt; *mut Pyobject</code>
-function and embeds the call to the Rust function inside this FFI-wrapper function. This
-wrapper handles extraction of the regular arguments and the keyword arguments from the input
-<code>PyObjects</code>. Since this function is not user-defined but required to build a <code>PyCFunction</code>, PyO3
-offers the <code>raw_pycfunction!()</code> macro to get the identifier of this generated wrapper.</p>
+<p>In order to make Rust functions callable from Python, PyO3 generates an <code>extern &quot;C&quot;</code>
+function whose exact signature depends on the Rust signature.  (PyO3 chooses the optimal
+Python argument passing convention.) It then embeds the call to the Rust function inside this
+FFI-wrapper function. This wrapper handles extraction of the regular arguments and the keyword
+arguments from the input <code>PyObject</code>s.</p>
 <p>The <code>wrap_pyfunction</code> macro can be used to directly get a <code>PyCFunction</code> given a
 <code>#[pyfunction]</code> and a <code>PyModule</code>: <code>wrap_pyfunction!(rust_fun, module)</code>.</p>
 <h1 id="python-classes"><a class="header" href="#python-classes">Python Classes</a></h1>
@@ -4709,6 +4708,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Reduce LLVM line counts to improve compilation times. <a href="https://github.com/PyO3/pyo3/pull/1604">#1604</a></li>
 <li>Deprecate string-literal second argument to <code>#[pyfn(m, &quot;name&quot;)]</code>. <a href="https://github.com/PyO3/pyo3/pull/1610">#1610</a></li>
 <li>No longer call <code>PyEval_InitThreads()</code> in <code>#[pymodule]</code> init code. <a href="https://github.com/PyO3/pyo3/pull/1630">#1630</a></li>
+<li>Use <code>METH_FASTCALL</code> argument passing convention, when possible, to improve <code>#[pyfunction]</code> performance. <a href="https://github.com/PyO3/pyo3/pull/1619">#1619</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
@@ -4731,6 +4731,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 </li>
 <li>Remove <code>__doc__</code> from module's <code>__all__</code>. <a href="https://github.com/PyO3/pyo3/pull/1509">#1509</a></li>
 <li>Remove <code>PYO3_CROSS_INCLUDE_DIR</code> environment variable and the associated C header parsing functionality. <a href="https://github.com/PyO3/pyo3/pull/1521">#1521</a></li>
+<li>Remove <code>raw_pycfunction!</code> macro. <a href="https://github.com/PyO3/pyo3/pull/1619">#1619</a></li>
 </ul>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <ul>
