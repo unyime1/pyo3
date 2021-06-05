@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622879886162,
+  "lastUpdate": 1622880262393,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -575,6 +575,150 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item",
             "value": 496132,
             "range": "± 12004",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "messense@icloud.com",
+            "name": "messense",
+            "username": "messense"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f49f4440b46e479cbdc78daf26dea844043bcfc9",
+          "message": "Merge pull request #1654 from messense/pathlib\n\nAdd support for extracting PathBuf from pathlib.Path",
+          "timestamp": "2021-06-05T15:49:30+08:00",
+          "tree_id": "e2c481e19f9fa455e0db4289474f19e7032c89b0",
+          "url": "https://github.com/PyO3/pyo3/commit/f49f4440b46e479cbdc78daf26dea844043bcfc9"
+        },
+        "date": 1622880245416,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 78978,
+            "range": "± 1537",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 224159,
+            "range": "± 15044",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 2350474,
+            "range": "± 14314",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 2776454,
+            "range": "± 12278",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 6758561,
+            "range": "± 151005",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 11379982,
+            "range": "± 57409",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 5355474,
+            "range": "± 162388",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 19,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 98,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 101,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 1777492,
+            "range": "± 38448",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 791788,
+            "range": "± 23919",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 4390,
+            "range": "± 26989",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 3502,
+            "range": "± 1",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 1845924,
+            "range": "± 45821",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 7037817,
+            "range": "± 82313",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 9630431,
+            "range": "± 63964",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 4273865,
+            "range": "± 65886",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 808975,
+            "range": "± 978",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 401816,
+            "range": "± 1128",
             "unit": "ns/iter"
           }
         ]
