@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622893058309,
+  "lastUpdate": 1622893490485,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -1019,6 +1019,156 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item",
             "value": 397057,
             "range": "± 1094",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "1939362+davidhewitt@users.noreply.github.com",
+            "name": "David Hewitt",
+            "username": "davidhewitt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a5810eaffa95b5e2ae4986c2be461291737b0421",
+          "message": "Merge pull request #1619 from birkenfeld/fastcall\n\nImplement METH_FASTCALL for pyfunctions.",
+          "timestamp": "2021-06-05T12:32:16+01:00",
+          "tree_id": "d75fc0f08b3b7bf3f8abb4754ebdd92551d55ba6",
+          "url": "https://github.com/PyO3/pyo3/commit/a5810eaffa95b5e2ae4986c2be461291737b0421"
+        },
+        "date": 1622893471296,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 94399,
+            "range": "± 5671",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 266379,
+            "range": "± 6450",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 2813394,
+            "range": "± 140124",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 3367059,
+            "range": "± 166870",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 7970525,
+            "range": "± 414155",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 13453213,
+            "range": "± 362645",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 6317643,
+            "range": "± 371932",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 22,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 110,
+            "range": "± 5",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 114,
+            "range": "± 5",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 2015570,
+            "range": "± 142074",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 913548,
+            "range": "± 48464",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 4871,
+            "range": "± 22115",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 3981,
+            "range": "± 369",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 2012458,
+            "range": "± 120936",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 7773420,
+            "range": "± 341270",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 10700190,
+            "range": "± 456912",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 4849460,
+            "range": "± 264492",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 893582,
+            "range": "± 104210",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_new",
+            "value": 1586289,
+            "range": "± 92860",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 452666,
+            "range": "± 18279",
             "unit": "ns/iter"
           }
         ]
