@@ -415,26 +415,6 @@
 <span id="412">412</span>
 <span id="413">413</span>
 <span id="414">414</span>
-<span id="415">415</span>
-<span id="416">416</span>
-<span id="417">417</span>
-<span id="418">418</span>
-<span id="419">419</span>
-<span id="420">420</span>
-<span id="421">421</span>
-<span id="422">422</span>
-<span id="423">423</span>
-<span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
-<span id="433">433</span>
-<span id="434">434</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -453,6 +433,22 @@
 
 <span class="macro">pyobject_native_type_core!</span>(<span class="ident">PyList</span>, <span class="ident">ffi::PyList_Type</span>, #<span class="ident">checkfunction</span><span class="op">=</span><span class="ident">ffi::PyList_Check</span>);
 
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_from_iter</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="ident">elements</span>: <span class="kw">impl</span> <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
+    <span class="ident">convert</span>: <span class="kw">impl</span> <span class="ident">Fn</span>(<span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span> {
+    <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyList_New</span>(<span class="ident">elements</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">Py_ssize_t</span>);
+    <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="ident">elements</span>.<span class="ident">enumerate</span>() {
+        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">convert</span>(<span class="ident">e</span>).<span class="ident">into_ptr</span>();
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+        <span class="ident">ffi::PyList_SET_ITEM</span>(<span class="ident">ptr</span>, <span class="ident">i</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>, <span class="ident">obj</span>);
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
+        <span class="ident">ffi::PyList_SetItem</span>(<span class="ident">ptr</span>, <span class="ident">i</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>, <span class="ident">obj</span>);
+    }
+    <span class="ident">ptr</span>
+}
+
 <span class="kw">impl</span> <span class="ident">PyList</span> {
     <span class="doccomment">/// Constructs a new list with the given elements.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>, <span class="ident">elements</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span>, <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">U</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">PyList</span>
@@ -460,15 +456,8 @@
         <span class="ident">T</span>: <span class="ident">ToPyObject</span>,
         <span class="ident">U</span>: <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
     {
-        <span class="kw">let</span> <span class="ident">elements_iter</span> <span class="op">=</span> <span class="ident">elements</span>.<span class="ident">into_iter</span>();
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">elements_iter</span>.<span class="ident">len</span>();
         <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyList_New</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>);
-            <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="ident">elements_iter</span>.<span class="ident">enumerate</span>() {
-                <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ptr</span>();
-                <span class="ident">ffi::PyList_SetItem</span>(<span class="ident">ptr</span>, <span class="ident">i</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>, <span class="ident">obj</span>);
-            }
-            <span class="ident">py</span>.<span class="ident">from_owned_ptr</span>::<span class="op">&lt;</span><span class="ident">PyList</span><span class="op">&gt;</span>(<span class="ident">ptr</span>)
+            <span class="ident">py</span>.<span class="ident">from_owned_ptr</span>::<span class="op">&lt;</span><span class="ident">PyList</span><span class="op">&gt;</span>(<span class="ident">new_from_iter</span>(<span class="ident">elements</span>.<span class="ident">into_iter</span>(), <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_object</span>(<span class="ident">py</span>)))
         }
     }
 
@@ -479,8 +468,15 @@
 
     <span class="doccomment">/// Returns the length of the list.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
-        <span class="comment">// non-negative Py_ssize_t should always fit into Rust usize</span>
-        <span class="kw">unsafe</span> { <span class="ident">ffi::PyList_Size</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) <span class="kw">as</span> <span class="ident">usize</span> }
+        <span class="kw">unsafe</span> {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+            <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">ffi::PyList_GET_SIZE</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>());
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
+            <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">ffi::PyList_Size</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>());
+
+            <span class="comment">// non-negative Py_ssize_t should always fit into Rust usize</span>
+            <span class="ident">size</span> <span class="kw">as</span> <span class="ident">usize</span>
+        }
     }
 
     <span class="doccomment">/// Checks if the list is empty.</span>
@@ -494,23 +490,14 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">isize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">PyAny</span> {
         <span class="macro">assert!</span>((<span class="ident">index</span>.<span class="ident">abs</span>() <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">len</span>());
         <span class="kw">unsafe</span> {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyList_GET_ITEM</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">index</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>);
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_LIMITED_API</span>)]</span>
             <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyList_GetItem</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">index</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>);
 
             <span class="comment">// PyList_GetItem return borrowed ptr; must make owned for safety (see #890).</span>
             <span class="ident">ffi::Py_INCREF</span>(<span class="ident">ptr</span>);
             <span class="self">self</span>.<span class="ident">py</span>().<span class="ident">from_owned_ptr</span>(<span class="ident">ptr</span>)
-        }
-    }
-
-    <span class="doccomment">/// Gets the item at the specified index.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Panics if the index is out of range.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_parked_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">isize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">PyObject::from_borrowed_ptr</span>(
-                <span class="self">self</span>.<span class="ident">py</span>(),
-                <span class="ident">ffi::PyList_GetItem</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">index</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>),
-            )
         }
     }
 
@@ -605,14 +592,7 @@
     <span class="ident">T</span>: <span class="ident">ToPyObject</span>,
 {
     <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-        <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyList_New</span>(<span class="self">self</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">Py_ssize_t</span>);
-            <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ptr</span>();
-                <span class="ident">ffi::PyList_SetItem</span>(<span class="ident">ptr</span>, <span class="ident">i</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>, <span class="ident">obj</span>);
-            }
-            <span class="ident">PyObject::from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">ptr</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">PyObject::from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">new_from_iter</span>(<span class="self">self</span>.<span class="ident">iter</span>(), <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_object</span>(<span class="ident">py</span>))) }
     }
 }
 
@@ -630,14 +610,7 @@
     <span class="ident">T</span>: <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span>,
 {
     <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-        <span class="kw">unsafe</span> {
-            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyList_New</span>(<span class="self">self</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">Py_ssize_t</span>);
-            <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">into_iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">into_py</span>(<span class="ident">py</span>).<span class="ident">into_ptr</span>();
-                <span class="ident">ffi::PyList_SetItem</span>(<span class="ident">ptr</span>, <span class="ident">i</span> <span class="kw">as</span> <span class="ident">Py_ssize_t</span>, <span class="ident">obj</span>);
-            }
-            <span class="ident">PyObject::from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">ptr</span>)
-        }
+        <span class="kw">unsafe</span> { <span class="ident">PyObject::from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">new_from_iter</span>(<span class="self">self</span>.<span class="ident">into_iter</span>(), <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_py</span>(<span class="ident">py</span>))) }
     }
 }
 
@@ -680,19 +653,6 @@
         <span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">list</span>.<span class="ident">get_item</span>(<span class="number">1</span>).<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
         <span class="macro">assert_eq!</span>(<span class="number">5</span>, <span class="ident">list</span>.<span class="ident">get_item</span>(<span class="number">2</span>).<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
         <span class="macro">assert_eq!</span>(<span class="number">7</span>, <span class="ident">list</span>.<span class="ident">get_item</span>(<span class="number">3</span>).<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_get_parked_item</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>];
-        <span class="kw">let</span> <span class="ident">ob</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyList</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">ob</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="number">2</span>, <span class="ident">list</span>.<span class="ident">get_parked_item</span>(<span class="number">0</span>).<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">3</span>, <span class="ident">list</span>.<span class="ident">get_parked_item</span>(<span class="number">1</span>).<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">5</span>, <span class="ident">list</span>.<span class="ident">get_parked_item</span>(<span class="number">2</span>).<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">7</span>, <span class="ident">list</span>.<span class="ident">get_parked_item</span>(<span class="number">3</span>).<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
