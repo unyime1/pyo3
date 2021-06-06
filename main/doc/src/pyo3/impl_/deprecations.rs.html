@@ -20,6 +20,12 @@
 <span id="17">17</span>
 <span id="18">18</span>
 <span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Symbols used to denote deprecated usages of PyO3&#39;s proc macros.</span>
 
@@ -34,6 +40,12 @@
     <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;use `#[pyfn(m)] #[pyo3(name = \&quot;...\&quot;)]` instead of `#[pyfn(m, \&quot;...\&quot;)]`&quot;</span>
 )]</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PYFN_NAME_ARGUMENT</span>: () <span class="op">=</span> ();
+
+<span class="attribute">#[<span class="ident">deprecated</span>(
+    <span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.14.0&quot;</span>,
+    <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;use `#[pymodule] #[pyo3(name = \&quot;...\&quot;)]` instead of `#[pymodule(...)]`&quot;</span>
+)]</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PYMODULE_NAME_ARGUMENT</span>: () <span class="op">=</span> ();
 
 <span class="attribute">#[<span class="ident">deprecated</span>(
     <span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.14.0&quot;</span>,
