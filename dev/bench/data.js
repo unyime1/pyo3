@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1622962365102,
+  "lastUpdate": 1622964756092,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -2802,6 +2802,86 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 1.3715517428974107e-8",
             "extra": "mean: 273.7728020995538 nsec\nrounds: 196079"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "1939362+davidhewitt@users.noreply.github.com",
+            "name": "David Hewitt",
+            "username": "davidhewitt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b681143cc88e553c68fa51ecb36ed4a0f309a8e",
+          "message": "Merge pull request #1664 from PyO3/pylist_opt\n\nPyList: remove get_parked_item, use macros for speed on !abi3",
+          "timestamp": "2021-06-06T08:31:18+01:00",
+          "tree_id": "3870ced28ecf7272d5825ef95c612b549b432577",
+          "url": "https://github.com/PyO3/pyo3/commit/6b681143cc88e553c68fa51ecb36ed4a0f309a8e"
+        },
+        "date": 1622964738752,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/test_benchmarks.py::test_args_and_kwargs",
+            "value": 2840281.1155768917,
+            "unit": "iter/sec",
+            "range": "stddev: 7.803773919741461e-8",
+            "extra": "mean: 352.07782585875805 nsec\nrounds: 166667"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_and_kwargs_py",
+            "value": 2593215.553799721,
+            "unit": "iter/sec",
+            "range": "stddev: 1.8008053466919655e-8",
+            "extra": "mean: 385.62162660739216 nsec\nrounds: 196079"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_mixed_args",
+            "value": 1384225.83245945,
+            "unit": "iter/sec",
+            "range": "stddev: 1.1088233038105772e-7",
+            "extra": "mean: 722.4254717333447 nsec\nrounds: 112360"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_mixed_args_py",
+            "value": 1933242.0488724322,
+            "unit": "iter/sec",
+            "range": "stddev: 2.7431166071184966e-8",
+            "extra": "mean: 517.2658025847825 nsec\nrounds: 178572"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_no_args",
+            "value": 10127647.933584487,
+            "unit": "iter/sec",
+            "range": "stddev: 5.063365364307096e-9",
+            "extra": "mean: 98.73960929110747 nsec\nrounds: 46083"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_no_args_py",
+            "value": 8777399.878134275,
+            "unit": "iter/sec",
+            "range": "stddev: 4.141023958516314e-9",
+            "extra": "mean: 113.92895548612638 nsec\nrounds: 81301"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args",
+            "value": 2012364.2765127518,
+            "unit": "iter/sec",
+            "range": "stddev: 8.732277151339213e-8",
+            "extra": "mean: 496.92792287731874 nsec\nrounds: 144928"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_py",
+            "value": 3600983.5762542915,
+            "unit": "iter/sec",
+            "range": "stddev: 1.581750427307706e-8",
+            "extra": "mean: 277.7019052778814 nsec\nrounds: 192308"
           }
         ]
       }
