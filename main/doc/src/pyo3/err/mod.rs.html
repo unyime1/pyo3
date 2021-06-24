@@ -628,6 +628,60 @@
 <span id="628">628</span>
 <span id="629">629</span>
 <span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -1021,6 +1075,28 @@
         <span class="ident">PyErr::from_state</span>(<span class="ident">PyErrState::Normalized</span>(<span class="self">self</span>.<span class="ident">normalized</span>(<span class="ident">py</span>).<span class="ident">clone</span>()))
     }
 
+    <span class="doccomment">/// Return the cause (either an exception instance, or None, set by `raise ... from ...`)</span>
+    <span class="doccomment">/// associated with the exception, as accessible from Python through `__cause__`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PyErr</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::PyException_GetCause</span>(<span class="self">self</span>.<span class="ident">pvalue</span>(<span class="ident">py</span>).<span class="ident">as_ptr</span>()) };
+        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">py</span>.<span class="ident">from_owned_ptr_or_opt</span>::<span class="op">&lt;</span><span class="ident">PyAny</span><span class="op">&gt;</span>(<span class="ident">ptr</span>) };
+        <span class="ident">obj</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="self">Self</span><span class="ident">::from_instance</span>(<span class="ident">x</span>))
+    }
+
+    <span class="doccomment">/// Set the cause associated with the exception, pass `None` to clear it.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>, <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">cause</span>) <span class="op">=</span> <span class="ident">cause</span> {
+            <span class="kw">let</span> <span class="ident">cause</span> <span class="op">=</span> <span class="ident">cause</span>.<span class="ident">into_instance</span>(<span class="ident">py</span>);
+            <span class="kw">unsafe</span> {
+                <span class="ident">ffi::PyException_SetCause</span>(<span class="self">self</span>.<span class="ident">pvalue</span>(<span class="ident">py</span>).<span class="ident">as_ptr</span>(), <span class="ident">cause</span>.<span class="ident">as_ptr</span>());
+            }
+        } <span class="kw">else</span> {
+            <span class="kw">unsafe</span> {
+                <span class="ident">ffi::PyException_SetCause</span>(<span class="self">self</span>.<span class="ident">pvalue</span>(<span class="ident">py</span>).<span class="ident">as_ptr</span>(), <span class="ident">std::ptr::null_mut</span>());
+            }
+        }
+    }
+
     <span class="kw">fn</span> <span class="ident">from_state</span>(<span class="ident">state</span>: <span class="ident">PyErrState</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyErr</span> {
         <span class="ident">PyErr</span> {
             <span class="ident">state</span>: <span class="ident">UnsafeCell::new</span>(<span class="prelude-val">Some</span>(<span class="ident">state</span>)),
@@ -1257,6 +1333,38 @@
 
         <span class="ident">is_send</span>::<span class="op">&lt;</span><span class="ident">PyErrState</span><span class="op">&gt;</span>();
         <span class="ident">is_sync</span>::<span class="op">&lt;</span><span class="ident">PyErrState</span><span class="op">&gt;</span>();
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_pyerr_cause</span>() {
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+                .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>);
+            <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">cause</span>(<span class="ident">py</span>).<span class="ident">is_none</span>());
+
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">run</span>(
+                    <span class="string">&quot;raise Exception(&#39;banana&#39;) from Exception(&#39;apple&#39;)&quot;</span>,
+                    <span class="prelude-val">None</span>,
+                    <span class="prelude-val">None</span>,
+                )
+                .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>);
+            <span class="kw">let</span> <span class="ident">cause</span> <span class="op">=</span> <span class="ident">err</span>
+                .<span class="ident">cause</span>(<span class="ident">py</span>)
+                .<span class="ident">expect</span>(<span class="string">&quot;raising from should have given us a cause&quot;</span>);
+            <span class="macro">assert_eq!</span>(<span class="ident">cause</span>.<span class="ident">to_string</span>(), <span class="string">&quot;Exception: apple&quot;</span>);
+
+            <span class="ident">err</span>.<span class="ident">set_cause</span>(<span class="ident">py</span>, <span class="prelude-val">None</span>);
+            <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">cause</span>(<span class="ident">py</span>).<span class="ident">is_none</span>());
+
+            <span class="kw">let</span> <span class="ident">new_cause</span> <span class="op">=</span> <span class="ident">exceptions::PyValueError::new_err</span>(<span class="string">&quot;orange&quot;</span>);
+            <span class="ident">err</span>.<span class="ident">set_cause</span>(<span class="ident">py</span>, <span class="prelude-val">Some</span>(<span class="ident">new_cause</span>));
+            <span class="kw">let</span> <span class="ident">cause</span> <span class="op">=</span> <span class="ident">err</span>
+                .<span class="ident">cause</span>(<span class="ident">py</span>)
+                .<span class="ident">expect</span>(<span class="string">&quot;set_cause should have given us a cause&quot;</span>);
+            <span class="macro">assert_eq!</span>(<span class="ident">cause</span>.<span class="ident">to_string</span>(), <span class="string">&quot;ValueError: orange&quot;</span>);
+        });
     }
 }
 </pre></div>
