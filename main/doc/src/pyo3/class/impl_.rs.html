@@ -413,6 +413,10 @@
 <span id="413">413</span>
 <span id="414">414</span>
 <span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -422,7 +426,7 @@
     <span class="ident">pycell::PyCellLayout</span>,
     <span class="ident">pyclass_init::PyObjectInit</span>,
     <span class="ident">type_object</span>::{<span class="ident">PyLayout</span>, <span class="ident">PyTypeObject</span>},
-    <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyTypeInfo</span>, <span class="ident">Python</span>,
+    <span class="ident">PyClass</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyTypeInfo</span>, <span class="ident">Python</span>,
 };
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">os::raw::c_void</span>, <span class="ident">thread</span>};
 
@@ -552,6 +556,10 @@
 }
 
 <span class="doccomment">/// Implementation of tp_alloc for `freelist` classes.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Safety</span>
+<span class="doccomment">/// - `subtype` must be a valid pointer to the type object of T or a subclass.</span>
+<span class="doccomment">/// - The GIL must be held.</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">alloc_with_freelist</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClassWithFreeList</span><span class="op">&gt;</span>(
     <span class="ident">subtype</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyTypeObject</span>,
     <span class="ident">nitems</span>: <span class="ident">ffi::Py_ssize_t</span>,
@@ -575,6 +583,10 @@
 }
 
 <span class="doccomment">/// Implementation of tp_free for `freelist` classes.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Safety</span>
+<span class="doccomment">/// - `obj` must be a valid pointer to an instance of T (not a subclass).</span>
+<span class="doccomment">/// - The GIL must be held.</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::collapsible_if</span>)]</span> <span class="comment">// for if cfg!</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">free_with_freelist</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClassWithFreeList</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>) {
     <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>;
@@ -808,8 +820,7 @@
     <span class="kw">type</span> <span class="ident">Initializer</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::pyclass_init::PyClassInitializer</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>;
 }
 
-<span class="comment">// Default new implementation</span>
-
+<span class="doccomment">/// Default new implementation</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">fallback_new</span>(
     <span class="ident">_subtype</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyTypeObject</span>,
     <span class="ident">_args</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>,
@@ -822,12 +833,9 @@
     })
 }
 
+<span class="doccomment">/// Implementation of tp_dealloc for all pyclasses</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>) {
-    <span class="kw">crate</span><span class="macro">::callback_body!</span>(<span class="ident">py</span>, {
-        <span class="comment">// Safety: Python will only call tp_dealloc when no references to the object remain.</span>
-        <span class="kw">let</span> <span class="ident">cell</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
-        <span class="ident">cell</span>.<span class="ident">tp_dealloc</span>(<span class="ident">py</span>);
-    })
+    <span class="kw">crate</span><span class="macro">::callback_body!</span>(<span class="ident">py</span>, <span class="ident">T::Layout::tp_dealloc</span>(<span class="ident">obj</span>, <span class="ident">py</span>))
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>

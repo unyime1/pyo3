@@ -80,6 +80,9 @@
 <span id="80">80</span>
 <span id="81">81</span>
 <span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
 </pre><pre class="rust">
 <span class="doccomment">//! This module contains additional fields for `#[pyclass]`..</span>
 <span class="doccomment">//! Mainly used by our proc-macro codes.</span>
@@ -98,6 +101,9 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PyClassWeakRef</span> {
     <span class="kw">const</span> <span class="ident">IS_DUMMY</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">true</span>;
     <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>;
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">/// - `_obj` must be a pointer to the pyclass instance which contains `self`.</span>
+    <span class="doccomment">/// - The GIL must be held.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">clear_weakrefs</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {}
     <span class="macro">private_decl!</span> {}

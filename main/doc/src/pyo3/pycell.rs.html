@@ -731,6 +731,9 @@
 <span id="731">731</span>
 <span id="732">732</span>
 <span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Includes `PyCell` implementation.</span>
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::exceptions::PyRuntimeError</span>;
@@ -1409,8 +1412,11 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PyCellLayout</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>: <span class="ident">PyLayout</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">get_borrow_flag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">BorrowFlag</span>;
     <span class="kw">fn</span> <span class="ident">set_borrow_flag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">flag</span>: <span class="ident">BorrowFlag</span>);
-    <span class="doccomment">/// Implementation of tp_dealloc. Do not attempt to use &amp;self after calling this!</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>);
+    <span class="doccomment">/// Implementation of tp_dealloc.</span>
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">/// - slf must be a valid pointer to an instance of a T or a subclass.</span>
+    <span class="doccomment">/// - slf must not be used after this call (as it will be freed).</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span>(<span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">py</span>: <span class="ident">Python</span>);
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">PyCellLayout</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PyCellBase</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>
@@ -1424,21 +1430,19 @@
     <span class="kw">fn</span> <span class="ident">set_borrow_flag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">flag</span>: <span class="ident">BorrowFlag</span>) {
         <span class="self">self</span>.<span class="ident">borrow_flag</span>.<span class="ident">set</span>(<span class="ident">flag</span>)
     }
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) {
-        <span class="kw">let</span> <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span> <span class="op">=</span> <span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>;
-
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span>(<span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">py</span>: <span class="ident">Python</span>) {
         <span class="comment">// For `#[pyclass]` types which inherit from PyAny, we can just call tp_free</span>
         <span class="kw">if</span> <span class="ident">T::type_object_raw</span>(<span class="ident">py</span>) <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PyBaseObject_Type</span> {
-            <span class="kw">return</span> <span class="ident">get_tp_free</span>(<span class="ident">ffi::Py_TYPE</span>(<span class="ident">obj</span>))(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw">_</span>);
+            <span class="kw">return</span> <span class="ident">get_tp_free</span>(<span class="ident">ffi::Py_TYPE</span>(<span class="ident">slf</span>))(<span class="ident">slf</span> <span class="kw">as</span> <span class="kw">_</span>);
         }
 
         <span class="comment">// More complex native types (e.g. `extends=PyDict`) require calling the base&#39;s dealloc.</span>
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
         {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dealloc</span>) <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">T::type_object_raw</span>(<span class="ident">py</span>)).<span class="ident">tp_dealloc</span> {
-                <span class="ident">dealloc</span>(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw">_</span>);
+                <span class="ident">dealloc</span>(<span class="ident">slf</span> <span class="kw">as</span> <span class="kw">_</span>);
             } <span class="kw">else</span> {
-                <span class="ident">get_tp_free</span>(<span class="ident">ffi::Py_TYPE</span>(<span class="ident">obj</span>))(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw">_</span>);
+                <span class="ident">get_tp_free</span>(<span class="ident">ffi::Py_TYPE</span>(<span class="ident">slf</span>))(<span class="ident">slf</span> <span class="kw">as</span> <span class="kw">_</span>);
             }
         }
 
@@ -1458,11 +1462,13 @@
     <span class="kw">fn</span> <span class="ident">set_borrow_flag</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">flag</span>: <span class="ident">BorrowFlag</span>) {
         <span class="self">self</span>.<span class="ident">ob_base</span>.<span class="ident">set_borrow_flag</span>(<span class="ident">flag</span>)
     }
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) {
-        <span class="ident">ManuallyDrop::drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">contents</span>.<span class="ident">value</span>);
-        <span class="self">self</span>.<span class="ident">contents</span>.<span class="ident">dict</span>.<span class="ident">clear_dict</span>(<span class="ident">py</span>);
-        <span class="self">self</span>.<span class="ident">contents</span>.<span class="ident">weakref</span>.<span class="ident">clear_weakrefs</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">py</span>);
-        <span class="self">self</span>.<span class="ident">ob_base</span>.<span class="ident">tp_dealloc</span>(<span class="ident">py</span>);
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span>(<span class="ident">slf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">py</span>: <span class="ident">Python</span>) {
+        <span class="comment">// Safety: Python only calls tp_dealloc when no references to the object remain.</span>
+        <span class="kw">let</span> <span class="ident">cell</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="ident">slf</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
+        <span class="ident">ManuallyDrop::drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cell</span>.<span class="ident">contents</span>.<span class="ident">value</span>);
+        <span class="ident">cell</span>.<span class="ident">contents</span>.<span class="ident">dict</span>.<span class="ident">clear_dict</span>(<span class="ident">py</span>);
+        <span class="ident">cell</span>.<span class="ident">contents</span>.<span class="ident">weakref</span>.<span class="ident">clear_weakrefs</span>(<span class="ident">slf</span>, <span class="ident">py</span>);
+        <span class="op">&lt;</span><span class="ident">T::BaseType</span> <span class="kw">as</span> <span class="ident">PyClassBaseType</span><span class="op">&gt;</span><span class="ident">::LayoutAsBase::tp_dealloc</span>(<span class="ident">slf</span>, <span class="ident">py</span>)
     }
 }
 </pre></div>
