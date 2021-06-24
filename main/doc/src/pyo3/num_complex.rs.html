@@ -193,6 +193,10 @@
 <span id="193">193</span>
 <span id="194">194</span>
 <span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
 </pre><pre class="rust">
 <span class="attribute">#![<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;num-complex&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;num-complex&quot;</span>)))]</span>
@@ -210,7 +214,12 @@
 <span class="doccomment">//! [dependencies]</span>
 <span class="doccomment">//! # change * to the latest versions</span>
 <span class="doccomment">//! num-complex = &quot;*&quot;</span>
-<span class="doccomment">//! pyo3 = { version = &quot;*&quot;, features = [&quot;num-complex&quot;] }</span>
+<span class="comment">// workaround for `extended_key_value_attributes`: https://github.com/rust-lang/rust/issues/82768#issuecomment-803935643</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span> <span class="op">=</span> <span class="macro">concat!</span>(<span class="string">&quot;pyo3 = { version = \&quot;&quot;</span>, <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),  <span class="string">&quot;\&quot;, features = [\&quot;num-complex\&quot;] }&quot;</span>)))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(
+    <span class="ident">not</span>(<span class="ident">docsrs</span>),
+    <span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot;pyo3 = { version = \&quot;*\&quot;, features = [\&quot;num-complex\&quot;] }&quot;</span>
+)]</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Note that you must use compatible versions of num-complex and PyO3.</span>
@@ -227,7 +236,6 @@
 <span class="doccomment">//! use nalgebra::base::{dimension::Const, storage::Storage, Matrix};</span>
 <span class="doccomment">//! use num_complex::Complex;</span>
 <span class="doccomment">//! use pyo3::prelude::*;</span>
-<span class="doccomment">//! use pyo3::wrap_pyfunction;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! type T = Complex&lt;f64&gt;;</span>
 <span class="doccomment">//!</span>

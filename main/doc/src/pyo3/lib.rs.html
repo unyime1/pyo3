@@ -511,6 +511,9 @@
 <span id="511">511</span>
 <span id="512">512</span>
 <span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
 </pre><pre class="rust">
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">specialization</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">feature</span>(<span class="ident">doc_cfg</span>))]</span>
@@ -663,7 +666,9 @@
 <span class="doccomment">//! crate-type = [&quot;cdylib&quot;]</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [dependencies.pyo3]</span>
-<span class="doccomment">//! version = &quot;0.13.2&quot;</span>
+<span class="comment">// workaround for `extended_key_value_attributes`: https://github.com/rust-lang/rust/issues/82768#issuecomment-803935643</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span> <span class="op">=</span> <span class="macro">concat!</span>(<span class="string">&quot;version = \&quot;&quot;</span>, <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),  <span class="string">&quot;\&quot;&quot;</span>)))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">docsrs</span>), <span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot;version = \&quot;*\&quot;&quot;</span>)]</span>
 <span class="doccomment">//! features = [&quot;extension-module&quot;]</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -671,7 +676,6 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```rust</span>
 <span class="doccomment">//! use pyo3::prelude::*;</span>
-<span class="doccomment">//! use pyo3::wrap_pyfunction;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! /// Formats the sum of two numbers as string.</span>
 <span class="doccomment">//! #[pyfunction]</span>
@@ -715,7 +719,9 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```toml</span>
 <span class="doccomment">//! [dependencies.pyo3]</span>
-<span class="doccomment">//! version = &quot;0.13.2&quot;</span>
+<span class="comment">// workaround for `extended_key_value_attributes`: https://github.com/rust-lang/rust/issues/82768#issuecomment-803935643</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span> <span class="op">=</span> <span class="macro">concat!</span>(<span class="string">&quot;version = \&quot;&quot;</span>, <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),  <span class="string">&quot;\&quot;&quot;</span>)))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">docsrs</span>), <span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot;version = \&quot;*\&quot;&quot;</span>)]</span>
 <span class="doccomment">//! # this is necessary to automatically initialize the Python interpreter</span>
 <span class="doccomment">//! features = [&quot;auto-initialize&quot;]</span>
 <span class="doccomment">//! ```</span>

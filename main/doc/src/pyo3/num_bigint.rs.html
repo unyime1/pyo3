@@ -290,6 +290,9 @@
 <span id="290">290</span>
 <span id="291">291</span>
 <span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -310,9 +313,13 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```toml</span>
 <span class="doccomment">//! [dependencies]</span>
-<span class="doccomment">//! # change * to the latest versions</span>
 <span class="doccomment">//! num-bigint = &quot;*&quot;</span>
-<span class="doccomment">//! pyo3 = { version = &quot;*&quot;, features = [&quot;num-bigint&quot;] }</span>
+<span class="comment">// workaround for `extended_key_value_attributes`: https://github.com/rust-lang/rust/issues/82768#issuecomment-803935643</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span> <span class="op">=</span> <span class="macro">concat!</span>(<span class="string">&quot;pyo3 = { version = \&quot;&quot;</span>, <span class="macro">env!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>),  <span class="string">&quot;\&quot;, features = [\&quot;num-bigint\&quot;] }&quot;</span>)))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(
+    <span class="ident">not</span>(<span class="ident">docsrs</span>),
+    <span class="ident">doc</span> <span class="op">=</span> <span class="string">&quot;pyo3 = { version = \&quot;*\&quot;, features = [\&quot;num-bigint\&quot;] }&quot;</span>
+)]</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Note that you must use compatible versions of num-bigint and PyO3.</span>
@@ -327,7 +334,6 @@
 <span class="doccomment">//! ```rust</span>
 <span class="doccomment">//! use num_bigint::BigInt;</span>
 <span class="doccomment">//! use pyo3::prelude::*;</span>
-<span class="doccomment">//! use pyo3::wrap_pyfunction;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! #[pyfunction]</span>
 <span class="doccomment">//! fn add_one(n: BigInt) -&gt; BigInt {</span>
