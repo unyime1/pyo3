@@ -210,8 +210,38 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
 </pre><pre class="rust">
-<span class="doccomment">//! Raw ffi declarations for the C interface of Python.</span>
+<span class="doccomment">//! Raw FFI declarations for Python&#39;s C API.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This module provides low level bindings to the Python interpreter.</span>
+<span class="doccomment">//! It is meant for advanced users only - regular PyO3 users shouldn&#39;t</span>
+<span class="doccomment">//! need to interact with this module at all.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Safety</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The functions in this module lack individual safety documentation, but</span>
+<span class="doccomment">//! generally the following apply:</span>
+<span class="doccomment">//! - Pointer arguments have to point to a valid Python object of the correct type,</span>
+<span class="doccomment">//! although null pointers are sometimes valid input.</span>
+<span class="doccomment">//! - The vast majority can only be used safely while the GIL is held.</span>
+<span class="doccomment">//! - Some functions have additional safety requirements, consult the</span>
+<span class="doccomment">//! [Python/C API Reference Manual](https://docs.python.org/3/c-api/index.html)</span>
+<span class="doccomment">//! for more information.</span>
 <span class="attribute">#![<span class="ident">allow</span>(
     <span class="ident">non_camel_case_types</span>,
     <span class="ident">non_snake_case</span>,
@@ -240,6 +270,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::codecs</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::compile</span>::<span class="kw-2">*</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::complexobject</span>::<span class="kw-2">*</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::context</span>::<span class="kw-2">*</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::datetime</span>::<span class="kw-2">*</span>;
@@ -291,6 +322,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::cpython</span>::<span class="kw-2">*</span>;
+
 <span class="kw">mod</span> <span class="ident">abstract_</span>;
 <span class="comment">// skipped asdl.h</span>
 <span class="comment">// skipped ast.h</span>
@@ -308,8 +340,6 @@
 <span class="kw">mod</span> <span class="ident">complexobject</span>; <span class="comment">// TODO supports PEP-384 only</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
 <span class="kw">mod</span> <span class="ident">context</span>; <span class="comment">// It&#39;s actually 3.7.1, but no cfg for patches.</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))))]</span>
-<span class="kw">mod</span> <span class="ident">context</span> {}
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">datetime</span>;
 <span class="kw">mod</span> <span class="ident">descrobject</span>; <span class="comment">// TODO supports PEP-384 only</span>

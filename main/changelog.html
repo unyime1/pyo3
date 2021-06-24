@@ -193,6 +193,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add support for extracting <code>PathBuf</code> from <code>pathlib.Path</code>. <a href="https://github.com/PyO3/pyo3/pull/1654">#1654</a></li>
 <li>Add <code>#[pyo3(text_signature = &quot;...&quot;)]</code> syntax for setting text signature. <a href="https://github.com/PyO3/pyo3/pull/1658">#1658</a></li>
 <li>Add support for setting and retrieving exception cause. <a href="https://github.com/PyO3/pyo3/pull/1679">#1679</a></li>
+<li>Add FFI definitions from <code>cpython/pystate.h</code>.<a href="https://github.com/PyO3/pyo3/pull/1687/">#1687</a></li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
@@ -249,6 +250,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Remove <code>raw_pycfunction!</code> macro. <a href="https://github.com/PyO3/pyo3/pull/1619">#1619</a></li>
 <li>Remove <code>PyClassAlloc</code> trait. <a href="https://github.com/PyO3/pyo3/pull/1657">#1657</a></li>
 <li>Remove <code>PyList::get_parked_item</code>. <a href="https://github.com/PyO3/pyo3/pull/1664">#1664</a></li>
+<li>Remove the layout of the ffi/ffi::cpython module from the public api <a href="https://github.com/PyO3/pyo3/pull/1687/">#1687</a>. If you were importing things with <code>pyo3::ffi::&lt;module&gt;::&lt;item&gt;;</code>, please use <code>pyo3::ffi::&lt;item&gt;;</code> instead</li>
 </ul>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <ul>

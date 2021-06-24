@@ -69,14 +69,7 @@
 <span id="69">69</span>
 <span id="70">70</span>
 <span id="71">71</span>
-<span id="72">72</span>
-<span id="73">73</span>
-<span id="74">74</span>
-<span id="75">75</span>
-<span id="76">76</span>
-<span id="77">77</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::ceval::_PyFrameEvalFunction</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::moduleobject::PyModuleDef</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::object::PyObject</span>;
 <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::PyFrameObject</span>;
@@ -84,12 +77,7 @@
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MAX_CO_EXTRA_USERS</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">255</span>;
 
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyInterpreterState</span> {
-    <span class="kw">pub</span> <span class="ident">ob_base</span>: <span class="ident">PyObject</span>,
-    <span class="kw">pub</span> <span class="ident">eval_frame</span>: <span class="ident">_PyFrameEvalFunction</span>,
-}
+<span class="macro">opaque_struct!</span>(<span class="ident">PyInterpreterState</span>);
 
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
