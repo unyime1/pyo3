@@ -4747,6 +4747,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Use <code>METH_FASTCALL</code> argument passing convention, when possible, to improve <code>#[pyfunction]</code> and method performance.
 <a href="https://github.com/PyO3/pyo3/pull/1619">#1619</a>, <a href="https://github.com/PyO3/pyo3/pull/1660">#1660</a></li>
 <li>Make the <code>Py_tracefunc</code> parameter of the <code>PyEval_SetProfile</code>/<code>PyEval_SetTrace</code> functions optional. <a href="https://github.com/PyO3/pyo3/pull/1692">#1692</a></li>
+<li>Make <code>ToPyObject</code> impl for <code>HashSet</code> accept non-default hashers. <a href="https://github.com/PyO3/pyo3/pull/1702">#1702</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>

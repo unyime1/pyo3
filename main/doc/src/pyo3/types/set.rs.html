@@ -613,6 +613,7 @@
 <span id="613">613</span>
 <span id="614">614</span>
 <span id="615">615</span>
+<span id="616">616</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -808,9 +809,10 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="ident">collections::HashSet</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span><span class="op">&gt;</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="ident">collections::HashSet</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">S</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">hash::Hash</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">ToPyObject</span>,
+    <span class="ident">S</span>: <span class="ident">hash::BuildHasher</span> <span class="op">+</span> <span class="ident">Default</span>,
 {
     <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
         <span class="kw">let</span> <span class="ident">set</span> <span class="op">=</span> <span class="ident">PySet::new</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span>[]).<span class="ident">expect</span>(<span class="string">&quot;Failed to construct empty set&quot;</span>);
