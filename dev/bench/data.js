@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1626939256959,
+  "lastUpdate": 1626939315979,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -9347,6 +9347,168 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item",
             "value": 403857,
             "range": "± 934",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "ivan.ivancps.cn@gmail.com",
+            "name": "Ivan Carvalho",
+            "username": "IvanIsCoding"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bd0e0d808fdc2100628a88bdcebe93c2cf366a5d",
+          "message": "Add optional support for conversion from `indexmap::IndexMap` (#1728)\n\n* Add support to IndexMap\r\n\r\n* Fix indexmap version to 1.6.2\r\n\r\n* Remove code duplication by mistake\r\n\r\n* Fix ambiguity in test\r\n\r\n* Minor change for doc.rs\r\n\r\n* Add to lib.rs docstring\r\n\r\n* Add indexmap to conversion table\r\n\r\n* Add indexmap flag in docs.rs action\r\n\r\n* Add indexmap feature to CI\r\n\r\n* Add note in changelog\r\n\r\n* Use with_gil in tests\r\n\r\n* Move code to src/conversions/indexmap.rs\r\n\r\n* Add PR number to CHANGELOG\r\n\r\nCo-authored-by: David Hewitt <1939362+davidhewitt@users.noreply.github.com>\r\n\r\n* Add round trip test\r\n\r\n* Fix issue in MSRV Ubuntu build\r\n\r\n* Fix Github workflow syntax\r\n\r\n* Yet Another Attempt to Fix MSRV Ubuntu build\r\n\r\n* Specify hashbrown to avoid ambiguity in CI\r\n\r\n* Add suggestions\r\n\r\n* More flexible version for indexmap\r\n\r\n* Add documentation\r\n\r\n* Address PR comments\r\n\r\n* Export indexmap for docs\r\n\r\nCo-authored-by: David Hewitt <1939362+davidhewitt@users.noreply.github.com>",
+          "timestamp": "2021-07-22T08:15:26+01:00",
+          "tree_id": "1e98c7c2cf0a72aabb5a6f2ba50b0e576afb5752",
+          "url": "https://github.com/PyO3/pyo3/commit/bd0e0d808fdc2100628a88bdcebe93c2cf366a5d"
+        },
+        "date": 1626939295457,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 70279,
+            "range": "± 4467",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 224696,
+            "range": "± 13519",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 2290557,
+            "range": "± 209660",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_new",
+            "value": 4385495,
+            "range": "± 353982",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 2535631,
+            "range": "± 168745",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 8400804,
+            "range": "± 741549",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 10364115,
+            "range": "± 749881",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 6903745,
+            "range": "± 459633",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 14,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 96,
+            "range": "± 8",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 94,
+            "range": "± 10",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 1415275,
+            "range": "± 155119",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_new",
+            "value": 1456065,
+            "range": "± 160564",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 596412,
+            "range": "± 57616",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 4744,
+            "range": "± 22183",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 3717,
+            "range": "± 239",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 2002963,
+            "range": "± 166561",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 8393200,
+            "range": "± 504430",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 9247607,
+            "range": "± 410397",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 4956975,
+            "range": "± 283412",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 736668,
+            "range": "± 35864",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_new",
+            "value": 1445704,
+            "range": "± 112318",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 415227,
+            "range": "± 24104",
             "unit": "ns/iter"
           }
         ]
