@@ -52,9 +52,9 @@ This is useful for types like enums that can carry different types.</p>
 <span class="kw">impl</span> <span class="ident">IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Value</span> {
     <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
         <span class="kw">match</span> <span class="self">self</span> {
-            <span class="self">Self</span><span class="ident">::Integer</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">into_py</span>(<span class="ident">py</span>),
-            <span class="self">Self</span><span class="ident">::String</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">into_py</span>(<span class="ident">py</span>),
-            <span class="self">Self</span><span class="ident">::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">py</span>.<span class="prelude-val">None</span>()
+            <span class="ident"><span class="self">Self</span>::Integer</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">into_py</span>(<span class="ident">py</span>),
+            <span class="ident"><span class="self">Self</span>::String</span>(<span class="ident">val</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">val</span>.<span class="ident">into_py</span>(<span class="ident">py</span>),
+            <span class="ident"><span class="self">Self</span>::None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">py</span>.<span class="prelude-val">None</span>()
         }
    }
 }</pre></div>

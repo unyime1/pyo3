@@ -527,7 +527,7 @@
 </pre><pre class="rust">
 <span class="comment">// FFI note: this file changed a lot between 3.6 and 3.10.</span>
 <span class="comment">// Some missing definitions may not be marked &quot;skipped&quot;.</span>
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::pyport</span>::{<span class="ident">Py_hash_t</span>, <span class="ident">Py_ssize_t</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pyport</span>::{<span class="ident">Py_hash_t</span>, <span class="ident">Py_ssize_t</span>};
 <span class="kw">use</span> <span class="ident">std::mem</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_uint</span>, <span class="ident">c_ulong</span>, <span class="ident">c_void</span>};
 <span class="kw">use</span> <span class="ident">std::ptr</span>;
@@ -536,7 +536,7 @@
 <span class="macro">opaque_struct!</span>(<span class="ident">PyTypeObject</span>);
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::cpython::object::PyTypeObject</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::cpython::object::PyTypeObject</span>;
 
 <span class="comment">// _PyObject_HEAD_EXTRA: conditionally defined in PyObject_HEAD_INIT</span>
 <span class="comment">// _PyObject_EXTRA_INIT: conditionally defined in PyObject_HEAD_INIT</span>

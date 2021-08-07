@@ -750,7 +750,7 @@
         <span class="kw">fn</span> <span class="ident">test_i128_roundtrip</span>(<span class="ident">x</span>: <span class="ident">i128</span>) {
             <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">x_py</span> <span class="op">=</span> <span class="ident">x</span>.<span class="ident">into_py</span>(<span class="ident">py</span>);
-                <span class="kw">crate</span><span class="macro">::py_run!</span>(<span class="ident">py</span>, <span class="ident">x_py</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>));
+                <span class="macro">crate::py_run!</span>(<span class="ident">py</span>, <span class="ident">x_py</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>));
                 <span class="kw">let</span> <span class="ident">roundtripped</span>: <span class="ident">i128</span> <span class="op">=</span> <span class="ident">x_py</span>.<span class="ident">extract</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>();
                 <span class="macro">assert_eq!</span>(<span class="ident">x</span>, <span class="ident">roundtripped</span>);
             })
@@ -762,7 +762,7 @@
         <span class="kw">fn</span> <span class="ident">test_u128_roundtrip</span>(<span class="ident">x</span>: <span class="ident">u128</span>) {
             <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">x_py</span> <span class="op">=</span> <span class="ident">x</span>.<span class="ident">into_py</span>(<span class="ident">py</span>);
-                <span class="kw">crate</span><span class="macro">::py_run!</span>(<span class="ident">py</span>, <span class="ident">x_py</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>));
+                <span class="macro">crate::py_run!</span>(<span class="ident">py</span>, <span class="ident">x_py</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>));
                 <span class="kw">let</span> <span class="ident">roundtripped</span>: <span class="ident">u128</span> <span class="op">=</span> <span class="ident">x_py</span>.<span class="ident">extract</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>();
                 <span class="macro">assert_eq!</span>(<span class="ident">x</span>, <span class="ident">roundtripped</span>);
             })
@@ -806,7 +806,7 @@
         <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;(1 &lt;&lt; 130) * -1&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">i128</span><span class="op">&gt;</span>().<span class="ident">unwrap_err</span>();
-            <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="kw">crate</span><span class="ident">::exceptions::PyOverflowError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+            <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::exceptions::PyOverflowError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
         })
     }
 
@@ -815,15 +815,15 @@
         <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;1 &lt;&lt; 130&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">u128</span><span class="op">&gt;</span>().<span class="ident">unwrap_err</span>();
-            <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="kw">crate</span><span class="ident">::exceptions::PyOverflowError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+            <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::exceptions::PyOverflowError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
         })
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::Python</span>;
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ToPyObject</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Python</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ToPyObject</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_u32_max</span>() {
@@ -871,9 +871,9 @@
     <span class="macro">macro_rules!</span> <span class="ident">test_common</span> (
         (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">test_mod_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">t</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> (
             <span class="kw">mod</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">test_mod_name</span> {
-                <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::exceptions</span>;
-                <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ToPyObject</span>;
-                <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::Python</span>;
+                <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exceptions</span>;
+                <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ToPyObject</span>;
+                <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Python</span>;
 
                 <span class="attribute">#[<span class="ident">test</span>]</span>
                 <span class="kw">fn</span> <span class="ident">from_py_string_type_error</span>() {

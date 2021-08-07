@@ -321,10 +321,10 @@
         <span class="kw">impl</span> <span class="ident">ToPyObject</span> <span class="kw">for</span> <span class="ident">Complex</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">float</span><span class="op">&gt;</span> {
             <span class="attribute">#[<span class="ident">inline</span>]</span>
             <span class="kw">fn</span> <span class="ident">to_object</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
-                <span class="kw">crate</span><span class="ident">::IntoPy</span>::<span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span><span class="ident">::into_py</span>(<span class="self">self</span>.<span class="ident">to_owned</span>(), <span class="ident">py</span>)
+                <span class="ident"><span class="kw">crate</span>::IntoPy</span>::<span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span><span class="ident">::into_py</span>(<span class="self">self</span>.<span class="ident">to_owned</span>(), <span class="ident">py</span>)
             }
         }
-        <span class="kw">impl</span> <span class="kw">crate</span><span class="ident">::IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Complex</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">float</span><span class="op">&gt;</span> {
+        <span class="kw">impl</span> <span class="ident"><span class="kw">crate</span>::IntoPy</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Complex</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">float</span><span class="op">&gt;</span> {
             <span class="kw">fn</span> <span class="ident">into_py</span>(<span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyObject</span> {
                 <span class="kw">unsafe</span> {
                     <span class="kw">let</span> <span class="ident">raw_obj</span> <span class="op">=</span>

@@ -706,9 +706,9 @@
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::panic::PanicException</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::type_object::PyTypeObject</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types::PyType</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::panic::PanicException</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::type_object::PyTypeObject</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types::PyType</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">exceptions</span>::{<span class="self">self</span>, <span class="ident">PyBaseException</span>},
     <span class="ident">ffi</span>,
@@ -1104,7 +1104,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PyErr</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::PyException_GetCause</span>(<span class="self">self</span>.<span class="ident">pvalue</span>(<span class="ident">py</span>).<span class="ident">as_ptr</span>()) };
         <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">py</span>.<span class="ident">from_owned_ptr_or_opt</span>::<span class="op">&lt;</span><span class="ident">PyAny</span><span class="op">&gt;</span>(<span class="ident">ptr</span>) };
-        <span class="ident">obj</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="self">Self</span><span class="ident">::from_instance</span>(<span class="ident">x</span>))
+        <span class="ident">obj</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident"><span class="self">Self</span>::from_instance</span>(<span class="ident">x</span>))
     }
 
     <span class="doccomment">/// Set the cause associated with the exception, pass `None` to clear it.</span>
@@ -1271,8 +1271,8 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span><span class="ident">::PyErrState</span>;
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::exceptions</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::PyErrState</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exceptions</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PyErr</span>, <span class="ident">Python</span>};
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1291,7 +1291,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">invalid_error_type</span>() {
         <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">PyErr</span> <span class="op">=</span> <span class="ident">PyErr::new</span>::<span class="op">&lt;</span><span class="kw">crate</span><span class="ident">::types::PyString</span>, <span class="kw">_</span><span class="op">&gt;</span>(());
+            <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">PyErr</span> <span class="op">=</span> <span class="ident">PyErr::new</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::types::PyString</span>, <span class="kw">_</span><span class="op">&gt;</span>(());
             <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions::PyTypeError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
             <span class="ident">err</span>.<span class="ident">restore</span>(<span class="ident">py</span>);
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">PyErr::fetch</span>(<span class="ident">py</span>);
@@ -1306,7 +1306,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="attribute">#[<span class="ident">should_panic</span>(<span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;new panic&quot;</span>)]</span>
     <span class="kw">fn</span> <span class="ident">fetching_panic_exception_resumes_unwind</span>() {
-        <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::panic::PanicException</span>;
+        <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::panic::PanicException</span>;
 
         <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
         <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();

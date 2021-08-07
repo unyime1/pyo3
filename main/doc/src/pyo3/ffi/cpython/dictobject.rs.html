@@ -62,8 +62,8 @@
 <span id="62">62</span>
 <span id="63">63</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::object</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::pyport::Py_ssize_t</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::object</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pyport::Py_ssize_t</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw::c_int</span>;
 
 <span class="macro">opaque_struct!</span>(<span class="ident">PyDictKeysObject</span>);
@@ -88,7 +88,7 @@
         <span class="ident">mp</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
         <span class="ident">key</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
         <span class="ident">item</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">hash</span>: <span class="kw">crate</span><span class="ident">::ffi::Py_hash_t</span>,
+        <span class="ident">hash</span>: <span class="ident"><span class="kw">crate</span>::ffi::Py_hash_t</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
     <span class="comment">// skipped _PyDict_DelItem_KnownHash</span>
     <span class="comment">// skipped _PyDict_DelItemIf</span>
@@ -98,7 +98,7 @@
         <span class="ident">pos</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Py_ssize_t</span>,
         <span class="ident">key</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
         <span class="ident">value</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">hash</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">crate</span><span class="ident">::ffi::Py_hash_t</span>,
+        <span class="ident">hash</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident"><span class="kw">crate</span>::ffi::Py_hash_t</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
     <span class="comment">// skipped PyDict_GET_SIZE</span>
     <span class="comment">// skipped _PyDict_Contains_KnownHash</span>

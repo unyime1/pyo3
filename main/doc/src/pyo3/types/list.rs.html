@@ -440,8 +440,8 @@
 <span class="comment">//</span>
 <span class="comment">// based on Daniel Grunwald&#39;s https://github.com/dgrunwald/rust-cpython</span>
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::err</span>::{<span class="self">self</span>, <span class="ident">PyResult</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi</span>::{<span class="self">self</span>, <span class="ident">Py_ssize_t</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::err</span>::{<span class="self">self</span>, <span class="ident">PyResult</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi</span>::{<span class="self">self</span>, <span class="ident">Py_ssize_t</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">AsPyPointer</span>, <span class="ident">IntoPy</span>, <span class="ident">IntoPyPointer</span>, <span class="ident">PyAny</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyObject</span>, <span class="ident">Python</span>, <span class="ident">ToBorrowedObject</span>,
     <span class="ident">ToPyObject</span>,
@@ -612,7 +612,7 @@
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyAny</span>;
     <span class="kw">type</span> <span class="ident">IntoIter</span> <span class="op">=</span> <span class="ident">PyListIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::IntoIter</span> {
+    <span class="kw">fn</span> <span class="ident">into_iter</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::IntoIter</span> {
         <span class="self">self</span>.<span class="ident">iter</span>()
     }
 }
@@ -646,8 +646,8 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types::PyList</span>;
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::Python</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types::PyList</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Python</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">IntoPy</span>, <span class="ident">PyObject</span>, <span class="ident">PyTryFrom</span>, <span class="ident">ToPyObject</span>};
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -707,7 +707,7 @@
 
         <span class="kw">let</span> <span class="ident">cnt</span>;
         {
-            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw">crate</span><span class="ident">::GILPool::new</span>() };
+            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident"><span class="kw">crate</span>::GILPool::new</span>() };
             <span class="kw">let</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">2</span>];
             <span class="kw">let</span> <span class="ident">ob</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
             <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyList</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">ob</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
@@ -740,7 +740,7 @@
 
         <span class="kw">let</span> <span class="ident">cnt</span>;
         {
-            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw">crate</span><span class="ident">::GILPool::new</span>() };
+            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident"><span class="kw">crate</span>::GILPool::new</span>() };
             <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">PyList::empty</span>(<span class="ident">py</span>);
             <span class="kw">let</span> <span class="ident">none</span> <span class="op">=</span> <span class="ident">py</span>.<span class="prelude-val">None</span>();
             <span class="ident">cnt</span> <span class="op">=</span> <span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>);
@@ -767,7 +767,7 @@
 
         <span class="kw">let</span> <span class="ident">cnt</span>;
         {
-            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw">crate</span><span class="ident">::GILPool::new</span>() };
+            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident"><span class="kw">crate</span>::GILPool::new</span>() };
             <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">PyList::empty</span>(<span class="ident">py</span>);
             <span class="kw">let</span> <span class="ident">none</span> <span class="op">=</span> <span class="ident">py</span>.<span class="prelude-val">None</span>();
             <span class="ident">cnt</span> <span class="op">=</span> <span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>);

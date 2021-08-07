@@ -311,7 +311,7 @@
 <span class="doccomment">//! # if another hash table was used, the order could be random</span>
 <span class="doccomment">//! ```</span>
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">FromPyObject</span>, <span class="ident">IntoPy</span>, <span class="ident">PyErr</span>, <span class="ident">PyObject</span>, <span class="ident">PyTryFrom</span>, <span class="ident">Python</span>, <span class="ident">ToPyObject</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp</span>, <span class="ident">hash</span>};
 
@@ -359,7 +359,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test_indexmap</span> {
 
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">IntoPy</span>, <span class="ident">PyObject</span>, <span class="ident">PyTryFrom</span>, <span class="ident">Python</span>, <span class="ident">ToPyObject</span>};
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

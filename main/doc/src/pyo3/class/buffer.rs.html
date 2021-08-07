@@ -65,7 +65,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! For more information check [buffer protocol](https://docs.python.org/3/c-api/buffer.html)</span>
 <span class="doccomment">//! c-api</span>
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::callback::IntoPyCallbackOutput</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::callback::IntoPyCallbackOutput</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyRefMut</span>};
 <span class="kw">use</span> <span class="ident">std::os::raw::c_int</span>;
 
@@ -77,11 +77,11 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PyBufferProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>: <span class="ident">PyClass</span> {
     <span class="comment">// No default implementations so that implementors of this trait provide both methods.</span>
 
-    <span class="kw">fn</span> <span class="ident">bf_getbuffer</span>(<span class="ident">slf</span>: <span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">view</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Py_buffer</span>, <span class="ident">flags</span>: <span class="ident">c_int</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::Result</span>
+    <span class="kw">fn</span> <span class="ident">bf_getbuffer</span>(<span class="ident">slf</span>: <span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">view</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Py_buffer</span>, <span class="ident">flags</span>: <span class="ident">c_int</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Result</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">PyBufferGetBufferProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">bf_releasebuffer</span>(<span class="ident">slf</span>: <span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">view</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Py_buffer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::Result</span>
+    <span class="kw">fn</span> <span class="ident">bf_releasebuffer</span>(<span class="ident">slf</span>: <span class="ident">PyRefMut</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">view</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::Py_buffer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Result</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">PyBufferReleaseBufferProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>;
 }
@@ -103,7 +103,7 @@
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyBufferGetBufferProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
 {
-    <span class="kw">crate</span><span class="macro">::callback_body!</span>(<span class="ident">py</span>, {
+    <span class="macro">crate::callback_body!</span>(<span class="ident">py</span>, {
         <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
         <span class="ident">T::bf_getbuffer</span>(<span class="ident">slf</span>.<span class="ident">try_borrow_mut</span>()<span class="question-mark">?</span>, <span class="ident">arg1</span>, <span class="ident">arg2</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
     })
@@ -114,8 +114,8 @@
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyBufferReleaseBufferProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
 {
-    <span class="kw">crate</span><span class="macro">::callback_body!</span>(<span class="ident">py</span>, {
-        <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="kw">crate</span><span class="ident">::PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
+    <span class="macro">crate::callback_body!</span>(<span class="ident">py</span>, {
+        <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
         <span class="ident">T::bf_releasebuffer</span>(<span class="ident">slf</span>.<span class="ident">try_borrow_mut</span>()<span class="question-mark">?</span>, <span class="ident">arg1</span>).<span class="ident">convert</span>(<span class="ident">py</span>)
     })
 }

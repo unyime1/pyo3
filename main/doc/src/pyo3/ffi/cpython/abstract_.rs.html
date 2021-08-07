@@ -301,11 +301,11 @@
 <span id="301">301</span>
 <span id="302">302</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi</span>::{<span class="ident">PyObject</span>, <span class="ident">Py_buffer</span>, <span class="ident">Py_ssize_t</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi</span>::{<span class="ident">PyObject</span>, <span class="ident">Py_buffer</span>, <span class="ident">Py_ssize_t</span>};
 <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_void</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi</span>::{
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi</span>::{
     <span class="ident">pyport::PY_SSIZE_T_MAX</span>, <span class="ident">vectorcallfunc</span>, <span class="ident">PyCallable_Check</span>, <span class="ident">PyThreadState</span>, <span class="ident">PyThreadState_GET</span>,
     <span class="ident">PyTuple_Check</span>, <span class="ident">PyType_HasFeature</span>, <span class="ident">Py_TPFLAGS_HAVE_VECTORCALL</span>,
 };
@@ -354,7 +354,7 @@
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">PyVectorcall_Function</span>(<span class="ident">callable</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">vectorcallfunc</span><span class="op">&gt;</span> {
     <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">callable</span>.<span class="ident">is_null</span>());
-    <span class="kw">let</span> <span class="ident">tp</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::ffi::Py_TYPE</span>(<span class="ident">callable</span>);
+    <span class="kw">let</span> <span class="ident">tp</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::ffi::Py_TYPE</span>(<span class="ident">callable</span>);
     <span class="kw">if</span> <span class="ident">PyType_HasFeature</span>(<span class="ident">tp</span>, <span class="ident">Py_TPFLAGS_HAVE_VECTORCALL</span>) <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
         <span class="kw">return</span> <span class="prelude-val">None</span>;
     }
@@ -521,7 +521,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">Py_3_9</span>, <span class="ident">PyPy</span>)))]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">PyObject_CheckBuffer</span>(<span class="ident">o</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span> {
-    <span class="kw">let</span> <span class="ident">tp_as_buffer</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="kw">crate</span><span class="ident">::ffi::Py_TYPE</span>(<span class="ident">o</span>)).<span class="ident">tp_as_buffer</span>;
+    <span class="kw">let</span> <span class="ident">tp_as_buffer</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident"><span class="kw">crate</span>::ffi::Py_TYPE</span>(<span class="ident">o</span>)).<span class="ident">tp_as_buffer</span>;
     (<span class="op">!</span><span class="ident">tp_as_buffer</span>.<span class="ident">is_null</span>() <span class="op">&amp;&amp;</span> (<span class="kw-2">*</span><span class="ident">tp_as_buffer</span>).<span class="ident">bf_getbuffer</span>.<span class="ident">is_some</span>()) <span class="kw">as</span> <span class="ident">c_int</span>
 }
 

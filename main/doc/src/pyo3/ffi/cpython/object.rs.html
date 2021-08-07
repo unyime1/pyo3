@@ -385,7 +385,7 @@
 <span id="385">385</span>
 <span id="386">386</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::PyObject</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::PyObject</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw::c_int</span>;
 
 <span class="comment">// skipped _Py_NewReference</span>
@@ -399,7 +399,7 @@
 <span class="comment">// skipped _Py_IDENTIFIER</span>
 
 <span class="kw">mod</span> <span class="ident">bufferinfo</span> {
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::Py_ssize_t</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::Py_ssize_t</span>;
     <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_void</span>};
     <span class="kw">use</span> <span class="ident">std::ptr</span>;
 
@@ -411,7 +411,7 @@
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Py_buffer</span> {
         <span class="kw">pub</span> <span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_void</span>,
         <span class="doccomment">/// Owned reference</span>
-        <span class="kw">pub</span> <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">crate</span><span class="ident">::ffi::PyObject</span>,
+        <span class="kw">pub</span> <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident"><span class="kw">crate</span>::ffi::PyObject</span>,
         <span class="kw">pub</span> <span class="ident">len</span>: <span class="ident">Py_ssize_t</span>,
         <span class="kw">pub</span> <span class="ident">itemsize</span>: <span class="ident">Py_ssize_t</span>,
         <span class="kw">pub</span> <span class="ident">readonly</span>: <span class="ident">c_int</span>,
@@ -454,12 +454,12 @@
     }
 
     <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">getbufferproc</span> <span class="op">=</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(
-        <span class="ident">arg1</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">crate</span><span class="ident">::ffi::PyObject</span>,
+        <span class="ident">arg1</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident"><span class="kw">crate</span>::ffi::PyObject</span>,
         <span class="ident">arg2</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Py_buffer</span>,
         <span class="ident">arg3</span>: <span class="ident">c_int</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
     <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">releasebufferproc</span> <span class="op">=</span>
-        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(<span class="ident">arg1</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">crate</span><span class="ident">::ffi::PyObject</span>, <span class="ident">arg2</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Py_buffer</span>);
+        <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(<span class="ident">arg1</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident"><span class="kw">crate</span>::ffi::PyObject</span>, <span class="ident">arg2</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Py_buffer</span>);
 
     <span class="doccomment">/// Maximum number of dimensions</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyBUF_MAX_NDIM</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">64</span>;
@@ -493,7 +493,7 @@
     <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyBUF_WRITE</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">0x200</span>;
 }
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::bufferinfo</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::bufferinfo</span>::<span class="kw-2">*</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_8</span>)]</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">vectorcallfunc</span> <span class="op">=</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span>(
@@ -504,8 +504,8 @@
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>;
 
 <span class="kw">mod</span> <span class="ident">typeobject</span> {
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi</span>::{<span class="self">self</span>, <span class="ident">object</span>};
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi</span>::{<span class="ident">PyObject</span>, <span class="ident">Py_ssize_t</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi</span>::{<span class="self">self</span>, <span class="ident">object</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi</span>::{<span class="ident">PyObject</span>, <span class="ident">Py_ssize_t</span>};
     <span class="kw">use</span> <span class="ident">std::mem</span>;
     <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_uint</span>, <span class="ident">c_ulong</span>, <span class="ident">c_void</span>};
 
@@ -586,8 +586,8 @@
     <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Default</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyBufferProcs</span> {
-        <span class="kw">pub</span> <span class="ident">bf_getbuffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">super</span><span class="ident">::getbufferproc</span><span class="op">&gt;</span>,
-        <span class="kw">pub</span> <span class="ident">bf_releasebuffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">super</span><span class="ident">::releasebufferproc</span><span class="op">&gt;</span>,
+        <span class="kw">pub</span> <span class="ident">bf_getbuffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::getbufferproc</span><span class="op">&gt;</span>,
+        <span class="kw">pub</span> <span class="ident">bf_releasebuffer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::releasebufferproc</span><span class="op">&gt;</span>,
     }
 
     <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">printfunc</span> <span class="op">=</span>
@@ -657,7 +657,7 @@
         <span class="kw">pub</span> <span class="ident">tp_version_tag</span>: <span class="ident">c_uint</span>,
         <span class="kw">pub</span> <span class="ident">tp_finalize</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">object::destructor</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_8</span>)]</span>
-        <span class="kw">pub</span> <span class="ident">tp_vectorcall</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">super</span><span class="ident">::vectorcallfunc</span><span class="op">&gt;</span>,
+        <span class="kw">pub</span> <span class="ident">tp_vectorcall</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="kw">super</span>::vectorcallfunc</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
         <span class="kw">pub</span> <span class="ident">tp_pypy_flags</span>: <span class="ident">std::os::raw::c_long</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;COUNT_ALLOCS&quot;</span>)]</span>
@@ -705,7 +705,7 @@
 }
 
 <span class="comment">// The exported types depend on whether Py_LIMITED_API is set</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::typeobject</span>::<span class="kw-2">*</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::typeobject</span>::<span class="kw-2">*</span>;
 
 <span class="comment">// skipped _PyType_Name</span>
 <span class="comment">// skipped _PyType_Lookup</span>

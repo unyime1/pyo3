@@ -272,10 +272,10 @@
 
 <span class="doccomment">//! Utilities for a Python callable object that invokes a Rust function.</span>
 
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::err</span>::{<span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::exceptions::PyOverflowError</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi</span>::{<span class="self">self</span>, <span class="ident">Py_hash_t</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::panic::PanicException</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::err</span>::{<span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exceptions::PyOverflowError</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi</span>::{<span class="self">self</span>, <span class="ident">Py_hash_t</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::panic::PanicException</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">GILPool</span>, <span class="ident">IntoPyPointer</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">IntoPy</span>, <span class="ident">PyObject</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="ident">std::any::Any</span>;
@@ -468,7 +468,7 @@
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules!</span> <span class="ident">callback_body</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">py</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {
-        <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::callback::handle_panic</span>(<span class="op">|</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">py</span><span class="op">|</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span><span class="macro-nonterminal">::callback::convert</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">py</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>))
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::callback::handle_panic</span>(<span class="op">|</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">py</span><span class="op">|</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::callback::convert</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">py</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>))
     };
 }
 

@@ -122,7 +122,7 @@
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyGCTraverseProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
 {
-    <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::GILPool::new</span>();
+    <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::GILPool::new</span>();
     <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">python</span>();
     <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
 
@@ -147,7 +147,7 @@
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyGCClearProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
 {
-    <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="kw">crate</span><span class="ident">::GILPool::new</span>();
+    <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::GILPool::new</span>();
     <span class="kw">let</span> <span class="ident">slf</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">python</span>().<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
 
     <span class="ident">slf</span>.<span class="ident">borrow_mut</span>().<span class="ident">__clear__</span>();

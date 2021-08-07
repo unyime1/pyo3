@@ -793,12 +793,12 @@
 <span id="793">793</span>
 </pre><pre class="rust">
 <span class="doccomment">//! Includes `PyCell` implementation.</span>
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::exceptions::PyRuntimeError</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::pyclass::PyClass</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::pyclass_init::PyClassInitializer</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::pyclass_slots</span>::{<span class="ident">PyClassDict</span>, <span class="ident">PyClassWeakRef</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::type_object</span>::{<span class="ident">PyLayout</span>, <span class="ident">PySizedLayout</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types::PyAny</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exceptions::PyRuntimeError</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass::PyClass</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass_init::PyClassInitializer</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass_slots</span>::{<span class="ident">PyClassDict</span>, <span class="ident">PyClassWeakRef</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::type_object</span>::{<span class="ident">PyLayout</span>, <span class="ident">PySizedLayout</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types::PyAny</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">class::impl_::PyClassBaseType</span>, <span class="ident">class::impl_::PyClassThreadChecker</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">conversion</span>::{<span class="ident">AsPyPointer</span>, <span class="ident">FromPyPointer</span>, <span class="ident">ToPyObject</span>},
@@ -1340,9 +1340,9 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw">crate</span><span class="ident">::PyRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident"><span class="kw">crate</span>::PyRef</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">PyBorrowError</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">cell</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw">crate</span><span class="ident">::PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span><span class="ident">::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">cell</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident"><span class="kw">crate</span>::PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="ident">cell</span>.<span class="ident">try_borrow</span>()
     }
 }
@@ -1444,9 +1444,9 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="kw">crate</span><span class="ident">::PyRefMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span> <span class="ident">std::convert::TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident"><span class="kw">crate</span>::PyRefMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">PyBorrowMutError</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">cell</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw">crate</span><span class="ident">::PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span><span class="ident">::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">cell</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident"><span class="kw">crate</span>::PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="ident">cell</span>.<span class="ident">try_borrow_mut</span>()
     }
 }

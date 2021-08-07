@@ -203,9 +203,9 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::PyFloat_AS_DOUBLE</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::PyFloat_AS_DOUBLE</span>;
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::AsPyPointer</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::AsPyPointer</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Python</span>, <span class="ident">ToPyObject</span>};
 
     <span class="macro">macro_rules!</span> <span class="ident">num_to_py_object_and_back</span> (

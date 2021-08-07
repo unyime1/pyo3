@@ -265,7 +265,7 @@ assert value == 3</pre></div></div></details><details class="rustdoc-toggle meth
 <div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types</span>::{<span class="ident">PyDict</span>, <span class="ident">PyList</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::pyo3::types::IntoPyDict</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyo3::types::IntoPyDict</span>;
 
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">PyList::new</span>(<span class="ident">py</span>, <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>]);

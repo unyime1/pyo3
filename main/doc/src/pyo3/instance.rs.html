@@ -901,11 +901,11 @@
 <span id="901">901</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::conversion</span>::{<span class="ident">PyTryFrom</span>, <span class="ident">ToBorrowedObject</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::err</span>::{<span class="ident">PyDowncastError</span>, <span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::gil</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::pycell</span>::{<span class="ident">PyBorrowError</span>, <span class="ident">PyBorrowMutError</span>, <span class="ident">PyCell</span>};
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types</span>::{<span class="ident">PyDict</span>, <span class="ident">PyTuple</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::conversion</span>::{<span class="ident">PyTryFrom</span>, <span class="ident">ToBorrowedObject</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::err</span>::{<span class="ident">PyDowncastError</span>, <span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::gil</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pycell</span>::{<span class="ident">PyBorrowError</span>, <span class="ident">PyBorrowMutError</span>, <span class="ident">PyCell</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types</span>::{<span class="ident">PyDict</span>, <span class="ident">PyTuple</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">FromPyObject</span>, <span class="ident">IntoPy</span>, <span class="ident">IntoPyPointer</span>, <span class="ident">PyAny</span>, <span class="ident">PyClass</span>, <span class="ident">PyClassInitializer</span>,
     <span class="ident">PyRef</span>, <span class="ident">PyRefMut</span>, <span class="ident">PyTypeInfo</span>, <span class="ident">Python</span>, <span class="ident">ToPyObject</span>,
@@ -1503,7 +1503,7 @@
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_owned_ptr</span>(<span class="ident">py</span>: <span class="ident">Python</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">NonNull::new</span>(<span class="ident">ptr</span>) {
             <span class="prelude-val">Some</span>(<span class="ident">nonnull_ptr</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Py</span>(<span class="ident">nonnull_ptr</span>, <span class="ident">PhantomData</span>),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">crate</span><span class="ident">::err::panic_after_error</span>(<span class="ident">py</span>),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="kw">crate</span>::err::panic_after_error</span>(<span class="ident">py</span>),
         }
     }
 
@@ -1541,9 +1541,9 @@
     <span class="doccomment">/// Panics if `ptr` is null.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_borrowed_ptr</span>(<span class="ident">py</span>: <span class="ident">Python</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">Self</span><span class="ident">::from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>) {
+        <span class="kw">match</span> <span class="ident"><span class="self">Self</span>::from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>) {
             <span class="prelude-val">Some</span>(<span class="ident">slf</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">slf</span>,
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">crate</span><span class="ident">::err::panic_after_error</span>(<span class="ident">py</span>),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="kw">crate</span>::err::panic_after_error</span>(<span class="ident">py</span>),
         }
     }
 
@@ -1555,7 +1555,7 @@
     <span class="doccomment">/// `ptr` must be a pointer to a Python object of type T.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_borrowed_ptr_or_err</span>(<span class="ident">py</span>: <span class="ident">Python</span>, <span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="self">Self</span><span class="ident">::from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">PyErr::fetch</span>(<span class="ident">py</span>))
+        <span class="ident"><span class="self">Self</span>::from_borrowed_ptr_or_opt</span>(<span class="ident">py</span>, <span class="ident">ptr</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">PyErr::fetch</span>(<span class="ident">py</span>))
     }
 
     <span class="doccomment">/// Create a `Py&lt;T&gt;` instance by creating a new reference from the given FFI pointer.</span>
@@ -1638,7 +1638,7 @@
 {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="kw">unsafe</span> { <span class="self">Self</span><span class="ident">::from_non_null</span>(<span class="ident">other</span>.<span class="ident">into_non_null</span>()) }
+        <span class="kw">unsafe</span> { <span class="ident"><span class="self">Self</span>::from_non_null</span>(<span class="ident">other</span>.<span class="ident">into_non_null</span>()) }
     }
 }
 
@@ -1764,7 +1764,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Py</span>, <span class="ident">PyObject</span>};
-    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::types::PyDict</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types::PyDict</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">Python</span>};
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

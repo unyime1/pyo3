@@ -321,8 +321,8 @@
 <span id="321">321</span>
 <span id="322">322</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::object</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">crate</span><span class="ident">::ffi::pyport::Py_ssize_t</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::object</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pyport::Py_ssize_t</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>};
 <span class="kw">use</span> <span class="ident">std::ptr</span>;
 
@@ -417,10 +417,10 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">PyPy</span>)))]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">PyIter_Check</span>(<span class="ident">o</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span> {
-    (<span class="kw">match</span> (<span class="kw-2">*</span><span class="kw">crate</span><span class="ident">::ffi::Py_TYPE</span>(<span class="ident">o</span>)).<span class="ident">tp_iternext</span> {
+    (<span class="kw">match</span> (<span class="kw-2">*</span><span class="ident"><span class="kw">crate</span>::ffi::Py_TYPE</span>(<span class="ident">o</span>)).<span class="ident">tp_iternext</span> {
         <span class="prelude-val">Some</span>(<span class="ident">tp_iternext</span>) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="ident">tp_iternext</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">std::os::raw::c_void</span>
-                <span class="op">!</span><span class="op">=</span> <span class="kw">crate</span><span class="ident">::ffi::_PyObject_NextNotImplemented</span> <span class="kw">as</span> <span class="kw">_</span>
+                <span class="op">!</span><span class="op">=</span> <span class="ident"><span class="kw">crate</span>::ffi::_PyObject_NextNotImplemented</span> <span class="kw">as</span> <span class="kw">_</span>
         }
         <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
     }) <span class="kw">as</span> <span class="ident">c_int</span>
