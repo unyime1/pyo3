@@ -4846,6 +4846,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Fix incorrect calculation of <code>dictoffset</code> on 32-bit Windows. <a href="https://github.com/PyO3/pyo3/pull/1475">#1475</a></li>
 <li>Fix regression in 0.13.2 leading to linking to incorrect Python library on Windows &quot;gnu&quot; targets. <a href="https://github.com/PyO3/pyo3/pull/1759">#1759</a></li>
 <li>Fix compiler warning: deny trailing semicolons in expression macro. <a href="https://github.com/PyO3/pyo3/pull/1762">#1762</a></li>
+<li>Fix incorrect FFI definition of <code>Py_DecodeLocale</code>. The 2nd argument is now <code>*mut Py_ssize_t</code> instead of <code>Py_ssize_t</code>. <a href="https://github.com/PyO3/pyo3/pull/1766">#1766</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0140v01410141a---2021-07-04"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0140v01410141a---2021-07-04"><a href="https://github.com/pyo3/pyo3/compare/v0.14.0...v0.14.1">0.14.1</a> - 2021-07-04</a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
