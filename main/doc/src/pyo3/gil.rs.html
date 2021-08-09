@@ -804,6 +804,27 @@
 <span id="804">804</span>
 <span id="805">805</span>
 <span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -1048,6 +1069,15 @@
             }
         }
 
+        <span class="ident"><span class="self">Self</span>::acquire_unchecked</span>()
+    }
+
+    <span class="doccomment">/// Acquires the `GILGuard` without performing any state checking.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This can be called in &quot;unsafe&quot; contexts where the normal interpreter state</span>
+    <span class="doccomment">/// checking performed by `GILGuard::acquire` may fail. This includes calling</span>
+    <span class="doccomment">/// as part of multi-phase interpreter initialization.</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">acquire_unchecked</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GILGuard</span> {
         <span class="kw">let</span> <span class="ident">gstate</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::PyGILState_Ensure</span>() }; <span class="comment">// acquire GIL</span>
 
         <span class="comment">// If there&#39;s already a GILPool, we should not create another or this could lead to</span>
@@ -1279,6 +1309,18 @@
         <span class="ident">EnsureGIL</span>(<span class="prelude-val">None</span>)
     } <span class="kw">else</span> {
         <span class="ident">EnsureGIL</span>(<span class="prelude-val">Some</span>(<span class="ident">GILGuard::acquire</span>()))
+    }
+}
+
+<span class="doccomment">/// Ensures the GIL is held, without interpreter state checking.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This bypasses interpreter state checking that would normally be performed</span>
+<span class="doccomment">/// before acquiring the GIL.</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">ensure_gil_unchecked</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">EnsureGIL</span> {
+    <span class="kw">if</span> <span class="ident">gil_is_acquired</span>() {
+        <span class="ident">EnsureGIL</span>(<span class="prelude-val">None</span>)
+    } <span class="kw">else</span> {
+        <span class="ident">EnsureGIL</span>(<span class="prelude-val">Some</span>(<span class="ident">GILGuard::acquire_unchecked</span>()))
     }
 }
 

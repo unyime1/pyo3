@@ -781,6 +781,31 @@
 <span id="781">781</span>
 <span id="782">782</span>
 <span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -943,6 +968,31 @@
         <span class="ident">F</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">FnOnce</span>(<span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>,
     {
         <span class="ident">f</span>(<span class="kw">unsafe</span> { <span class="ident">gil::ensure_gil</span>().<span class="ident">python</span>() })
+    }
+
+    <span class="doccomment">/// Like [Python::with_gil] except Python interpreter state checking is skipped.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Normally when the GIL is acquired, we check that the Python interpreter is an</span>
+    <span class="doccomment">/// appropriate state (e.g. it is fully initialized). This function skips those</span>
+    <span class="doccomment">/// checks.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Safety</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If [Python::with_gil] would succeed, it is safe to call this function.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// In most cases, you should use [Python::with_gil].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A justified scenario for calling this function is during multi-phase interpreter</span>
+    <span class="doccomment">/// initialization when [Python::with_gil] would fail before `_Py_InitializeMain()`</span>
+    <span class="doccomment">/// is called because the interpreter is only partially initialized.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Behavior in other scenarios is not documented.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">with_gil_unchecked</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">f</span>: <span class="ident">F</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">FnOnce</span>(<span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span>,
+    {
+        <span class="ident">f</span>(<span class="ident">gil::ensure_gil_unchecked</span>().<span class="ident">python</span>())
     }
 }
 
