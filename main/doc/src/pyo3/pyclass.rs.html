@@ -453,7 +453,7 @@
 
     <span class="kw">let</span> <span class="ident">type_object</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::PyType_FromSpec</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">spec</span>) };
     <span class="kw">if</span> <span class="ident">type_object</span>.<span class="ident">is_null</span>() {
-        <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">py</span>))
+        <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">py</span>))
     } <span class="kw">else</span> {
         <span class="ident">tp_init_additional</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">type_object</span> <span class="kw">as</span> <span class="kw">_</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">type_object</span> <span class="kw">as</span> <span class="kw">_</span>)

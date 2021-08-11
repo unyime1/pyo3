@@ -462,7 +462,7 @@
             <span class="kw">if</span> <span class="ident">result</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="prelude-val">Ok</span>(())
             } <span class="kw">else</span> {
-                <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="self">self</span>.<span class="ident">py</span>()))
+                <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="self">self</span>.<span class="ident">py</span>()))
             }
         }
     }

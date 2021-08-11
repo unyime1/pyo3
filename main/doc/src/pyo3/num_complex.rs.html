@@ -340,7 +340,7 @@
                 <span class="kw">unsafe</span> {
                     <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">ffi::PyComplex_AsCComplex</span>(<span class="ident">obj</span>.<span class="ident">as_ptr</span>());
                     <span class="kw">if</span> <span class="ident">val</span>.<span class="ident">real</span> <span class="op">=</span><span class="op">=</span> <span class="op">-</span><span class="number">1.0</span> <span class="op">&amp;&amp;</span> <span class="ident">PyErr::occurred</span>(<span class="ident">obj</span>.<span class="ident">py</span>()) {
-                        <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">obj</span>.<span class="ident">py</span>()))
+                        <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">obj</span>.<span class="ident">py</span>()))
                     } <span class="kw">else</span> {
                         <span class="prelude-val">Ok</span>(<span class="ident">Complex::new</span>(<span class="ident">val</span>.<span class="ident">real</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">float</span>, <span class="ident">val</span>.<span class="ident">imag</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">float</span>))
                     }
@@ -355,7 +355,7 @@
                     <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">as_ptr</span>();
                     <span class="kw">let</span> <span class="ident">real</span> <span class="op">=</span> <span class="ident">ffi::PyComplex_RealAsDouble</span>(<span class="ident">ptr</span>);
                     <span class="kw">if</span> <span class="ident">real</span> <span class="op">=</span><span class="op">=</span> <span class="op">-</span><span class="number">1.0</span> <span class="op">&amp;&amp;</span> <span class="ident">PyErr::occurred</span>(<span class="ident">obj</span>.<span class="ident">py</span>()) {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">obj</span>.<span class="ident">py</span>()));
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">obj</span>.<span class="ident">py</span>()));
                     }
                     <span class="kw">let</span> <span class="ident">imag</span> <span class="op">=</span> <span class="ident">ffi::PyComplex_ImagAsDouble</span>(<span class="ident">ptr</span>);
                     <span class="prelude-val">Ok</span>(<span class="ident">Complex::new</span>(<span class="ident">real</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">float</span>, <span class="ident">imag</span> <span class="kw">as</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">float</span>))

@@ -226,8 +226,6 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="doccomment">//! Python type object information</span>
@@ -238,7 +236,7 @@
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass::PyClass</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types</span>::{<span class="ident">PyAny</span>, <span class="ident">PyType</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">conversion::IntoPyPointer</span>, <span class="ident">PyMethodDefType</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">PyErr</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="ident">parking_lot</span>::{<span class="ident">const_mutex</span>, <span class="ident">Mutex</span>};
 <span class="kw">use</span> <span class="ident">std::thread</span>::{<span class="self">self</span>, <span class="ident">ThreadId</span>};
 
@@ -421,9 +419,7 @@
     <span class="comment">// the POV of other threads.</span>
     <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">val</span>) <span class="kw">in</span> <span class="ident">items</span> {
         <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">ffi::PyObject_SetAttrString</span>(<span class="ident">type_object</span>, <span class="ident">key</span>.<span class="ident">as_ptr</span>(), <span class="ident">val</span>.<span class="ident">into_ptr</span>()) };
-        <span class="kw">if</span> <span class="ident">ret</span> <span class="op">&lt;</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">py</span>));
-        }
+        <span class="ident"><span class="kw">crate</span>::err::error_on_minusone</span>(<span class="ident">py</span>, <span class="ident">ret</span>)<span class="question-mark">?</span>;
     }
     <span class="prelude-val">Ok</span>(())
 }

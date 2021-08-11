@@ -999,7 +999,7 @@
             <span class="ident">e</span>.<span class="ident">restore</span>(<span class="ident">py</span>);
 
             <span class="macro">assert_eq!</span>(
-                <span class="ident">PyErr::fetch</span>(<span class="ident">py</span>).<span class="ident">to_string</span>(),
+                <span class="ident">PyErr::api_call_failed</span>(<span class="ident">py</span>).<span class="ident">to_string</span>(),
                 <span class="string">&quot;UnicodeDecodeError: \&#39;utf-8\&#39; codec can\&#39;t decode byte 0xd8 in position 2: invalid utf-8&quot;</span>
             );
         });

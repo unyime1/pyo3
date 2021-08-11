@@ -277,7 +277,7 @@
             <span class="prelude-val">Some</span>(<span class="ident">obj</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">obj</span>)),
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="ident">PyErr::occurred</span>(<span class="ident">py</span>) {
-                    <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">py</span>)))
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">py</span>)))
                 } <span class="kw">else</span> {
                     <span class="prelude-val">None</span>
                 }

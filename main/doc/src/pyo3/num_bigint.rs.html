@@ -406,11 +406,11 @@
                 <span class="kw">unsafe</span> {
                     <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">ffi::PyNumber_Index</span>(<span class="ident">ob</span>.<span class="ident">as_ptr</span>());
                     <span class="kw">if</span> <span class="ident">num</span>.<span class="ident">is_null</span>() {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">py</span>));
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">py</span>));
                     }
                     <span class="kw">let</span> <span class="ident">n_bits</span> <span class="op">=</span> <span class="ident">ffi::_PyLong_NumBits</span>(<span class="ident">num</span>);
                     <span class="kw">let</span> <span class="ident">n_bytes</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">n_bits</span> <span class="op">&lt;</span> <span class="number">0</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">py</span>));
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">py</span>));
                     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">n_bits</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
                         <span class="number">0</span>
                     } <span class="kw">else</span> {
