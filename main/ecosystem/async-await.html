@@ -310,7 +310,9 @@ to do something special with the object that it returns.</p>
 coroutine in Rust, we first need to convert it into Rust's version of a <code>coroutine</code>: a <code>Future</code>.
 That's where <code>pyo3-asyncio</code> comes in.
 <a href="https://docs.rs/pyo3-asyncio/latest/pyo3_asyncio/fn.into_future.html"><code>pyo3_asyncio::into_future</code></a>
-performs this conversion for us:</p>
+performs this conversion for us.</p>
+<p>The following example uses <code>into_future</code> to call the <code>py_sleep</code> function shown above and then await the
+coroutine object returned from the call:</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 
 #[pyo3_asyncio::tokio::main]
@@ -334,6 +336,57 @@ async fn main() -&gt; PyResult&lt;()&gt; {
     Ok(())
 }
 </code></pre></pre>
+<p>Alternatively, the below example shows how to write a <code>#[pyfunction]</code> which uses <code>into_future</code> to receive and await
+a coroutine argument:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[pyfunction]
+fn await_coro(coro: &amp;PyAny) -&gt; PyResult&lt;()&gt; {
+    // convert the coroutine into a Rust future using the
+    // async_std runtime
+    let f = pyo3_asyncio::async_std::into_future(coro)?;
+
+    pyo3_asyncio::async_std::run_until_complete(coro.py(), async move {
+        // await the future
+        f.await?;
+        Ok(())
+    })
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>This could be called from Python as:</p>
+<pre><code class="language-python">import asyncio
+
+async def py_sleep():
+    asyncio.sleep(1)
+
+await_coro(py_sleep())
+</code></pre>
+<p>If for you wanted to pass a callable function to the <code>#[pyfunction]</code> instead, (i.e. the last line becomes <code>await_coro(py_sleep))</code>, then the above example needs to be tweaked to first call the callable to get the coroutine:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[pyfunction]
+fn await_coro(callable: &amp;PyAny) -&gt; PyResult&lt;()&gt; {
+    // get the coroutine by calling the callable
+    let coro = callable.call0()?;
+
+    // convert the coroutine into a Rust future using the
+    // async_std runtime
+    let f = pyo3_asyncio::async_std::into_future(coro)?;
+
+    pyo3_asyncio::async_std::run_until_complete(coro.py(), async move {
+        // await the future
+        f.await?;
+        Ok(())
+    })
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>This can be particularly helpful where you need to repeatedly create and await a coroutine. Trying to await the same coroutine multiple times will raise an error:</p>
+<pre><code class="language-python">RuntimeError: cannot reuse already awaited coroutine
+</code></pre>
 <blockquote>
 <p>If you're interested in learning more about <code>coroutines</code> and <code>awaitables</code> in general, check out the
 <a href="https://docs.python.org/3/library/asyncio-task.html">Python 3 <code>asyncio</code> docs</a> for more information.</p>
