@@ -210,11 +210,6 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
-<span id="213">213</span>
-<span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -325,65 +320,62 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">vec_iter</span>() {
-        <span class="kw">let</span> <span class="ident">gil_guard</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil_guard</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>].<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">inst</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">iter</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="number">10</span>, <span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>().<span class="ident">unwrap</span>());
-        <span class="macro">assert_eq!</span>(<span class="number">20</span>, <span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>().<span class="ident">unwrap</span>());
-        <span class="macro">assert!</span>(<span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>].<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">inst</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">iter</span>().<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq!</span>(<span class="number">10</span>, <span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>().<span class="ident">unwrap</span>());
+            <span class="macro">assert_eq!</span>(<span class="number">20</span>, <span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>().<span class="ident">unwrap</span>());
+            <span class="macro">assert!</span>(<span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">is_none</span>());
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">iter_refcnt</span>() {
-        <span class="kw">let</span> <span class="ident">obj</span>;
-        <span class="kw">let</span> <span class="ident">count</span>;
-        {
-            <span class="kw">let</span> <span class="ident">gil_guard</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-            <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil_guard</span>.<span class="ident">python</span>();
-            <span class="ident">obj</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>].<span class="ident">to_object</span>(<span class="ident">py</span>);
-            <span class="ident">count</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>);
-        }
+        <span class="kw">let</span> (<span class="ident">obj</span>, <span class="ident">count</span>) <span class="op">=</span> <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>].<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>);
+            (<span class="ident">obj</span>, <span class="ident">count</span>)
+        });
 
-        {
-            <span class="kw">let</span> <span class="ident">gil_guard</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-            <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil_guard</span>.<span class="ident">python</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">inst</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">iter</span>().<span class="ident">unwrap</span>();
 
             <span class="macro">assert_eq!</span>(<span class="number">10</span>, <span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>().<span class="ident">unwrap</span>());
-        }
-        <span class="macro">assert_eq!</span>(<span class="ident">count</span>, <span class="ident">obj</span>.<span class="ident">get_refcnt</span>(<span class="ident">Python::acquire_gil</span>().<span class="ident">python</span>()));
+        });
+
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="macro">assert_eq!</span>(<span class="ident">count</span>, <span class="ident">obj</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>));
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">iter_item_refcnt</span>() {
-        <span class="kw">let</span> <span class="ident">gil_guard</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil_guard</span>.<span class="ident">python</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span>;
+            <span class="kw">let</span> <span class="ident">none</span>;
+            <span class="kw">let</span> <span class="ident">count</span>;
+            {
+                <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">GILPool::new</span>() };
+                <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">PyList::empty</span>(<span class="ident">py</span>);
+                <span class="ident">none</span> <span class="op">=</span> <span class="ident">py</span>.<span class="prelude-val">None</span>();
+                <span class="ident">l</span>.<span class="ident">append</span>(<span class="number">10</span>).<span class="ident">unwrap</span>();
+                <span class="ident">l</span>.<span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="ident">none</span>).<span class="ident">unwrap</span>();
+                <span class="ident">count</span> <span class="op">=</span> <span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>);
+                <span class="ident">obj</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            }
 
-        <span class="kw">let</span> <span class="ident">obj</span>;
-        <span class="kw">let</span> <span class="ident">none</span>;
-        <span class="kw">let</span> <span class="ident">count</span>;
-        {
-            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">GILPool::new</span>() };
-            <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">PyList::empty</span>(<span class="ident">py</span>);
-            <span class="ident">none</span> <span class="op">=</span> <span class="ident">py</span>.<span class="prelude-val">None</span>();
-            <span class="ident">l</span>.<span class="ident">append</span>(<span class="number">10</span>).<span class="ident">unwrap</span>();
-            <span class="ident">l</span>.<span class="ident">append</span>(<span class="kw-2">&amp;</span><span class="ident">none</span>).<span class="ident">unwrap</span>();
-            <span class="ident">count</span> <span class="op">=</span> <span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>);
-            <span class="ident">obj</span> <span class="op">=</span> <span class="ident">l</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        }
+            {
+                <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">GILPool::new</span>() };
+                <span class="kw">let</span> <span class="ident">inst</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>);
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">iter</span>().<span class="ident">unwrap</span>();
 
-        {
-            <span class="kw">let</span> <span class="ident">_pool</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">GILPool::new</span>() };
-            <span class="kw">let</span> <span class="ident">inst</span> <span class="op">=</span> <span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>);
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">it</span> <span class="op">=</span> <span class="ident">inst</span>.<span class="ident">iter</span>().<span class="ident">unwrap</span>();
-
-            <span class="macro">assert_eq!</span>(<span class="number">10</span>, <span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>().<span class="ident">unwrap</span>());
-            <span class="macro">assert!</span>(<span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">is_none</span>());
-        }
-        <span class="macro">assert_eq!</span>(<span class="ident">count</span>, <span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>));
+                <span class="macro">assert_eq!</span>(<span class="number">10</span>, <span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>().<span class="ident">unwrap</span>());
+                <span class="macro">assert!</span>(<span class="ident">it</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">is_none</span>());
+            }
+            <span class="macro">assert_eq!</span>(<span class="ident">count</span>, <span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>));
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -399,38 +391,36 @@
         &quot;#</span>
         );
 
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
+            <span class="ident">py</span>.<span class="ident">run</span>(<span class="ident">fibonacci_generator</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">context</span>)).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
-        <span class="ident">py</span>.<span class="ident">run</span>(<span class="ident">fibonacci_generator</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">context</span>)).<span class="ident">unwrap</span>();
-
-        <span class="kw">let</span> <span class="ident">generator</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;fibonacci(5)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">context</span>)).<span class="ident">unwrap</span>();
-        <span class="kw">for</span> (<span class="ident">actual</span>, <span class="ident">expected</span>) <span class="kw">in</span> <span class="ident">generator</span>.<span class="ident">iter</span>().<span class="ident">unwrap</span>().<span class="ident">zip</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>]) {
-            <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">actual</span>.<span class="ident">unwrap</span>().<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">actual</span>, <span class="kw-2">*</span><span class="ident">expected</span>)
-        }
+            <span class="kw">let</span> <span class="ident">generator</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;fibonacci(5)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">context</span>)).<span class="ident">unwrap</span>();
+            <span class="kw">for</span> (<span class="ident">actual</span>, <span class="ident">expected</span>) <span class="kw">in</span> <span class="ident">generator</span>.<span class="ident">iter</span>().<span class="ident">unwrap</span>().<span class="ident">zip</span>(<span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>]) {
+                <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="ident">actual</span>.<span class="ident">unwrap</span>().<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+                <span class="macro">assert_eq!</span>(<span class="ident">actual</span>, <span class="kw-2">*</span><span class="ident">expected</span>)
+            }
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">int_not_iterable</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">5</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">PyIterator::from_object</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span><span class="ident">x</span>).<span class="ident">unwrap_err</span>();
 
-        <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">5</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">PyIterator::from_object</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span><span class="ident">x</span>).<span class="ident">unwrap_err</span>();
-
-        <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyTypeError</span><span class="op">&gt;</span>(<span class="ident">py</span>))
+            <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyTypeError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>), <span class="ident">Py_3_8</span>))]</span>
     <span class="kw">fn</span> <span class="ident">iterator_try_from</span>() {
-        <span class="kw">let</span> <span class="ident">gil_guard</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil_guard</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyAny</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">as_ref</span>(<span class="ident">py</span>).<span class="ident">iter</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>();
-        <span class="kw">let</span> <span class="ident">iter</span>: <span class="kw-2">&amp;</span><span class="ident">PyIterator</span> <span class="op">=</span> <span class="ident">PyIterator::try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">obj</span>, <span class="ident">iter</span>.<span class="ident">into</span>());
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span>: <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyAny</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">10</span>, <span class="number">20</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">as_ref</span>(<span class="ident">py</span>).<span class="ident">iter</span>().<span class="ident">unwrap</span>().<span class="ident">into</span>();
+            <span class="kw">let</span> <span class="ident">iter</span>: <span class="kw-2">&amp;</span><span class="ident">PyIterator</span> <span class="op">=</span> <span class="ident">PyIterator::try_from</span>(<span class="ident">obj</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq!</span>(<span class="ident">obj</span>, <span class="ident">iter</span>.<span class="ident">into</span>());
+        });
     }
 }
 </pre></div>

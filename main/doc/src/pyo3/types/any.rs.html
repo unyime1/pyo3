@@ -782,7 +782,6 @@
 <span id="782">782</span>
 <span id="783">783</span>
 <span id="784">784</span>
-<span id="785">785</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::class::basic::CompareOp</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::conversion</span>::{
@@ -1480,23 +1479,23 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_call_for_non_existing_method</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;42&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-        <span class="ident">a</span>.<span class="ident">call_method0</span>(<span class="string">&quot;__str__&quot;</span>).<span class="ident">unwrap</span>(); <span class="comment">// ok</span>
-        <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">call_method</span>(<span class="string">&quot;nonexistent_method&quot;</span>, (<span class="number">1</span>,), <span class="prelude-val">None</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">call_method0</span>(<span class="string">&quot;nonexistent_method&quot;</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">call_method1</span>(<span class="string">&quot;nonexistent_method&quot;</span>, (<span class="number">1</span>,)).<span class="ident">is_err</span>());
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;42&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+            <span class="ident">a</span>.<span class="ident">call_method0</span>(<span class="string">&quot;__str__&quot;</span>).<span class="ident">unwrap</span>(); <span class="comment">// ok</span>
+            <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">call_method</span>(<span class="string">&quot;nonexistent_method&quot;</span>, (<span class="number">1</span>,), <span class="prelude-val">None</span>).<span class="ident">is_err</span>());
+            <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">call_method0</span>(<span class="string">&quot;nonexistent_method&quot;</span>).<span class="ident">is_err</span>());
+            <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">call_method1</span>(<span class="string">&quot;nonexistent_method&quot;</span>, (<span class="number">1</span>,)).<span class="ident">is_err</span>());
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_call_with_kwargs</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>].<span class="ident">to_object</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="string">&quot;reverse&quot;</span>, <span class="bool-val">true</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>);
-        <span class="ident">list</span>.<span class="ident">call_method</span>(<span class="ident">py</span>, <span class="string">&quot;sort&quot;</span>, (), <span class="prelude-val">Some</span>(<span class="ident">dict</span>)).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>(), <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>]);
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>].<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="string">&quot;reverse&quot;</span>, <span class="bool-val">true</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>);
+            <span class="ident">list</span>.<span class="ident">call_method</span>(<span class="ident">py</span>, <span class="string">&quot;sort&quot;</span>, (), <span class="prelude-val">Some</span>(<span class="ident">dict</span>)).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq!</span>(<span class="ident">list</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">i32</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>(), <span class="macro">vec!</span>[<span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>]);
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1525,48 +1524,47 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_type</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;42&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">obj</span>.<span class="ident">get_type</span>().<span class="ident">as_type_ptr</span>(), <span class="ident">obj</span>.<span class="ident">get_type_ptr</span>())
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;42&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq!</span>(<span class="ident">obj</span>.<span class="ident">get_type</span>().<span class="ident">as_type_ptr</span>(), <span class="ident">obj</span>.<span class="ident">get_type_ptr</span>());
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_dir</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;42&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">eval</span>(<span class="string">&quot;dir(42)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">PyList</span><span class="op">&gt;</span>()
-            .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">obj</span>
-            .<span class="ident">dir</span>()
-            .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">dir</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
-        <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">eq</span>(<span class="ident">b</span>));
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;42&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">dir</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">eval</span>(<span class="string">&quot;dir(42)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+                .<span class="ident">unwrap</span>()
+                .<span class="ident">downcast</span>::<span class="op">&lt;</span><span class="ident">PyList</span><span class="op">&gt;</span>()
+                .<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">obj</span>
+                .<span class="ident">dir</span>()
+                .<span class="ident">into_iter</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
+            <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">dir</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> <span class="ident">x</span>.<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
+            <span class="macro">assert!</span>(<span class="ident">a</span>.<span class="ident">eq</span>(<span class="ident">b</span>));
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_nan_eq</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">nan</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;float(&#39;nan&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert!</span>(<span class="ident">nan</span>.<span class="ident">compare</span>(<span class="ident">nan</span>).<span class="ident">is_err</span>());
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">nan</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;float(&#39;nan&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+            <span class="macro">assert!</span>(<span class="ident">nan</span>.<span class="ident">compare</span>(<span class="ident">nan</span>).<span class="ident">is_err</span>());
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_any_isinstance</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">5</span>.<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
+            <span class="macro">assert!</span>(<span class="ident">x</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyLong</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
 
-        <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="number">5</span>.<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
-        <span class="macro">assert!</span>(<span class="ident">x</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyLong</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
-
-        <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">x</span>, <span class="ident">x</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
-        <span class="macro">assert!</span>(<span class="ident">l</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyList</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
+            <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">x</span>, <span class="ident">x</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
+            <span class="macro">assert!</span>(<span class="ident">l</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyList</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
+        });
     }
 }
 </pre></div>

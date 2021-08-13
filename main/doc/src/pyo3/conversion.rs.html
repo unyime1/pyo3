@@ -1140,39 +1140,39 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_try_from</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">dict</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="string">&quot;reverse&quot;</span>, <span class="bool-val">true</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>).<span class="ident">as_ref</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">dict</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="string">&quot;reverse&quot;</span>, <span class="bool-val">true</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>).<span class="ident">as_ref</span>();
 
-        <span class="macro">assert!</span>(<span class="ident">PyList::try_from</span>(<span class="ident">list</span>).<span class="ident">is_ok</span>());
-        <span class="macro">assert!</span>(<span class="ident">PyDict::try_from</span>(<span class="ident">dict</span>).<span class="ident">is_ok</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyList::try_from</span>(<span class="ident">list</span>).<span class="ident">is_ok</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyDict::try_from</span>(<span class="ident">dict</span>).<span class="ident">is_ok</span>());
 
-        <span class="macro">assert!</span>(<span class="ident">PyAny::try_from</span>(<span class="ident">list</span>).<span class="ident">is_ok</span>());
-        <span class="macro">assert!</span>(<span class="ident">PyAny::try_from</span>(<span class="ident">dict</span>).<span class="ident">is_ok</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyAny::try_from</span>(<span class="ident">list</span>).<span class="ident">is_ok</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyAny::try_from</span>(<span class="ident">dict</span>).<span class="ident">is_ok</span>());
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_try_from_exact</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">dict</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="string">&quot;reverse&quot;</span>, <span class="bool-val">true</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>).<span class="ident">as_ref</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="number">3</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>].<span class="ident">to_object</span>(<span class="ident">py</span>).<span class="ident">into_ref</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">dict</span>: <span class="kw-2">&amp;</span><span class="ident">PyAny</span> <span class="op">=</span> <span class="macro">vec!</span>[(<span class="string">&quot;reverse&quot;</span>, <span class="bool-val">true</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>).<span class="ident">as_ref</span>();
 
-        <span class="macro">assert!</span>(<span class="ident">PyList::try_from_exact</span>(<span class="ident">list</span>).<span class="ident">is_ok</span>());
-        <span class="macro">assert!</span>(<span class="ident">PyDict::try_from_exact</span>(<span class="ident">dict</span>).<span class="ident">is_ok</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyList::try_from_exact</span>(<span class="ident">list</span>).<span class="ident">is_ok</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyDict::try_from_exact</span>(<span class="ident">dict</span>).<span class="ident">is_ok</span>());
 
-        <span class="macro">assert!</span>(<span class="ident">PyAny::try_from_exact</span>(<span class="ident">list</span>).<span class="ident">is_err</span>());
-        <span class="macro">assert!</span>(<span class="ident">PyAny::try_from_exact</span>(<span class="ident">dict</span>).<span class="ident">is_err</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyAny::try_from_exact</span>(<span class="ident">list</span>).<span class="ident">is_err</span>());
+            <span class="macro">assert!</span>(<span class="ident">PyAny::try_from_exact</span>(<span class="ident">dict</span>).<span class="ident">is_err</span>());
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_try_from_unchecked</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">PyList::new</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
-        <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="op">&lt;</span><span class="ident">PyList</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from_unchecked</span>(<span class="ident">list</span>.<span class="ident">as_ref</span>()) };
-        <span class="macro">assert_eq!</span>(<span class="ident">list</span>, <span class="ident">val</span>);
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">PyList::new</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
+            <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="op">&lt;</span><span class="ident">PyList</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from_unchecked</span>(<span class="ident">list</span>.<span class="ident">as_ref</span>()) };
+            <span class="macro">assert_eq!</span>(<span class="ident">list</span>, <span class="ident">val</span>);
+        });
     }
 }
 </pre></div>
