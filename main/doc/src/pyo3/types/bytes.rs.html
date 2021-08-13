@@ -174,6 +174,7 @@
 <span id="174">174</span>
 <span id="175">175</span>
 <span id="176">176</span>
+<span id="177">177</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">ffi</span>, <span class="ident">AsPyPointer</span>, <span class="ident">FromPyObject</span>, <span class="ident">IntoPy</span>, <span class="ident">Py</span>, <span class="ident">PyAny</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>, <span class="ident">PyTryFrom</span>, <span class="ident">Python</span>,
@@ -298,57 +299,58 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_extract_bytes</span>() {
-        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;b&#39;Hello Python&#39;&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="ident">FromPyObject::extract</span>(<span class="ident">py_bytes</span>).<span class="ident">unwrap</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>, <span class="string">b&quot;Hello Python&quot;</span>);
-        });
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+
+        <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;b&#39;Hello Python&#39;&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="ident">FromPyObject::extract</span>(<span class="ident">py_bytes</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>, <span class="string">b&quot;Hello Python&quot;</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_bytes_index</span>() {
-        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new</span>(<span class="ident">py</span>, <span class="string">b&quot;Hello World&quot;</span>);
-            <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>[<span class="number">1</span>], <span class="string">b&#39;e&#39;</span>);
-        });
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new</span>(<span class="ident">py</span>, <span class="string">b&quot;Hello World&quot;</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>[<span class="number">1</span>], <span class="string">b&#39;e&#39;</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_bytes_new_with</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">super</span>::PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">super</span>::PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> {
-                <span class="ident">b</span>.<span class="ident">copy_from_slice</span>(<span class="string">b&quot;Hello Rust&quot;</span>);
-                <span class="prelude-val">Ok</span>(())
-            })<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="ident">FromPyObject::extract</span>(<span class="ident">py_bytes</span>)<span class="question-mark">?</span>;
-            <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>, <span class="string">b&quot;Hello Rust&quot;</span>);
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> {
+            <span class="ident">b</span>.<span class="ident">copy_from_slice</span>(<span class="string">b&quot;Hello Rust&quot;</span>);
             <span class="prelude-val">Ok</span>(())
-        })
+        })<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="ident">FromPyObject::extract</span>(<span class="ident">py_bytes</span>)<span class="question-mark">?</span>;
+        <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>, <span class="string">b&quot;Hello Rust&quot;</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_bytes_new_with_zero_initialised</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">super</span>::PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">super</span>::PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-            <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">_b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> <span class="prelude-val">Ok</span>(()))<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="ident">FromPyObject::extract</span>(<span class="ident">py_bytes</span>)<span class="question-mark">?</span>;
-            <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>; <span class="number">10</span>]);
-            <span class="prelude-val">Ok</span>(())
-        })
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">_b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> <span class="prelude-val">Ok</span>(()))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="ident">FromPyObject::extract</span>(<span class="ident">py_bytes</span>)<span class="question-mark">?</span>;
+        <span class="macro">assert_eq!</span>(<span class="ident">bytes</span>, <span class="kw-2">&amp;</span>[<span class="number">0</span>; <span class="number">10</span>]);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_bytes_new_with_error</span>() {
         <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exceptions::PyValueError</span>;
-        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">py_bytes_result</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">_b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> {
-                <span class="prelude-val">Err</span>(<span class="ident">PyValueError::new_err</span>(<span class="string">&quot;Hello Crustaceans!&quot;</span>))
-            });
-            <span class="macro">assert!</span>(<span class="ident">py_bytes_result</span>.<span class="ident">is_err</span>());
-            <span class="macro">assert!</span>(<span class="ident">py_bytes_result</span>
-                .<span class="ident">err</span>()
-                .<span class="ident">unwrap</span>()
-                .<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyValueError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="kw">let</span> <span class="ident">py_bytes_result</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">_b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">PyValueError::new_err</span>(<span class="string">&quot;Hello Crustaceans!&quot;</span>))
         });
+        <span class="macro">assert!</span>(<span class="ident">py_bytes_result</span>.<span class="ident">is_err</span>());
+        <span class="macro">assert!</span>(<span class="ident">py_bytes_result</span>
+            .<span class="ident">err</span>()
+            .<span class="ident">unwrap</span>()
+            .<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyValueError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
     }
 }
 </pre></div>

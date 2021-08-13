@@ -76,6 +76,7 @@
 <span id="76">76</span>
 <span id="77">77</span>
 <span id="78">78</span>
+<span id="79">79</span>
 </pre><pre class="rust">
 <span class="attribute">#![<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="doccomment">//! Support for the Python `marshal` format. Not supported in limited API</span>
@@ -135,20 +136,21 @@
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types::PyDict</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">marshal_roundtrip</span>() {
-        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
-            <span class="ident">dict</span>.<span class="ident">set_item</span>(<span class="string">&quot;aap&quot;</span>, <span class="string">&quot;noot&quot;</span>).<span class="ident">unwrap</span>();
-            <span class="ident">dict</span>.<span class="ident">set_item</span>(<span class="string">&quot;mies&quot;</span>, <span class="string">&quot;wim&quot;</span>).<span class="ident">unwrap</span>();
-            <span class="ident">dict</span>.<span class="ident">set_item</span>(<span class="string">&quot;zus&quot;</span>, <span class="string">&quot;jet&quot;</span>).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">marhshal_roundtrip</span>() {
+        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
 
-            <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">dumps</span>(<span class="ident">py</span>, <span class="ident">dict</span>, <span class="ident">VERSION</span>)
-                .<span class="ident">expect</span>(<span class="string">&quot;marshalling failed&quot;</span>)
-                .<span class="ident">as_bytes</span>();
-            <span class="kw">let</span> <span class="ident">deserialized</span> <span class="op">=</span> <span class="ident">loads</span>(<span class="ident">py</span>, <span class="ident">bytes</span>).<span class="ident">expect</span>(<span class="string">&quot;unmarshalling failed&quot;</span>);
+        <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
+        <span class="ident">dict</span>.<span class="ident">set_item</span>(<span class="string">&quot;aap&quot;</span>, <span class="string">&quot;noot&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">dict</span>.<span class="ident">set_item</span>(<span class="string">&quot;mies&quot;</span>, <span class="string">&quot;wim&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="ident">dict</span>.<span class="ident">set_item</span>(<span class="string">&quot;zus&quot;</span>, <span class="string">&quot;jet&quot;</span>).<span class="ident">unwrap</span>();
 
-            <span class="macro">assert!</span>(<span class="ident">equal</span>(<span class="ident">py</span>, <span class="ident">dict</span>, <span class="ident">deserialized</span>));
-        });
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">dumps</span>(<span class="ident">py</span>, <span class="ident">dict</span>, <span class="ident">VERSION</span>)
+            .<span class="ident">expect</span>(<span class="string">&quot;marshalling failed&quot;</span>)
+            .<span class="ident">as_bytes</span>();
+        <span class="kw">let</span> <span class="ident">deserialzed</span> <span class="op">=</span> <span class="ident">loads</span>(<span class="ident">py</span>, <span class="ident">bytes</span>).<span class="ident">expect</span>(<span class="string">&quot;unmarshalling failed&quot;</span>);
+
+        <span class="macro">assert!</span>(<span class="ident">equal</span>(<span class="ident">py</span>, <span class="ident">dict</span>, <span class="ident">deserialzed</span>));
     }
 
     <span class="kw">fn</span> <span class="ident">equal</span>(<span class="ident">_py</span>: <span class="ident">Python</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">AsPyPointer</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw">impl</span> <span class="ident">AsPyPointer</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
