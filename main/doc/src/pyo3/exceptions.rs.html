@@ -499,8 +499,6 @@
 <span id="499">499</span>
 <span id="500">500</span>
 <span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
@@ -846,141 +844,139 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_check_exception</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">PyErr</span> <span class="op">=</span> <span class="ident">gaierror::new_err</span>(());
+            <span class="kw">let</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">import</span>(<span class="string">&quot;socket&quot;</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;could not import socket&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">PyErr</span> <span class="op">=</span> <span class="ident">gaierror::new_err</span>(());
-        <span class="kw">let</span> <span class="ident">socket</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">import</span>(<span class="string">&quot;socket&quot;</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-            .<span class="ident">expect</span>(<span class="string">&quot;could not import socket&quot;</span>);
+            <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
+            <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;socket&quot;</span>, <span class="ident">socket</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
-        <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;socket&quot;</span>, <span class="ident">socket</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-            .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
+            <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;exc&quot;</span>, <span class="ident">err</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
 
-        <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;exc&quot;</span>, <span class="ident">err</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-            .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
-
-        <span class="ident">py</span>.<span class="ident">run</span>(<span class="string">&quot;assert isinstance(exc, socket.gaierror)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">d</span>))
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-            .<span class="ident">expect</span>(<span class="string">&quot;assertion failed&quot;</span>);
+            <span class="ident">py</span>.<span class="ident">run</span>(<span class="string">&quot;assert isinstance(exc, socket.gaierror)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">d</span>))
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;assertion failed&quot;</span>);
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_check_exception_nested</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">PyErr</span> <span class="op">=</span> <span class="ident">MessageError::new_err</span>(());
+            <span class="kw">let</span> <span class="ident">email</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">import</span>(<span class="string">&quot;email&quot;</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;could not import email&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">PyErr</span> <span class="op">=</span> <span class="ident">MessageError::new_err</span>(());
-        <span class="kw">let</span> <span class="ident">email</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">import</span>(<span class="string">&quot;email&quot;</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-            .<span class="ident">expect</span>(<span class="string">&quot;could not import email&quot;</span>);
+            <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
+            <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;email&quot;</span>, <span class="ident">email</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
+            <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;exc&quot;</span>, <span class="ident">err</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
+                .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
-        <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;email&quot;</span>, <span class="ident">email</span>)
+            <span class="ident">py</span>.<span class="ident">run</span>(
+                <span class="string">&quot;assert isinstance(exc, email.errors.MessageError)&quot;</span>,
+                <span class="prelude-val">None</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">d</span>),
+            )
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-            .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
-        <span class="ident">d</span>.<span class="ident">set_item</span>(<span class="string">&quot;exc&quot;</span>, <span class="ident">err</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-            .<span class="ident">expect</span>(<span class="string">&quot;could not setitem&quot;</span>);
-
-        <span class="ident">py</span>.<span class="ident">run</span>(
-            <span class="string">&quot;assert isinstance(exc, email.errors.MessageError)&quot;</span>,
-            <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="ident">d</span>),
-        )
-        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">print</span>(<span class="ident">py</span>))
-        .<span class="ident">expect</span>(<span class="string">&quot;assertion failed&quot;</span>);
+            .<span class="ident">expect</span>(<span class="string">&quot;assertion failed&quot;</span>);
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">custom_exception</span>() {
         <span class="macro">create_exception!</span>(<span class="ident">mymodule</span>, <span class="ident">CustomError</span>, <span class="ident">PyException</span>);
 
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">error_type</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">get_type</span>::<span class="op">&lt;</span><span class="ident">CustomError</span><span class="op">&gt;</span>();
-        <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> [(<span class="string">&quot;CustomError&quot;</span>, <span class="ident">error_type</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>);
-        <span class="kw">let</span> <span class="ident">type_description</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">eval</span>(<span class="string">&quot;str(CustomError)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">ctx</span>))
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">extract</span>()
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">error_type</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">get_type</span>::<span class="op">&lt;</span><span class="ident">CustomError</span><span class="op">&gt;</span>();
+            <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> [(<span class="string">&quot;CustomError&quot;</span>, <span class="ident">error_type</span>)].<span class="ident">into_py_dict</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">type_description</span>: <span class="ident">String</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">eval</span>(<span class="string">&quot;str(CustomError)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">ctx</span>))
+                .<span class="ident">unwrap</span>()
+                .<span class="ident">extract</span>()
+                .<span class="ident">unwrap</span>();
+            <span class="macro">assert_eq!</span>(<span class="ident">type_description</span>, <span class="string">&quot;&lt;class &#39;mymodule.CustomError&#39;&gt;&quot;</span>);
+            <span class="ident">py</span>.<span class="ident">run</span>(
+                <span class="string">&quot;assert CustomError(&#39;oops&#39;).args == (&#39;oops&#39;,)&quot;</span>,
+                <span class="prelude-val">None</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">ctx</span>),
+            )
             .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq!</span>(<span class="ident">type_description</span>, <span class="string">&quot;&lt;class &#39;mymodule.CustomError&#39;&gt;&quot;</span>);
-        <span class="ident">py</span>.<span class="ident">run</span>(
-            <span class="string">&quot;assert CustomError(&#39;oops&#39;).args == (&#39;oops&#39;,)&quot;</span>,
-            <span class="prelude-val">None</span>,
-            <span class="prelude-val">Some</span>(<span class="ident">ctx</span>),
-        )
-        .<span class="ident">unwrap</span>();
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">native_exception_debug</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
-            .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
-            .<span class="ident">into_instance</span>(<span class="ident">py</span>)
-            .<span class="ident">into_ref</span>(<span class="ident">py</span>);
-        <span class="macro">assert_eq!</span>(
-            <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>),
-            <span class="ident">exc</span>.<span class="ident">repr</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()
-        );
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+                .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
+                .<span class="ident">into_instance</span>(<span class="ident">py</span>)
+                .<span class="ident">into_ref</span>(<span class="ident">py</span>);
+            <span class="macro">assert_eq!</span>(
+                <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>),
+                <span class="ident">exc</span>.<span class="ident">repr</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()
+            );
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">native_exception_display</span>() {
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
-            .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
-            .<span class="ident">into_instance</span>(<span class="ident">py</span>)
-            .<span class="ident">into_ref</span>(<span class="ident">py</span>);
-        <span class="macro">assert_eq!</span>(
-            <span class="ident">exc</span>.<span class="ident">to_string</span>(),
-            <span class="ident">exc</span>.<span class="ident">str</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()
-        );
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+                .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
+                .<span class="ident">into_instance</span>(<span class="ident">py</span>)
+                .<span class="ident">into_ref</span>(<span class="ident">py</span>);
+            <span class="macro">assert_eq!</span>(
+                <span class="ident">exc</span>.<span class="ident">to_string</span>(),
+                <span class="ident">exc</span>.<span class="ident">str</span>().<span class="ident">unwrap</span>().<span class="ident">extract</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>()
+            );
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">native_exception_chain</span>() {
         <span class="kw">use</span> <span class="ident">std::error::Error</span>;
 
-        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">Python::acquire_gil</span>();
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
-        <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
-            .<span class="ident">run</span>(
-                <span class="string">&quot;raise Exception(&#39;banana&#39;) from TypeError(&#39;peach&#39;)&quot;</span>,
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">None</span>,
-            )
-            .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
-            .<span class="ident">into_instance</span>(<span class="ident">py</span>)
-            .<span class="ident">into_ref</span>(<span class="ident">py</span>);
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
+                .<span class="ident">run</span>(
+                    <span class="string">&quot;raise Exception(&#39;banana&#39;) from TypeError(&#39;peach&#39;)&quot;</span>,
+                    <span class="prelude-val">None</span>,
+                    <span class="prelude-val">None</span>,
+                )
+                .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
+                .<span class="ident">into_instance</span>(<span class="ident">py</span>)
+                .<span class="ident">into_ref</span>(<span class="ident">py</span>);
 
-        <span class="kw">if</span> <span class="ident">py</span>.<span class="ident">version_info</span>() <span class="op">&gt;</span><span class="op">=</span> (<span class="number">3</span>, <span class="number">7</span>) {
-            <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>), <span class="string">&quot;Exception(&#39;banana&#39;)&quot;</span>);
-        } <span class="kw">else</span> {
-            <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>), <span class="string">&quot;Exception(&#39;banana&#39;,)&quot;</span>);
-        }
+            <span class="kw">if</span> <span class="ident">py</span>.<span class="ident">version_info</span>() <span class="op">&gt;</span><span class="op">=</span> (<span class="number">3</span>, <span class="number">7</span>) {
+                <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>), <span class="string">&quot;Exception(&#39;banana&#39;)&quot;</span>);
+            } <span class="kw">else</span> {
+                <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>), <span class="string">&quot;Exception(&#39;banana&#39;,)&quot;</span>);
+            }
 
-        <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">exc</span>.<span class="ident">source</span>().<span class="ident">expect</span>(<span class="string">&quot;cause should exist&quot;</span>);
+            <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">exc</span>.<span class="ident">source</span>().<span class="ident">expect</span>(<span class="string">&quot;cause should exist&quot;</span>);
 
-        <span class="kw">if</span> <span class="ident">py</span>.<span class="ident">version_info</span>() <span class="op">&gt;</span><span class="op">=</span> (<span class="number">3</span>, <span class="number">7</span>) {
-            <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">source</span>), <span class="string">&quot;TypeError(&#39;peach&#39;)&quot;</span>);
-        } <span class="kw">else</span> {
-            <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">source</span>), <span class="string">&quot;TypeError(&#39;peach&#39;,)&quot;</span>);
-        }
+            <span class="kw">if</span> <span class="ident">py</span>.<span class="ident">version_info</span>() <span class="op">&gt;</span><span class="op">=</span> (<span class="number">3</span>, <span class="number">7</span>) {
+                <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">source</span>), <span class="string">&quot;TypeError(&#39;peach&#39;)&quot;</span>);
+            } <span class="kw">else</span> {
+                <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">source</span>), <span class="string">&quot;TypeError(&#39;peach&#39;,)&quot;</span>);
+            }
 
-        <span class="kw">let</span> <span class="ident">source_source</span> <span class="op">=</span> <span class="ident">source</span>.<span class="ident">source</span>();
-        <span class="macro">assert!</span>(<span class="ident">source_source</span>.<span class="ident">is_none</span>(), <span class="string">&quot;source_source should be None&quot;</span>);
+            <span class="kw">let</span> <span class="ident">source_source</span> <span class="op">=</span> <span class="ident">source</span>.<span class="ident">source</span>();
+            <span class="macro">assert!</span>(<span class="ident">source_source</span>.<span class="ident">is_none</span>(), <span class="string">&quot;source_source should be None&quot;</span>);
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
