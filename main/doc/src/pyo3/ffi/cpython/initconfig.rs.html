@@ -193,6 +193,8 @@
 <span id="193">193</span>
 <span id="194">194</span>
 <span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
 </pre><pre class="rust">
 <span class="comment">/* --- PyStatus ----------------------------------------------- */</span>
 
@@ -200,6 +202,7 @@
 <span class="kw">use</span> <span class="ident">libc::wchar_t</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_ulong</span>};
 
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">_PyStatus_TYPE</span> {
     <span class="ident">_PyStatus_TYPE_OK</span> <span class="op">=</span> <span class="number">0</span>,
@@ -210,6 +213,7 @@
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyStatus</span> {
+    <span class="kw">pub</span> <span class="ident">_type</span>: <span class="ident">_PyStatus_TYPE</span>,
     <span class="kw">pub</span> <span class="ident">func</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
     <span class="kw">pub</span> <span class="ident">err_msg</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
     <span class="kw">pub</span> <span class="ident">exitcode</span>: <span class="ident">c_int</span>,
