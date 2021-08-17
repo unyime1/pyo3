@@ -324,7 +324,7 @@
         <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">T</span>: <span class="ident">Default</span> <span class="op">+</span> <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident"><span class="kw">crate</span>::buffer::Element</span>,
     {
         <span class="kw">fn</span> <span class="ident">extract</span>(<span class="ident">obj</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident">PyAny</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-            <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">AsPyPointer</span>, <span class="ident">PyNativeType</span>};
+            <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::AsPyPointer</span>;
             <span class="comment">// first try buffer protocol</span>
             <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident"><span class="kw">crate</span>::ffi::PyObject_CheckBuffer</span>(<span class="ident">obj</span>.<span class="ident">as_ptr</span>()) } <span class="op">=</span><span class="op">=</span> <span class="number">1</span> {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">buf</span>) <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::buffer::PyBuffer::get</span>(<span class="ident">obj</span>) {
