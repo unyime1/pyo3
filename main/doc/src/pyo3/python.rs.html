@@ -821,6 +821,7 @@
 <span id="821">821</span>
 <span id="822">822</span>
 <span id="823">823</span>
+<span id="824">824</span>
 </pre><pre class="rust">
 <span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
@@ -1220,6 +1221,7 @@
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="self">self</span>));
             }
             <span class="kw">let</span> <span class="ident">res_ptr</span> <span class="op">=</span> <span class="ident">ffi::PyEval_EvalCode</span>(<span class="ident">code_obj</span>, <span class="ident">globals</span>, <span class="ident">locals</span>);
+            <span class="ident">ffi::Py_DECREF</span>(<span class="ident">code_obj</span>);
 
             <span class="self">self</span>.<span class="ident">from_owned_ptr_or_err</span>(<span class="ident">res_ptr</span>)
         }

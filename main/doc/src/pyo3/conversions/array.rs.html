@@ -349,7 +349,7 @@
         <span class="kw">if</span> <span class="ident">seq_len</span> <span class="op">!</span><span class="op">=</span> <span class="ident">N</span> {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">invalid_sequence_length</span>(<span class="ident">N</span>, <span class="ident">seq_len</span>));
         }
-        <span class="ident">array_try_from_fn</span>(<span class="op">|</span><span class="ident">idx</span><span class="op">|</span> <span class="ident">seq</span>.<span class="ident">get_item</span>(<span class="ident">idx</span> <span class="kw">as</span> <span class="ident">isize</span>).<span class="ident">and_then</span>(<span class="ident">PyAny::extract</span>))
+        <span class="ident">array_try_from_fn</span>(<span class="op">|</span><span class="ident">idx</span><span class="op">|</span> <span class="ident">seq</span>.<span class="ident">get_item</span>(<span class="ident">idx</span>).<span class="ident">and_then</span>(<span class="ident">PyAny::extract</span>))
     }
 
     <span class="comment">// TODO use std::array::try_from_fn, if that stabilises:</span>
