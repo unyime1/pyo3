@@ -99,7 +99,7 @@ steps set up some files for an example Python module, install <code>maturin</cod
 and import the Python module.</p>
 <p>First, create a new folder (let’s call it <code>string_sum</code>) containing the following two files:</p>
 <p><strong><code>Cargo.toml</code></strong></p>
-<div class="example-wrap"><pre class="language-toml">[package]
+<div class="example-wrap"><pre class="language-toml"><code>[package]
 name = &quot;string-sum&quot;
 version = &quot;0.1.0&quot;
 edition = &quot;2018&quot;
@@ -110,11 +110,10 @@ crate-type = [&quot;cdylib&quot;]
 
 [dependencies.pyo3]
 version = &quot;0.14.2&quot;
-features = [&quot;extension-module&quot;]</pre></div>
+features = [&quot;extension-module&quot;]</code></pre></div>
 <p><strong><code>src/lib.rs</code></strong></p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Formats the sum of two numbers as string.</span>
 <span class="attribute">#[<span class="ident">pyfunction</span>]</span>
@@ -128,20 +127,20 @@ features = [&quot;extension-module&quot;]</pre></div>
     <span class="ident">m</span>.<span class="ident">add_function</span>(<span class="macro">wrap_pyfunction!</span>(<span class="ident">sum_as_string</span>, <span class="ident">m</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
-}</pre></div>
+}</code></pre></div>
 <p>With those two files in place, now <code>maturin</code> needs to be installed. This can be done using
 Python’s package manager <code>pip</code>. First, load up a new Python <code>virtualenv</code>, and install <code>maturin</code>
 into it:</p>
-<div class="example-wrap"><pre class="language-bash">$ cd string_sum
+<div class="example-wrap"><pre class="language-bash"><code>$ cd string_sum
 $ python -m venv .env
 $ source .env/bin/activate
-$ pip install maturin</pre></div>
+$ pip install maturin</code></pre></div>
 <p>Now build and execute the module:</p>
-<div class="example-wrap"><pre class="language-bash">$ maturin develop
+<div class="example-wrap"><pre class="language-bash"><code>$ maturin develop
 $ python
 &gt;&gt;&gt; import string_sum
 &gt;&gt;&gt; string_sum.sum_as_string(5, 20)
-&#39;25&#39;</pre></div>
+&#39;25&#39;</code></pre></div>
 <p>As well as with <code>maturin</code>, it is possible to build using
 <a href="https://github.com/PyO3/setuptools-rust"><code>setuptools-rust</code></a> or
 <a href="https://pyo3.rs/latest/building_and_distribution.html#manual-builds">manually</a>. Both offer more
@@ -151,15 +150,14 @@ flexibility than <code>maturin</code> but require further configuration.</p>
 shared library. The following steps demonstrate how to ensure this (for Ubuntu), and then give
 some example code which runs an embedded Python interpreter.</p>
 <p>To install the Python shared library on Ubuntu:</p>
-<div class="example-wrap"><pre class="language-bash">sudo apt install python3-dev</pre></div>
+<div class="example-wrap"><pre class="language-bash"><code>sudo apt install python3-dev</code></pre></div>
 <p>Start a new project with <code>cargo new</code> and add  <code>pyo3</code> to the <code>Cargo.toml</code> like this:</p>
-<div class="example-wrap"><pre class="language-toml">[dependencies.pyo3]
+<div class="example-wrap"><pre class="language-toml"><code>[dependencies.pyo3]
 version = &quot;0.14.2&quot;
-features = [&quot;auto-initialize&quot;]</pre></div>
+features = [&quot;auto-initialize&quot;]</code></pre></div>
 <p>Example program displaying the value of <code>sys.version</code> and the current user name:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered">
-<span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::IntoPyDict</span>;
 
 <span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -174,7 +172,7 @@ features = [&quot;auto-initialize&quot;]</pre></div>
         <span class="macro">println!</span>(<span class="string">&quot;Hello {}, I&#39;m Python {}&quot;</span>, <span class="ident">user</span>, <span class="ident">version</span>);
         <span class="prelude-val">Ok</span>(())
     })
-}</pre></div>
+}</code></pre></div>
 <p>The guide has <a href="https://pyo3.rs/latest/python_from_rust.html">a section</a> with lots of examples
 about this topic.</p>
 <h1 id="other-examples" class="section-header"><a href="#other-examples">Other Examples</a></h1>
