@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1629534361792,
+  "lastUpdate": 1629534865062,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -17669,6 +17669,180 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item_unchecked",
             "value": 602987,
             "range": "± 13505",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "benjamin@benkay.net",
+            "name": "Benjamin Kay",
+            "username": "benkay86"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ac4613eb9fbcd830b84b375b02132c916a2a3d3a",
+          "message": "Improve documentation about when we free memory, resolves #311 (#1807)\n\n* Improve API docs regarding when we free memory, resolves #311\r\n\r\n* Add chapter to guide about when we free memory, resolves #311\r\n\r\n* Fix typos in documentation\r\n\r\nCo-authored-by: David Hewitt <1939362+davidhewitt@users.noreply.github.com>\r\n\r\n* Add links from guide to docs.rs\r\n\r\n* Update guide/src/memory.md\r\n\r\nCo-authored-by: David Hewitt <1939362+davidhewitt@users.noreply.github.com>",
+          "timestamp": "2021-08-21T09:23:10+01:00",
+          "tree_id": "7374540806ffd6972ca6e604d0836d3ca83386b1",
+          "url": "https://github.com/PyO3/pyo3/commit/ac4613eb9fbcd830b84b375b02132c916a2a3d3a"
+        },
+        "date": 1629534841723,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 95863,
+            "range": "± 4662",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 289582,
+            "range": "± 15910",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 3023254,
+            "range": "± 137491",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_new",
+            "value": 5883889,
+            "range": "± 231633",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 3569490,
+            "range": "± 168289",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 12030769,
+            "range": "± 1103042",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 14989956,
+            "range": "± 706085",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 10366348,
+            "range": "± 1255864",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 17,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 116,
+            "range": "± 6",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 124,
+            "range": "± 9",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 1781381,
+            "range": "± 84080",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_new",
+            "value": 1750822,
+            "range": "± 57101",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 1052735,
+            "range": "± 65878",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item_unchecked",
+            "value": 930776,
+            "range": "± 59070",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 5433,
+            "range": "± 22103",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 4797,
+            "range": "± 221",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 2216867,
+            "range": "± 111295",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 11614404,
+            "range": "± 631379",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 13767984,
+            "range": "± 414105",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 6832006,
+            "range": "± 415392",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 1047269,
+            "range": "± 71356",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_new",
+            "value": 1782448,
+            "range": "± 75826",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 787560,
+            "range": "± 36094",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item_unchecked",
+            "value": 612282,
+            "range": "± 29085",
             "unit": "ns/iter"
           }
         ]
