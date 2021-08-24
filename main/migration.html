@@ -146,6 +146,19 @@
                         <h1 id="migrating-from-older-pyo3-versions"><a class="header" href="#migrating-from-older-pyo3-versions">Migrating from older PyO3 versions</a></h1>
 <p>This guide can help you upgrade code through breaking changes from one PyO3 version to the next.
 For a detailed list of all changes, see the <a href="changelog.html">CHANGELOG</a>.</p>
+<h2 id="from-014-to-015"><a class="header" href="#from-014-to-015">from 0.14.* to 0.15</a></h2>
+<h3 id="changes-in-sequence-indexing"><a class="header" href="#changes-in-sequence-indexing">Changes in sequence indexing</a></h3>
+<p>For all types that take sequence indices (<code>PyList</code>, <code>PyTuple</code> and <code>PySequence</code>),
+the API has been made consistent to only take <code>usize</code> indices, for consistency
+with Rust's indexing conventions.  Negative indices, which were only
+sporadically supported even in APIs that took <code>isize</code>, now aren't supported
+anywhere.</p>
+<p>Further, the <code>get_item</code> methods now always return a <code>PyResult</code> instead of
+panicking on invalid indices.  The <code>Index</code> trait has been implemented instead,
+and provides the same panic behavior as on Rust vectors.</p>
+<p>Note that <em>slice</em> indices (accepted by <code>PySequence::get_slice</code> and other) still
+inherit the Python behavior of clamping the indices to the actual length, and
+not panicking/returning an error on out of range indices.</p>
 <h2 id="from-013-to-014"><a class="header" href="#from-013-to-014">from 0.13.* to 0.14</a></h2>
 <h3 id="auto-initialize-feature-is-now-opt-in"><a class="header" href="#auto-initialize-feature-is-now-opt-in"><code>auto-initialize</code> feature is now opt-in</a></h3>
 <p>For projects embedding Python in Rust, PyO3 no longer automatically initalizes a Python interpreter on the first call to <code>Python::with_gil</code> (or <code>Python::acquire_gil</code>) unless the <a href="features.html#auto-initalize"><code>auto-initalize</code> feature</a> is enabled.</p>
