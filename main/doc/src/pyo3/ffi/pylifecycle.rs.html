@@ -51,6 +51,8 @@
 <span id="51">51</span>
 <span id="52">52</span>
 <span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pystate::PyThreadState</span>;
 
 <span class="kw">use</span> <span class="ident">libc::wchar_t</span>;
@@ -89,6 +91,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_GetExecPrefix</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_GetPath</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_SetPath</span>(<span class="ident">arg1</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">wchar_t</span>);
+
+    <span class="comment">// skipped _Py_CheckPython3</span>
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPy_GetVersion&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_GetVersion</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>;
