@@ -170,6 +170,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Deprecate <code>PyTuple::slice</code>, new method <code>PyTuple::get_slice</code> added with <code>usize</code> indices. <a href="https://github.com/PyO3/pyo3/pull/1828">#1828</a></li>
 <li>Deprecate FFI definitions <code>PyParser_SimpleParseStringFlags</code>, <code>PyParser_SimpleParseStringFlagsFilename</code>, <code>PyParser_SimpleParseFileFlags</code> when building for Python 3.9. <a href="https://github.com/PyO3/pyo3/pull/1830">#1830</a></li>
 <li>Mark FFI definitions removed in Python 3.10 <code>PyParser_ASTFromString</code>, <code>PyParser_ASTFromStringObject</code>, <code>PyParser_ASTFromFile</code>, <code>PyParser_ASTFromFileObject</code>, <code>PyParser_SimpleParseStringFlags</code>, <code>PyParser_SimpleParseStringFlagsFilename</code>, <code>PyParser_SimpleParseFileFlags</code>, <code>PyParser_SimpleParseString</code>, <code>PyParser_SimpleParseFile</code>, <code>Py_SymtableString</code>, and <code>Py_SymtableStringObject</code>. <a href="https://github.com/PyO3/pyo3/pull/1830">#1830</a></li>
+<li><code>pyo3</code>'s <code>Cargo.toml</code> now advertises <code>links = &quot;python&quot;</code> to inform Cargo that it links against <em>libpython</em>. <a href="https://github.com/PyO3/pyo3/pull/1819">#1819</a></li>
 </ul>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <ul>
