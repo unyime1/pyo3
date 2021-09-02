@@ -3069,6 +3069,12 @@ test_word_count_python_sequential                      27.3985 (15.82)    45.452
 <li><code>FromPyObject</code> for <code>Vec</code> and <code>[T;N]</code> can perform a <code>memcpy</code> when the object supports the Python buffer protocol.</li>
 <li><code>ToBorrowedObject</code> can skip a reference count increase when the provided object is a Python native type.</li>
 </ul>
+<h3 id="resolve-config"><a class="header" href="#resolve-config"><code>resolve-config</code></a></h3>
+<p>The <code>resolve-config</code> feature of the <code>pyo3-build-config</code> crate controls whether that crate's
+build script automatically resolves a Python interpreter / build configuration. Disabling
+this feature enables this crate to be used in <em>library mode</em>. This may be desirable for
+use cases where you want to read or write PyO3 build configuration files or resolve
+metadata about a Python interpreter.</p>
 <h2 id="optional-dependencies"><a class="header" href="#optional-dependencies">Optional Dependencies</a></h2>
 <p>These features enable conversions between Python types and types from other Rust crates, enabling easy access to the rest of the Rust ecosystem.</p>
 <h3 id="hashbrown"><a class="header" href="#hashbrown"><code>hashbrown</code></a></h3>
@@ -5348,6 +5354,7 @@ and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semanti
 <li>Add implementation of <code>std::ops::Index&lt;usize&gt;</code> for <code>PyList</code>, <code>PyTuple</code> and <code>PySequence</code>. <a href="https://github.com/PyO3/pyo3/pull/1825">#1825</a></li>
 <li>Add range indexing implementations of <code>std::ops::Index</code> for <code>PyList</code>, <code>PyTuple</code> and <code>PySequence</code>. <a href="https://github.com/PyO3/pyo3/pull/1829">#1829</a></li>
 <li>Add commonly-used sequence methods to <code>PyList</code> and <code>PyTuple</code>. <a href="https://github.com/PyO3/pyo3/pull/1849">#1849</a></li>
+<li>The <code>pyo3-build-config</code> crate now has a <code>resolve-config</code> feature to control whether its build script does anything. <a href="https://github.com/PyO3/pyo3/pull/1856">#1856</a></li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
