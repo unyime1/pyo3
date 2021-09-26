@@ -1994,6 +1994,7 @@ both <code>Yield</code> values and <code>Return</code> a final value - see its d
 <tr><td><code>datetime.timedelta</code></td><td align="center">-</td><td align="center"><code>&amp;PyDelta</code></td></tr>
 <tr><td><code>typing.Optional[T]</code></td><td align="center"><code>Option&lt;T&gt;</code></td><td align="center">-</td></tr>
 <tr><td><code>typing.Sequence[T]</code></td><td align="center"><code>Vec&lt;T&gt;</code></td><td align="center"><code>&amp;PySequence</code></td></tr>
+<tr><td><code>typing.Mapping[K, V]</code></td><td align="center"><code>HashMap&lt;K, V&gt;</code>, <code>BTreeMap&lt;K, V&gt;</code>, <code>hashbrown::HashMap&lt;K, V&gt;</code><sup class="footnote-reference"><a href="#2">2</a></sup>, <code>indexmap::IndexMap&lt;K, V&gt;</code><sup class="footnote-reference"><a href="#3">3</a></sup></td><td align="center"><code>&amp;PyMapping</code></td></tr>
 <tr><td><code>typing.Iterator[Any]</code></td><td align="center">-</td><td align="center"><code>&amp;PyIterator</code></td></tr>
 <tr><td><code>typing.Union[...]</code></td><td align="center">See <a href="conversions/traits.html#deriving-a-hrefhttpsdocsrspyo3latestpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums"><code>#[derive(FromPyObject)]</code></a></td><td align="center">-</td></tr>
 </tbody></table>
@@ -5361,6 +5362,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Add <code>PyAny::py</code> as a convenience for <code>PyNativeType::py</code>. <a href="https://github.com/PyO3/pyo3/pull/1751">#1751</a></li>
 <li>Add implementation of <code>std::ops::Index&lt;usize&gt;</code> for <code>PyList</code>, <code>PyTuple</code> and <code>PySequence</code>. <a href="https://github.com/PyO3/pyo3/pull/1825">#1825</a></li>
 <li>Add range indexing implementations of <code>std::ops::Index</code> for <code>PyList</code>, <code>PyTuple</code> and <code>PySequence</code>. <a href="https://github.com/PyO3/pyo3/pull/1829">#1829</a></li>
+<li>Add <code>PyMapping</code> type to represent the Python mapping protocol. <a href="https://github.com/PyO3/pyo3/pull/1844">#1844</a></li>
 <li>Add commonly-used sequence methods to <code>PyList</code> and <code>PyTuple</code>. <a href="https://github.com/PyO3/pyo3/pull/1849">#1849</a></li>
 <li>Add <code>as_sequence</code> methods to <code>PyList</code> and <code>PyTuple</code>. <a href="https://github.com/PyO3/pyo3/pull/1860">#1860</a></li>
 </ul>
@@ -5387,6 +5389,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Fix building with a conda environment on Windows. <a href="https://github.com/PyO3/pyo3/pull/1873">#1873</a></li>
 <li>Fix panic on Python 3.6 when calling <code>Python::with_gil</code> with Python initialized but threading not initialized. <a href="https://github.com/PyO3/pyo3/pull/1874">#1874</a></li>
 <li>Fix incorrect linking to version-specific DLL instead of <code>python3.dll</code> when cross-compiling to Windows with <code>abi3</code>. <a href="https://github.com/PyO3/pyo3/pull/1880">#1880</a></li>
+<li>Fix panic in generated <code>#[derive(FromPyObject)]</code> for enums. <a href="https://github.com/PyO3/pyo3/pull/1888">#1888</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0144v01450145a---2021-09-05"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0144v01450145a---2021-09-05"><a href="https://github.com/pyo3/pyo3/compare/v0.14.4...v0.14.5">0.14.5</a> - 2021-09-05</a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
