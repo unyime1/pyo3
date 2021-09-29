@@ -900,8 +900,7 @@
             <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyDict_GetItem</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">key</span>);
             <span class="ident">NonNull::new</span>(<span class="ident">ptr</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> {
                 <span class="comment">// PyDict_GetItem return s borrowed ptr, must make it owned for safety (see #890).</span>
-                <span class="ident">ffi::Py_INCREF</span>(<span class="ident">p</span>.<span class="ident">as_ptr</span>());
-                <span class="self">self</span>.<span class="ident">py</span>().<span class="ident">from_owned_ptr</span>(<span class="ident">p</span>.<span class="ident">as_ptr</span>())
+                <span class="self">self</span>.<span class="ident">py</span>().<span class="ident">from_owned_ptr</span>(<span class="ident">ffi::_Py_NewRef</span>(<span class="ident">p</span>.<span class="ident">as_ptr</span>()))
             })
         })
     }
@@ -996,9 +995,10 @@
             <span class="kw">if</span> <span class="ident">ffi::PyDict_Next</span>(<span class="self">self</span>.<span class="ident">dict</span>.<span class="ident">as_ptr</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pos</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">value</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
                 <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">dict</span>.<span class="ident">py</span>();
                 <span class="comment">// PyDict_Next returns borrowed values; for safety must make them owned (see #890)</span>
-                <span class="ident">ffi::Py_INCREF</span>(<span class="ident">key</span>);
-                <span class="ident">ffi::Py_INCREF</span>(<span class="ident">value</span>);
-                <span class="prelude-val">Some</span>((<span class="ident">py</span>.<span class="ident">from_owned_ptr</span>(<span class="ident">key</span>), <span class="ident">py</span>.<span class="ident">from_owned_ptr</span>(<span class="ident">value</span>)))
+                <span class="prelude-val">Some</span>((
+                    <span class="ident">py</span>.<span class="ident">from_owned_ptr</span>(<span class="ident">ffi::_Py_NewRef</span>(<span class="ident">key</span>)),
+                    <span class="ident">py</span>.<span class="ident">from_owned_ptr</span>(<span class="ident">ffi::_Py_NewRef</span>(<span class="ident">value</span>)),
+                ))
             } <span class="kw">else</span> {
                 <span class="prelude-val">None</span>
             }
