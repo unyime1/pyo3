@@ -766,6 +766,127 @@
 <span id="766">766</span>
 <span id="767">767</span>
 <span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Exception types defined by Python.</span>
@@ -787,6 +908,7 @@
 <span class="macro">macro_rules!</span> <span class="ident">impl_exception_boilerplate</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="kw">impl</span> <span class="ident">::std::convert::From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr</span> {
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
             <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr</span> {
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr::from_instance</span>(<span class="ident">err</span>)
             }
@@ -796,6 +918,7 @@
             <span class="doccomment">/// Creates a new [`PyErr`] of this type.</span>
             <span class="doccomment">///</span>
             <span class="doccomment">/// [`PyErr`]: https://docs.rs/pyo3/latest/pyo3/struct.PyErr.html &quot;PyErr in pyo3&quot;</span>
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
             <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_err</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="ident">args</span>: <span class="ident">A</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr</span>
             <span class="kw">where</span>
                 <span class="ident">A</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErrArguments</span> <span class="op">+</span> <span class="ident">::std::marker::Send</span> <span class="op">+</span> <span class="ident">::std::marker::Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
@@ -1036,20 +1159,20 @@ except &quot;</span>, <span class="macro-nonterminal">$</span><span class="macro
 ```
 
 # Example: Catching &quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot; in Rust
-        
+
 ```
 use pyo3::prelude::*;
 use pyo3::exceptions::Py&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;;
-        
+
 Python::with_gil(|py| {
     let result: PyResult&lt;()&gt; = py.run(\&quot;raise &quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;\&quot;, None, None);
-        
+
     let error_type = match result {
         Ok(_) =&gt; \&quot;Not an error\&quot;,
         Err(error) if error.is_instance::&lt;Py&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;&gt;(py) =&gt; \&quot;&quot;</span> , <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;\&quot;,
         Err(_) =&gt; \&quot;Some other error\&quot;,
     };
-        
+
     assert_eq!(error_type, \&quot;&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;\&quot;);
 });
 ```
@@ -1346,6 +1469,38 @@ Python::with_gil(|py| {
     }
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="macro">macro_rules!</span> <span class="ident">test_exception</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span>:<span class="ident">ident</span> $(, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">constructor</span>:<span class="ident">expr</span>)<span class="question-mark">?</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
+        <span class="attribute">#[<span class="ident">test</span>]</span>
+        <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span> () {
+            <span class="kw">use</span> <span class="kw">super</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span>;
+
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+                <span class="kw">use</span> <span class="ident">std::error::Error</span>;
+                <span class="kw">let</span> <span class="ident">err</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr</span> <span class="op">=</span> {
+                    <span class="prelude-val">None</span>
+                    $(
+                        .<span class="ident">or</span>(<span class="prelude-val">Some</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">constructor</span>(<span class="ident">py</span>)))
+                    )<span class="question-mark">?</span>
+                        .<span class="ident">unwrap_or</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty::new_err</span>(<span class="string">&quot;a test exception&quot;</span>))
+                };
+
+                <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+
+                <span class="kw">let</span> <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">instance</span>(<span class="ident">py</span>).<span class="ident">downcast</span>().<span class="ident">unwrap</span>();
+                <span class="macro">assert!</span>(<span class="ident">value</span>.<span class="ident">source</span>().<span class="ident">is_none</span>());
+
+                <span class="ident">err</span>.<span class="ident">set_cause</span>(<span class="ident">py</span>, <span class="prelude-val">Some</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::exceptions::PyValueError::new_err</span>(<span class="string">&quot;a cause&quot;</span>)));
+                <span class="macro">assert!</span>(<span class="ident">value</span>.<span class="ident">source</span>().<span class="ident">is_some</span>());
+
+                <span class="macro">assert!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr::from</span>(<span class="ident">value</span>).<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+            })
+        }
+    };
+}
+
 <span class="doccomment">/// Exceptions defined in Python&#39;s [`asyncio`](https://docs.python.org/3/library/asyncio.html)</span>
 <span class="doccomment">/// module.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">asyncio</span> {
@@ -1356,6 +1511,21 @@ Python::with_gil(|py| {
     <span class="macro">import_exception!</span>(<span class="ident">asyncio</span>, <span class="ident">LimitOverrunError</span>);
     <span class="macro">import_exception!</span>(<span class="ident">asyncio</span>, <span class="ident">QueueEmpty</span>);
     <span class="macro">import_exception!</span>(<span class="ident">asyncio</span>, <span class="ident">QueueFull</span>);
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+    <span class="kw">mod</span> <span class="ident">tests</span> {
+        <span class="macro">test_exception!</span>(<span class="ident">CancelledError</span>);
+        <span class="macro">test_exception!</span>(<span class="ident">InvalidStateError</span>);
+        <span class="macro">test_exception!</span>(<span class="ident">TimeoutError</span>);
+        <span class="macro">test_exception!</span>(<span class="ident">IncompleteReadError</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+            <span class="ident">IncompleteReadError::new_err</span>((<span class="string">&quot;partial&quot;</span>, <span class="string">&quot;expected&quot;</span>))
+        });
+        <span class="macro">test_exception!</span>(<span class="ident">LimitOverrunError</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+            <span class="ident">LimitOverrunError::new_err</span>((<span class="string">&quot;message&quot;</span>, <span class="string">&quot;consumed&quot;</span>))
+        });
+        <span class="macro">test_exception!</span>(<span class="ident">QueueEmpty</span>);
+        <span class="macro">test_exception!</span>(<span class="ident">QueueFull</span>);
+    }
 }
 
 <span class="doccomment">/// Exceptions defined in Python&#39;s [`socket`](https://docs.python.org/3/library/socket.html)</span>
@@ -1364,11 +1534,18 @@ Python::with_gil(|py| {
     <span class="macro">import_exception!</span>(<span class="ident">socket</span>, <span class="ident">herror</span>);
     <span class="macro">import_exception!</span>(<span class="ident">socket</span>, <span class="ident">gaierror</span>);
     <span class="macro">import_exception!</span>(<span class="ident">socket</span>, <span class="ident">timeout</span>);
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+    <span class="kw">mod</span> <span class="ident">tests</span> {
+        <span class="macro">test_exception!</span>(<span class="ident">herror</span>);
+        <span class="macro">test_exception!</span>(<span class="ident">gaierror</span>);
+        <span class="macro">test_exception!</span>(<span class="ident">timeout</span>);
+    }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">PyException</span>, <span class="ident">PyUnicodeDecodeError</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types</span>::{<span class="ident">IntoPyDict</span>, <span class="ident">PyDict</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PyErr</span>, <span class="ident">Python</span>};
 
@@ -1533,6 +1710,71 @@ Python::with_gil(|py| {
             );
         });
     }
+
+    <span class="macro">test_exception!</span>(<span class="ident">PyBaseException</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyException</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyStopAsyncIteration</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyStopIteration</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyGeneratorExit</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyArithmeticError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyLookupError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyAssertionError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyAttributeError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyBufferError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyEOFError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyFloatingPointError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyOSError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyImportError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyModuleNotFoundError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyIndexError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyKeyError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyKeyboardInterrupt</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyMemoryError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyNameError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyOverflowError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyRuntimeError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyRecursionError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyNotImplementedError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PySyntaxError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyReferenceError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PySystemError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PySystemExit</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyTypeError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyUnboundLocalError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyUnicodeError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyUnicodeDecodeError</span>, <span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+        <span class="kw">let</span> <span class="ident">invalid_utf8</span> <span class="op">=</span> <span class="string">b&quot;fo\xd8o&quot;</span>;
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">std::str::from_utf8</span>(<span class="ident">invalid_utf8</span>).<span class="ident">expect_err</span>(<span class="string">&quot;should be invalid utf8&quot;</span>);
+        <span class="ident">PyErr::from_instance</span>(<span class="ident">PyUnicodeDecodeError::new_utf8</span>(<span class="ident">py</span>, <span class="ident">invalid_utf8</span>, <span class="ident">err</span>).<span class="ident">unwrap</span>())
+    });
+    <span class="macro">test_exception!</span>(<span class="ident">PyUnicodeEncodeError</span>, <span class="op">|</span><span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> {
+        <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;chr(40960).encode(&#39;ascii&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+            .<span class="ident">unwrap_err</span>()
+    });
+    <span class="macro">test_exception!</span>(<span class="ident">PyUnicodeTranslateError</span>, <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+        <span class="ident">PyUnicodeTranslateError::new_err</span>((<span class="string">&quot;\u{3042}&quot;</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="string">&quot;ouch&quot;</span>))
+    });
+    <span class="macro">test_exception!</span>(<span class="ident">PyValueError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyZeroDivisionError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyBlockingIOError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyBrokenPipeError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyChildProcessError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyConnectionError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyConnectionAbortedError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyConnectionRefusedError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyConnectionResetError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyFileExistsError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyFileNotFoundError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyInterruptedError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyIsADirectoryError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyNotADirectoryError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyPermissionError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyProcessLookupError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyTimeoutError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyEnvironmentError</span>);
+    <span class="macro">test_exception!</span>(<span class="ident">PyIOError</span>);
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+    <span class="macro">test_exception!</span>(<span class="ident">PyWindowsError</span>);
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
