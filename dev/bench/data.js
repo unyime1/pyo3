@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1633037282470,
+  "lastUpdate": 1633207893866,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -47852,6 +47852,128 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 1.935401009772958e-8",
             "extra": "mean: 136.99954353977708 nsec\nrounds: 84739"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "georg@python.org",
+            "name": "Georg Brandl",
+            "username": "birkenfeld"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "05092e7fa3000ebf38e25e18f18d0dc6dc3d97c8",
+          "message": "Merge pull request #1899 from Ben-KC/patch-1",
+          "timestamp": "2021-10-02T22:49:16+02:00",
+          "tree_id": "7556519968fa0183c55f75f1e41a71c78115f108",
+          "url": "https://github.com/PyO3/pyo3/commit/05092e7fa3000ebf38e25e18f18d0dc6dc3d97c8"
+        },
+        "date": 1633207868251,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/test_benchmarks.py::test_none_py",
+            "value": 6953837.94397702,
+            "unit": "iter/sec",
+            "range": "stddev: 7.037491311195679e-7",
+            "extra": "mean: 143.80547951463714 nsec\nrounds: 196079"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_none_rs",
+            "value": 8441989.901495796,
+            "unit": "iter/sec",
+            "range": "stddev: 1.6311521215514027e-7",
+            "extra": "mean: 118.45548403494827 nsec\nrounds: 84746"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_py",
+            "value": 2985326.8402748164,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000014138286725308217",
+            "extra": "mean: 334.9716977414588 nsec\nrounds: 196040"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_rs",
+            "value": 1973346.0499922838,
+            "unit": "iter/sec",
+            "range": "stddev: 5.115618408657371e-7",
+            "extra": "mean: 506.7534911088388 nsec\nrounds: 181819"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_py",
+            "value": 2665828.6311325473,
+            "unit": "iter/sec",
+            "range": "stddev: 5.58709815499838e-7",
+            "extra": "mean: 375.1178857941223 nsec\nrounds: 196079"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_rs",
+            "value": 1841660.8197302436,
+            "unit": "iter/sec",
+            "range": "stddev: 4.543363896554285e-7",
+            "extra": "mean: 542.9881492220709 nsec\nrounds: 93458"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_kwargs_py",
+            "value": 1615327.2053660483,
+            "unit": "iter/sec",
+            "range": "stddev: 9.507040057192603e-7",
+            "extra": "mean: 619.0696204944169 nsec\nrounds: 78734"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_kwargs_rs",
+            "value": 1445154.7770519312,
+            "unit": "iter/sec",
+            "range": "stddev: 9.58268359045073e-7",
+            "extra": "mean: 691.9674043773975 nsec\nrounds: 128189"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_kwargs_py",
+            "value": 1619533.6087056424,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000010109426899920724",
+            "extra": "mean: 617.461715289279 nsec\nrounds: 83327"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_kwargs_rs",
+            "value": 1487844.710056043,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000010177480300845688",
+            "extra": "mean: 672.1131535039976 nsec\nrounds: 161265"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_kwargs_py",
+            "value": 2110796.959543911,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000010094910115859714",
+            "extra": "mean: 473.7547093185798 nsec\nrounds: 185186"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_kwargs_rs",
+            "value": 4077829.6512272665,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00000101306575298512",
+            "extra": "mean: 245.22848807566555 nsec\nrounds: 188644"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_empty_class_init",
+            "value": 5153570.905476229,
+            "unit": "iter/sec",
+            "range": "stddev: 9.97432130597671e-7",
+            "extra": "mean: 194.04021373570038 nsec\nrounds: 192308"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_empty_class_init_py",
+            "value": 7213091.150926521,
+            "unit": "iter/sec",
+            "range": "stddev: 1.9766807338552617e-7",
+            "extra": "mean: 138.636817291789 nsec\nrounds: 74069"
           }
         ]
       }
