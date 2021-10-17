@@ -407,6 +407,10 @@
 <span id="407">407</span>
 <span id="408">408</span>
 <span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">specialization</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">feature</span>(<span class="ident">doc_cfg</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(
@@ -488,10 +492,11 @@
 <span class="doccomment">//! crate, which is not supported on all platforms.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The following features enable interactions with other crates in the Rust ecosystem:</span>
+<span class="doccomment">//! - [`anyhow`]: Enables a conversion from [anyhow]’s [`Error`][anyhow_error] type to [`PyErr`].</span>
 <span class="doccomment">//! - [`eyre`]: Enables a conversion from [eyre]’s [`Report`] type to [`PyErr`].</span>
 <span class="doccomment">//! - [`hashbrown`]: Enables conversions between Python objects and [hashbrown]&#39;s [`HashMap`] and</span>
 <span class="doccomment">//! [`HashSet`] types.</span>
-<span class="doccomment">//! - [`indexmap`]: Enables conversions between Python dictionary and [indexmap]&#39;s [`IndexMap`].</span>
+<span class="doccomment">//! - [`indexmap`][indexmap_feature]: Enables conversions between Python dictionary and [indexmap]&#39;s [`IndexMap`].</span>
 <span class="doccomment">//! - [`num-bigint`]: Enables conversions between Python objects and [num-bigint]&#39;s [`BigInt`] and</span>
 <span class="doccomment">//! [`BigUint`] types.</span>
 <span class="doccomment">//! - [`num-complex`]: Enables conversions between Python objects and [num-complex]&#39;s [`Complex`]</span>
@@ -651,6 +656,9 @@
 <span class="doccomment">//! There are many projects using PyO3 - see a list of some at</span>
 <span class="doccomment">//! &lt;https://github.com/PyO3/pyo3#examples&gt;.</span>
 <span class="doccomment">//!</span>
+<span class="doccomment">//! [anyhow]: https://docs.rs/anyhow/ &quot;A trait object based error system for easy idiomatic error handling in Rust applications.&quot;</span>
+<span class="doccomment">//! [anyhow_error]: https://docs.rs/anyhow/latest/anyhow/struct.Error.html &quot;Anyhows `Error` type, a wrapper around a dynamic error type&quot;</span>
+<span class="doccomment">//! [`anyhow`]: ./anyhow/index.html &quot;Documentation about the `anyhow` feature.&quot;</span>
 <span class="doccomment">//! [inventory]: https://docs.rs/inventory</span>
 <span class="doccomment">//! [`HashMap`]: https://docs.rs/hashbrown/latest/hashbrown/struct.HashMap.html</span>
 <span class="doccomment">//! [`HashSet`]: https://docs.rs/hashbrown/latest/hashbrown/struct.HashSet.html</span>
@@ -662,14 +670,14 @@
 <span class="doccomment">//! [`Serialize`]: https://docs.rs/serde/latest/serde/trait.Serialize.html</span>
 <span class="doccomment">//! [eyre]: https://docs.rs/eyre/ &quot;A library for easy idiomatic error handling and reporting in Rust applications.&quot;</span>
 <span class="doccomment">//! [`Report`]: https://docs.rs/eyre/latest/eyre/struct.Report.html</span>
-<span class="doccomment">//! [`eyre`]: ./eyre/index.html</span>
-<span class="doccomment">//! [`hashbrown`]: ./hashbrown/index.html</span>
-<span class="doccomment">//! [`indexmap`]: &lt;./indexmap/index.html&gt;</span>
+<span class="doccomment">//! [`eyre`]: ./eyre/index.html &quot;Documentation about the `eyre` feature.&quot;</span>
+<span class="doccomment">//! [`hashbrown`]: ./hashbrown/index.html &quot;Documentation about the `hashbrown` feature.&quot;</span>
+<span class="doccomment">//! [indexmap_feature]: ./indexmap/index.html &quot;Documentation about the `indexmap` feature.&quot;</span>
 <span class="doccomment">//! [`maturin`]: https://github.com/PyO3/maturin &quot;Build and publish crates with pyo3, rust-cpython and cffi bindings as well as rust binaries as python packages&quot;</span>
-<span class="doccomment">//! [`num-bigint`]: ./num_bigint/index.html</span>
-<span class="doccomment">//! [`num-complex`]: ./num_complex/index.html</span>
+<span class="doccomment">//! [`num-bigint`]: ./num_bigint/index.html &quot;Documentation about the `num-bigint` feature.&quot;</span>
+<span class="doccomment">//! [`num-complex`]: ./num_complex/index.html &quot;Documentation about the `num-complex` feature.&quot;</span>
 <span class="doccomment">//! [`pyo3-build-config`]: https://docs.rs/pyo3-build-config</span>
-<span class="doccomment">//! [`serde`]: &lt;./serde/index.html&gt;</span>
+<span class="doccomment">//! [`serde`]: &lt;./serde/index.html&gt; &quot;Documentation about the `serde` feature.&quot;</span>
 <span class="doccomment">//! [calling_rust]: https://pyo3.rs/latest/python_from_rust.html &quot;Calling Python from Rust - PyO3 user guide&quot;</span>
 <span class="doccomment">//! [examples subdirectory]: https://github.com/PyO3/pyo3/tree/main/examples</span>
 <span class="doccomment">//! [feature flags]: https://doc.rust-lang.org/cargo/reference/features.html &quot;Features - The Cargo Book&quot;</span>
