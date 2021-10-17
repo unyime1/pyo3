@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1634455012563,
+  "lastUpdate": 1634455472828,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -30023,6 +30023,180 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item_unchecked",
             "value": 499554,
             "range": "± 377",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "40474653+chris-laplante@users.noreply.github.com",
+            "name": "Chris Laplante",
+            "username": "chris-laplante"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3b94f4b70c335854020cf877b24253dbc43758fa",
+          "message": "Add `anyhow-integration` feature which implements From<anyhow::Error> for PyErr (#1822)\n\n* Add 'anyhow' feature which provides simple From<anyhow::Error> for PyErr impl\r\n\r\nThis makes it possible to use anyhow::Result<T> as the return type for\r\nmethods and functions exposed to Python.\r\n\r\nThe current implementation just stringifies the anyhow::Error before\r\nshoving it into a PyRuntimeError. Conversion back to the anyhow::Error\r\nis not possible, but it is better than nothing.\r\n\r\nSigned-off-by: Chris Laplante <chris.laplante@agilent.com>\r\n\r\n* Document `anyhow` feature in the guide\r\n\r\nSigned-off-by: Chris Laplante <chris.laplante@agilent.com>\r\n\r\n* update changelog to document anyhow feature\r\n\r\n* WIP adding tests\r\n\r\n* Finish up anyhow feature\r\n\r\n* Fix formatting\r\n\r\n* Fix tests\r\n\r\n* Fix tests\r\n\r\n* Apply review suggestions\r\n\r\nCo-authored-by: Bruno Kolenbrander <59372212+mejrs@users.noreply.github.com>\r\nCo-authored-by: mejrs <brunokolenbrander@hotmail.com>",
+          "timestamp": "2021-10-17T07:54:29+01:00",
+          "tree_id": "d28728ec5794b88902917c4e67b6d2a13eb30055",
+          "url": "https://github.com/PyO3/pyo3/commit/3b94f4b70c335854020cf877b24253dbc43758fa"
+        },
+        "date": 1634455447277,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 77299,
+            "range": "± 5855",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 239689,
+            "range": "± 19980",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 2453515,
+            "range": "± 159352",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_new",
+            "value": 4716749,
+            "range": "± 355906",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 2800270,
+            "range": "± 184794",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 8991142,
+            "range": "± 705259",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 12092703,
+            "range": "± 721297",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 7228259,
+            "range": "± 450345",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 15,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 96,
+            "range": "± 5",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 97,
+            "range": "± 5",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 1418038,
+            "range": "± 111400",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_new",
+            "value": 1501830,
+            "range": "± 85870",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 896464,
+            "range": "± 63084",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item_unchecked",
+            "value": 753782,
+            "range": "± 59797",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 5426,
+            "range": "± 21225",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 4431,
+            "range": "± 315",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 2075763,
+            "range": "± 135314",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 9233583,
+            "range": "± 600362",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 12105516,
+            "range": "± 797271",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 6401243,
+            "range": "± 423559",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 999558,
+            "range": "± 46884",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_new",
+            "value": 1901292,
+            "range": "± 86054",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 743060,
+            "range": "± 29816",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item_unchecked",
+            "value": 604916,
+            "range": "± 48159",
             "unit": "ns/iter"
           }
         ]
