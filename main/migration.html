@@ -254,7 +254,7 @@ Exception types</a>).</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span><span class="boring">use pyo3::{PyErr, PyResult, exceptions::PyTypeError};
+</span><span class="boring">use pyo3::{PyResult, exceptions::PyTypeError};
 </span>let result: PyResult&lt;()&gt; = Err(PyTypeError::new_err(&quot;error message&quot;));
 <span class="boring">}
 </span></code></pre></pre>
@@ -391,6 +391,7 @@ struct NotThreadSafe {
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 use std::sync::{Arc, Mutex};
 
@@ -426,6 +427,7 @@ struct Unsendable {
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 
 #[pyclass(unsendable)]
@@ -543,7 +545,8 @@ rules of references.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span>#[pyclass]
+</span>
+#[pyclass]
 struct Names {
     names: Vec&lt;String&gt;
 }

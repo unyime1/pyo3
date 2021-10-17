@@ -234,7 +234,10 @@ fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; 
 </ul>
 <h2 id="argument-parsing"><a class="header" href="#argument-parsing">Argument parsing</a></h2>
 <p>The <code>#[pyfunction]</code> attribute supports specifying details of argument parsing. The details are given in the section <a href="class.html#method-arguments">&quot;Method arguments&quot; of the Classes chapter</a>.  Here is an example for a function that accepts arbitrary keyword arguments (<code>**kwargs</code> in Python syntax) and returns the number that was passed:</p>
-<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
 #[pyfunction(kwds=&quot;**&quot;)]
@@ -247,8 +250,7 @@ fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; 
     m.add_function(wrap_pyfunction!(num_kwds, m)?).unwrap();
     Ok(())
 }
-
-<span class="boring">fn main() {}
+<span class="boring">}
 </span></code></pre></pre>
 <h2 id="making-the-function-signature-available-to-python"><a class="header" href="#making-the-function-signature-available-to-python">Making the function signature available to Python</a></h2>
 <p>In order to make the function signature available to Python to be retrieved via
@@ -256,10 +258,7 @@ fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; 
 below. The <code>/</code> signifies the end of positional-only arguments. (This
 is not a feature of this library in particular, but the general format used by
 CPython for annotating signatures of built-in functions.)</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use pyo3::prelude::*;
+<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 
 /// This function adds two unsigned 64-bit integers.
 #[pyfunction]
@@ -267,17 +266,31 @@ CPython for annotating signatures of built-in functions.)</p>
 fn add(a: u64, b: u64) -&gt; u64 {
     a + b
 }
-<span class="boring">}
+<span class="boring">
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span><span class="boring">    Python::with_gil(|py| {
+</span><span class="boring">        let fun = pyo3::wrap_pyfunction!(add, py)?;
+</span><span class="boring">
+</span><span class="boring">        let doc: String = fun.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">        assert_eq!(doc, &quot;This function adds two unsigned 64-bit integers.&quot;);
+</span><span class="boring">
+</span><span class="boring">        let inspect = PyModule::import(py, &quot;inspect&quot;)?.getattr(&quot;signature&quot;)?;
+</span><span class="boring">        let sig: String = inspect
+</span><span class="boring">            .call1((fun,))?
+</span><span class="boring">            .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">            .extract()?;
+</span><span class="boring">        assert_eq!(sig, &quot;(a, b, /)&quot;);
+</span><span class="boring">
+</span><span class="boring">        Ok(())
+</span><span class="boring">    })
+</span><span class="boring">}
 </span></code></pre></pre>
 <p>This also works for classes and methods:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 use pyo3::types::PyType;
 
 // it works even if the item is not documented:
-
 #[pyclass]
 #[pyo3(text_signature = &quot;(c, d, /)&quot;)]
 struct MyClass {}
@@ -306,7 +319,69 @@ impl MyClass {
         e + f
     }
 }
-<span class="boring">}
+<span class="boring">
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span><span class="boring">    Python::with_gil(|py| {
+</span><span class="boring">        let inspect = PyModule::import(py, &quot;inspect&quot;)?.getattr(&quot;signature&quot;)?;
+</span><span class="boring">        let module = PyModule::new(py, &quot;my_module&quot;)?;
+</span><span class="boring">        module.add_class::&lt;MyClass&gt;()?;
+</span><span class="boring">        let class = module.getattr(&quot;MyClass&quot;)?;
+</span><span class="boring">
+</span><span class="boring">        if cfg!(not(Py_LIMITED_API)) || py.version_info() &gt;= (3, 10)  {
+</span><span class="boring">            let doc: String = class.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">            assert_eq!(doc, &quot;&quot;);
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((class,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(c, d, /)&quot;);
+</span><span class="boring">        } else {
+</span><span class="boring">            let doc: String = class.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">            assert_eq!(doc, &quot;&quot;);
+</span><span class="boring">
+</span><span class="boring">            inspect.call1((class,)).expect_err(&quot;`text_signature` on classes is not compatible with compilation in `abi3` mode until Python 3.10 or greater&quot;);
+</span><span class="boring">         }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(self, /, e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_class_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(cls, e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_static_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        Ok(())
+</span><span class="boring">    })
+</span><span class="boring">}
 </span></code></pre></pre>
 <p>Note that <code>text_signature</code> on classes is not compatible with compilation in
 <code>abi3</code> mode until Python 3.10 or greater.</p>
@@ -319,6 +394,7 @@ generated signatures when those are added in a future version of PyO3.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 
 /// add(a, b, /)
@@ -371,7 +447,10 @@ the FFI barrier. You can even make that class callable with <code>__call__</code
 in Python code.</p>
 <h3 id="accessing-the-module-of-a-function"><a class="header" href="#accessing-the-module-of-a-function">Accessing the module of a function</a></h3>
 <p>It is possible to access the module of a <code>#[pyfunction]</code> in the function body by using <code>#[pyo3(pass_module)]</code> option:</p>
-<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use pyo3::prelude::*;
 
 #[pyfunction]
 #[pyo3(pass_module)]
@@ -383,8 +462,7 @@ fn pyfunction_with_module(module: &amp;PyModule) -&gt; PyResult&lt;&amp;str&gt; 
 fn module_with_fn(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
     m.add_function(wrap_pyfunction!(pyfunction_with_module, m)?)
 }
-
-<span class="boring">fn main() {}
+<span class="boring">}
 </span></code></pre></pre>
 <p>If <code>pass_module</code> is set, the first argument <strong>must</strong> be the <code>&amp;PyModule</code>. It is then possible to use the module
 in the function body.</p>

@@ -828,12 +828,6 @@
 <span id="828">828</span>
 <span id="829">829</span>
 <span id="830">830</span>
-<span id="831">831</span>
-<span id="832">832</span>
-<span id="833">833</span>
-<span id="834">834</span>
-<span id="835">835</span>
-<span id="836">836</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Interaction with Python&#39;s global interpreter lock</span>
@@ -899,13 +893,10 @@
 <span class="doccomment">/// ```rust</span>
 <span class="doccomment">/// use pyo3::prelude::*;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// # #[allow(clippy::needless_doctest_main)]</span>
-<span class="doccomment">/// fn main() {</span>
-<span class="doccomment">///     pyo3::prepare_freethreaded_python();</span>
-<span class="doccomment">///     Python::with_gil(|py| {</span>
-<span class="doccomment">///         py.run(&quot;print(&#39;Hello World&#39;)&quot;, None, None)</span>
-<span class="doccomment">///     });</span>
-<span class="doccomment">/// }</span>
+<span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt;{</span>
+<span class="doccomment">/// pyo3::prepare_freethreaded_python();</span>
+<span class="doccomment">/// Python::with_gil(|py| py.run(&quot;print(&#39;Hello World&#39;)&quot;, None, None))</span>
+<span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))))]</span>
@@ -967,14 +958,11 @@
 <span class="doccomment">/// ```rust</span>
 <span class="doccomment">/// use pyo3::prelude::*;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// # #[allow(clippy::needless_doctest_main)]</span>
-<span class="doccomment">/// fn main() {</span>
-<span class="doccomment">///     unsafe {</span>
-<span class="doccomment">///         pyo3::with_embedded_python_interpreter(|py| {</span>
-<span class="doccomment">///             py.run(&quot;print(&#39;Hello World&#39;)&quot;, None, None)</span>
-<span class="doccomment">///         });</span>
-<span class="doccomment">///     }</span>
+<span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt;{</span>
+<span class="doccomment">/// unsafe {</span>
+<span class="doccomment">///     pyo3::with_embedded_python_interpreter(|py| py.run(&quot;print(&#39;Hello World&#39;)&quot;, None, None))</span>
 <span class="doccomment">/// }</span>
+<span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))))]</span>

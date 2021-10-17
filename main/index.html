@@ -247,7 +247,7 @@ use pyo3::types::IntoPyDict;
 fn main() -&gt; PyResult&lt;()&gt; {
     Python::with_gil(|py| {
         let sys = py.import(&quot;sys&quot;)?;
-        let version: String = sys.get(&quot;version&quot;)?.extract()?;
+        let version: String = sys.getattr(&quot;version&quot;)?.extract()?;
 
         let locals = [(&quot;os&quot;, py.import(&quot;os&quot;)?)].into_py_dict(py);
         let code = &quot;os.getenv('USER') or os.getenv('USERNAME') or 'Unknown'&quot;;

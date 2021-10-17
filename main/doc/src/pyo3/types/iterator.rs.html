@@ -210,6 +210,7 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
+<span id="213">213</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 <span class="comment">// based on Daniel Grunwald&#39;s https://github.com/dgrunwald/rust-cpython</span>
@@ -223,18 +224,19 @@
 <span class="doccomment">/// # Examples</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// # use pyo3::prelude::*;</span>
-<span class="doccomment">/// use pyo3::types::PyIterator;</span>
+<span class="doccomment">/// use pyo3::prelude::*;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
-<span class="doccomment">/// Python::with_gil(|py| -&gt;  PyResult&lt;()&gt; {</span>
+<span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
 <span class="doccomment">///     let list = py.eval(&quot;iter([1, 2, 3, 4])&quot;, None, None)?;</span>
-<span class="doccomment">///     let numbers: PyResult&lt;Vec&lt;usize&gt;&gt; = list.iter()?.map(|i| i.and_then(PyAny::extract::&lt;usize&gt;)).collect();</span>
+<span class="doccomment">///     let numbers: PyResult&lt;Vec&lt;usize&gt;&gt; = list</span>
+<span class="doccomment">///         .iter()?</span>
+<span class="doccomment">///         .map(|i| i.and_then(PyAny::extract::&lt;usize&gt;))</span>
+<span class="doccomment">///         .collect();</span>
 <span class="doccomment">///     let sum: usize = numbers?.iter().sum();</span>
 <span class="doccomment">///     assert_eq!(sum, 10);</span>
 <span class="doccomment">///     Ok(())</span>
-<span class="doccomment">/// });</span>
-<span class="doccomment">/// # Ok(())</span>
+<span class="doccomment">/// })</span>
 <span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>

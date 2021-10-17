@@ -783,11 +783,6 @@
 <span id="783">783</span>
 <span id="784">784</span>
 <span id="785">785</span>
-<span id="786">786</span>
-<span id="787">787</span>
-<span id="788">788</span>
-<span id="789">789</span>
-<span id="790">790</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::class::basic::CompareOp</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::conversion</span>::{
     <span class="ident">AsPyPointer</span>, <span class="ident">FromPyObject</span>, <span class="ident">IntoPy</span>, <span class="ident">IntoPyPointer</span>, <span class="ident">PyTryFrom</span>, <span class="ident">ToBorrowedObject</span>, <span class="ident">ToPyObject</span>,
@@ -1009,25 +1004,21 @@
     <span class="doccomment">/// Depending on the value of `compare_op`, this is equivalent to one of the</span>
     <span class="doccomment">/// following Python expressions:</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// &lt;div style=&quot;width:1px&quot;&gt;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// | `compare_op` | &lt;span style=&quot;white-space: pre&quot;&gt;Python expression&lt;/span&gt; |</span>
+    <span class="doccomment">/// | `compare_op` | Python expression |</span>
     <span class="doccomment">/// | :---: | :----: |</span>
-    <span class="doccomment">/// | [`CompareOp::Eq`] | &lt;span style=&quot;white-space: pre&quot;&gt;`self == other`&lt;/span&gt; |</span>
-    <span class="doccomment">/// | [`CompareOp::Ne`] | &lt;span style=&quot;white-space: pre&quot;&gt;`self != other`&lt;/span&gt; |</span>
-    <span class="doccomment">/// | [`CompareOp::Lt`] | &lt;span style=&quot;white-space: pre&quot;&gt;`self &lt; other`&lt;/span&gt; |</span>
-    <span class="doccomment">/// | [`CompareOp::Le`] | &lt;span style=&quot;white-space: pre&quot;&gt;`self &lt;= other`&lt;/span&gt; |</span>
-    <span class="doccomment">/// | [`CompareOp::Gt`] | &lt;span style=&quot;white-space: pre&quot;&gt;`self &gt; other`&lt;/span&gt; |</span>
-    <span class="doccomment">/// | [`CompareOp::Ge`] | &lt;span style=&quot;white-space: pre&quot;&gt;`self &gt;= other`&lt;/span&gt; |</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// &lt;/div&gt;</span>
+    <span class="doccomment">/// | [`CompareOp::Eq`] | `self == other` |</span>
+    <span class="doccomment">/// | [`CompareOp::Ne`] | `self != other` |</span>
+    <span class="doccomment">/// | [`CompareOp::Lt`] | `self &lt; other` |</span>
+    <span class="doccomment">/// | [`CompareOp::Le`] | `self &lt;= other` |</span>
+    <span class="doccomment">/// | [`CompareOp::Gt`] | `self &gt; other` |</span>
+    <span class="doccomment">/// | [`CompareOp::Ge`] | `self &gt;= other` |</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use pyo3::class::basic::CompareOp;</span>
     <span class="doccomment">/// use pyo3::prelude::*;</span>
     <span class="doccomment">/// use pyo3::types::PyInt;</span>
-    <span class="doccomment">/// use pyo3::class::basic::CompareOp;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
@@ -1035,7 +1026,7 @@
     <span class="doccomment">///     let b: &amp;PyInt = 42_u8.into_py(py).into_ref(py).downcast()?;</span>
     <span class="doccomment">///     assert!(a.rich_compare(b, CompareOp::Le)?.is_true()?);</span>
     <span class="doccomment">///     Ok(())</span>
-    <span class="doccomment">///   })?;</span>
+    <span class="doccomment">/// })?;</span>
     <span class="doccomment">/// # Ok(())}</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">rich_compare</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="ident">O</span>, <span class="ident">compare_op</span>: <span class="ident">CompareOp</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyAny</span><span class="op">&gt;</span>
@@ -1064,10 +1055,10 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
-    <span class="doccomment">///        let builtins = PyModule::import(py, &quot;builtins&quot;)?;</span>
-    <span class="doccomment">///        let print = builtins.getattr(&quot;print&quot;)?;</span>
-    <span class="doccomment">///        assert!(print.is_callable());</span>
-    <span class="doccomment">///        Ok(())</span>
+    <span class="doccomment">///     let builtins = PyModule::import(py, &quot;builtins&quot;)?;</span>
+    <span class="doccomment">///     let print = builtins.getattr(&quot;print&quot;)?;</span>
+    <span class="doccomment">///     assert!(print.is_callable());</span>
+    <span class="doccomment">///     Ok(())</span>
     <span class="doccomment">/// })?;</span>
     <span class="doccomment">/// # Ok(())}</span>
     <span class="doccomment">/// ```</span>
@@ -1153,7 +1144,7 @@
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">///     let module = PyModule::import(py, &quot;operator&quot;)?;</span>
     <span class="doccomment">///     let add = module.getattr(&quot;add&quot;)?;</span>
-    <span class="doccomment">///     let args = (1,2);</span>
+    <span class="doccomment">///     let args = (1, 2);</span>
     <span class="doccomment">///     let value = add.call1(args)?;</span>
     <span class="doccomment">///     assert_eq!(value.extract::&lt;i32&gt;()?, 3);</span>
     <span class="doccomment">///     Ok(())</span>
@@ -1181,8 +1172,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// use pyo3::prelude::*;</span>
-    <span class="doccomment">/// use pyo3::types::{PyDict, PyList};</span>
-    <span class="doccomment">/// use crate::pyo3::types::IntoPyDict;</span>
+    <span class="doccomment">/// use pyo3::types::{IntoPyDict, PyList};</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>

@@ -195,7 +195,7 @@ a list:</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::{Py, Python, PyAny, PyResult, types::PyList};
+</span><span class="boring">use pyo3::types::PyList;
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let obj: &amp;PyAny = PyList::empty(py);
 
@@ -216,7 +216,7 @@ let _: Py&lt;PyList&gt; = obj.extract()?;
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::{Py, Python, PyAny, PyResult, types::PyList};
+</span><span class="boring">use pyo3::{Py, Python, PyAny, PyResult};
 </span><span class="boring">#[pyclass] #[derive(Clone)] struct MyClass { }
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let obj: &amp;PyAny = Py::new(py, MyClass { })?.into_ref(py);
@@ -355,7 +355,6 @@ so it also exposes all of the methods on <code>PyAny</code>.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::types::PyList;
 </span><span class="boring">#[pyclass] struct MyClass { }
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let cell: &amp;PyCell&lt;MyClass&gt; = PyCell::new(py, MyClass { })?;
@@ -377,7 +376,6 @@ let _: &amp;mut MyClass = &amp;mut *py_ref_mut;
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::types::PyList;
 </span><span class="boring">#[pyclass] struct MyClass { }
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let cell: &amp;PyCell&lt;MyClass&gt; = PyCell::new(py, MyClass { })?;

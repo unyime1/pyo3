@@ -173,11 +173,12 @@
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span><span class="boring">use pyo3::prelude::*;
 </span>#[pyclass]
 struct MyClass {
-    num: i32,
-    debug: bool,
+<span class="boring">    #[pyo3(get)]
+</span>    num: i32,
 }
 <span class="boring">}
 </span></code></pre></pre>
@@ -191,8 +192,8 @@ struct MyClass {
 </span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">   #[allow(dead_code)] 
 </span><span class="boring">   num: i32,
-</span><span class="boring">   debug: bool,
 </span><span class="boring">}
 </span>#[pymodule]
 fn mymodule(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
@@ -221,15 +222,13 @@ like <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html"><code>RefC
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::types::PyDict;
 </span>#[pyclass]
 struct MyClass {
     #[pyo3(get)]
     num: i32,
-    debug: bool,
 }
 Python::with_gil(|py| {
-    let obj = PyCell::new(py, MyClass { num: 3, debug: true }).unwrap();
+    let obj = PyCell::new(py, MyClass { num: 3}).unwrap();
     {
         let obj_ref = obj.borrow(); // Get PyRef
         assert_eq!(obj_ref.num, 3);
@@ -261,10 +260,13 @@ lifetime, and therefore needs a <code>Python&lt;'_&gt;</code> token to access.</
 struct MyClass {
     num: i32,
 }
+
 fn return_myclass() -&gt; Py&lt;MyClass&gt; {
     Python::with_gil(|py| Py::new(py, MyClass { num: 1 }).unwrap())
 }
+
 let obj = return_myclass();
+
 Python::with_gil(|py|{
     let cell = obj.as_ref(py); // Py&lt;MyClass&gt;::as_ref returns &amp;PyCell&lt;MyClass&gt;
     let obj_ref = cell.borrow(); // Get PyRef&lt;T&gt;
@@ -300,7 +302,8 @@ attribute. Only Python's <code>__new__</code> method can be specified, <code>__i
 </span><span class="boring">use pyo3::prelude::*;
 </span>#[pyclass]
 struct MyClass {
-    num: i32,
+<span class="boring">    #[allow(dead_code)]
+</span>    num: i32,
 }
 
 #[pymethods]
@@ -319,7 +322,8 @@ impl MyClass {
 </span><span class="boring">use pyo3::prelude::*;
 </span>#[pyclass]
 struct MyClass {
-    num: i32,
+<span class="boring">    #[allow(dead_code)]
+</span>    num: i32,
 }
 
 #[pymethods]
@@ -460,8 +464,11 @@ impl DictWithCounter {
 </span><span class="boring">}
 </span></code></pre></pre>
 <p>If <code>SubClass</code> does not provide a baseclass initialization, the compilation fails.</p>
-<pre><code class="language-compile_fail"># use pyo3::prelude::*;
-
+<pre><pre class="playground"><code class="language-rust compile_fail">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::prelude::*;
+</span>
 #[pyclass]
 struct BaseClass {
     val1: usize,
@@ -479,7 +486,8 @@ impl SubClass {
         SubClass { val2: 15 }
     }
 }
-</code></pre>
+<span class="boring">}
+</span></code></pre></pre>
 <h2 id="object-properties"><a class="header" href="#object-properties">Object properties</a></h2>
 <p>PyO3 supports two ways to add properties to your <code>#[pyclass]</code>:</p>
 <ul>
@@ -627,8 +635,8 @@ gets injected by the method wrapper, e.g.</p>
 </span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">#[allow(dead_code)]
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
@@ -650,8 +658,8 @@ This is the equivalent of the Python decorator <code>@classmethod</code>.</p>
 </span><span class="boring">use pyo3::types::PyType;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">    #[allow(dead_code)]
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
@@ -680,8 +688,8 @@ This may be the type object of a derived class.</li>
 </span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">    #[allow(dead_code)]
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
@@ -826,19 +834,17 @@ code unmodified.</li>
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
     #[new]
-    #[args(num = &quot;-1&quot;, debug = &quot;true&quot;)]
-    fn new(num: i32, debug: bool) -&gt; Self {
-        MyClass { num, debug }
+    #[args(num = &quot;-1&quot;)]
+    fn new(num: i32) -&gt; Self {
+        MyClass { num }
     }
 
     #[args(
         num = &quot;10&quot;,
-        debug = &quot;true&quot;,
         py_args = &quot;*&quot;,
         name = &quot;\&quot;Hello\&quot;&quot;,
         py_kwargs = &quot;**&quot;
@@ -846,23 +852,20 @@ impl MyClass {
     fn method(
         &amp;mut self,
         num: i32,
-        debug: bool,
         name: &amp;str,
         py_args: &amp;PyTuple,
         py_kwargs: Option&lt;&amp;PyDict&gt;,
     ) -&gt; PyResult&lt;String&gt; {
-        self.debug = debug;
         self.num = num;
         Ok(format!(
-            &quot;py_args={:?}, py_kwargs={:?}, name={}, num={}, debug={}&quot;,
-            py_args, py_kwargs, name, self.num, self.debug
+            &quot;py_args={:?}, py_kwargs={:?}, name={}, num={}&quot;,
+            py_args, py_kwargs, name, self.num
         ))
     }
 
-    fn make_change(&amp;mut self, num: i32, debug: bool) -&gt; PyResult&lt;String&gt; {
+    fn make_change(&amp;mut self, num: i32) -&gt; PyResult&lt;String&gt; {
         self.num = num;
-        self.debug = debug;
-        Ok(format!(&quot;num={}, debug={}&quot;, self.num, self.debug))
+        Ok(format!(&quot;num={}&quot;, self.num))
     }
 }
 <span class="boring">}
@@ -874,13 +877,12 @@ mc = mymodule.MyClass()
 print(mc.method(44, False, &quot;World&quot;, 666, x=44, y=55))
 print(mc.method(num=-1, name=&quot;World&quot;))
 print(mc.make_change(44, False))
-print(mc.make_change(debug=False, num=-1))
 </code></pre>
 <p>Produces output:</p>
-<pre><code class="language-text">py_args=('World', 666), py_kwargs=Some({'x': 44, 'y': 55}), name=Hello, num=44, debug=false
-py_args=(), py_kwargs=None, name=World, num=-1, debug=true
-num=44, debug=false
-num=-1, debug=false
+<pre><code class="language-text">py_args=('World', 666), py_kwargs=Some({'x': 44, 'y': 55}), name=Hello, num=44
+py_args=(), py_kwargs=None, name=World, num=-1
+num=44
+num=-1
 </code></pre>
 <h2 id="implementation-details"><a class="header" href="#implementation-details">Implementation details</a></h2>
 <p>The <code>#[pyclass]</code> macros rely on a lot of conditional code generation: each <code>#[pyclass]</code> can optionally have a <code>#[pymethods]</code> block as well as several different possible <code>#[pyproto]</code> trait implementations.</p>
@@ -896,8 +898,8 @@ num=-1, debug=false
 
 /// Class for demonstration
 struct MyClass {
-    num: i32,
-    debug: bool,
+<span class="boring">    #[allow(dead_code)]
+</span>    num: i32,
 }
 
 unsafe impl pyo3::PyTypeInfo for MyClass {
@@ -927,7 +929,7 @@ impl pyo3::IntoPy&lt;PyObject&gt; for MyClass {
 }
 
 impl pyo3::class::impl_::PyClassImpl for MyClass {
-    const DOC: &amp;'static str = &quot;Class for demonstration&quot;;
+    const DOC: &amp;'static str = &quot;Class for demonstration\u{0}&quot;;
     const IS_GC: bool = false;
     const IS_BASETYPE: bool = false;
     const IS_SUBCLASS: bool = false;

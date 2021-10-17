@@ -696,6 +696,9 @@
 <span id="696">696</span>
 <span id="697">697</span>
 <span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi</span>::{<span class="self">self</span>, <span class="ident">Py_ssize_t</span>};
@@ -808,13 +811,16 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// use pyo3::{prelude::*, types::PyTuple};</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">///     let ob = (1, 2, 3).to_object(py);</span>
     <span class="doccomment">///     let tuple = &lt;PyTuple as PyTryFrom&gt;::try_from(ob.as_ref(py)).unwrap();</span>
     <span class="doccomment">///     let obj = tuple.get_item(0);</span>
     <span class="doccomment">///     assert_eq!(obj.unwrap().extract::&lt;i32&gt;().unwrap(), 1);</span>
     <span class="doccomment">///     Ok(())</span>
-    <span class="doccomment">/// });</span>
+    <span class="doccomment">/// })</span>
+    <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">index</span>: <span class="ident">usize</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyAny</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {

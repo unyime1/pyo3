@@ -248,7 +248,7 @@ use pyo3::types::IntoPyDict;
 fn main() -&gt; PyResult&lt;()&gt; {
     Python::with_gil(|py| {
         let sys = py.import(&quot;sys&quot;)?;
-        let version: String = sys.get(&quot;version&quot;)?.extract()?;
+        let version: String = sys.getattr(&quot;version&quot;)?.extract()?;
 
         let locals = [(&quot;os&quot;, py.import(&quot;os&quot;)?)].into_py_dict(py);
         let code = &quot;os.getenv('USER') or os.getenv('USERNAME') or 'Unknown'&quot;;
@@ -411,9 +411,7 @@ pub(crate) fn register(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 }
 
 #[pyclass]
-struct SomeClass {
-    x: usize,
-}
+struct SomeClass {/* ... */}
 <span class="boring">}
 </span>
 // src/osutil.rs
@@ -591,7 +589,10 @@ fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; 
 </ul>
 <h2 id="argument-parsing"><a class="header" href="#argument-parsing">Argument parsing</a></h2>
 <p>The <code>#[pyfunction]</code> attribute supports specifying details of argument parsing. The details are given in the section <a href="class.html#method-arguments">&quot;Method arguments&quot; of the Classes chapter</a>.  Here is an example for a function that accepts arbitrary keyword arguments (<code>**kwargs</code> in Python syntax) and returns the number that was passed:</p>
-<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
 #[pyfunction(kwds=&quot;**&quot;)]
@@ -604,8 +605,7 @@ fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; 
     m.add_function(wrap_pyfunction!(num_kwds, m)?).unwrap();
     Ok(())
 }
-
-<span class="boring">fn main() {}
+<span class="boring">}
 </span></code></pre></pre>
 <h2 id="making-the-function-signature-available-to-python"><a class="header" href="#making-the-function-signature-available-to-python">Making the function signature available to Python</a></h2>
 <p>In order to make the function signature available to Python to be retrieved via
@@ -613,10 +613,7 @@ fn module_with_functions(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; 
 below. The <code>/</code> signifies the end of positional-only arguments. (This
 is not a feature of this library in particular, but the general format used by
 CPython for annotating signatures of built-in functions.)</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use pyo3::prelude::*;
+<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 
 /// This function adds two unsigned 64-bit integers.
 #[pyfunction]
@@ -624,17 +621,31 @@ CPython for annotating signatures of built-in functions.)</p>
 fn add(a: u64, b: u64) -&gt; u64 {
     a + b
 }
-<span class="boring">}
+<span class="boring">
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span><span class="boring">    Python::with_gil(|py| {
+</span><span class="boring">        let fun = pyo3::wrap_pyfunction!(add, py)?;
+</span><span class="boring">
+</span><span class="boring">        let doc: String = fun.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">        assert_eq!(doc, &quot;This function adds two unsigned 64-bit integers.&quot;);
+</span><span class="boring">
+</span><span class="boring">        let inspect = PyModule::import(py, &quot;inspect&quot;)?.getattr(&quot;signature&quot;)?;
+</span><span class="boring">        let sig: String = inspect
+</span><span class="boring">            .call1((fun,))?
+</span><span class="boring">            .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">            .extract()?;
+</span><span class="boring">        assert_eq!(sig, &quot;(a, b, /)&quot;);
+</span><span class="boring">
+</span><span class="boring">        Ok(())
+</span><span class="boring">    })
+</span><span class="boring">}
 </span></code></pre></pre>
 <p>This also works for classes and methods:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 use pyo3::types::PyType;
 
 // it works even if the item is not documented:
-
 #[pyclass]
 #[pyo3(text_signature = &quot;(c, d, /)&quot;)]
 struct MyClass {}
@@ -663,7 +674,69 @@ impl MyClass {
         e + f
     }
 }
-<span class="boring">}
+<span class="boring">
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span><span class="boring">    Python::with_gil(|py| {
+</span><span class="boring">        let inspect = PyModule::import(py, &quot;inspect&quot;)?.getattr(&quot;signature&quot;)?;
+</span><span class="boring">        let module = PyModule::new(py, &quot;my_module&quot;)?;
+</span><span class="boring">        module.add_class::&lt;MyClass&gt;()?;
+</span><span class="boring">        let class = module.getattr(&quot;MyClass&quot;)?;
+</span><span class="boring">
+</span><span class="boring">        if cfg!(not(Py_LIMITED_API)) || py.version_info() &gt;= (3, 10)  {
+</span><span class="boring">            let doc: String = class.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">            assert_eq!(doc, &quot;&quot;);
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((class,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(c, d, /)&quot;);
+</span><span class="boring">        } else {
+</span><span class="boring">            let doc: String = class.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">            assert_eq!(doc, &quot;&quot;);
+</span><span class="boring">
+</span><span class="boring">            inspect.call1((class,)).expect_err(&quot;`text_signature` on classes is not compatible with compilation in `abi3` mode until Python 3.10 or greater&quot;);
+</span><span class="boring">         }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(self, /, e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_class_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(cls, e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_static_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        Ok(())
+</span><span class="boring">    })
+</span><span class="boring">}
 </span></code></pre></pre>
 <p>Note that <code>text_signature</code> on classes is not compatible with compilation in
 <code>abi3</code> mode until Python 3.10 or greater.</p>
@@ -676,6 +749,7 @@ generated signatures when those are added in a future version of PyO3.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 
 /// add(a, b, /)
@@ -728,7 +802,10 @@ the FFI barrier. You can even make that class callable with <code>__call__</code
 in Python code.</p>
 <h3 id="accessing-the-module-of-a-function"><a class="header" href="#accessing-the-module-of-a-function">Accessing the module of a function</a></h3>
 <p>It is possible to access the module of a <code>#[pyfunction]</code> in the function body by using <code>#[pyo3(pass_module)]</code> option:</p>
-<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use pyo3::prelude::*;
 
 #[pyfunction]
 #[pyo3(pass_module)]
@@ -740,8 +817,7 @@ fn pyfunction_with_module(module: &amp;PyModule) -&gt; PyResult&lt;&amp;str&gt; 
 fn module_with_fn(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
     m.add_function(wrap_pyfunction!(pyfunction_with_module, m)?)
 }
-
-<span class="boring">fn main() {}
+<span class="boring">}
 </span></code></pre></pre>
 <p>If <code>pass_module</code> is set, the first argument <strong>must</strong> be the <code>&amp;PyModule</code>. It is then possible to use the module
 in the function body.</p>
@@ -783,11 +859,12 @@ arguments from the input <code>PyObject</code>s.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span><span class="boring">use pyo3::prelude::*;
 </span>#[pyclass]
 struct MyClass {
-    num: i32,
-    debug: bool,
+<span class="boring">    #[pyo3(get)]
+</span>    num: i32,
 }
 <span class="boring">}
 </span></code></pre></pre>
@@ -801,8 +878,8 @@ struct MyClass {
 </span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">   #[allow(dead_code)] 
 </span><span class="boring">   num: i32,
-</span><span class="boring">   debug: bool,
 </span><span class="boring">}
 </span>#[pymodule]
 fn mymodule(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
@@ -831,15 +908,13 @@ like <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html"><code>RefC
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::types::PyDict;
 </span>#[pyclass]
 struct MyClass {
     #[pyo3(get)]
     num: i32,
-    debug: bool,
 }
 Python::with_gil(|py| {
-    let obj = PyCell::new(py, MyClass { num: 3, debug: true }).unwrap();
+    let obj = PyCell::new(py, MyClass { num: 3}).unwrap();
     {
         let obj_ref = obj.borrow(); // Get PyRef
         assert_eq!(obj_ref.num, 3);
@@ -871,10 +946,13 @@ lifetime, and therefore needs a <code>Python&lt;'_&gt;</code> token to access.</
 struct MyClass {
     num: i32,
 }
+
 fn return_myclass() -&gt; Py&lt;MyClass&gt; {
     Python::with_gil(|py| Py::new(py, MyClass { num: 1 }).unwrap())
 }
+
 let obj = return_myclass();
+
 Python::with_gil(|py|{
     let cell = obj.as_ref(py); // Py&lt;MyClass&gt;::as_ref returns &amp;PyCell&lt;MyClass&gt;
     let obj_ref = cell.borrow(); // Get PyRef&lt;T&gt;
@@ -910,7 +988,8 @@ attribute. Only Python's <code>__new__</code> method can be specified, <code>__i
 </span><span class="boring">use pyo3::prelude::*;
 </span>#[pyclass]
 struct MyClass {
-    num: i32,
+<span class="boring">    #[allow(dead_code)]
+</span>    num: i32,
 }
 
 #[pymethods]
@@ -929,7 +1008,8 @@ impl MyClass {
 </span><span class="boring">use pyo3::prelude::*;
 </span>#[pyclass]
 struct MyClass {
-    num: i32,
+<span class="boring">    #[allow(dead_code)]
+</span>    num: i32,
 }
 
 #[pymethods]
@@ -1070,8 +1150,11 @@ impl DictWithCounter {
 </span><span class="boring">}
 </span></code></pre></pre>
 <p>If <code>SubClass</code> does not provide a baseclass initialization, the compilation fails.</p>
-<pre><code class="language-compile_fail"># use pyo3::prelude::*;
-
+<pre><pre class="playground"><code class="language-rust compile_fail">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::prelude::*;
+</span>
 #[pyclass]
 struct BaseClass {
     val1: usize,
@@ -1089,7 +1172,8 @@ impl SubClass {
         SubClass { val2: 15 }
     }
 }
-</code></pre>
+<span class="boring">}
+</span></code></pre></pre>
 <h2 id="object-properties"><a class="header" href="#object-properties">Object properties</a></h2>
 <p>PyO3 supports two ways to add properties to your <code>#[pyclass]</code>:</p>
 <ul>
@@ -1237,8 +1321,8 @@ gets injected by the method wrapper, e.g.</p>
 </span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">#[allow(dead_code)]
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
@@ -1260,8 +1344,8 @@ This is the equivalent of the Python decorator <code>@classmethod</code>.</p>
 </span><span class="boring">use pyo3::types::PyType;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">    #[allow(dead_code)]
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
@@ -1290,8 +1374,8 @@ This may be the type object of a derived class.</li>
 </span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
+</span><span class="boring">    #[allow(dead_code)]
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
@@ -1436,19 +1520,17 @@ code unmodified.</li>
 </span><span class="boring">#[pyclass]
 </span><span class="boring">struct MyClass {
 </span><span class="boring">    num: i32,
-</span><span class="boring">    debug: bool,
 </span><span class="boring">}
 </span>#[pymethods]
 impl MyClass {
     #[new]
-    #[args(num = &quot;-1&quot;, debug = &quot;true&quot;)]
-    fn new(num: i32, debug: bool) -&gt; Self {
-        MyClass { num, debug }
+    #[args(num = &quot;-1&quot;)]
+    fn new(num: i32) -&gt; Self {
+        MyClass { num }
     }
 
     #[args(
         num = &quot;10&quot;,
-        debug = &quot;true&quot;,
         py_args = &quot;*&quot;,
         name = &quot;\&quot;Hello\&quot;&quot;,
         py_kwargs = &quot;**&quot;
@@ -1456,23 +1538,20 @@ impl MyClass {
     fn method(
         &amp;mut self,
         num: i32,
-        debug: bool,
         name: &amp;str,
         py_args: &amp;PyTuple,
         py_kwargs: Option&lt;&amp;PyDict&gt;,
     ) -&gt; PyResult&lt;String&gt; {
-        self.debug = debug;
         self.num = num;
         Ok(format!(
-            &quot;py_args={:?}, py_kwargs={:?}, name={}, num={}, debug={}&quot;,
-            py_args, py_kwargs, name, self.num, self.debug
+            &quot;py_args={:?}, py_kwargs={:?}, name={}, num={}&quot;,
+            py_args, py_kwargs, name, self.num
         ))
     }
 
-    fn make_change(&amp;mut self, num: i32, debug: bool) -&gt; PyResult&lt;String&gt; {
+    fn make_change(&amp;mut self, num: i32) -&gt; PyResult&lt;String&gt; {
         self.num = num;
-        self.debug = debug;
-        Ok(format!(&quot;num={}, debug={}&quot;, self.num, self.debug))
+        Ok(format!(&quot;num={}&quot;, self.num))
     }
 }
 <span class="boring">}
@@ -1484,13 +1563,12 @@ mc = mymodule.MyClass()
 print(mc.method(44, False, &quot;World&quot;, 666, x=44, y=55))
 print(mc.method(num=-1, name=&quot;World&quot;))
 print(mc.make_change(44, False))
-print(mc.make_change(debug=False, num=-1))
 </code></pre>
 <p>Produces output:</p>
-<pre><code class="language-text">py_args=('World', 666), py_kwargs=Some({'x': 44, 'y': 55}), name=Hello, num=44, debug=false
-py_args=(), py_kwargs=None, name=World, num=-1, debug=true
-num=44, debug=false
-num=-1, debug=false
+<pre><code class="language-text">py_args=('World', 666), py_kwargs=Some({'x': 44, 'y': 55}), name=Hello, num=44
+py_args=(), py_kwargs=None, name=World, num=-1
+num=44
+num=-1
 </code></pre>
 <h2 id="implementation-details"><a class="header" href="#implementation-details">Implementation details</a></h2>
 <p>The <code>#[pyclass]</code> macros rely on a lot of conditional code generation: each <code>#[pyclass]</code> can optionally have a <code>#[pymethods]</code> block as well as several different possible <code>#[pyproto]</code> trait implementations.</p>
@@ -1506,8 +1584,8 @@ num=-1, debug=false
 
 /// Class for demonstration
 struct MyClass {
-    num: i32,
-    debug: bool,
+<span class="boring">    #[allow(dead_code)]
+</span>    num: i32,
 }
 
 unsafe impl pyo3::PyTypeInfo for MyClass {
@@ -1537,7 +1615,7 @@ impl pyo3::IntoPy&lt;PyObject&gt; for MyClass {
 }
 
 impl pyo3::class::impl_::PyClassImpl for MyClass {
-    const DOC: &amp;'static str = &quot;Class for demonstration&quot;;
+    const DOC: &amp;'static str = &quot;Class for demonstration\u{0}&quot;;
     const IS_GC: bool = false;
     const IS_BASETYPE: bool = false;
     const IS_SUBCLASS: bool = false;
@@ -1892,7 +1970,7 @@ use pyo3::PyIterProtocol;
 
 #[pyclass]
 struct MyIterator {
-    iter: Box&lt;Iterator&lt;Item = PyObject&gt; + Send&gt;,
+    iter: Box&lt;dyn Iterator&lt;Item = PyObject&gt; + Send&gt;,
 }
 
 #[pyproto]
@@ -2072,24 +2150,55 @@ if the member types themselves implement <code>FromPyObject</code>. This even in
 with a generic type <code>T: FromPyObject</code>. Derivation for empty enums, enum variants and
 structs is not supported.</p>
 <h4 id="deriving-a-hrefhttpspyo3rsmaindocpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-structs"><a class="header" href="#deriving-a-hrefhttpspyo3rsmaindocpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-structs">Deriving <a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> for structs</a></h4>
+<p>The derivation generates code that will attempt to access the attribute  <code>my_string</code> on
+the Python object, i.e. <code>obj.getattr(&quot;my_string&quot;)</code>, and call <code>extract()</code> on the attribute.</p>
 <pre><code>use pyo3::prelude::*;
 
 #[derive(FromPyObject)]
 struct RustyStruct {
     my_string: String,
 }
+#
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         let module = PyModule::from_code(
+#             py,
+#             &quot;class Foo:
+#             def __init__(self):
+#                 self.my_string = 'test'&quot;,
+#             &quot;&quot;,
+#             &quot;&quot;,
+#         )?;
+# 
+#         let class = module.getattr(&quot;Foo&quot;)?;
+#         let instance = class.call0()?;
+#         let rustystruct: RustyStruct = instance.extract()?;
+#         assert_eq!(rustystruct.my_string, &quot;test&quot;);
+#         Ok(())
+#     })
+# }
 </code></pre>
-<p>The derivation generates code that will per default access the attribute <code>my_string</code> on
-the Python object, i.e. <code>obj.getattr(&quot;my_string&quot;)</code>, and call <code>extract()</code> on the attribute.
-It is also possible to access the value on the Python object through <code>obj.get_item(&quot;my_string&quot;)</code>
-by setting the attribute <code>pyo3(item)</code> on the field:</p>
+<p>By setting the <code>#[pyo3(item)]</code> attribute on the field, PyO3 will attempt to extract the value by calling the <code>get_item</code> method on the Python object.</p>
 <pre><code>use pyo3::prelude::*;
+
 
 #[derive(FromPyObject)]
 struct RustyStruct {
     #[pyo3(item)]
     my_string: String,
 }
+#
+# use pyo3::types::PyDict;
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         let dict = PyDict::new(py);
+#         dict.set_item(&quot;my_string&quot;, &quot;test&quot;)?;
+# 
+#         let rustystruct: RustyStruct = dict.extract()?;
+#         assert_eq!(rustystruct.my_string, &quot;test&quot;);
+#         Ok(())
+#     })
+# }
 </code></pre>
 <p>The argument passed to <code>getattr</code> and <code>get_item</code> can also be configured:</p>
 <pre><code>use pyo3::prelude::*;
@@ -2101,6 +2210,28 @@ struct RustyStruct {
     #[pyo3(attribute(&quot;name&quot;))]
     string_attr: String,
 }
+# 
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         let module = PyModule::from_code(
+#             py,
+#             &quot;class Foo(dict):
+#             def __init__(self):
+#                 self.name = 'test'
+#                 self['key'] = 'test2'&quot;,
+#             &quot;&quot;,
+#             &quot;&quot;,
+#         )?;
+# 
+#         let class = module.getattr(&quot;Foo&quot;)?;
+#         let instance = class.call0()?;
+#         let rustystruct: RustyStruct = instance.extract()?;
+# 		assert_eq!(rustystruct.string_attr, &quot;test&quot;);
+#         assert_eq!(rustystruct.string_in_mapping, &quot;test2&quot;);
+# 
+#         Ok(())
+#     })
+# }
 </code></pre>
 <p>This tries to extract <code>string_attr</code> from the attribute <code>name</code> and <code>string_in_mapping</code>
 from a mapping with the key <code>&quot;key&quot;</code>. The arguments for <code>attribute</code> are restricted to
@@ -2114,6 +2245,19 @@ is extracted from the <code>n</code>th item in the Python tuple.</p>
 
 #[derive(FromPyObject)]
 struct RustyTuple(String, String);
+
+# use pyo3::types::PyTuple;
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         let tuple = PyTuple::new(py, vec![&quot;test&quot;, &quot;test2&quot;]);
+# 
+#         let rustytuple: RustyTuple = tuple.extract()?;
+#         assert_eq!(rustytuple.0, &quot;test&quot;);
+#         assert_eq!(rustytuple.1, &quot;test2&quot;);
+# 
+#         Ok(())
+#     })
+# }
 </code></pre>
 <p>Tuple structs with a single field are treated as wrapper types which are described in the
 following section. To override this behaviour and ensure that the input is in fact a tuple,
@@ -2122,6 +2266,18 @@ specify the struct as</p>
 
 #[derive(FromPyObject)]
 struct RustyTuple((String,));
+
+# use pyo3::types::PyTuple;
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         let tuple = PyTuple::new(py, vec![&quot;test&quot;]);
+# 
+#         let rustytuple: RustyTuple = tuple.extract()?;
+#         assert_eq!((rustytuple.0).0, &quot;test&quot;);
+# 
+#         Ok(())
+#     })
+# }
 </code></pre>
 <h4 id="deriving-a-hrefhttpspyo3rsmaindocpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-wrapper-types"><a class="header" href="#deriving-a-hrefhttpspyo3rsmaindocpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-wrapper-types">Deriving <a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> for wrapper types</a></h4>
 <p>The <code>pyo3(transparent)</code> attribute can be used on structs with exactly one field. This results
@@ -2138,6 +2294,21 @@ struct RustyTransparentTupleStruct(String);
 struct RustyTransparentStruct {
     inner: String,
 }
+
+# use pyo3::types::PyString;
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         let s = PyString::new(py, &quot;test&quot;);
+# 
+#         let tup: RustyTransparentTupleStruct = s.extract()?;
+#         assert_eq!(tup.0, &quot;test&quot;);
+# 
+#         let stru: RustyTransparentStruct = s.extract()?;
+#         assert_eq!(stru.inner, &quot;test&quot;);
+# 
+#         Ok(())
+#     })
+# }
 </code></pre>
 <h4 id="deriving-a-hrefhttpspyo3rsmaindocpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums"><a class="header" href="#deriving-a-hrefhttpspyo3rsmaindocpyo3conversiontraitfrompyobjecthtmlfrompyobjecta-for-enums">Deriving <a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> for enums</a></h4>
 <p>The <code>FromPyObject</code> derivation for enums generates code that tries to extract the variants in the
@@ -2150,6 +2321,7 @@ attribute can be applied to single-field-variants.</p>
 <pre><code>use pyo3::prelude::*;
 
 #[derive(FromPyObject)]
+# #[derive(Debug)]
 enum RustyEnum&lt;'a&gt; {
     Int(usize), // input is a positive int
     String(String), // input is a string
@@ -2169,20 +2341,175 @@ enum RustyEnum&lt;'a&gt; {
     #[pyo3(transparent)]
     CatchAll(&amp;'a PyAny), // This extraction never fails
 }
+# 
+# use pyo3::types::{PyBytes, PyString};
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         {
+#             let thing = 42_u8.to_object(py);
+#             let rust_thing: RustyEnum = thing.extract(py)?;
+# 
+#             assert_eq!(
+#                 42,
+#                 match rust_thing {
+#                     RustyEnum::Int(i) =&gt; i,
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+#         {
+#             let thing = PyString::new(py, &quot;text&quot;);
+#             let rust_thing: RustyEnum = thing.extract()?;
+# 
+#             assert_eq!(
+#                 &quot;text&quot;,
+#                 match rust_thing {
+#                     RustyEnum::String(i) =&gt; i,
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+#         {
+#             let thing = (32_u8, 73_u8).to_object(py);
+#             let rust_thing: RustyEnum = thing.extract(py)?;
+# 
+#             assert_eq!(
+#                 (32, 73),
+#                 match rust_thing {
+#                     RustyEnum::IntTuple(i, j) =&gt; (i, j),
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+#         {
+#             let thing = (&quot;foo&quot;, 73_u8).to_object(py);
+#             let rust_thing: RustyEnum = thing.extract(py)?;
+# 
+#             assert_eq!(
+#                 (String::from(&quot;foo&quot;), 73),
+#                 match rust_thing {
+#                     RustyEnum::StringIntTuple(i, j) =&gt; (i, j),
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+#         {
+#             let module = PyModule::from_code(
+#                 py,
+#                 &quot;class Foo(dict):
+#             def __init__(self):
+#                 self.x = 0
+#                 self.y = 1
+#                 self.z = 2&quot;,
+#                 &quot;&quot;,
+#                 &quot;&quot;,
+#             )?;
+# 
+#             let class = module.getattr(&quot;Foo&quot;)?;
+#             let instance = class.call0()?;
+#             let rust_thing: RustyEnum = instance.extract()?;
+# 
+#             assert_eq!(
+#                 (0, 1, 2),
+#                 match rust_thing {
+#                     RustyEnum::Coordinates3d { x, y, z } =&gt; (x, y, z),
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+# 
+#         {
+#             let module = PyModule::from_code(
+#                 py,
+#                 &quot;class Foo(dict):
+#             def __init__(self):
+#                 self.x = 3
+#                 self.y = 4&quot;,
+#                 &quot;&quot;,
+#                 &quot;&quot;,
+#             )?;
+# 
+#             let class = module.getattr(&quot;Foo&quot;)?;
+#             let instance = class.call0()?;
+#             let rust_thing: RustyEnum = instance.extract()?;
+# 
+#             assert_eq!(
+#                 (3, 4),
+#                 match rust_thing {
+#                     RustyEnum::Coordinates2d { a, b } =&gt; (a, b),
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+# 
+#         {
+#             let thing = PyBytes::new(py, b&quot;text&quot;);
+#             let rust_thing: RustyEnum = thing.extract()?;
+# 
+#             assert_eq!(
+#                 b&quot;text&quot;,
+#                 match rust_thing {
+#                     RustyEnum::CatchAll(i) =&gt; i.downcast::&lt;PyBytes&gt;()?.as_bytes(),
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+#         Ok(())
+#     })
+# }
 </code></pre>
-<p>If none of the enum variants match, a <code>PyValueError</code> containing the names of the
+<p>If none of the enum variants match, a <code>PyTypeError</code> containing the names of the
 tested variants is returned. The names reported in the error message can be customized
-through the <code>pyo3(annotation = &quot;name&quot;)</code> attribute, e.g. to use conventional Python type
+through the <code>#[pyo3(annotation = &quot;name&quot;)]</code> attribute, e.g. to use conventional Python type
 names:</p>
 <pre><code>use pyo3::prelude::*;
 
 #[derive(FromPyObject)]
+# #[derive(Debug)]
 enum RustyEnum {
     #[pyo3(transparent, annotation = &quot;str&quot;)]
     String(String),
     #[pyo3(transparent, annotation = &quot;int&quot;)]
     Int(isize),
 }
+#
+# fn main() -&gt; PyResult&lt;()&gt; {
+#     Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+#         {
+#             let thing = 42_u8.to_object(py);
+#             let rust_thing: RustyEnum = thing.extract(py)?;
+# 
+#             assert_eq!(
+#                 42,
+#                 match rust_thing {
+#                     RustyEnum::Int(i) =&gt; i,
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+# 
+#         {
+#             let thing = &quot;foo&quot;.to_object(py);
+#             let rust_thing: RustyEnum = thing.extract(py)?;
+# 
+#             assert_eq!(
+#                 &quot;foo&quot;,
+#                 match rust_thing {
+#                     RustyEnum::String(i) =&gt; i,
+#                     other =&gt; unreachable!(&quot;Error extracting: {:?}&quot;, other),
+#                 }
+#             );
+#         }
+# 
+#         {
+#             let thing = b&quot;foo&quot;.to_object(py);
+#             let error = thing.extract::&lt;RustyEnum&gt;(py).unwrap_err();
+#             assert!(error.is_instance::&lt;pyo3::exceptions::PyTypeError&gt;(py));
+#         }
+# 
+#         Ok(())
+#     })
+# }
 </code></pre>
 <p>If the input is neither a string nor an integer, the error message will be:
 <code>&quot;'&lt;INPUT_TYPE&gt;' cannot be converted to 'str | int'&quot;</code>.</p>
@@ -2288,7 +2615,31 @@ fn mymodule(py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
 
 </code></pre>
 <h2 id="raising-an-exception"><a class="header" href="#raising-an-exception">Raising an exception</a></h2>
-<p>To raise an exception, first you need to obtain an exception type and construct a new <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html"><code>PyErr</code></a>, then call the <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html#method.restore"><code>PyErr::restore</code></a> method to write the exception back to the Python interpreter's global state.</p>
+<p>To raise an exception from <code>pyfunction</code>s and <code>pymethods</code>, you should return an <code>Err(PyErr)</code>.
+If returned to Python code, this <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html"><code>PyErr</code></a> will then be raised as a Python exception. Many PyO3 APIs also return <a href="https://pyo3.rs/main/doc/pyo3/type.PyResult.html"><code>PyResult</code></a>.</p>
+<p>If a Rust type exists for the exception, then it is possible to use the <code>new_err</code> method.
+For example, each standard exception defined in the <code>pyo3::exceptions</code> module
+has a corresponding Rust type and exceptions defined by <a href="https://pyo3.rs/main/doc/pyo3/macro.create_exception.html"><code>create_exception!</code></a> and <a href="https://pyo3.rs/main/doc/pyo3/macro.import_exception.html"><code>import_exception!</code></a> macro have Rust types as well.</p>
+<pre><pre class="playground"><code class="language-rust">use pyo3::exceptions::PyZeroDivisionError;
+use pyo3::prelude::*;
+
+#[pyfunction]
+fn divide(a: i32, b: i32) -&gt; PyResult&lt;i32&gt; {
+    match a.checked_div(b) {
+        Some(q) =&gt; Ok(q),
+        None =&gt; Err(PyZeroDivisionError::new_err(&quot;division by zero&quot;)),
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main(){
+</span><span class="boring">	Python::with_gil(|py|{
+</span><span class="boring">		let fun = pyo3::wrap_pyfunction!(divide, py).unwrap();
+</span><span class="boring">		fun.call1((1,0)).unwrap_err();
+</span><span class="boring">		fun.call1((1,1)).unwrap();
+</span><span class="boring">	});
+</span><span class="boring">}
+</span></code></pre></pre>
+<p>You can also manually write and fetch errors in the Python interpreter's global state:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -2302,30 +2653,9 @@ Python::with_gil(|py| {
 });
 <span class="boring">}
 </span></code></pre></pre>
-<p>From <code>pyfunction</code>s and <code>pyclass</code> methods, returning an <code>Err(PyErr)</code> is enough;
-PyO3 will handle restoring the exception on the Python interpreter side.</p>
 <p>If you already have a Python exception instance, you can simply call <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html#method.from_instance"><code>PyErr::from_instance</code></a>.</p>
 <pre><code class="language-rust ignore">PyErr::from_instance(py, err).restore(py);
 </code></pre>
-<p>If a Rust type exists for the exception, then it is possible to use the <code>new_err</code> method.
-For example, each standard exception defined in the <code>pyo3::exceptions</code> module
-has a corresponding Rust type, exceptions defined by <a href="https://pyo3.rs/main/doc/pyo3/macro.create_exception.html"><code>create_exception!</code></a> and <a href="https://pyo3.rs/main/doc/pyo3/macro.import_exception.html"><code>import_exception!</code></a> macro
-have Rust types as well.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">use pyo3::exceptions::PyValueError;
-</span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">fn check_for_error() -&gt; bool {false}
-</span>fn my_func(arg: PyObject) -&gt; PyResult&lt;()&gt; {
-    if check_for_error() {
-        Err(PyValueError::new_err(&quot;argument is wrong&quot;))
-    } else {
-        Ok(())
-    }
-}
-<span class="boring">}
-</span></code></pre></pre>
 <h2 id="checking-exception-types"><a class="header" href="#checking-exception-types">Checking exception types</a></h2>
 <p>Python has an <a href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance</code></a> method to check an object's type.
 In PyO3 every native type has access to the <a href="https://pyo3.rs/main/doc/pyo3/struct.PyAny.html#method.is_instance"><code>PyAny::is_instance</code></a> method which does the same thing.</p>
@@ -2363,58 +2693,83 @@ method to do the actual work.</p>
 which is an alias for the type <code>Result&lt;T, PyErr&gt;</code>.</p>
 <p>A <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html"><code>PyErr</code></a> represents a Python exception. Errors within the PyO3 library are also exposed as
 Python exceptions.</p>
-<p>If your code has a custom error type e.g. <code>MyError</code>, adding an implementation of
-<code>std::convert::From&lt;MyError&gt; for PyErr</code> is usually enough. PyO3 will then automatically convert
-your error to a Python exception when needed.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::exceptions::PyOSError;
-</span><span class="boring">use std::error::Error;
-</span><span class="boring">use std::fmt;
-</span><span class="boring">
-</span><span class="boring">#[derive(Debug)]
-</span><span class="boring">struct CustomIOError;
-</span><span class="boring">
-</span><span class="boring">impl Error for CustomIOError {}
-</span><span class="boring">
-</span><span class="boring">impl fmt::Display for CustomIOError {
-</span><span class="boring">    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
-</span><span class="boring">        write!(f, &quot;Oh no!&quot;)
-</span><span class="boring">    }
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">fn bind(_addr: &amp;str) -&gt; Result&lt;(), CustomIOError&gt; {
-</span><span class="boring">    Err(CustomIOError)
-</span><span class="boring">}
-</span>impl std::convert::From&lt;CustomIOError&gt; for PyErr {
+<p>If your code has a custom error type, adding an implementation of <code>std::convert::From&lt;MyError&gt; for PyErr</code> 
+is usually enough. PyO3 will then automatically convert your error to a Python exception when needed.</p>
+<p>The following code snippet defines a Rust error named <code>CustomIOError</code>. In its <code>From&lt;CustomIOError&gt; for PyErr</code>
+implementation it returns a <code>PyErr</code> representing Python's <code>OSError</code>.</p>
+<pre><pre class="playground"><code class="language-rust">use pyo3::exceptions::PyOSError;
+use pyo3::prelude::*;
+use std::fmt;
+
+#[derive(Debug)]
+struct CustomIOError;
+
+impl std::error::Error for CustomIOError {}
+
+impl fmt::Display for CustomIOError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, &quot;Oh no!&quot;)
+    }
+}
+
+impl std::convert::From&lt;CustomIOError&gt; for PyErr {
     fn from(err: CustomIOError) -&gt; PyErr {
         PyOSError::new_err(err.to_string())
     }
 }
 
-#[pyfunction]
-fn connect(s: String) -&gt; Result&lt;bool, CustomIOError&gt; {
-    bind(&quot;127.0.0.1:80&quot;)?;
-    Ok(true)
+pub struct Connection { /* ... */}
+
+fn bind(addr: String) -&gt; Result&lt;Connection, CustomIOError&gt; {
+    if &amp;addr == &quot;0.0.0.0&quot;{
+        Err(CustomIOError)
+    } else {
+        Ok(Connection{ /* ... */})
+    }
 }
-<span class="boring">}
-</span></code></pre></pre>
-<p>The code snippet above will raise an <code>OSError</code> in Python if <code>bind()</code> returns a <code>CustomIOError</code>.</p>
-<p>The <code>std::convert::From&lt;T&gt;</code> trait is implemented for most of the Rust standard library's error
-types so the <code>?</code> operator can be used.</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use pyo3::prelude::*;
+
+#[pyfunction]
+fn connect(s: String) -&gt; Result&lt;(), CustomIOError&gt; {
+    bind(s)?;
+    Ok(())
+}
+
+fn main() {
+    Python::with_gil(|py| {
+        let fun = pyo3::wrap_pyfunction!(connect, py).unwrap();
+        let err = fun.call1((&quot;0.0.0.0&quot;,)).unwrap_err();
+        assert!(err.is_instance::&lt;PyOSError&gt;(py));
+    });
+}
+</code></pre></pre>
+<p>This has been implemented for most of Rust's standard library errors, so that you can use the <code>?</code>
+(&quot;try&quot;) operator with them. The following code snippet will raise a <code>ValueError</code> in Python if 
+<code>String::parse()</code> returns an error.</p>
+<pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 
 fn parse_int(s: String) -&gt; PyResult&lt;usize&gt; {
     Ok(s.parse::&lt;usize&gt;()?)
 }
-<span class="boring">}
+<span class="boring">
+</span><span class="boring">use pyo3::exceptions::PyValueError;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    Python::with_gil(|py| {
+</span><span class="boring">        assert_eq!(parse_int(String::from(&quot;1&quot;)).unwrap(), 1);
+</span><span class="boring">        assert_eq!(parse_int(String::from(&quot;1337&quot;)).unwrap(), 1337);
+</span><span class="boring">
+</span><span class="boring">        assert!(parse_int(String::from(&quot;-1&quot;))
+</span><span class="boring">            .unwrap_err()
+</span><span class="boring">            .is_instance::&lt;PyValueError&gt;(py));
+</span><span class="boring">        assert!(parse_int(String::from(&quot;foo&quot;))
+</span><span class="boring">            .unwrap_err()
+</span><span class="boring">            .is_instance::&lt;PyValueError&gt;(py));
+</span><span class="boring">        assert!(parse_int(String::from(&quot;13.37&quot;))
+</span><span class="boring">            .unwrap_err()
+</span><span class="boring">            .is_instance::&lt;PyValueError&gt;(py));
+</span><span class="boring">    })
+</span><span class="boring">}
 </span></code></pre></pre>
-<p>The code snippet above will raise a <code>ValueError</code> in Python if <code>String::parse()</code> returns an error.</p>
 <p>If lazy construction of the Python exception instance is desired, the
 <a href="https://pyo3.rs/main/doc/pyo3/trait.PyErrArguments.html"><code>PyErrArguments</code></a>
 trait can be implemented. In that case, actual exception argument creation is delayed
@@ -2425,7 +2780,8 @@ The <code>import_exception!</code> macro allows importing a specific exception c
 for that exception.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+</span>#![allow(dead_code)]
+<span class="boring">fn main() {
 </span>use pyo3::prelude::*;
 
 mod io {
@@ -2433,8 +2789,6 @@ mod io {
 }
 
 fn tell(file: &amp;PyAny) -&gt; PyResult&lt;u64&gt; {
-    use pyo3::exceptions::*;
-
     match file.call_method0(&quot;tell&quot;) {
         Err(_) =&gt; Err(io::UnsupportedOperation::new_err(&quot;not supported: tell&quot;)),
         Ok(x) =&gt; x.extract::&lt;u64&gt;(),
@@ -2464,74 +2818,85 @@ defines exceptions for several standard library modules.</p>
 <li><a href="https://docs.rs/pyo3/0.12.3/pyo3/struct.PyAny.html#method.call0"><code>call0</code></a> and <a href="https://docs.rs/pyo3/0.12.3/pyo3/struct.PyAny.html#method.call_method0"><code>call_method0</code></a> to call with no arguments.</li>
 </ul>
 <p>For convenience the <a href="types.html#pyt-and-pyobject"><code>Py&lt;T&gt;</code></a> smart pointer also exposes these same six API methods, but needs a <code>Python</code> token as an additional first argument to prove the GIL is held.</p>
-<p>The example below shows a calling Python functions behind a <code>PyObject</code> (aka <code>Py&lt;PyAny&gt;</code>) reference:</p>
+<p>The example below calls a Python function behind a <code>PyObject</code> (aka <code>Py&lt;PyAny&gt;</code>) reference:</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyTuple};
+use pyo3::types::PyTuple;
 
-struct SomeObject;
-impl SomeObject {
-    fn new(py: Python) -&gt; PyObject {
-        PyDict::new(py).to_object(py)
-    }
-}
-
-fn main() {
+fn main() -&gt; PyResult&lt;()&gt; {
     let arg1 = &quot;arg1&quot;;
     let arg2 = &quot;arg2&quot;;
     let arg3 = &quot;arg3&quot;;
 
     Python::with_gil(|py| {
-        let obj = SomeObject::new(py);
+        let fun: Py&lt;PyAny&gt; = PyModule::from_code(
+            py,
+            &quot;def example(*args, **kwargs):
+                if args != ():
+                    print('called with args', args)
+                if kwargs != {}:
+                    print('called with kwargs', kwargs)
+                if args == () and kwargs == {}:
+                    print('called with no arguments')&quot;,
+            &quot;&quot;,
+            &quot;&quot;,
+        )?.getattr(&quot;example&quot;)?.into();
 
         // call object without empty arguments
-        obj.call0(py);
+        fun.call0(py)?;
 
         // call object with PyTuple
         let args = PyTuple::new(py, &amp;[arg1, arg2, arg3]);
-        obj.call1(py, args);
+        fun.call1(py, args)?;
 
         // pass arguments as rust tuple
         let args = (arg1, arg2, arg3);
-        obj.call1(py, args);
-    });
+        fun.call1(py, args)?;
+        Ok(())
+    })
 }
 </code></pre></pre>
 <h3 id="creating-keyword-arguments"><a class="header" href="#creating-keyword-arguments">Creating keyword arguments</a></h3>
 <p>For the <code>call</code> and <code>call_method</code> APIs, <code>kwargs</code> can be <code>None</code> or <code>Some(&amp;PyDict)</code>. You can use the <a href="https://pyo3.rs/main/doc/pyo3/types/trait.IntoPyDict.html"><code>IntoPyDict</code></a> trait to convert other dict-like containers, e.g. <code>HashMap</code> or <code>BTreeMap</code>, as well as tuples with up to 10 elements and <code>Vec</code>s where each element is a two-element tuple.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
-use pyo3::types::{IntoPyDict, PyDict};
+use pyo3::types::IntoPyDict;
 use std::collections::HashMap;
 
-struct SomeObject;
-
-impl SomeObject {
-    fn new(py: Python) -&gt; PyObject {
-        PyDict::new(py).to_object(py)
-    }
-}
-
-fn main() {
+fn main() -&gt; PyResult&lt;()&gt; {
     let key1 = &quot;key1&quot;;
     let val1 = 1;
     let key2 = &quot;key2&quot;;
     let val2 = 2;
 
     Python::with_gil(|py| {
-        let obj = SomeObject::new(py);
+        let fun: Py&lt;PyAny&gt; = PyModule::from_code(
+            py,
+            &quot;def example(*args, **kwargs):
+                if args != ():
+                    print('called with args', args)
+                if kwargs != {}:
+                    print('called with kwargs', kwargs)
+                if args == () and kwargs == {}:
+                    print('called with no arguments')&quot;,
+            &quot;&quot;,
+            &quot;&quot;,
+        )?.getattr(&quot;example&quot;)?.into();
+
 
         // call object with PyDict
         let kwargs = [(key1, val1)].into_py_dict(py);
-        obj.call(py, (), Some(kwargs));
+        fun.call(py, (), Some(kwargs))?;
 
         // pass arguments as Vec
         let kwargs = vec![(key1, val1), (key2, val2)];
-        obj.call(py, (), Some(kwargs.into_py_dict(py)));
+        fun.call(py, (), Some(kwargs.into_py_dict(py)))?;
 
         // pass arguments as HashMap
         let mut kwargs = HashMap::&lt;&amp;str, i32&gt;::new();
         kwargs.insert(key1, 1);
-        obj.call(py, (), Some(kwargs.into_py_dict(py)));
-   });
+        fun.call(py, (), Some(kwargs.into_py_dict(py)))?;
+
+        Ok(())
+   })
 }
 </code></pre></pre>
 <h2 id="executing-existing-python-code"><a class="header" href="#executing-existing-python-code">Executing existing Python code</a></h2>
@@ -2556,7 +2921,6 @@ fn main() -&gt; PyResult&lt;()&gt; {
 a method to execute a <a href="https://docs.python.org/3.7/reference/expressions.html">Python expression</a>
 and return the evaluated value as a <code>&amp;PyAny</code> object.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
-use pyo3::types::IntoPyDict;
 
 <span class="boring">fn main() -&gt; Result&lt;(), ()&gt; {
 </span>Python::with_gil(|py| {
@@ -2741,7 +3105,7 @@ a list:</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::{Py, Python, PyAny, PyResult, types::PyList};
+</span><span class="boring">use pyo3::types::PyList;
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let obj: &amp;PyAny = PyList::empty(py);
 
@@ -2762,7 +3126,7 @@ let _: Py&lt;PyList&gt; = obj.extract()?;
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::{Py, Python, PyAny, PyResult, types::PyList};
+</span><span class="boring">use pyo3::{Py, Python, PyAny, PyResult};
 </span><span class="boring">#[pyclass] #[derive(Clone)] struct MyClass { }
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let obj: &amp;PyAny = Py::new(py, MyClass { })?.into_ref(py);
@@ -2901,7 +3265,6 @@ so it also exposes all of the methods on <code>PyAny</code>.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::types::PyList;
 </span><span class="boring">#[pyclass] struct MyClass { }
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let cell: &amp;PyCell&lt;MyClass&gt; = PyCell::new(py, MyClass { })?;
@@ -2923,7 +3286,6 @@ let _: &amp;mut MyClass = &amp;mut *py_ref_mut;
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span><span class="boring">use pyo3::types::PyList;
 </span><span class="boring">#[pyclass] struct MyClass { }
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let cell: &amp;PyCell&lt;MyClass&gt; = PyCell::new(py, MyClass { })?;
@@ -4341,7 +4703,7 @@ Exception types</a>).</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span><span class="boring">use pyo3::{PyErr, PyResult, exceptions::PyTypeError};
+</span><span class="boring">use pyo3::{PyResult, exceptions::PyTypeError};
 </span>let result: PyResult&lt;()&gt; = Err(PyTypeError::new_err(&quot;error message&quot;));
 <span class="boring">}
 </span></code></pre></pre>
@@ -4478,6 +4840,7 @@ struct NotThreadSafe {
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 use std::sync::{Arc, Mutex};
 
@@ -4513,6 +4876,7 @@ struct Unsendable {
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>use pyo3::prelude::*;
 
 #[pyclass(unsendable)]
@@ -4630,7 +4994,8 @@ rules of references.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">use pyo3::prelude::*;
-</span>#[pyclass]
+</span>
+#[pyclass]
 struct Names {
     names: Vec&lt;String&gt;
 }
@@ -4857,6 +5222,7 @@ The argument of the function can be any model that implements the <code>Model</c
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>pub trait Model {
   fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
   fn compute(&amp;mut self);
@@ -4948,6 +5314,7 @@ Let's add the PyO3 annotations and add a constructor:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span><span class="boring">pub trait Model {
 </span><span class="boring">  fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
 </span><span class="boring">  fn compute(&amp;mut self);

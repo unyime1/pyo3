@@ -219,7 +219,6 @@
 <span id="219">219</span>
 <span id="220">220</span>
 <span id="221">221</span>
-<span id="222">222</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;indexmap&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;indexmap&quot;</span>)))]</span>
 
@@ -257,7 +256,6 @@
 <span class="doccomment">//! Using [indexmap](https://docs.rs/indexmap) to return a dictionary with some statistics</span>
 <span class="doccomment">//! about a list of numbers. Because of the insertion order guarantees, the Python code will</span>
 <span class="doccomment">//! always print the same result, matching users&#39; expectations about Python&#39;s dict.</span>
-<span class="doccomment">//!</span>
 <span class="doccomment">//! ```rust</span>
 <span class="doccomment">//! use indexmap::{indexmap, IndexMap};</span>
 <span class="doccomment">//! use pyo3::prelude::*;</span>
@@ -265,7 +263,7 @@
 <span class="doccomment">//! fn median(data: &amp;Vec&lt;i32&gt;) -&gt; f32 {</span>
 <span class="doccomment">//!     let sorted_data = data.clone().sort();</span>
 <span class="doccomment">//!     let mid = data.len() / 2;</span>
-<span class="doccomment">//!     if (data.len() % 2 == 0) {</span>
+<span class="doccomment">//!     if data.len() % 2 == 0 {</span>
 <span class="doccomment">//!         data[mid] as f32</span>
 <span class="doccomment">//!     }</span>
 <span class="doccomment">//!     else {</span>

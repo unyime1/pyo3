@@ -580,6 +580,18 @@
 <span id="580">580</span>
 <span id="581">581</span>
 <span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Defines conversions between Rust and Python types.</span>
@@ -599,7 +611,7 @@
 <span class="doccomment">/// # Examples</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
-<span class="doccomment">/// use pyo3::{AsPyPointer, prelude::*};</span>
+<span class="doccomment">/// use pyo3::{prelude::*, AsPyPointer};</span>
 <span class="doccomment">/// Python::with_gil(|py| {</span>
 <span class="doccomment">///     let dict = pyo3::types::PyDict::new(py);</span>
 <span class="doccomment">///     // All native object wrappers implement AsPyPointer!!!</span>
@@ -729,8 +741,8 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// #[pyclass]</span>
 <span class="doccomment">/// struct Number {</span>
-<span class="doccomment">///    #[pyo3(get, set)]</span>
-<span class="doccomment">///    value: i32,</span>
+<span class="doccomment">///     #[pyo3(get, set)]</span>
+<span class="doccomment">///     value: i32,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// Python code will see this as an instance of the `Number` class with a `value` attribute.</span>
@@ -743,14 +755,14 @@
 <span class="doccomment">/// use pyo3::prelude::*;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// struct Number {</span>
-<span class="doccomment">///   value: i32,</span>
+<span class="doccomment">///     value: i32,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// impl IntoPy&lt;PyObject&gt; for Number {</span>
 <span class="doccomment">///     fn into_py(self, py: Python) -&gt; PyObject {</span>
 <span class="doccomment">///         // delegates to i32&#39;s IntoPy implementation.</span>
 <span class="doccomment">///         self.value.into_py(py)</span>
-<span class="doccomment">///    }</span>
+<span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// Python code will see this as an `int` object.</span>
@@ -765,7 +777,7 @@
 <span class="doccomment">/// enum Value {</span>
 <span class="doccomment">///     Integer(i32),</span>
 <span class="doccomment">///     String(String),</span>
-<span class="doccomment">///     None</span>
+<span class="doccomment">///     None,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// impl IntoPy&lt;PyObject&gt; for Value {</span>
@@ -773,10 +785,22 @@
 <span class="doccomment">///         match self {</span>
 <span class="doccomment">///             Self::Integer(val) =&gt; val.into_py(py),</span>
 <span class="doccomment">///             Self::String(val) =&gt; val.into_py(py),</span>
-<span class="doccomment">///             Self::None =&gt; py.None()</span>
+<span class="doccomment">///             Self::None =&gt; py.None(),</span>
 <span class="doccomment">///         }</span>
-<span class="doccomment">///    }</span>
+<span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
+<span class="doccomment">/// # fn main() {</span>
+<span class="doccomment">/// #     Python::with_gil(|py| {</span>
+<span class="doccomment">/// #         let v = Value::Integer(73).into_py(py);</span>
+<span class="doccomment">/// #         let v = v.extract::&lt;i32&gt;(py).unwrap();</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// #         let v = Value::String(&quot;foo&quot;.into()).into_py(py);</span>
+<span class="doccomment">/// #         let v = v.extract::&lt;String&gt;(py).unwrap();</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// #         let v = Value::None.into_py(py);</span>
+<span class="doccomment">/// #         let v = v.extract::&lt;Option&lt;Vec&lt;i32&gt;&gt;&gt;(py).unwrap();</span>
+<span class="doccomment">/// #     });</span>
+<span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// Python code will see this as any of the `int`, `string` or `None` objects.</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;IntoPyCallbackOutput&quot;</span>))]</span>

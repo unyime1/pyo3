@@ -138,13 +138,13 @@
 <span class="doccomment">/// the integers 1 to 5, before raising `StopIteration(&quot;Ended&quot;)`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```rust</span>
+<span class="doccomment">/// use pyo3::class::iter::IterNextOutput;</span>
 <span class="doccomment">/// use pyo3::prelude::*;</span>
 <span class="doccomment">/// use pyo3::PyIterProtocol;</span>
-<span class="doccomment">/// use pyo3::class::iter::IterNextOutput;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// #[pyclass]</span>
 <span class="doccomment">/// struct Iter {</span>
-<span class="doccomment">///     count: usize</span>
+<span class="doccomment">///     count: usize,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// #[pyproto]</span>

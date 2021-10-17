@@ -855,6 +855,20 @@
 <span id="855">855</span>
 <span id="856">856</span>
 <span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 <span class="comment">// based on Daniel Grunwald&#39;s https://github.com/dgrunwald/rust-cpython</span>
@@ -1037,11 +1051,14 @@
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// use pyo3::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">///     let x: i32 = py.eval(&quot;5&quot;, None, None)?.extract()?;</span>
     <span class="doccomment">///     assert_eq!(x, 5);</span>
     <span class="doccomment">///     Ok(())</span>
-    <span class="doccomment">/// });</span>
+    <span class="doccomment">/// })</span>
+    <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_gil</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">f</span>: <span class="ident">F</span>) -&gt; <span class="ident">R</span>
@@ -1107,18 +1124,18 @@
     <span class="doccomment">/// Temporarily releases the `GIL`, thus allowing other Python threads to run.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use pyo3::prelude::*; use pyo3::types::IntoPyDict;</span>
     <span class="doccomment">/// use pyo3::exceptions::PyRuntimeError;</span>
-    <span class="doccomment">/// use std::sync::Arc;</span>
-    <span class="doccomment">/// use std::thread;</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// #[pyfunction]</span>
     <span class="doccomment">/// fn parallel_count(py: Python&lt;&#39;_&gt;, strings: Vec&lt;String&gt;, query: String) -&gt; PyResult&lt;usize&gt; {</span>
     <span class="doccomment">///     let query = query.chars().next().unwrap();</span>
     <span class="doccomment">///     py.allow_threads(move || {</span>
     <span class="doccomment">///         let threads: Vec&lt;_&gt; = strings</span>
     <span class="doccomment">///             .into_iter()</span>
-    <span class="doccomment">///             .map(|s| thread::spawn(move || s.chars().filter(|&amp;c| c == query).count()))</span>
+    <span class="doccomment">///             .map(|s| std::thread::spawn(move || s.chars().filter(|&amp;c| c == query).count()))</span>
     <span class="doccomment">///             .collect();</span>
     <span class="doccomment">///         let mut sum = 0;</span>
     <span class="doccomment">///         for t in threads {</span>
@@ -1130,12 +1147,17 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>
     <span class="doccomment">///     let m = PyModule::new(py, &quot;pcount&quot;).unwrap();</span>
-    <span class="doccomment">///     m.add_function(wrap_pyfunction!(parallel_count, m).unwrap()).unwrap();</span>
+    <span class="doccomment">///     m.add_function(wrap_pyfunction!(parallel_count, m).unwrap())</span>
+    <span class="doccomment">///         .unwrap();</span>
     <span class="doccomment">///     let locals = [(&quot;pcount&quot;, m)].into_py_dict(py);</span>
-    <span class="doccomment">///     pyo3::py_run!(py, *locals, r#&quot;</span>
+    <span class="doccomment">///     pyo3::py_run!(</span>
+    <span class="doccomment">///         py,</span>
+    <span class="doccomment">///         *locals,</span>
+    <span class="doccomment">///         r#&quot;</span>
     <span class="doccomment">///         s = [&quot;Flow&quot;, &quot;my&quot;, &quot;tears&quot;, &quot;the&quot;, &quot;Policeman&quot;, &quot;Said&quot;]</span>
     <span class="doccomment">///         assert pcount.parallel_count(s, &quot;a&quot;) == 3</span>
-    <span class="doccomment">///     &quot;#);</span>
+    <span class="doccomment">///     &quot;#</span>
+    <span class="doccomment">///     );</span>
     <span class="doccomment">/// });</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -1198,8 +1220,9 @@
     <span class="doccomment">/// If `locals` is `None`, it defaults to the value of `globals`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use pyo3::{types::{PyBytes, PyDict}, prelude::*};</span>
+    <span class="doccomment">/// # use pyo3::prelude::*;</span>
     <span class="doccomment">/// # Python::with_gil(|py| {</span>
     <span class="doccomment">/// let result = py.eval(&quot;[i * 10 for i in range(5)]&quot;, None, None).unwrap();</span>
     <span class="doccomment">/// let res: Vec&lt;i64&gt; = result.extract().unwrap();</span>
@@ -1222,7 +1245,10 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use pyo3::{types::{PyBytes, PyDict}, prelude::*};</span>
+    <span class="doccomment">/// use pyo3::{</span>
+    <span class="doccomment">///     prelude::*,</span>
+    <span class="doccomment">///     types::{PyBytes, PyDict},</span>
+    <span class="doccomment">/// };</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>
     <span class="doccomment">///     let locals = PyDict::new(py);</span>
     <span class="doccomment">///     py.run(</span>
@@ -1231,8 +1257,8 @@
     <span class="doccomment">/// s = &#39;Hello Rust!&#39;</span>
     <span class="doccomment">/// ret = base64.b64encode(s.encode(&#39;utf-8&#39;))</span>
     <span class="doccomment">/// &quot;#,</span>
-    <span class="doccomment">///       None,</span>
-    <span class="doccomment">///       Some(locals),</span>
+    <span class="doccomment">///         None,</span>
+    <span class="doccomment">///         Some(locals),</span>
     <span class="doccomment">///     )</span>
     <span class="doccomment">///     .unwrap();</span>
     <span class="doccomment">///     let ret = locals.get_item(&quot;ret&quot;).unwrap();</span>
@@ -1488,7 +1514,9 @@
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # #![allow(dead_code)] // this example is quite impractical to test</span>
     <span class="doccomment">/// use pyo3::prelude::*;</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// # fn main(){</span>
     <span class="doccomment">/// #[pyfunction]</span>
     <span class="doccomment">/// fn loop_forever(py: Python) -&gt; PyResult&lt;()&gt; {</span>
@@ -1556,7 +1584,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">///         // It is recommended to *always* immediately set py to the pool&#39;s Python, to help</span>
     <span class="doccomment">///         // avoid creating references with invalid lifetimes.</span>
-    <span class="doccomment">///         let py = unsafe { pool.python() };</span>
+    <span class="doccomment">///         let py = pool.python();</span>
     <span class="doccomment">///</span>
     <span class="doccomment">///         // do stuff...</span>
     <span class="doccomment">/// #       break;  // Exit the loop so that doctest terminates!</span>

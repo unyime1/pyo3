@@ -909,6 +909,36 @@
 <span id="909">909</span>
 <span id="910">910</span>
 <span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::conversion</span>::{<span class="ident">PyTryFrom</span>, <span class="ident">ToBorrowedObject</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::err</span>::{<span class="self">self</span>, <span class="ident">PyDowncastError</span>, <span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
@@ -995,44 +1025,74 @@
 <span class="doccomment">/// [`Py`]`&lt;T&gt;` can be used to get around this by converting `dict` into a GIL-independent reference:</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// # use pyo3::prelude::*;</span>
-<span class="doccomment">/// # use pyo3::types::PyDict;</span>
-<span class="doccomment">/// #</span>
+<span class="doccomment">/// use pyo3::prelude::*;</span>
+<span class="doccomment">/// use pyo3::types::PyDict;</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// #[pyclass]</span>
 <span class="doccomment">/// struct Foo {</span>
 <span class="doccomment">///     inner: Py&lt;PyDict&gt;,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// #[pymethods]</span>
 <span class="doccomment">/// impl Foo {</span>
-<span class="doccomment">///     fn new() -&gt; Foo {</span>
+<span class="doccomment">///     #[new]</span>
+<span class="doccomment">///     fn __new__() -&gt; Foo {</span>
 <span class="doccomment">///         Python::with_gil(|py| {</span>
 <span class="doccomment">///             let dict: Py&lt;PyDict&gt; = PyDict::new(py).into();</span>
 <span class="doccomment">///             Foo { inner: dict }</span>
 <span class="doccomment">///         })</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
+<span class="doccomment">/// #     Python::with_gil(|py| {</span>
+<span class="doccomment">/// #         let m = pyo3::types::PyModule::new(py, &quot;test&quot;)?;</span>
+<span class="doccomment">/// #         m.add_class::&lt;Foo&gt;()?;</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// #         let foo: &amp;PyCell&lt;Foo&gt; = pyo3::PyTryFrom::try_from(m.getattr(&quot;Foo&quot;)?.call0()?)?;</span>
+<span class="doccomment">/// #         let dict = &amp;foo.borrow().inner;</span>
+<span class="doccomment">/// #         let dict: &amp;PyDict = dict.as_ref(py);</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// #         Ok(())</span>
+<span class="doccomment">/// #     })</span>
+<span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This can also be done with other pyclasses:</span>
 <span class="doccomment">/// ```rust</span>
-<span class="doccomment">/// # use pyo3::prelude::*;</span>
-<span class="doccomment">/// #</span>
+<span class="doccomment">/// use pyo3::prelude::*;</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// #[pyclass]</span>
-<span class="doccomment">/// struct Bar {/* fields omitted */}</span>
+<span class="doccomment">/// struct Bar {/* ... */}</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// #[pyclass]</span>
 <span class="doccomment">/// struct Foo {</span>
 <span class="doccomment">///     inner: Py&lt;Bar&gt;,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// #[pymethods]</span>
 <span class="doccomment">/// impl Foo {</span>
-<span class="doccomment">///     fn new() -&gt; PyResult&lt;Foo&gt; {</span>
+<span class="doccomment">///     #[new]</span>
+<span class="doccomment">///     fn __new__() -&gt; PyResult&lt;Foo&gt; {</span>
 <span class="doccomment">///         Python::with_gil(|py| {</span>
 <span class="doccomment">///             let bar: Py&lt;Bar&gt; = Py::new(py, Bar {})?;</span>
 <span class="doccomment">///             Ok(Foo { inner: bar })</span>
 <span class="doccomment">///         })</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
+<span class="doccomment">/// #     Python::with_gil(|py| {</span>
+<span class="doccomment">/// #         let m = pyo3::types::PyModule::new(py, &quot;test&quot;)?;</span>
+<span class="doccomment">/// #         m.add_class::&lt;Foo&gt;()?;</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// #         let foo: &amp;PyCell&lt;Foo&gt; = pyo3::PyTryFrom::try_from(m.getattr(&quot;Foo&quot;)?.call0()?)?;</span>
+<span class="doccomment">/// #         let bar = &amp;foo.borrow().inner;</span>
+<span class="doccomment">/// #         let bar: &amp;Bar = &amp;*bar.borrow(py);</span>
+<span class="doccomment">/// #</span>
+<span class="doccomment">/// #         Ok(())</span>
+<span class="doccomment">/// #     })</span>
+<span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Example: Shared ownership of Python objects</span>
@@ -1045,9 +1105,9 @@
 <span class="doccomment">/// [`Py::clone_ref`] will be faster if you happen to be already holding the GIL.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```rust</span>
+<span class="doccomment">/// use pyo3::conversion::AsPyPointer;</span>
 <span class="doccomment">/// use pyo3::prelude::*;</span>
 <span class="doccomment">/// use pyo3::types::PyDict;</span>
-<span class="doccomment">/// use pyo3::conversion::AsPyPointer;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # fn main() {</span>
 <span class="doccomment">/// Python::with_gil(|py| {</span>
@@ -1170,10 +1230,10 @@
     <span class="doccomment">/// # use pyo3::prelude::*;</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// #[pyclass]</span>
-    <span class="doccomment">/// struct MyClass { }</span>
+    <span class="doccomment">/// struct MyClass {}</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>
-    <span class="doccomment">///     let my_class: Py&lt;MyClass&gt; = Py::new(py, MyClass { }).unwrap();</span>
+    <span class="doccomment">///     let my_class: Py&lt;MyClass&gt; = Py::new(py, MyClass {}).unwrap();</span>
     <span class="doccomment">///     let my_class_cell: &amp;PyCell&lt;MyClass&gt; = my_class.as_ref(py);</span>
     <span class="doccomment">///     assert!(my_class_cell.try_borrow().is_ok());</span>
     <span class="doccomment">/// });</span>
@@ -1215,7 +1275,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use pyo3::prelude::*;</span>
-    <span class="doccomment">/// #</span>
+    <span class="doccomment">/// # #[allow(dead_code)] // This is just to show it compiles.</span>
     <span class="doccomment">/// fn new_py_any&lt;&#39;py&gt;(py: Python&lt;&#39;py&gt;, value: impl IntoPy&lt;Py&lt;PyAny&gt;&gt;) -&gt; &amp;&#39;py PyAny {</span>
     <span class="doccomment">///     let obj: Py&lt;PyAny&gt; = value.into_py(py);</span>
     <span class="doccomment">///</span>
@@ -1352,9 +1412,9 @@
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// use pyo3::conversion::AsPyPointer;</span>
     <span class="doccomment">/// use pyo3::prelude::*;</span>
     <span class="doccomment">/// use pyo3::types::PyDict;</span>
-    <span class="doccomment">/// use pyo3::conversion::AsPyPointer;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # fn main() {</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>

@@ -165,6 +165,7 @@ The argument of the function can be any model that implements the <code>Model</c
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span>pub trait Model {
   fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
   fn compute(&amp;mut self);
@@ -256,6 +257,7 @@ Let's add the PyO3 annotations and add a constructor:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">#![allow(dead_code)]
 </span><span class="boring">pub trait Model {
 </span><span class="boring">  fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
 </span><span class="boring">  fn compute(&amp;mut self);

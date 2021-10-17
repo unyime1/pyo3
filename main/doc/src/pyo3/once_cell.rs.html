@@ -119,9 +119,9 @@
 <span class="doccomment">/// between threads:</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
+<span class="doccomment">/// use pyo3::once_cell::GILOnceCell;</span>
 <span class="doccomment">/// use pyo3::prelude::*;</span>
 <span class="doccomment">/// use pyo3::types::PyList;</span>
-<span class="doccomment">/// use pyo3::once_cell::GILOnceCell;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// static LIST_CELL: GILOnceCell&lt;Py&lt;PyList&gt;&gt; = GILOnceCell::new();</span>
 <span class="doccomment">///</span>

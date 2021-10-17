@@ -285,6 +285,24 @@
 <span id="285">285</span>
 <span id="286">286</span>
 <span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains initialization utilities for `#[pyclass]`.</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::class::impl_::PyClassThreadChecker</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass_slots</span>::{<span class="ident">PyClassDict</span>, <span class="ident">PyClassWeakRef</span>};
@@ -372,7 +390,6 @@
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// # use pyo3::prelude::*;</span>
 <span class="doccomment">/// # use pyo3::py_run;</span>
-<span class="doccomment">/// # use pyo3::types::IntoPyDict;</span>
 <span class="doccomment">/// #[pyclass(subclass)]</span>
 <span class="doccomment">/// struct BaseClass {</span>
 <span class="doccomment">///     #[pyo3(get)]</span>
@@ -395,7 +412,9 @@
 <span class="doccomment">///     fn new() -&gt; PyClassInitializer&lt;Self&gt; {</span>
 <span class="doccomment">///         PyClassInitializer::from(BaseClass { basename: &quot;base&quot; })</span>
 <span class="doccomment">///             .add_subclass(SubClass { subname: &quot;sub&quot; })</span>
-<span class="doccomment">///             .add_subclass(SubSubClass { subsubname: &quot;subsub&quot; })</span>
+<span class="doccomment">///             .add_subclass(SubSubClass {</span>
+<span class="doccomment">///                 subsubname: &quot;subsub&quot;,</span>
+<span class="doccomment">///             })</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// Python::with_gil(|py| {</span>
@@ -428,19 +447,20 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use pyo3::prelude::*;</span>
-    <span class="doccomment">/// #[pyclass]</span>
+    <span class="doccomment">/// use pyo3::prelude::*;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// #[pyclass(subclass)]</span>
     <span class="doccomment">/// struct BaseClass {</span>
-    <span class="doccomment">///     value: u32,</span>
+    <span class="doccomment">///     #[pyo3(get)]</span>
+    <span class="doccomment">///     value: i32,</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// impl BaseClass {</span>
     <span class="doccomment">///     fn new(value: i32) -&gt; PyResult&lt;Self&gt; {</span>
-    <span class="doccomment">///         Ok(Self {</span>
-    <span class="doccomment">///             value: std::convert::TryFrom::try_from(value)?,</span>
-    <span class="doccomment">///         })</span>
+    <span class="doccomment">///         Ok(Self { value })</span>
     <span class="doccomment">///     }</span>
     <span class="doccomment">/// }</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// #[pyclass(extends=BaseClass)]</span>
     <span class="doccomment">/// struct SubClass {}</span>
     <span class="doccomment">///</span>
@@ -451,6 +471,22 @@
     <span class="doccomment">///         let base_init = PyClassInitializer::from(BaseClass::new(value)?);</span>
     <span class="doccomment">///         Ok(base_init.add_subclass(SubClass {}))</span>
     <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// fn main() -&gt; PyResult&lt;()&gt; {</span>
+    <span class="doccomment">///     Python::with_gil(|py| {</span>
+    <span class="doccomment">///         let m = PyModule::new(py, &quot;example&quot;)?;</span>
+    <span class="doccomment">///         m.add_class::&lt;SubClass&gt;()?;</span>
+    <span class="doccomment">///         m.add_class::&lt;BaseClass&gt;()?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///         let instance = m.getattr(&quot;SubClass&quot;)?.call1((92,))?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///         // `SubClass` does not have a `value` attribute, but `BaseClass` does.</span>
+    <span class="doccomment">///         let n = instance.getattr(&quot;value&quot;)?.extract::&lt;i32&gt;()?;</span>
+    <span class="doccomment">///         assert_eq!(n, 92);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">///         Ok(())</span>
+    <span class="doccomment">///     })</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_subclass</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">subclass_value</span>: <span class="ident">S</span>) -&gt; <span class="ident">PyClassInitializer</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>

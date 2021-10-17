@@ -7,9 +7,9 @@ GIL. For an example, see <a href="https://pyo3.rs/latest/faq.html">the FAQ secti
 <p>The following example shows how to use <code>GILOnceCell</code> to share a reference to a Python list
 between threads:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::once_cell::GILOnceCell</span>;
+<span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::PyList</span>;
-<span class="kw">use</span> <span class="ident">pyo3::once_cell::GILOnceCell</span>;
 
 <span class="kw">static</span> <span class="ident">LIST_CELL</span>: <span class="ident">GILOnceCell</span><span class="op">&lt;</span><span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyList</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">GILOnceCell::new</span>();
 

@@ -145,6 +145,8 @@
 <span id="145">145</span>
 <span id="146">146</span>
 <span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
 </pre><pre class="rust"><code><span class="doccomment">/// Wraps a Rust function annotated with [`#[pyfunction]`](crate::pyfunction), turning it into a</span>
 <span class="doccomment">/// [`PyCFunction`](crate::types::PyCFunction).</span>
 <span class="doccomment">///</span>
@@ -244,12 +246,14 @@
 <span class="doccomment">/// #[pymethods]</span>
 <span class="doccomment">/// impl MyClass {</span>
 <span class="doccomment">///     #[new]</span>
-<span class="doccomment">///     fn new() -&gt; Self { MyClass {} }</span>
+<span class="doccomment">///     fn new() -&gt; Self {</span>
+<span class="doccomment">///         MyClass {}</span>
+<span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Python::with_gil(|py| {</span>
-<span class="doccomment">///    let locals = [(&quot;C&quot;, py.get_type::&lt;MyClass&gt;())].into_py_dict(py);</span>
-<span class="doccomment">///    pyo3::py_run!(py, *locals, &quot;c = C()&quot;);</span>
+<span class="doccomment">///     let locals = [(&quot;C&quot;, py.get_type::&lt;MyClass&gt;())].into_py_dict(py);</span>
+<span class="doccomment">///     pyo3::py_run!(py, *locals, &quot;c = C()&quot;);</span>
 <span class="doccomment">/// });</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>

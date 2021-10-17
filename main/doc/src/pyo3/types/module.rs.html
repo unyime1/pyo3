@@ -422,14 +422,6 @@
 <span id="422">422</span>
 <span id="423">423</span>
 <span id="424">424</span>
-<span id="425">425</span>
-<span id="426">426</span>
-<span id="427">427</span>
-<span id="428">428</span>
-<span id="429">429</span>
-<span id="430">430</span>
-<span id="431">431</span>
-<span id="432">432</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 <span class="comment">// based on Daniel Grunwald&#39;s https://github.com/dgrunwald/rust-cpython</span>
@@ -496,7 +488,6 @@
     <span class="doccomment">///  ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is equivalent to the following Python expression:</span>
-    <span class="doccomment">///</span>
     <span class="doccomment">/// ```python</span>
     <span class="doccomment">/// import antigravity</span>
     <span class="doccomment">/// ```</span>
@@ -531,12 +522,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # fn main() -&gt; PyResult&lt;()&gt; {</span>
     <span class="doccomment">/// Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {</span>
-    <span class="doccomment">///    let module = PyModule::from_code(</span>
-    <span class="doccomment">///         py,</span>
-    <span class="doccomment">///         &quot;print(__file__, __name__)&quot;,</span>
-    <span class="doccomment">///         &quot;my_file&quot;,</span>
-    <span class="doccomment">///         &quot;my_module&quot;</span>
-    <span class="doccomment">///     )?;</span>
+    <span class="doccomment">///     let module = PyModule::from_code(py, &quot;print(__file__, __name__)&quot;, &quot;my_file&quot;, &quot;my_module&quot;)?;</span>
     <span class="doccomment">///     Ok(())</span>
     <span class="doccomment">/// })?;</span>
     <span class="doccomment">/// # Ok(())}</span>
@@ -686,7 +672,6 @@
     <span class="doccomment">///  ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Python code can see this class as such:</span>
-    <span class="doccomment">///</span>
     <span class="doccomment">/// ```python</span>
     <span class="doccomment">/// from my_module import Foo</span>
     <span class="doccomment">///</span>
@@ -694,7 +679,6 @@
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This will result in the following output:</span>
-    <span class="doccomment">///</span>
     <span class="doccomment">/// ```text</span>
     <span class="doccomment">/// Foo is &lt;class &#39;builtins.Foo&#39;&gt;</span>
     <span class="doccomment">/// ```</span>

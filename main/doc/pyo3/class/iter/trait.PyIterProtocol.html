@@ -10,13 +10,13 @@ for more.</p>
 <p>The following example shows how to implement a simple Python iterator in Rust which yields
 the integers 1 to 5, before raising <code>StopIteration(&quot;Ended&quot;)</code>.</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::class::iter::IterNextOutput</span>;
+<span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::PyIterProtocol</span>;
-<span class="kw">use</span> <span class="ident">pyo3::class::iter::IterNextOutput</span>;
 
 <span class="attribute">#[<span class="ident">pyclass</span>]</span>
 <span class="kw">struct</span> <span class="ident">Iter</span> {
-    <span class="ident">count</span>: <span class="ident">usize</span>
+    <span class="ident">count</span>: <span class="ident">usize</span>,
 }
 
 <span class="attribute">#[<span class="ident">pyproto</span>]</span>
