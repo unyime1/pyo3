@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1634453921578,
+  "lastUpdate": 1634455012563,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -51108,6 +51108,128 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 2.7816054330855357e-7",
             "extra": "mean: 147.93155767158578 nsec\nrounds: 80646"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "40474653+chris-laplante@users.noreply.github.com",
+            "name": "Chris Laplante",
+            "username": "chris-laplante"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3b94f4b70c335854020cf877b24253dbc43758fa",
+          "message": "Add `anyhow-integration` feature which implements From<anyhow::Error> for PyErr (#1822)\n\n* Add 'anyhow' feature which provides simple From<anyhow::Error> for PyErr impl\r\n\r\nThis makes it possible to use anyhow::Result<T> as the return type for\r\nmethods and functions exposed to Python.\r\n\r\nThe current implementation just stringifies the anyhow::Error before\r\nshoving it into a PyRuntimeError. Conversion back to the anyhow::Error\r\nis not possible, but it is better than nothing.\r\n\r\nSigned-off-by: Chris Laplante <chris.laplante@agilent.com>\r\n\r\n* Document `anyhow` feature in the guide\r\n\r\nSigned-off-by: Chris Laplante <chris.laplante@agilent.com>\r\n\r\n* update changelog to document anyhow feature\r\n\r\n* WIP adding tests\r\n\r\n* Finish up anyhow feature\r\n\r\n* Fix formatting\r\n\r\n* Fix tests\r\n\r\n* Fix tests\r\n\r\n* Apply review suggestions\r\n\r\nCo-authored-by: Bruno Kolenbrander <59372212+mejrs@users.noreply.github.com>\r\nCo-authored-by: mejrs <brunokolenbrander@hotmail.com>",
+          "timestamp": "2021-10-17T07:54:29+01:00",
+          "tree_id": "d28728ec5794b88902917c4e67b6d2a13eb30055",
+          "url": "https://github.com/PyO3/pyo3/commit/3b94f4b70c335854020cf877b24253dbc43758fa"
+        },
+        "date": 1634454990272,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/test_benchmarks.py::test_none_py",
+            "value": 8545376.535826176,
+            "unit": "iter/sec",
+            "range": "stddev: 4.196557274957319e-9",
+            "extra": "mean: 117.02234486773168 nsec\nrounds: 77514"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_none_rs",
+            "value": 9637760.999919092,
+            "unit": "iter/sec",
+            "range": "stddev: 1.7878772196550674e-8",
+            "extra": "mean: 103.75853893946034 nsec\nrounds: 95239"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_py",
+            "value": 3459265.183365242,
+            "unit": "iter/sec",
+            "range": "stddev: 3.349824653751269e-8",
+            "extra": "mean: 289.07873406500454 nsec\nrounds: 192271"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_rs",
+            "value": 2251280.6055946117,
+            "unit": "iter/sec",
+            "range": "stddev: 2.8997397229871605e-8",
+            "extra": "mean: 444.1916292066275 nsec\nrounds: 188680"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_py",
+            "value": 3134332.02672863,
+            "unit": "iter/sec",
+            "range": "stddev: 1.849404934268964e-8",
+            "extra": "mean: 319.04724562436405 nsec\nrounds: 196079"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_rs",
+            "value": 2058121.1632293272,
+            "unit": "iter/sec",
+            "range": "stddev: 2.8047728033126933e-8",
+            "extra": "mean: 485.88004334496424 nsec\nrounds: 181819"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_kwargs_py",
+            "value": 1882001.1237688097,
+            "unit": "iter/sec",
+            "range": "stddev: 3.1068953590028216e-8",
+            "extra": "mean: 531.3493107784407 nsec\nrounds: 166639"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_kwargs_rs",
+            "value": 1700015.2385530148,
+            "unit": "iter/sec",
+            "range": "stddev: 5.710586029422625e-8",
+            "extra": "mean: 588.2300213093578 nsec\nrounds: 149254"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_kwargs_py",
+            "value": 1900996.5396198046,
+            "unit": "iter/sec",
+            "range": "stddev: 1.8137806676729004e-8",
+            "extra": "mean: 526.0398844282132 nsec\nrounds: 92585"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_kwargs_rs",
+            "value": 1666570.0541391997,
+            "unit": "iter/sec",
+            "range": "stddev: 2.3267305695569285e-8",
+            "extra": "mean: 600.0347825262669 nsec\nrounds: 79366"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_kwargs_py",
+            "value": 2484343.3171872953,
+            "unit": "iter/sec",
+            "range": "stddev: 2.396504172370853e-8",
+            "extra": "mean: 402.5208565506461 nsec\nrounds: 188644"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_kwargs_rs",
+            "value": 4766506.954840759,
+            "unit": "iter/sec",
+            "range": "stddev: 3.321847467617502e-8",
+            "extra": "mean: 209.797239251845 nsec\nrounds: 196079"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_empty_class_init",
+            "value": 5972436.396623204,
+            "unit": "iter/sec",
+            "range": "stddev: 1.0394080619682193e-8",
+            "extra": "mean: 167.43585592051258 nsec\nrounds: 196079"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_empty_class_init_py",
+            "value": 8437463.518523036,
+            "unit": "iter/sec",
+            "range": "stddev: 4.4612052936036906e-9",
+            "extra": "mean: 118.5190309628408 nsec\nrounds: 81968"
           }
         ]
       }
