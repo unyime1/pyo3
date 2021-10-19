@@ -789,6 +789,13 @@
 <span id="789">789</span>
 <span id="790">790</span>
 <span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Python Number Interface</span>
@@ -1405,7 +1412,14 @@
 );
 <span class="macro">py_binary_num_func!</span>(<span class="ident">mul</span>, <span class="ident">PyNumberMulProtocol</span>, <span class="ident">T::__mul__</span>);
 <span class="macro">py_binary_reversed_num_func!</span>(<span class="ident">rmul</span>, <span class="ident">PyNumberRMulProtocol</span>, <span class="ident">T::__rmul__</span>);
+<span class="macro">py_binary_fallback_num_func!</span>(
+    <span class="ident">mod_rmod</span>,
+    <span class="ident">T</span>,
+    <span class="ident">PyNumberModProtocol::__mod__</span>,
+    <span class="ident">PyNumberRModProtocol::__rmod__</span>
+);
 <span class="macro">py_binary_num_func!</span>(<span class="ident">mod_</span>, <span class="ident">PyNumberModProtocol</span>, <span class="ident">T::__mod__</span>);
+<span class="macro">py_binary_reversed_num_func!</span>(<span class="ident">rmod</span>, <span class="ident">PyNumberRModProtocol</span>, <span class="ident">T::__rmod__</span>);
 <span class="macro">py_binary_fallback_num_func!</span>(
     <span class="ident">divmod_rdivmod</span>,
     <span class="ident">T</span>,

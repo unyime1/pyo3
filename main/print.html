@@ -1499,6 +1499,9 @@ with the <code>#[args(...)]</code> attribute. This attribute accepts a comma sep
 the form of <code>attr_name=&quot;default value&quot;</code>. Each parameter has to match the method parameter by name.</p>
 <p>Each parameter can be one of the following types:</p>
 <ul>
+<li><code>&quot;/&quot;</code>: positional-only arguments separator, each parameter defined before <code>&quot;/&quot;</code> is a
+positional-only parameter.
+Corresponds to python's <code>def meth(arg1, arg2, ..., /, argN..)</code>.</li>
 <li><code>&quot;*&quot;</code>: var arguments separator, each parameter defined after <code>&quot;*&quot;</code> is a keyword-only parameter.
 Corresponds to python's <code>def meth(*, arg1.., arg2=..)</code>.</li>
 <li><code>args=&quot;*&quot;</code>: &quot;args&quot; is var args, corresponds to Python's <code>def meth(*args)</code>. Type of the <code>args</code>
@@ -1556,7 +1559,7 @@ impl MyClass {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>N.B. the position of the <code>&quot;*&quot;</code> argument (if included) controls the system of handling positional and keyword arguments. In Python:</p>
+<p>N.B. the position of the <code>&quot;/&quot;</code> and <code>&quot;*&quot;</code> arguments (if included) control the system of handling positional and keyword arguments. In Python:</p>
 <pre><code class="language-python">import mymodule
 
 mc = mymodule.MyClass()
@@ -5745,6 +5748,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Add <code>as_sequence</code> methods to <code>PyList</code> and <code>PyTuple</code>. <a href="https://github.com/PyO3/pyo3/pull/1860">#1860</a></li>
 <li>Add <code>abi3-py310</code> feature. <a href="https://github.com/PyO3/pyo3/pull/1889">#1889</a></li>
 <li>Add <code>PyCFunction::new_closure</code> to create a Python function from a Rust closure. <a href="https://github.com/PyO3/pyo3/pull/1901">#1901</a></li>
+<li>Add support for positional-only arguments in <code>#[pyfunction]</code> <a href="https://github.com/PyO3/pyo3/pull/1925">#1925</a></li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
@@ -5771,6 +5775,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Fix incorrect linking to version-specific DLL instead of <code>python3.dll</code> when cross-compiling to Windows with <code>abi3</code>. <a href="https://github.com/PyO3/pyo3/pull/1880">#1880</a></li>
 <li>Fix panic in generated <code>#[derive(FromPyObject)]</code> for enums. <a href="https://github.com/PyO3/pyo3/pull/1888">#1888</a></li>
 <li>Fix cross-compiling to Python 3.7 builds with the &quot;m&quot; abi flag. <a href="https://github.com/PyO3/pyo3/pull/1908">#1908</a></li>
+<li>Fix <code>__mod__</code> magic method fallback to <code>__rmod__</code>. <a href="https://github.com/PyO3/pyo3/pull/1934">#1934</a>.</li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0144v01450145a---2021-09-05"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0144v01450145a---2021-09-05"><a href="https://github.com/pyo3/pyo3/compare/v0.14.4...v0.14.5">0.14.5</a> - 2021-09-05</a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>

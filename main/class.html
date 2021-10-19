@@ -813,6 +813,9 @@ with the <code>#[args(...)]</code> attribute. This attribute accepts a comma sep
 the form of <code>attr_name=&quot;default value&quot;</code>. Each parameter has to match the method parameter by name.</p>
 <p>Each parameter can be one of the following types:</p>
 <ul>
+<li><code>&quot;/&quot;</code>: positional-only arguments separator, each parameter defined before <code>&quot;/&quot;</code> is a
+positional-only parameter.
+Corresponds to python's <code>def meth(arg1, arg2, ..., /, argN..)</code>.</li>
 <li><code>&quot;*&quot;</code>: var arguments separator, each parameter defined after <code>&quot;*&quot;</code> is a keyword-only parameter.
 Corresponds to python's <code>def meth(*, arg1.., arg2=..)</code>.</li>
 <li><code>args=&quot;*&quot;</code>: &quot;args&quot; is var args, corresponds to Python's <code>def meth(*args)</code>. Type of the <code>args</code>
@@ -870,7 +873,7 @@ impl MyClass {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>N.B. the position of the <code>&quot;*&quot;</code> argument (if included) controls the system of handling positional and keyword arguments. In Python:</p>
+<p>N.B. the position of the <code>&quot;/&quot;</code> and <code>&quot;*&quot;</code> arguments (if included) control the system of handling positional and keyword arguments. In Python:</p>
 <pre><code class="language-python">import mymodule
 
 mc = mymodule.MyClass()
