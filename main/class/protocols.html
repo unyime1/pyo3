@@ -143,15 +143,15 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="class-customizations"><a class="header" href="#class-customizations">Class customizations</a></h2>
+                        <h1 id="class-customizations"><a class="header" href="#class-customizations">Class customizations</a></h1>
 <p>PyO3 uses the <code>#[pyproto]</code> attribute in combination with special traits to implement certain protocol (aka <code>__dunder__</code>) methods of Python classes. The special traits are listed in this chapter of the guide. See also the <a href="https://pyo3.rs/main/doc/pyo3/class/index.html">documentation for the <code>pyo3::class</code> module</a>.</p>
 <p>Python's object model defines several protocols for different object behavior, such as the sequence, mapping, and number protocols. You may be familiar with implementing these protocols in Python classes by &quot;dunder&quot; methods, such as <code>__str__</code> or <code>__repr__</code>.</p>
 <p>In the Python C-API which PyO3 is dependent upon, many of these protocol methods have to be provided into special &quot;slots&quot; on the class type object. To fill these slots PyO3 uses the <code>#[pyproto]</code> attribute in combination with special traits.</p>
 <p>All <code>#[pyproto]</code> methods can return <code>T</code> instead of <code>PyResult&lt;T&gt;</code> if the method implementation is infallible. In addition, if the return type is <code>()</code>, it can be omitted altogether.</p>
 <p>There are many &quot;dunder&quot; methods which are not included in any of PyO3's protocol traits, such as <code>__dir__</code>. These methods can be implemented in <code>#[pymethods]</code> as already covered in the previous section.</p>
-<h3 id="basic-object-customization"><a class="header" href="#basic-object-customization">Basic object customization</a></h3>
+<h2 id="basic-object-customization"><a class="header" href="#basic-object-customization">Basic object customization</a></h2>
 <p>The <a href="https://pyo3.rs/main/doc/pyo3/class/basic/trait.PyObjectProtocol.html"><code>PyObjectProtocol</code></a> trait provides several basic customizations.</p>
-<h4 id="attribute-access"><a class="header" href="#attribute-access">Attribute access</a></h4>
+<h3 id="attribute-access"><a class="header" href="#attribute-access">Attribute access</a></h3>
 <p>To customize object attribute access, define the following methods:</p>
 <ul>
 <li><code>fn __getattr__(&amp;self, name: impl FromPyObject) -&gt; PyResult&lt;impl IntoPy&lt;PyObject&gt;&gt;</code></li>
@@ -159,7 +159,7 @@
 <li><code>fn __delattr__(&amp;mut self, name: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 </ul>
 <p>Each method corresponds to Python's <code>self.attr</code>, <code>self.attr = value</code> and <code>del self.attr</code> code.</p>
-<h4 id="string-conversions"><a class="header" href="#string-conversions">String Conversions</a></h4>
+<h3 id="string-conversions"><a class="header" href="#string-conversions">String Conversions</a></h3>
 <ul>
 <li>
 <p><code>fn __repr__(&amp;self) -&gt; PyResult&lt;impl ToPyObject&lt;ObjectType=PyString&gt;&gt;</code></p>
@@ -169,7 +169,7 @@
 <p>Possible return types for <code>__str__</code> and <code>__repr__</code> are <code>PyResult&lt;String&gt;</code> or <code>PyResult&lt;PyString&gt;</code>.</p>
 </li>
 </ul>
-<h4 id="comparison-operators"><a class="header" href="#comparison-operators">Comparison operators</a></h4>
+<h3 id="comparison-operators"><a class="header" href="#comparison-operators">Comparison operators</a></h3>
 <ul>
 <li>
 <p><code>fn __richcmp__(&amp;self, other: impl FromPyObject, op: CompareOp) -&gt; PyResult&lt;impl ToPyObject&gt;</code></p>
@@ -185,14 +185,72 @@ automatically <code>return NotImplemented</code>.</p>
 The return type must be <code>PyResult&lt;T&gt;</code> where <code>T</code> is one of Rust's primitive integer types.</p>
 </li>
 </ul>
-<h4 id="other-methods"><a class="header" href="#other-methods">Other methods</a></h4>
+<h3 id="other-methods"><a class="header" href="#other-methods">Other methods</a></h3>
 <ul>
 <li>
 <p><code>fn __bool__(&amp;self) -&gt; PyResult&lt;bool&gt;</code></p>
 <p>Determines the &quot;truthyness&quot; of the object.</p>
 </li>
 </ul>
-<h3 id="emulating-numeric-types"><a class="header" href="#emulating-numeric-types">Emulating numeric types</a></h3>
+<h2 id="callable-objects"><a class="header" href="#callable-objects">Callable objects</a></h2>
+<p>Custom classes can be callable if they have a <code>#[pymethod]</code> named <code>__call__</code>.</p>
+<p>The following pyclass is a basic decorator - its constructor takes a Python object
+as argument and calls that object when called.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyDict, PyTuple};
+</span><span class="boring">
+</span>#[pyclass(name = &quot;counter&quot;)]
+struct PyCounter {
+    count: u64,
+    wraps: Py&lt;PyAny&gt;,
+}
+
+#[pymethods]
+impl PyCounter {
+    #[new]
+    fn __new__(wraps: Py&lt;PyAny&gt;) -&gt; Self {
+        PyCounter { count: 0, wraps }
+    }
+
+    fn __call__(
+        &amp;mut self,
+        py: Python,
+        args: &amp;PyTuple,
+        kwargs: Option&lt;&amp;PyDict&gt;,
+    ) -&gt; PyResult&lt;Py&lt;PyAny&gt;&gt; {
+        self.count += 1;
+        let name = self.wraps.getattr(py, &quot;__name__&quot;).unwrap();
+
+        println!(&quot;{} has been called {} time(s).&quot;, name, self.count);
+        self.wraps.call(py, args, kwargs)
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>Python code:</p>
+<pre><code class="language-python">@counter
+def say_hello():
+    print(&quot;hello&quot;)
+
+say_hello()
+say_hello()
+say_hello()
+say_hello()
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-text">say_hello has been called 1 time(s).
+hello
+say_hello has been called 2 time(s).
+hello
+say_hello has been called 3 time(s).
+hello
+say_hello has been called 4 time(s).
+hello
+</code></pre>
+<h2 id="emulating-numeric-types"><a class="header" href="#emulating-numeric-types">Emulating numeric types</a></h2>
 <p>The <a href="https://pyo3.rs/main/doc/pyo3/class/number/trait.PyNumberProtocol.html"><code>PyNumberProtocol</code></a> trait can be implemented to emulate <a href="https://docs.python.org/3/reference/datamodel.html#emulating-numeric-types">numeric types</a>.</p>
 <ul>
 <li><code>fn __add__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
@@ -267,7 +325,7 @@ signature, or raise a TypeError.</p>
 <ul>
 <li><code>fn __index__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
 </ul>
-<h3 id="emulating-sequential-containers-such-as-lists-or-tuples"><a class="header" href="#emulating-sequential-containers-such-as-lists-or-tuples">Emulating sequential containers (such as lists or tuples)</a></h3>
+<h2 id="emulating-sequential-containers-such-as-lists-or-tuples"><a class="header" href="#emulating-sequential-containers-such-as-lists-or-tuples">Emulating sequential containers (such as lists or tuples)</a></h2>
 <p>The <a href="https://pyo3.rs/main/doc/pyo3/class/sequence/trait.PySequenceProtocol.html"><code>PySequenceProtocol</code></a> trait can be implemented to emulate
 <a href="https://docs.python.org/3/reference/datamodel.html#emulating-container-types">sequential container types</a>.</p>
 <p>For a sequence, the keys are the integers <em>k</em> for which <em>0 &lt;= k &lt; N</em>,
@@ -328,7 +386,7 @@ Used by the <code>*=</code> operator, after trying the numeric in place multipli
 the <code>PyNumberProtocol</code> trait method.</p>
 </li>
 </ul>
-<h3 id="emulating-mapping-containers-such-as-dictionaries"><a class="header" href="#emulating-mapping-containers-such-as-dictionaries">Emulating mapping containers (such as dictionaries)</a></h3>
+<h2 id="emulating-mapping-containers-such-as-dictionaries"><a class="header" href="#emulating-mapping-containers-such-as-dictionaries">Emulating mapping containers (such as dictionaries)</a></h2>
 <p>The <a href="https://pyo3.rs/main/doc/pyo3/class/mapping/trait.PyMappingProtocol.html"><code>PyMappingProtocol</code></a> trait allows to emulate
 <a href="https://docs.python.org/3/reference/datamodel.html#emulating-container-types">mapping container types</a>.</p>
 <p>For a mapping, the keys may be Python objects of arbitrary type.</p>
@@ -360,7 +418,7 @@ The same exceptions should be raised for improper key values as
 for the <code>__getitem__()</code> method.</p>
 </li>
 </ul>
-<h3 id="garbage-collector-integration"><a class="header" href="#garbage-collector-integration">Garbage Collector Integration</a></h3>
+<h2 id="garbage-collector-integration"><a class="header" href="#garbage-collector-integration">Garbage Collector Integration</a></h2>
 <p>If your type owns references to other Python objects, you will need to
 integrate with Python's garbage collector so that the GC is aware of
 those references.
@@ -409,7 +467,7 @@ at compile time:</p>
 <pre><code class="language-compile_fail">#[pyclass(gc)]
 struct GCTracked {} // Fails because it does not implement PyGCProtocol
 </code></pre>
-<h3 id="iterator-types"><a class="header" href="#iterator-types">Iterator Types</a></h3>
+<h2 id="iterator-types"><a class="header" href="#iterator-types">Iterator Types</a></h2>
 <p>Iterators can be defined using the
 <a href="https://pyo3.rs/main/doc/pyo3/class/iter/trait.PyIterProtocol.html"><code>PyIterProtocol</code></a> trait.
 It includes two methods <code>__iter__</code> and <code>__next__</code>:</p>
@@ -494,7 +552,7 @@ impl PyIterProtocol for Container {
 </span></code></pre></pre>
 <p>For more details on Python's iteration protocols, check out <a href="https://docs.python.org/3/library/stdtypes.html#iterator-types">the &quot;Iterator Types&quot; section of the library
 documentation</a>.</p>
-<h4 id="returning-a-value-from-iteration"><a class="header" href="#returning-a-value-from-iteration">Returning a value from iteration</a></h4>
+<h3 id="returning-a-value-from-iteration"><a class="header" href="#returning-a-value-from-iteration">Returning a value from iteration</a></h3>
 <p>This guide has so far shown how to use <code>Option&lt;T&gt;</code> to implement yielding values during iteration.
 In Python a generator can also return a value. To express this in Rust, PyO3 provides the
 <a href="https://pyo3.rs/main/doc/pyo3/class/iter/enum.IterNextOutput.html"><code>IterNextOutput</code></a> enum to

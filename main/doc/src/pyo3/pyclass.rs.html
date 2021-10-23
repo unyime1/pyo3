@@ -320,10 +320,6 @@
 <span id="320">320</span>
 <span id="321">321</span>
 <span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
 </pre><pre class="rust"><code><span class="doccomment">//! `PyClass` and related traits.</span>
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">class::impl_</span>::{<span class="ident">fallback_new</span>, <span class="ident">tp_dealloc</span>, <span class="ident">PyClassImpl</span>},
@@ -407,10 +403,6 @@
     }
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">free</span>) <span class="op">=</span> <span class="ident">T::get_free</span>() {
         <span class="ident">slots</span>.<span class="ident">push</span>(<span class="ident">ffi::Py_tp_free</span>, <span class="ident">free</span> <span class="kw">as</span> <span class="kw">_</span>);
-    }
-
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">call_meth</span>) <span class="op">=</span> <span class="ident">T::get_call</span>() {
-        <span class="ident">slots</span>.<span class="ident">push</span>(<span class="ident">ffi::Py_tp_call</span>, <span class="ident">call_meth</span> <span class="kw">as</span> <span class="kw">_</span>);
     }
 
     <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">Py_3_9</span>) {
