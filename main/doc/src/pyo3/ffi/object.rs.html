@@ -532,41 +532,6 @@
 <span id="532">532</span>
 <span id="533">533</span>
 <span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
-<span id="559">559</span>
-<span id="560">560</span>
-<span id="561">561</span>
-<span id="562">562</span>
-<span id="563">563</span>
-<span id="564">564</span>
-<span id="565">565</span>
-<span id="566">566</span>
-<span id="567">567</span>
-<span id="568">568</span>
-<span id="569">569</span>
 </pre><pre class="rust"><code><span class="comment">// FFI note: this file changed a lot between 3.6 and 3.10.</span>
 <span class="comment">// Some missing definitions may not be marked &quot;skipped&quot;.</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pyport</span>::{<span class="ident">Py_hash_t</span>, <span class="ident">Py_ssize_t</span>};
@@ -583,36 +548,13 @@
 <span class="comment">// _PyObject_HEAD_EXTRA: conditionally defined in PyObject_HEAD_INIT</span>
 <span class="comment">// _PyObject_EXTRA_INIT: conditionally defined in PyObject_HEAD_INIT</span>
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
     <span class="ident">_ob_next</span>: <span class="ident">std::ptr::null_mut</span>(),
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
     <span class="ident">_ob_prev</span>: <span class="ident">std::ptr::null_mut</span>(),
     <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
-    <span class="ident">ob_type</span>: <span class="ident">std::ptr::null_mut</span>(),
-};
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
-    <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
-    <span class="ident">ob_type</span>: <span class="ident">std::ptr::null_mut</span>(),
-};
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
-    <span class="ident">_ob_next</span>: <span class="ident">std::ptr::null_mut</span>(),
-    <span class="ident">_ob_prev</span>: <span class="ident">std::ptr::null_mut</span>(),
-    <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
-    <span class="ident">ob_pypy_link</span>: <span class="number">0</span>,
-    <span class="ident">ob_type</span>: <span class="ident">std::ptr::null_mut</span>(),
-};
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>))]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PyObject_HEAD_INIT</span>: <span class="ident">PyObject</span> <span class="op">=</span> <span class="ident">PyObject</span> {
-    <span class="ident">ob_refcnt</span>: <span class="number">1</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
     <span class="ident">ob_pypy_link</span>: <span class="number">0</span>,
     <span class="ident">ob_type</span>: <span class="ident">std::ptr::null_mut</span>(),
 };
@@ -622,21 +564,13 @@
 
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyObject</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
-    <span class="ident">_ob_next</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
+    <span class="kw">pub</span> <span class="ident">_ob_next</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;Py_TRACE_REFS&quot;</span>)]</span>
-    <span class="ident">_ob_prev</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
+    <span class="kw">pub</span> <span class="ident">_ob_prev</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
     <span class="kw">pub</span> <span class="ident">ob_refcnt</span>: <span class="ident">Py_ssize_t</span>,
-    <span class="kw">pub</span> <span class="ident">ob_type</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>,
-}
-
-<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyObject</span> {
-    <span class="kw">pub</span> <span class="ident">ob_refcnt</span>: <span class="ident">Py_ssize_t</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
     <span class="kw">pub</span> <span class="ident">ob_pypy_link</span>: <span class="ident">Py_ssize_t</span>,
     <span class="kw">pub</span> <span class="ident">ob_type</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyTypeObject</span>,
 }
@@ -922,11 +856,9 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_PRINT_RAW</span>: <span class="ident">c_int</span> <span class="op">=</span> <span class="number">1</span>; <span class="comment">// No string quotes etc.</span>
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)))]</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_TPFLAGS_DISALLOW_INSTANTIATION</span>: <span class="ident">c_ulong</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">7</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
-<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)))]</span>
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">Py_TPFLAGS_IMMUTABLETYPE</span>: <span class="ident">c_ulong</span> <span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="number">8</span>;
 
 <span class="doccomment">/// Set if the type object is dynamically allocated</span>
@@ -1037,10 +969,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_DecRef</span>(<span class="ident">o</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>);
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
-    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_NewRef</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>;
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
-    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_XNewRef</span>(<span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>;
 }
 

@@ -887,6 +887,19 @@
 <span id="887">887</span>
 <span id="888">888</span>
 <span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Exception types defined by Python.</span>
@@ -959,12 +972,10 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// import_exception!(socket, gaierror);</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// fn main() {</span>
-<span class="doccomment">///     Python::with_gil(|py| {</span>
-<span class="doccomment">///         let ctx = [(&quot;gaierror&quot;, py.get_type::&lt;gaierror&gt;())].into_py_dict(py);</span>
-<span class="doccomment">///         pyo3::py_run!(py, *ctx, &quot;import socket; assert gaierror is socket.gaierror&quot;);</span>
-<span class="doccomment">///     });</span>
-<span class="doccomment">/// }</span>
+<span class="doccomment">/// Python::with_gil(|py| {</span>
+<span class="doccomment">///     let ctx = [(&quot;gaierror&quot;, py.get_type::&lt;gaierror&gt;())].into_py_dict(py);</span>
+<span class="doccomment">///     pyo3::py_run!(py, *ctx, &quot;import socket; assert gaierror is socket.gaierror&quot;);</span>
+<span class="doccomment">/// });</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
@@ -1035,19 +1046,17 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// create_exception!(mymodule, CustomError, PyException);</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// fn main() {</span>
-<span class="doccomment">///     Python::with_gil(|py| {</span>
-<span class="doccomment">///         let error_type = py.get_type::&lt;CustomError&gt;();</span>
-<span class="doccomment">///         let ctx = [(&quot;CustomError&quot;, error_type)].into_py_dict(py);</span>
-<span class="doccomment">///         let type_description: String = py</span>
-<span class="doccomment">///             .eval(&quot;str(CustomError)&quot;, None, Some(&amp;ctx))</span>
-<span class="doccomment">///             .unwrap()</span>
-<span class="doccomment">///             .extract()</span>
-<span class="doccomment">///             .unwrap();</span>
-<span class="doccomment">///         assert_eq!(type_description, &quot;&lt;class &#39;mymodule.CustomError&#39;&gt;&quot;);</span>
-<span class="doccomment">///         pyo3::py_run!(py, *ctx, &quot;assert CustomError(&#39;oops&#39;).args == (&#39;oops&#39;,)&quot;);</span>
-<span class="doccomment">///    });</span>
-<span class="doccomment">/// }</span>
+<span class="doccomment">/// Python::with_gil(|py| {</span>
+<span class="doccomment">///     let error_type = py.get_type::&lt;CustomError&gt;();</span>
+<span class="doccomment">///     let ctx = [(&quot;CustomError&quot;, error_type)].into_py_dict(py);</span>
+<span class="doccomment">///     let type_description: String = py</span>
+<span class="doccomment">///         .eval(&quot;str(CustomError)&quot;, None, Some(&amp;ctx))</span>
+<span class="doccomment">///         .unwrap()</span>
+<span class="doccomment">///         .extract()</span>
+<span class="doccomment">///         .unwrap();</span>
+<span class="doccomment">///     assert_eq!(type_description, &quot;&lt;class &#39;mymodule.CustomError&#39;&gt;&quot;);</span>
+<span class="doccomment">///     pyo3::py_run!(py, *ctx, &quot;assert CustomError(&#39;oops&#39;).args == (&#39;oops&#39;,)&quot;);</span>
+<span class="doccomment">/// });</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules!</span> <span class="ident">create_exception</span> {
@@ -1111,6 +1120,22 @@
     );
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>:<span class="ident">expr</span>) =&gt; (
         <span class="macro">impl_native_exception!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyBaseExceptionObject</span>);
+    )
+);
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+<span class="macro">macro_rules!</span> <span class="ident">impl_windows_native_exception</span> (
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>:<span class="ident">path</span>) =&gt; (
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+        <span class="attribute">#[<span class="ident">doc</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>]</span>
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyAny</span>);
+
+        <span class="macro-nonterminal">$</span><span class="macro">crate::impl_exception_boilerplate!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>);
+        <span class="macro-nonterminal">$</span><span class="macro">crate::pyobject_native_type!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>, <span class="kw-2">*</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span>));
+    );
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>:<span class="ident">expr</span>) =&gt; (
+        <span class="macro">impl_windows_native_exception!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyBaseExceptionObject</span>);
     )
 );
 
@@ -1405,8 +1430,9 @@ Python::with_gil(|py| {
     <span class="macro">native_doc!</span>(<span class="string">&quot;EnvironmentError&quot;</span>)
 );
 <span class="macro">impl_native_exception!</span>(<span class="ident">PyIOError</span>, <span class="ident">PyExc_IOError</span>, <span class="macro">native_doc!</span>(<span class="string">&quot;IOError&quot;</span>));
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-<span class="macro">impl_native_exception!</span>(
+<span class="macro">impl_windows_native_exception!</span>(
     <span class="ident">PyWindowsError</span>,
     <span class="ident">PyExc_WindowsError</span>,
     <span class="macro">native_doc!</span>(<span class="string">&quot;WindowsError&quot;</span>)

@@ -108,6 +108,7 @@
 <span id="108">108</span>
 <span id="109">109</span>
 <span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::object</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pyport::Py_ssize_t</span>;
 <span class="kw">use</span> <span class="ident">libc::size_t</span>;
@@ -140,11 +141,12 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyGC_Collect</span>() -&gt; <span class="ident">Py_ssize_t</span>;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
-    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyGC_Enable</span>() -&gt; <span class="ident">c_int</span>;
-    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)))]</span>
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyGC_Disable</span>() -&gt; <span class="ident">c_int</span>;
-    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)))]</span>
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyGC_IsEnabled</span>() -&gt; <span class="ident">c_int</span>;
 }
 

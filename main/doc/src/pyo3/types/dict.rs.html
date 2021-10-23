@@ -790,7 +790,6 @@
 <span id="790">790</span>
 <span id="791">791</span>
 <span id="792">792</span>
-<span id="793">793</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::err</span>::{<span class="self">self</span>, <span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
@@ -832,7 +831,6 @@
     <span class="doccomment">/// Returns an error on invalid input. In the case of key collisions,</span>
     <span class="doccomment">/// this keeps the last entry seen.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
-    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span>(<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_sequence</span>(<span class="ident">py</span>: <span class="ident">Python</span>, <span class="ident">seq</span>: <span class="ident">PyObject</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">PyDict</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
             <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_owned_ptr</span>::<span class="op">&lt;</span><span class="ident">PyDict</span><span class="op">&gt;</span>(<span class="ident">ffi::PyDict_New</span>());
