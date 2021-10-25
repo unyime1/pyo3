@@ -144,55 +144,41 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="class-customizations"><a class="header" href="#class-customizations">Class customizations</a></h1>
-<p>PyO3 uses the <code>#[pyproto]</code> attribute in combination with special traits to implement certain protocol (aka <code>__dunder__</code>) methods of Python classes. The special traits are listed in this chapter of the guide. See also the <a href="https://pyo3.rs/main/doc/pyo3/class/index.html">documentation for the <code>pyo3::class</code> module</a>.</p>
-<p>Python's object model defines several protocols for different object behavior, such as the sequence, mapping, and number protocols. You may be familiar with implementing these protocols in Python classes by &quot;dunder&quot; methods, such as <code>__str__</code> or <code>__repr__</code>.</p>
-<p>In the Python C-API which PyO3 is dependent upon, many of these protocol methods have to be provided into special &quot;slots&quot; on the class type object. To fill these slots PyO3 uses the <code>#[pyproto]</code> attribute in combination with special traits.</p>
-<p>All <code>#[pyproto]</code> methods can return <code>T</code> instead of <code>PyResult&lt;T&gt;</code> if the method implementation is infallible. In addition, if the return type is <code>()</code>, it can be omitted altogether.</p>
-<p>There are many &quot;dunder&quot; methods which are not included in any of PyO3's protocol traits, such as <code>__dir__</code>. These methods can be implemented in <code>#[pymethods]</code> as already covered in the previous section.</p>
-<h2 id="basic-object-customization"><a class="header" href="#basic-object-customization">Basic object customization</a></h2>
-<p>The <a href="https://pyo3.rs/main/doc/pyo3/class/basic/trait.PyObjectProtocol.html"><code>PyObjectProtocol</code></a> trait provides several basic customizations.</p>
-<h3 id="attribute-access"><a class="header" href="#attribute-access">Attribute access</a></h3>
-<p>To customize object attribute access, define the following methods:</p>
+<p>Python's object model defines several protocols for different object behavior, such as the sequence, mapping, and number protocols. You may be familiar with implementing these protocols in Python classes by &quot;magic&quot; methods, such as <code>__str__</code> or <code>__repr__</code>. Because of the double-underscores surrounding their name, these are also known as &quot;dunder&quot; methods.</p>
+<p>In the Python C-API which PyO3 is implemented upon, many of these magic methods have to be placed into special &quot;slots&quot; on the class type object. as already covered in the previous section. There are two ways in which this can be done:</p>
 <ul>
-<li><code>fn __getattr__(&amp;self, name: impl FromPyObject) -&gt; PyResult&lt;impl IntoPy&lt;PyObject&gt;&gt;</code></li>
-<li><code>fn __setattr__(&amp;mut self, name: impl FromPyObject, value: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
-<li><code>fn __delattr__(&amp;mut self, name: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li>[Experimental for PyO3 0.15, may change slightly in PyO3 0.16] In <code>#[pymethods]</code>, if the name of the method is a recognised magic method, PyO3 will place it in the type object automatically.</li>
+<li>[Stable, but expected to be deprecated in PyO3 0.16] In special traits combined with the <code>#[pyproto]</code> attribute.</li>
 </ul>
-<p>Each method corresponds to Python's <code>self.attr</code>, <code>self.attr = value</code> and <code>del self.attr</code> code.</p>
-<h3 id="string-conversions"><a class="header" href="#string-conversions">String Conversions</a></h3>
+<p>(There are also many magic methods which don't have a special slot, such as <code>__dir__</code>. These methods can be implemented as normal in <code>#[pymethods]</code>.)</p>
+<p>This chapter of the guide has a section on each of these solutions in turn:</p>
+<h3 id="magic-methods-in-pymethods"><a class="header" href="#magic-methods-in-pymethods">Magic methods in <code>#[pymethods]</code></a></h3>
+<p>In PyO3 0.15, if a function name in <code>#[pymethods]</code> is a recognised magic method, it will be automatically placed into the correct slot in the Python type object. The function name is taken from the usual rules for naming <code>#[pymethods]</code>: the <code>#[pyo3(name = &quot;...&quot;)]</code> attribute is used if present, otherwise the Rust function name is used.</p>
+<p>The magic methods handled by PyO3 are very similar to the standard Python ones on <a href="https://docs.python.org/3/reference/datamodel.html#special-method-names">this page</a> - in particular they are the the subset which have slots as <a href="https://docs.python.org/3/c-api/typeobj.html">defined here</a>. Some of the slots do not have a magic method in Python, which leads to a few additional magic methods defined only in PyO3:</p>
 <ul>
-<li>
-<p><code>fn __repr__(&amp;self) -&gt; PyResult&lt;impl ToPyObject&lt;ObjectType=PyString&gt;&gt;</code></p>
-</li>
-<li>
-<p><code>fn __str__(&amp;self) -&gt; PyResult&lt;impl ToPyObject&lt;ObjectType=PyString&gt;&gt;</code></p>
-<p>Possible return types for <code>__str__</code> and <code>__repr__</code> are <code>PyResult&lt;String&gt;</code> or <code>PyResult&lt;PyString&gt;</code>.</p>
-</li>
+<li>Magic methods for garbage collection</li>
+<li>Magic methods for the buffer protocol</li>
+<li>Magic methods for the sequence protocol</li>
 </ul>
-<h3 id="comparison-operators"><a class="header" href="#comparison-operators">Comparison operators</a></h3>
+<p>When PyO3 handles a magic method, a couple of changes apply compared to other <code>#[pymethods]</code>:</p>
 <ul>
-<li>
-<p><code>fn __richcmp__(&amp;self, other: impl FromPyObject, op: CompareOp) -&gt; PyResult&lt;impl ToPyObject&gt;</code></p>
-<p>Overloads Python comparison operations (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code>).
-The <code>op</code> argument indicates the comparison operation being performed.
-The return type will normally be <code>PyResult&lt;bool&gt;</code>, but any Python object can be returned.
-If <code>other</code> is not of the type specified in the signature, the generated code will
-automatically <code>return NotImplemented</code>.</p>
-</li>
-<li>
-<p><code>fn __hash__(&amp;self) -&gt; PyResult&lt;impl PrimInt&gt;</code></p>
-<p>Objects that compare equal must have the same hash value.
-The return type must be <code>PyResult&lt;T&gt;</code> where <code>T</code> is one of Rust's primitive integer types.</p>
-</li>
+<li>The <code>#[pyo3(text_signature = &quot;...&quot;)]</code> attribute is not allowed</li>
+<li>The types of the arguments are fixed according to the magic method</li>
 </ul>
-<h3 id="other-methods"><a class="header" href="#other-methods">Other methods</a></h3>
+<p>The following sections list of all magic methods PyO3 currently handles:</p>
+<h4 id="basic-object-customization"><a class="header" href="#basic-object-customization">Basic object customization</a></h4>
 <ul>
-<li>
-<p><code>fn __bool__(&amp;self) -&gt; PyResult&lt;bool&gt;</code></p>
-<p>Determines the &quot;truthyness&quot; of the object.</p>
-</li>
+<li><code>__str__</code></li>
+<li><code>__repr__</code></li>
+<li><code>__hash__</code></li>
+<li><code>__richcmp__</code></li>
+<li><code>__getattr__</code></li>
+<li><code>__setattr__</code></li>
+<li><code>__delattr__</code></li>
+<li><code>__bool__</code></li>
+<li><code>__call__</code></li>
 </ul>
-<h2 id="callable-objects"><a class="header" href="#callable-objects">Callable objects</a></h2>
+<h5 id="example-callable-objects"><a class="header" href="#example-callable-objects">Example: Callable objects</a></h5>
 <p>Custom classes can be callable if they have a <code>#[pymethod]</code> named <code>__call__</code>.</p>
 <p>The following pyclass is a basic decorator - its constructor takes a Python object
 as argument and calls that object when called.</p>
@@ -250,7 +236,136 @@ hello
 say_hello has been called 4 time(s).
 hello
 </code></pre>
-<h2 id="emulating-numeric-types"><a class="header" href="#emulating-numeric-types">Emulating numeric types</a></h2>
+<h4 id="iterable-objects"><a class="header" href="#iterable-objects">Iterable objects</a></h4>
+<ul>
+<li><code>__iter__</code></li>
+<li><code>__next__</code></li>
+</ul>
+<h4 id="awaitable-objects"><a class="header" href="#awaitable-objects">Awaitable objects</a></h4>
+<ul>
+<li><code>__await__</code></li>
+<li><code>__aiter__</code></li>
+<li><code>__anext__</code></li>
+</ul>
+<h4 id="sequence-types"><a class="header" href="#sequence-types">Sequence types</a></h4>
+<p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
+<h4 id="mapping-types"><a class="header" href="#mapping-types">Mapping types</a></h4>
+<ul>
+<li><code>__len__</code></li>
+<li><code>__contains__</code></li>
+<li><code>__getitem__</code></li>
+<li><code>__setitem__</code></li>
+<li><code>__delitem__</code></li>
+</ul>
+<h4 id="descriptors"><a class="header" href="#descriptors">Descriptors</a></h4>
+<ul>
+<li><code>__get__</code></li>
+<li><code>__set__</code></li>
+<li><code>__delete__</code></li>
+</ul>
+<h4 id="numeric-types"><a class="header" href="#numeric-types">Numeric types</a></h4>
+<ul>
+<li><code>__pos__</code></li>
+<li><code>__neg__</code></li>
+<li><code>__abs__</code></li>
+<li><code>__invert__</code></li>
+<li><code>__index__</code></li>
+<li><code>__int__</code></li>
+<li><code>__float__</code></li>
+<li><code>__iadd__</code></li>
+<li><code>__isub__</code></li>
+<li><code>__imul__</code></li>
+<li><code>__imatmul__</code></li>
+<li><code>__itruediv__</code></li>
+<li><code>__ifloordiv__</code></li>
+<li><code>__imod__</code></li>
+<li><code>__ipow__</code></li>
+<li><code>__ilshift__</code></li>
+<li><code>__irshift__</code></li>
+<li><code>__iand__</code></li>
+<li><code>__ixor__</code></li>
+<li><code>__ior__</code></li>
+<li><code>__add__</code></li>
+<li><code>__radd__</code></li>
+<li><code>__sub__</code></li>
+<li><code>__rsub__</code></li>
+<li><code>__mul__</code></li>
+<li><code>__rmul__</code></li>
+<li><code>__matmul__</code></li>
+<li><code>__rmatmul__</code></li>
+<li><code>__floordiv__</code></li>
+<li><code>__rfloordiv__</code></li>
+<li><code>__truediv__</code></li>
+<li><code>__rtruediv__</code></li>
+<li><code>__divmod__</code></li>
+<li><code>__rdivmod__</code></li>
+<li><code>__mod__</code></li>
+<li><code>__rmod__</code></li>
+<li><code>__lshift__</code></li>
+<li><code>__rlshift__</code></li>
+<li><code>__rshift__</code></li>
+<li><code>__rrshift__</code></li>
+<li><code>__and__</code></li>
+<li><code>__rand__</code></li>
+<li><code>__xor__</code></li>
+<li><code>__rxor__</code></li>
+<li><code>__or__</code></li>
+<li><code>__ror__</code></li>
+<li><code>__pow__</code></li>
+<li><code>__rpow__</code></li>
+</ul>
+<h4 id="buffer-objects"><a class="header" href="#buffer-objects">Buffer objects</a></h4>
+<p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
+<h4 id="garbage-collector-integration"><a class="header" href="#garbage-collector-integration">Garbage Collector Integration</a></h4>
+<p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
+<h3 id="pyproto-traits"><a class="header" href="#pyproto-traits"><code>#[pyproto]</code> traits</a></h3>
+<p>PyO3 can use the <code>#[pyproto]</code> attribute in combination with special traits to implement the magic methods which need slots. The special traits are listed below. See also the <a href="https://pyo3.rs/main/doc/pyo3/class/index.html">documentation for the <code>pyo3::class</code> module</a>.</p>
+<p>Before PyO3 0.15 this was the only supported solution for implementing magic methods. Due to complexity in the implementation and usage, these traits are expected to be deprecated in PyO3 0.16 in favour of the <code>#[pymethods]</code> solution.</p>
+<p>All <code>#[pyproto]</code> methods can return <code>T</code> instead of <code>PyResult&lt;T&gt;</code> if the method implementation is infallible. In addition, if the return type is <code>()</code>, it can be omitted altogether.</p>
+<h4 id="basic-object-customization-1"><a class="header" href="#basic-object-customization-1">Basic object customization</a></h4>
+<p>The <a href="https://pyo3.rs/main/doc/pyo3/class/basic/trait.PyObjectProtocol.html"><code>PyObjectProtocol</code></a> trait provides several basic customizations.</p>
+<h5 id="attribute-access"><a class="header" href="#attribute-access">Attribute access</a></h5>
+<p>To customize object attribute access, define the following methods:</p>
+<ul>
+<li><code>fn __getattr__(&amp;self, name: impl FromPyObject) -&gt; PyResult&lt;impl IntoPy&lt;PyObject&gt;&gt;</code></li>
+<li><code>fn __setattr__(&amp;mut self, name: impl FromPyObject, value: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __delattr__(&amp;mut self, name: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+</ul>
+<p>Each method corresponds to Python's <code>self.attr</code>, <code>self.attr = value</code> and <code>del self.attr</code> code.</p>
+<h5 id="string-conversions"><a class="header" href="#string-conversions">String Conversions</a></h5>
+<ul>
+<li>
+<p><code>fn __repr__(&amp;self) -&gt; PyResult&lt;impl ToPyObject&lt;ObjectType=PyString&gt;&gt;</code></p>
+</li>
+<li>
+<p><code>fn __str__(&amp;self) -&gt; PyResult&lt;impl ToPyObject&lt;ObjectType=PyString&gt;&gt;</code></p>
+<p>Possible return types for <code>__str__</code> and <code>__repr__</code> are <code>PyResult&lt;String&gt;</code> or <code>PyResult&lt;PyString&gt;</code>.</p>
+</li>
+</ul>
+<h5 id="comparison-operators"><a class="header" href="#comparison-operators">Comparison operators</a></h5>
+<ul>
+<li>
+<p><code>fn __richcmp__(&amp;self, other: impl FromPyObject, op: CompareOp) -&gt; PyResult&lt;impl ToPyObject&gt;</code></p>
+<p>Overloads Python comparison operations (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code>).
+The <code>op</code> argument indicates the comparison operation being performed.
+The return type will normally be <code>PyResult&lt;bool&gt;</code>, but any Python object can be returned.
+If <code>other</code> is not of the type specified in the signature, the generated code will
+automatically <code>return NotImplemented</code>.</p>
+</li>
+<li>
+<p><code>fn __hash__(&amp;self) -&gt; PyResult&lt;impl PrimInt&gt;</code></p>
+<p>Objects that compare equal must have the same hash value.
+The return type must be <code>PyResult&lt;T&gt;</code> where <code>T</code> is one of Rust's primitive integer types.</p>
+</li>
+</ul>
+<h5 id="other-methods"><a class="header" href="#other-methods">Other methods</a></h5>
+<ul>
+<li>
+<p><code>fn __bool__(&amp;self) -&gt; PyResult&lt;bool&gt;</code></p>
+<p>Determines the &quot;truthyness&quot; of the object.</p>
+</li>
+</ul>
+<h4 id="emulating-numeric-types"><a class="header" href="#emulating-numeric-types">Emulating numeric types</a></h4>
 <p>The <a href="https://pyo3.rs/main/doc/pyo3/class/number/trait.PyNumberProtocol.html"><code>PyNumberProtocol</code></a> trait can be implemented to emulate <a href="https://docs.python.org/3/reference/datamodel.html#emulating-numeric-types">numeric types</a>.</p>
 <ul>
 <li><code>fn __add__(lhs: impl FromPyObject, rhs: impl FromPyObject) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
@@ -325,7 +440,7 @@ signature, or raise a TypeError.</p>
 <ul>
 <li><code>fn __index__(&amp;'p self) -&gt; PyResult&lt;impl ToPyObject&gt;</code></li>
 </ul>
-<h2 id="emulating-sequential-containers-such-as-lists-or-tuples"><a class="header" href="#emulating-sequential-containers-such-as-lists-or-tuples">Emulating sequential containers (such as lists or tuples)</a></h2>
+<h4 id="emulating-sequential-containers-such-as-lists-or-tuples"><a class="header" href="#emulating-sequential-containers-such-as-lists-or-tuples">Emulating sequential containers (such as lists or tuples)</a></h4>
 <p>The <a href="https://pyo3.rs/main/doc/pyo3/class/sequence/trait.PySequenceProtocol.html"><code>PySequenceProtocol</code></a> trait can be implemented to emulate
 <a href="https://docs.python.org/3/reference/datamodel.html#emulating-container-types">sequential container types</a>.</p>
 <p>For a sequence, the keys are the integers <em>k</em> for which <em>0 &lt;= k &lt; N</em>,
@@ -386,7 +501,7 @@ Used by the <code>*=</code> operator, after trying the numeric in place multipli
 the <code>PyNumberProtocol</code> trait method.</p>
 </li>
 </ul>
-<h2 id="emulating-mapping-containers-such-as-dictionaries"><a class="header" href="#emulating-mapping-containers-such-as-dictionaries">Emulating mapping containers (such as dictionaries)</a></h2>
+<h4 id="emulating-mapping-containers-such-as-dictionaries"><a class="header" href="#emulating-mapping-containers-such-as-dictionaries">Emulating mapping containers (such as dictionaries)</a></h4>
 <p>The <a href="https://pyo3.rs/main/doc/pyo3/class/mapping/trait.PyMappingProtocol.html"><code>PyMappingProtocol</code></a> trait allows to emulate
 <a href="https://docs.python.org/3/reference/datamodel.html#emulating-container-types">mapping container types</a>.</p>
 <p>For a mapping, the keys may be Python objects of arbitrary type.</p>
@@ -418,7 +533,7 @@ The same exceptions should be raised for improper key values as
 for the <code>__getitem__()</code> method.</p>
 </li>
 </ul>
-<h2 id="garbage-collector-integration"><a class="header" href="#garbage-collector-integration">Garbage Collector Integration</a></h2>
+<h4 id="garbage-collector-integration-1"><a class="header" href="#garbage-collector-integration-1">Garbage Collector Integration</a></h4>
 <p>If your type owns references to other Python objects, you will need to
 integrate with Python's garbage collector so that the GC is aware of
 those references.
@@ -467,7 +582,7 @@ at compile time:</p>
 <pre><code class="language-compile_fail">#[pyclass(gc)]
 struct GCTracked {} // Fails because it does not implement PyGCProtocol
 </code></pre>
-<h2 id="iterator-types"><a class="header" href="#iterator-types">Iterator Types</a></h2>
+<h4 id="iterator-types"><a class="header" href="#iterator-types">Iterator Types</a></h4>
 <p>Iterators can be defined using the
 <a href="https://pyo3.rs/main/doc/pyo3/class/iter/trait.PyIterProtocol.html"><code>PyIterProtocol</code></a> trait.
 It includes two methods <code>__iter__</code> and <code>__next__</code>:</p>
@@ -552,7 +667,7 @@ impl PyIterProtocol for Container {
 </span></code></pre></pre>
 <p>For more details on Python's iteration protocols, check out <a href="https://docs.python.org/3/library/stdtypes.html#iterator-types">the &quot;Iterator Types&quot; section of the library
 documentation</a>.</p>
-<h3 id="returning-a-value-from-iteration"><a class="header" href="#returning-a-value-from-iteration">Returning a value from iteration</a></h3>
+<h5 id="returning-a-value-from-iteration"><a class="header" href="#returning-a-value-from-iteration">Returning a value from iteration</a></h5>
 <p>This guide has so far shown how to use <code>Option&lt;T&gt;</code> to implement yielding values during iteration.
 In Python a generator can also return a value. To express this in Rust, PyO3 provides the
 <a href="https://pyo3.rs/main/doc/pyo3/class/iter/enum.IterNextOutput.html"><code>IterNextOutput</code></a> enum to
