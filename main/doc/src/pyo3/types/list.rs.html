@@ -744,7 +744,7 @@
 <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">new_from_iter</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
     <span class="ident">elements</span>: <span class="kw">impl</span> <span class="ident">ExactSizeIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
     <span class="ident">convert</span>: <span class="kw">impl</span> <span class="ident">Fn</span>(<span class="ident">T</span>) -&gt; <span class="ident">PyObject</span>,
-) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span> {
+) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span> {
     <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi::PyList_New</span>(<span class="ident">elements</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">Py_ssize_t</span>);
     <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="ident">elements</span>.<span class="ident">enumerate</span>() {
         <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">convert</span>(<span class="ident">e</span>).<span class="ident">into_ptr</span>();
@@ -973,7 +973,7 @@
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyAny</span>;
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyAny</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyAny</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">len</span>() {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">PyPy</span>))]</span>
             <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">get_item</span>(<span class="self">self</span>.<span class="ident">index</span>).<span class="ident">expect</span>(<span class="string">&quot;list.get failed&quot;</span>);
@@ -1196,7 +1196,7 @@
             <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">size_hint</span>(), (<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="prelude-val">Some</span>(<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>)));
 
             <span class="comment">// Exhust iterator.</span>
-            <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">iter</span> {}
+            <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">iter</span> {}
 
             <span class="macro">assert_eq!</span>(<span class="ident">iter</span>.<span class="ident">size_hint</span>(), (<span class="number">0</span>, <span class="prelude-val">Some</span>(<span class="number">0</span>)));
         });

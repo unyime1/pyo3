@@ -1100,7 +1100,7 @@
 
 <span class="doccomment">/// The Drop implementation for `GILGuard` will release the GIL.</span>
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">GILGuard</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="comment">// First up, try to detect if the order of destruction is correct.</span>
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">GIL_COUNT</span>.<span class="ident">try_with</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> {
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">gstate</span> <span class="op">==</span> <span class="ident">ffi::PyGILState_STATE::PyGILState_UNLOCKED</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span>.<span class="ident">get</span>() <span class="op">!</span><span class="op">=</span> <span class="number">1</span> {
@@ -1117,7 +1117,7 @@
 
         <span class="comment">// Drop the objects in the pool before attempting to release the thread state</span>
         <span class="kw">unsafe</span> {
-            <span class="ident">ManuallyDrop::drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">pool</span>);
+            <span class="ident">ManuallyDrop::drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>.<span class="ident">pool</span>);
         }
 
         <span class="kw">if</span> <span class="ident">should_decrement</span> {
@@ -1165,7 +1165,7 @@
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ops</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pointer_ops</span>.<span class="ident">lock</span>();
-        <span class="kw">let</span> (<span class="ident">increfs</span>, <span class="ident">decrefs</span>) <span class="op">=</span> <span class="ident">mem::take</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">ops</span>);
+        <span class="kw">let</span> (<span class="ident">increfs</span>, <span class="ident">decrefs</span>) <span class="op">=</span> <span class="ident">mem::take</span>(<span class="kw-2">&amp;mut</span> <span class="kw-2">*</span><span class="ident">ops</span>);
         <span class="ident">drop</span>(<span class="ident">ops</span>);
         <span class="comment">// Always increase reference counts first - as otherwise objects which have a</span>
         <span class="comment">// nonzero total reference count might be incorrectly dropped by Python during</span>
@@ -1219,7 +1219,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">GILPool</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">obj_len_start</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">start</span> {
             <span class="kw">let</span> <span class="ident">dropping_obj</span> <span class="op">=</span> <span class="ident">OWNED_OBJECTS</span>.<span class="ident">with</span>(<span class="op">|</span><span class="ident">holder</span><span class="op">|</span> {
                 <span class="comment">// `holder` must be dropped before calling Py_DECREF, or Py_DECREF may call</span>
@@ -1632,7 +1632,7 @@
         <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">get_object</span>(<span class="ident">gil</span>.<span class="ident">python</span>());
 
         <span class="kw">unsafe</span> {
-            <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">capsule_drop</span>(<span class="ident">capsule</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>) {
+            <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">capsule_drop</span>(<span class="ident">capsule</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>) {
                 <span class="comment">// This line will implicitly call update_counts</span>
                 <span class="comment">// -&gt; and so cause deadlock if update_counts is not handling recursion correctly.</span>
                 <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident">GILPool::new</span>();

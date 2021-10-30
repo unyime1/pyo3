@@ -823,7 +823,7 @@
 
 <span class="kw">impl</span> <span class="ident"><span class="kw">crate</span>::AsPyPointer</span> <span class="kw">for</span> <span class="ident">PyAny</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span> {
+    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">get</span>()
     }
 }
@@ -831,7 +831,7 @@
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
 <span class="comment">// Copied here as the macro does not accept deprecated functions.</span>
 <span class="comment">// Originally ffi::object::PyObject_Check, but this is not in the Python C API.</span>
-<span class="kw">fn</span> <span class="ident">PyObject_Check</span>(<span class="kw">_</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>) -&gt; <span class="ident">c_int</span> {
+<span class="kw">fn</span> <span class="ident">PyObject_Check</span>(<span class="kw">_</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>) -&gt; <span class="ident">c_int</span> {
     <span class="number">1</span>
 }
 
@@ -1369,7 +1369,7 @@
 
     <span class="doccomment">/// Returns the Python type pointer for this object.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_type_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyTypeObject</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_type_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::PyTypeObject</span> {
         <span class="kw">unsafe</span> { <span class="ident">ffi::Py_TYPE</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) }
     }
 

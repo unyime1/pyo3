@@ -31,23 +31,23 @@
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyEval_EvalCode&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyEval_EvalCode</span>(
-        <span class="ident">arg1</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">arg2</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">arg3</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-    ) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>;
+        <span class="ident">arg1</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">arg2</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">arg3</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+    ) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyEval_EvalCodeEx</span>(
-        <span class="ident">co</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">globals</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">locals</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">args</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">co</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">globals</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">locals</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">args</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
         <span class="ident">argc</span>: <span class="ident">c_int</span>,
-        <span class="ident">kwds</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">kwds</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
         <span class="ident">kwdc</span>: <span class="ident">c_int</span>,
-        <span class="ident">defs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">defs</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
         <span class="ident">defc</span>: <span class="ident">c_int</span>,
-        <span class="ident">kwdefs</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">closure</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>,
-    ) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyObject</span>;
+        <span class="ident">kwdefs</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+        <span class="ident">closure</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
+    ) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
 
     <span class="comment">// skipped non-limited _PyEval_EvalCodeWithName</span>
     <span class="comment">// skipped non-limited _PyEval_CallTracing</span>

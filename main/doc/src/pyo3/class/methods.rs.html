@@ -380,7 +380,7 @@
 <span class="comment">// Manual implementation because `Python&lt;&#39;_&gt;` does not implement `Debug` and</span>
 <span class="comment">// trait bounds on `fn` compiler-generated derive impls are too restrictive.</span>
 <span class="kw">impl</span> <span class="ident">fmt::Debug</span> <span class="kw">for</span> <span class="ident">PyClassAttributeDef</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;PyClassAttributeDef&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>)
             .<span class="ident">finish</span>()
@@ -398,7 +398,7 @@
     }
 
     <span class="doccomment">/// Copy descriptor information to `ffi::PyGetSetDef`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ffi::PyGetSetDef</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ffi::PyGetSetDef</span>) {
         <span class="kw">if</span> <span class="ident">dst</span>.<span class="ident">name</span>.<span class="ident">is_null</span>() {
             <span class="ident">dst</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">get_name</span>(<span class="self">self</span>.<span class="ident">name</span>).<span class="ident">unwrap</span>().<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw">_</span>;
         }
@@ -420,7 +420,7 @@
     }
 
     <span class="doccomment">/// Copy descriptor information to `ffi::PyGetSetDef`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ffi::PyGetSetDef</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_to</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;mut</span> <span class="ident">ffi::PyGetSetDef</span>) {
         <span class="kw">if</span> <span class="ident">dst</span>.<span class="ident">name</span>.<span class="ident">is_null</span>() {
             <span class="ident">dst</span>.<span class="ident">name</span> <span class="op">=</span> <span class="ident">get_name</span>(<span class="self">self</span>.<span class="ident">name</span>).<span class="ident">unwrap</span>().<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw">_</span>;
         }

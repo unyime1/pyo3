@@ -122,7 +122,7 @@
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ref</span>();
     <span class="kw">unsafe</span> {
-        <span class="kw">let</span> <span class="ident">c_str</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>;
+        <span class="kw">let</span> <span class="ident">c_str</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>;
         <span class="kw">let</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">ffi::PyMarshal_ReadObjectFromString</span>(<span class="ident">c_str</span>, <span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">isize</span>);
         <span class="ident">FromPyPointer::from_owned_ptr_or_err</span>(<span class="ident">py</span>, <span class="ident">object</span>)
     }

@@ -213,14 +213,14 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyStatus</span> {
     <span class="kw">pub</span> <span class="ident">_type</span>: <span class="ident">_PyStatus_TYPE</span>,
-    <span class="kw">pub</span> <span class="ident">func</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
-    <span class="kw">pub</span> <span class="ident">err_msg</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
+    <span class="kw">pub</span> <span class="ident">func</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>,
+    <span class="kw">pub</span> <span class="ident">err_msg</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>,
     <span class="kw">pub</span> <span class="ident">exitcode</span>: <span class="ident">c_int</span>,
 }
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyStatus_Ok</span>() -&gt; <span class="ident">PyStatus</span>;
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyStatus_Error</span>(<span class="ident">err_msg</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>) -&gt; <span class="ident">PyStatus</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyStatus_Error</span>(<span class="ident">err_msg</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>) -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyStatus_NoMemory</span>() -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyStatus_Exit</span>(<span class="ident">exitcode</span>: <span class="ident">c_int</span>) -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyStatus_IsError</span>(<span class="ident">err</span>: <span class="ident">PyStatus</span>) -&gt; <span class="ident">c_int</span>;
@@ -234,15 +234,15 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyWideStringList</span> {
     <span class="kw">pub</span> <span class="ident">length</span>: <span class="ident">Py_ssize_t</span>,
-    <span class="kw">pub</span> <span class="ident">items</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">items</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
 }
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyWideStringList_Append</span>(<span class="ident">list</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyWideStringList</span>, <span class="ident">item</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">wchar_t</span>) -&gt; <span class="ident">PyStatus</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyWideStringList_Append</span>(<span class="ident">list</span>: <span class="kw-2">*mut</span> <span class="ident">PyWideStringList</span>, <span class="ident">item</span>: <span class="kw-2">*const</span> <span class="ident">wchar_t</span>) -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyWideStringList_Insert</span>(
-        <span class="ident">list</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyWideStringList</span>,
+        <span class="ident">list</span>: <span class="kw-2">*mut</span> <span class="ident">PyWideStringList</span>,
         <span class="ident">index</span>: <span class="ident">Py_ssize_t</span>,
-        <span class="ident">item</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">wchar_t</span>,
+        <span class="ident">item</span>: <span class="kw-2">*const</span> <span class="ident">wchar_t</span>,
     ) -&gt; <span class="ident">PyStatus</span>;
 }
 
@@ -268,8 +268,8 @@
 }
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyPreConfig_InitPythonConfig</span>(<span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyPreConfig</span>);
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyPreConfig_InitIsolatedConfig</span>(<span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyPreConfig</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyPreConfig_InitPythonConfig</span>(<span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyPreConfig</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyPreConfig_InitIsolatedConfig</span>(<span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyPreConfig</span>);
 }
 
 <span class="comment">/* --- PyConfig ---------------------------------------------- */</span>
@@ -294,15 +294,15 @@
     <span class="kw">pub</span> <span class="ident">show_alloc_count</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">dump_refs</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">malloc_stats</span>: <span class="ident">c_int</span>,
-    <span class="kw">pub</span> <span class="ident">filesystem_encoding</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">filesystem_errors</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">pycache_prefix</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">filesystem_encoding</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">filesystem_errors</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">pycache_prefix</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="kw">pub</span> <span class="ident">parse_argv</span>: <span class="ident">c_int</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
     <span class="kw">pub</span> <span class="ident">orig_argv</span>: <span class="ident">PyWideStringList</span>,
     <span class="kw">pub</span> <span class="ident">argv</span>: <span class="ident">PyWideStringList</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_10</span>))]</span>
-    <span class="kw">pub</span> <span class="ident">program_name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">program_name</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="kw">pub</span> <span class="ident">xoptions</span>: <span class="ident">PyWideStringList</span>,
     <span class="kw">pub</span> <span class="ident">warnoptions</span>: <span class="ident">PyWideStringList</span>,
     <span class="kw">pub</span> <span class="ident">site_import</span>: <span class="ident">c_int</span>,
@@ -317,35 +317,35 @@
     <span class="kw">pub</span> <span class="ident">user_site_directory</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">configure_c_stdio</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">buffered_stdio</span>: <span class="ident">c_int</span>,
-    <span class="kw">pub</span> <span class="ident">stdio_encoding</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">stdio_errors</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">stdio_encoding</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">stdio_errors</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
     <span class="kw">pub</span> <span class="ident">legacy_windows_stdio</span>: <span class="ident">c_int</span>,
 
-    <span class="kw">pub</span> <span class="ident">check_hash_pycs_mode</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">check_hash_pycs_mode</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">program_name</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">program_name</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="kw">pub</span> <span class="ident">pathconfig_warnings</span>: <span class="ident">c_int</span>,
-    <span class="kw">pub</span> <span class="ident">pythonpath_env</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">home</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">pythonpath_env</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">home</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_10</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">platlibdir</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">platlibdir</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
 
     <span class="kw">pub</span> <span class="ident">module_search_paths_set</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">module_search_paths</span>: <span class="ident">PyWideStringList</span>,
-    <span class="kw">pub</span> <span class="ident">executable</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">base_executable</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">prefix</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">base_prefix</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">exec_prefix</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">base_exec_prefix</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">executable</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">base_executable</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">prefix</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">base_prefix</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">exec_prefix</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">base_exec_prefix</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_9</span>, <span class="ident">not</span>(<span class="ident">Py_3_10</span>)))]</span>
-    <span class="kw">pub</span> <span class="ident">platlibdir</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">platlibdir</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="kw">pub</span> <span class="ident">skip_source_first_line</span>: <span class="ident">c_int</span>,
-    <span class="kw">pub</span> <span class="ident">run_command</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">run_module</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-    <span class="kw">pub</span> <span class="ident">run_filename</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">run_command</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">run_module</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+    <span class="kw">pub</span> <span class="ident">run_filename</span>: <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     <span class="kw">pub</span> <span class="ident">_install_importlib</span>: <span class="ident">c_int</span>,
     <span class="kw">pub</span> <span class="ident">_init_main</span>: <span class="ident">c_int</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_9</span>)]</span>
@@ -355,42 +355,42 @@
 }
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_InitPythonConfig</span>(<span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>);
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_InitIsolatedConfig</span>(<span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>);
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_Clear</span>(<span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_InitPythonConfig</span>(<span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_InitIsolatedConfig</span>(<span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_Clear</span>(<span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>);
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_SetString</span>(
-        <span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>,
-        <span class="ident">config_str</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-        <span class="ident">str</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">wchar_t</span>,
+        <span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>,
+        <span class="ident">config_str</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+        <span class="ident">str</span>: <span class="kw-2">*const</span> <span class="ident">wchar_t</span>,
     ) -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_SetBytesString</span>(
-        <span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>,
-        <span class="ident">config_str</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
-        <span class="ident">str</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
+        <span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>,
+        <span class="ident">config_str</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
+        <span class="ident">str</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>,
     ) -&gt; <span class="ident">PyStatus</span>;
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_Read</span>(<span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>) -&gt; <span class="ident">PyStatus</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_Read</span>(<span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>) -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_SetBytesArgv</span>(
-        <span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>,
+        <span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>,
         <span class="ident">argc</span>: <span class="ident">Py_ssize_t</span>,
-        <span class="ident">argv</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
+        <span class="ident">argv</span>: <span class="kw-2">*mut</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>,
     ) -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_SetArgv</span>(
-        <span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>,
+        <span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>,
         <span class="ident">argc</span>: <span class="ident">Py_ssize_t</span>,
-        <span class="ident">argv</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">wchar_t</span>,
+        <span class="ident">argv</span>: <span class="kw-2">*mut</span> <span class="kw-2">*const</span> <span class="ident">wchar_t</span>,
     ) -&gt; <span class="ident">PyStatus</span>;
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyConfig_SetWideStringList</span>(
-        <span class="ident">config</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyConfig</span>,
-        <span class="ident">list</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">PyWideStringList</span>,
+        <span class="ident">config</span>: <span class="kw-2">*mut</span> <span class="ident">PyConfig</span>,
+        <span class="ident">list</span>: <span class="kw-2">*mut</span> <span class="ident">PyWideStringList</span>,
         <span class="ident">length</span>: <span class="ident">Py_ssize_t</span>,
-        <span class="ident">items</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>,
+        <span class="ident">items</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>,
     ) -&gt; <span class="ident">PyStatus</span>;
 }
 
 <span class="comment">/* --- Helper functions --------------------------------------- */</span>
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_GetArgcArgv</span>(<span class="ident">argc</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_int</span>, <span class="ident">argv</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">wchar_t</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">Py_GetArgcArgv</span>(<span class="ident">argc</span>: <span class="kw-2">*mut</span> <span class="ident">c_int</span>, <span class="ident">argv</span>: <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="kw-2">*mut</span> <span class="ident">wchar_t</span>);
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../../" data-current-crate="pyo3" data-search-index-js="../../../../search-index.js" data-search-js="../../../../search.js"></div>

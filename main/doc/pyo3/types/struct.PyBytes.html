@@ -15,7 +15,7 @@ it inside <code>Err</code>.</li>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3</span>::{<span class="ident">prelude</span>::<span class="kw-2">*</span>, <span class="ident">types::PyBytes</span>};
 
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">bytes</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]<span class="op">|</span> {
+    <span class="kw">let</span> <span class="ident">py_bytes</span> <span class="op">=</span> <span class="ident">PyBytes::new_with</span>(<span class="ident">py</span>, <span class="number">10</span>, <span class="op">|</span><span class="ident">bytes</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">u8</span>]<span class="op">|</span> {
         <span class="ident">bytes</span>.<span class="ident">copy_from_slice</span>(<span class="string">b&quot;Hello Rust&quot;</span>);
         <span class="prelude-val">Ok</span>(())
     })<span class="question-mark">?</span>;

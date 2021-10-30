@@ -104,7 +104,7 @@
     <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span>;
     <span class="doccomment">/// Empties the dictionary of its key-value pairs.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">clear_dict</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {}
+    <span class="kw">fn</span> <span class="ident">clear_dict</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {}
     <span class="macro">private_decl!</span> {}
 }
 
@@ -120,7 +120,7 @@
     <span class="doccomment">/// - `_obj` must be a pointer to the pyclass instance which contains `self`.</span>
     <span class="doccomment">/// - The GIL must be held.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">clear_weakrefs</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {}
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">clear_weakrefs</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_obj</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {}
     <span class="macro">private_decl!</span> {}
 }
 
@@ -147,7 +147,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// `#[pyclass(dict)]` automatically adds this.</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyClassDictSlot</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyClassDictSlot</span>(<span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>);
 
 <span class="kw">impl</span> <span class="ident">PyClassDict</span> <span class="kw">for</span> <span class="ident">PyClassDictSlot</span> {
     <span class="macro">private_impl!</span> {}
@@ -157,7 +157,7 @@
         <span class="self">Self</span>(<span class="ident">std::ptr::null_mut</span>())
     }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">clear_dict</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {
+    <span class="kw">fn</span> <span class="ident">clear_dict</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_null</span>() {
             <span class="kw">unsafe</span> { <span class="ident">ffi::PyDict_Clear</span>(<span class="self">self</span>.<span class="number">0</span>) }
         }
@@ -168,7 +168,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// `#[pyclass(weakref)]` automatically adds this.</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyClassWeakRefSlot</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyClassWeakRefSlot</span>(<span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>);
 
 <span class="kw">impl</span> <span class="ident">PyClassWeakRef</span> <span class="kw">for</span> <span class="ident">PyClassWeakRefSlot</span> {
     <span class="macro">private_impl!</span> {}
@@ -178,7 +178,7 @@
         <span class="self">Self</span>(<span class="ident">std::ptr::null_mut</span>())
     }
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">clear_weakrefs</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">obj</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">clear_weakrefs</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>, <span class="ident">_py</span>: <span class="ident">Python</span>) {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="number">0</span>.<span class="ident">is_null</span>() {
             <span class="ident">ffi::PyObject_ClearWeakRefs</span>(<span class="ident">obj</span>)
         }

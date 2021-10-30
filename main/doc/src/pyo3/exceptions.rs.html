@@ -1000,7 +1000,7 @@
         );
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="kw">fn</span> <span class="ident">type_object_raw</span>(<span class="ident">py</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Python</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span> {
+            <span class="kw">fn</span> <span class="ident">type_object_raw</span>(<span class="ident">py</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Python</span>) -&gt; <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span> {
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::once_cell::GILOnceCell</span>;
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::AsPyPointer</span>;
                 <span class="kw">static</span> <span class="ident">TYPE_OBJECT</span>: <span class="ident">GILOnceCell</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Py</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::types::PyType</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span>
@@ -1021,7 +1021,7 @@
                         <span class="ident">cls</span>.<span class="ident">extract</span>()
                             .<span class="ident">expect</span>(<span class="string">&quot;Imported exception should be a type object&quot;</span>)
                     })
-                    .<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>
+                    .<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>
             }
         }
     };
@@ -1084,7 +1084,7 @@
         );
 
         <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span> {
-            <span class="kw">fn</span> <span class="ident">type_object_raw</span>(<span class="ident">py</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Python</span>) -&gt; <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span> {
+            <span class="kw">fn</span> <span class="ident">type_object_raw</span>(<span class="ident">py</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Python</span>) -&gt; <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span> {
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::once_cell::GILOnceCell</span>;
                 <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::AsPyPointer</span>;
                 <span class="kw">static</span> <span class="ident">TYPE_OBJECT</span>: <span class="ident">GILOnceCell</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::Py</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::types::PyType</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span>
@@ -1100,10 +1100,10 @@
                                 <span class="ident">::std::option::Option::Some</span>(<span class="ident">py</span>.<span class="ident">get_type</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">base</span><span class="op">&gt;</span>()),
                                 <span class="ident">::std::option::Option::None</span>,
                             )
-                            .<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyObject</span>,
+                            .<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyObject</span>,
                         )
                     })
-                    .<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>
+                    .<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>
             }
         }
     };
@@ -1116,7 +1116,7 @@
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyAny</span>);
 
         <span class="macro-nonterminal">$</span><span class="macro">crate::impl_exception_boilerplate!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>);
-        <span class="macro-nonterminal">$</span><span class="macro">crate::pyobject_native_type!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>, <span class="kw-2">*</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span>));
+        <span class="macro-nonterminal">$</span><span class="macro">crate::pyobject_native_type!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>, <span class="kw-2">*</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span>));
     );
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>:<span class="ident">expr</span>) =&gt; (
         <span class="macro">impl_native_exception!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyBaseExceptionObject</span>);
@@ -1132,7 +1132,7 @@
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyAny</span>);
 
         <span class="macro-nonterminal">$</span><span class="macro">crate::impl_exception_boilerplate!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>);
-        <span class="macro-nonterminal">$</span><span class="macro">crate::pyobject_native_type!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>, <span class="kw-2">*</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span>));
+        <span class="macro-nonterminal">$</span><span class="macro">crate::pyobject_native_type!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">layout</span>, <span class="kw-2">*</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyTypeObject</span>));
     );
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>:<span class="ident">expr</span>) =&gt; (
         <span class="macro">impl_windows_native_exception!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_name</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">doc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyBaseExceptionObject</span>);
@@ -1450,7 +1450,7 @@ Python::with_gil(|py| {
         <span class="kw">unsafe</span> {
             <span class="ident">py</span>.<span class="ident">from_owned_ptr_or_err</span>(<span class="ident">ffi::PyUnicodeDecodeError_Create</span>(
                 <span class="ident">encoding</span>.<span class="ident">as_ptr</span>(),
-                <span class="ident">input</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">c_char</span>,
+                <span class="ident">input</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*const</span> <span class="ident">c_char</span>,
                 <span class="ident">input</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">ffi::Py_ssize_t</span>,
                 <span class="ident">range</span>.<span class="ident">start</span> <span class="kw">as</span> <span class="ident">ffi::Py_ssize_t</span>,
                 <span class="ident">range</span>.<span class="ident">end</span> <span class="kw">as</span> <span class="ident">ffi::Py_ssize_t</span>,
