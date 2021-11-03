@@ -163,20 +163,56 @@
 <p>When PyO3 handles a magic method, a couple of changes apply compared to other <code>#[pymethods]</code>:</p>
 <ul>
 <li>The <code>#[pyo3(text_signature = &quot;...&quot;)]</code> attribute is not allowed</li>
-<li>The types of the arguments are fixed according to the magic method</li>
+<li>The signature is restricted to match the magic method</li>
 </ul>
-<p>The following sections list of all magic methods PyO3 currently handles:</p>
+<p>The following sections list of all magic methods PyO3 currently handles.  The
+given signatures should be interpreted as follows:</p>
+<ul>
+<li>All methods take a receiver as first argument, shown as <code>&lt;self&gt;</code>. It can be
+<code>&amp;self</code>, <code>&amp;mut self</code> or a <code>PyCell</code> reference like <code>self_: PyRef&lt;Self&gt;</code> and
+<code>self_: PyRefMut&lt;Self&gt;</code>, as described <a href="../class.html#inheritance">here</a>.</li>
+<li>An optional <code>Python&lt;'py&gt;</code> argument is always allowed as the first argument.</li>
+<li>Return values can be optionally wrapped in <code>PyResult</code>.</li>
+<li><code>object</code> means that any type is allowed that can be extracted from a Python
+object (if argument) or converted to a Python object (if return value).</li>
+<li>Other types must match what's given, e.g. <code>pyo3::basic::CompareOp</code> for
+<code>__richcmp__</code>'s second argument.</li>
+<li>For the comparison and arithmetic methods, extraction errors are not
+propagated as exceptions, but lead to a return of <code>NotImplemented</code>.</li>
+<li>For some magic methods, the return values are not restricted by PyO3, but
+checked by the Python interpreter. For example, <code>__str__</code> needs to return a
+string object.  This is indicated by <code>object (Python type)</code>.</li>
+</ul>
 <h4 id="basic-object-customization"><a class="header" href="#basic-object-customization">Basic object customization</a></h4>
 <ul>
-<li><code>__str__</code></li>
-<li><code>__repr__</code></li>
-<li><code>__hash__</code></li>
-<li><code>__richcmp__</code></li>
-<li><code>__getattr__</code></li>
-<li><code>__setattr__</code></li>
-<li><code>__delattr__</code></li>
-<li><code>__bool__</code></li>
-<li><code>__call__</code></li>
+<li>
+<p><code>__str__(&lt;self&gt;) -&gt; object (str)</code></p>
+</li>
+<li>
+<p><code>__repr__(&lt;self&gt;) -&gt; object (str)</code></p>
+</li>
+<li>
+<p><code>__hash__(&lt;self&gt;) -&gt; isize</code></p>
+</li>
+<li>
+<p><code>__richcmp__(&lt;self&gt;, object, pyo3::basic::CompareOp) -&gt; object</code></p>
+</li>
+<li>
+<p><code>__getattr__(&lt;self&gt;, object) -&gt; object</code></p>
+</li>
+<li>
+<p><code>__setattr__(&lt;self&gt;, object, object) -&gt; ()</code></p>
+</li>
+<li>
+<p><code>__delattr__(&lt;self&gt;, object) -&gt; ()</code></p>
+</li>
+<li>
+<p><code>__bool__(&lt;self&gt;) -&gt; bool</code></p>
+</li>
+<li>
+<p><code>__call__(&lt;self&gt;, ...) -&gt; object</code> - here, any argument list can be defined
+as for normal <code>pymethods</code></p>
+</li>
 </ul>
 <h5 id="example-callable-objects"><a class="header" href="#example-callable-objects">Example: Callable objects</a></h5>
 <p>Custom classes can be callable if they have a <code>#[pymethod]</code> named <code>__call__</code>.</p>
@@ -238,81 +274,81 @@ hello
 </code></pre>
 <h4 id="iterable-objects"><a class="header" href="#iterable-objects">Iterable objects</a></h4>
 <ul>
-<li><code>__iter__</code></li>
-<li><code>__next__</code></li>
+<li><code>__iter__(&lt;self&gt;) -&gt; object</code></li>
+<li><code>__next__(&lt;self&gt;) -&gt; Option&lt;object&gt; or IterNextOutput</code> (<a href="#returning-a-value-from-iteration">see details</a>)</li>
 </ul>
 <h4 id="awaitable-objects"><a class="header" href="#awaitable-objects">Awaitable objects</a></h4>
 <ul>
-<li><code>__await__</code></li>
-<li><code>__aiter__</code></li>
-<li><code>__anext__</code></li>
+<li><code>__await__(&lt;self&gt;) -&gt; object</code></li>
+<li><code>__aiter__(&lt;self&gt;) -&gt; object</code></li>
+<li><code>__anext__(&lt;self&gt;) -&gt; Option&lt;object&gt; or IterANextOutput</code></li>
 </ul>
 <h4 id="sequence-types"><a class="header" href="#sequence-types">Sequence types</a></h4>
 <p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
 <h4 id="mapping-types"><a class="header" href="#mapping-types">Mapping types</a></h4>
 <ul>
-<li><code>__len__</code></li>
-<li><code>__contains__</code></li>
-<li><code>__getitem__</code></li>
-<li><code>__setitem__</code></li>
-<li><code>__delitem__</code></li>
+<li><code>__len__(&lt;self&gt;) -&gt; usize</code></li>
+<li><code>__contains__(&lt;self&gt;, object) -&gt; bool</code></li>
+<li><code>__getitem__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__setitem__(&lt;self&gt;, object, object) -&gt; ()</code></li>
+<li><code>__delitem__(&lt;self&gt;, object) -&gt; ()</code></li>
 </ul>
 <h4 id="descriptors"><a class="header" href="#descriptors">Descriptors</a></h4>
 <ul>
-<li><code>__get__</code></li>
-<li><code>__set__</code></li>
-<li><code>__delete__</code></li>
+<li><code>__get__(&lt;self&gt;, object, object) -&gt; object</code></li>
+<li><code>__set__(&lt;self&gt;, object, object) -&gt; ()</code></li>
+<li><code>__delete__(&lt;self&gt;, object) -&gt; ()</code></li>
 </ul>
 <h4 id="numeric-types"><a class="header" href="#numeric-types">Numeric types</a></h4>
 <ul>
-<li><code>__pos__</code></li>
-<li><code>__neg__</code></li>
-<li><code>__abs__</code></li>
-<li><code>__invert__</code></li>
-<li><code>__index__</code></li>
-<li><code>__int__</code></li>
-<li><code>__float__</code></li>
-<li><code>__iadd__</code></li>
-<li><code>__isub__</code></li>
-<li><code>__imul__</code></li>
-<li><code>__imatmul__</code></li>
-<li><code>__itruediv__</code></li>
-<li><code>__ifloordiv__</code></li>
-<li><code>__imod__</code></li>
-<li><code>__ipow__</code></li>
-<li><code>__ilshift__</code></li>
-<li><code>__irshift__</code></li>
-<li><code>__iand__</code></li>
-<li><code>__ixor__</code></li>
-<li><code>__ior__</code></li>
-<li><code>__add__</code></li>
-<li><code>__radd__</code></li>
-<li><code>__sub__</code></li>
-<li><code>__rsub__</code></li>
-<li><code>__mul__</code></li>
-<li><code>__rmul__</code></li>
-<li><code>__matmul__</code></li>
-<li><code>__rmatmul__</code></li>
-<li><code>__floordiv__</code></li>
-<li><code>__rfloordiv__</code></li>
-<li><code>__truediv__</code></li>
-<li><code>__rtruediv__</code></li>
-<li><code>__divmod__</code></li>
-<li><code>__rdivmod__</code></li>
-<li><code>__mod__</code></li>
-<li><code>__rmod__</code></li>
-<li><code>__lshift__</code></li>
-<li><code>__rlshift__</code></li>
-<li><code>__rshift__</code></li>
-<li><code>__rrshift__</code></li>
-<li><code>__and__</code></li>
-<li><code>__rand__</code></li>
-<li><code>__xor__</code></li>
-<li><code>__rxor__</code></li>
-<li><code>__or__</code></li>
-<li><code>__ror__</code></li>
-<li><code>__pow__</code></li>
-<li><code>__rpow__</code></li>
+<li><code>__pos__(&lt;self&gt;) -&gt; object</code></li>
+<li><code>__neg__(&lt;self&gt;) -&gt; object</code></li>
+<li><code>__abs__(&lt;self&gt;) -&gt; object</code></li>
+<li><code>__invert__(&lt;self&gt;) -&gt; object</code></li>
+<li><code>__index__(&lt;self&gt;) -&gt; object (int)</code></li>
+<li><code>__int__(&lt;self&gt;) -&gt; object (int)</code></li>
+<li><code>__float__(&lt;self&gt;) -&gt; object (float)</code></li>
+<li><code>__iadd__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__isub__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__imul__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__imatmul__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__itruediv__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__ifloordiv__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__imod__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__ipow__(&lt;self&gt;, object, object) -&gt; ()</code></li>
+<li><code>__ilshift__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__irshift__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__iand__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__ixor__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__ior__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li><code>__add__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__radd__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__sub__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rsub__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__mul__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rmul__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__matmul__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rmatmul__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__floordiv__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rfloordiv__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__truediv__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rtruediv__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__divmod__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rdivmod__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__mod__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rmod__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__lshift__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rlshift__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rshift__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rrshift__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__and__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rand__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__xor__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__rxor__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__or__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__ror__(&lt;self&gt;, object) -&gt; object</code></li>
+<li><code>__pow__(&lt;self&gt;, object, object) -&gt; object</code></li>
+<li><code>__rpow__(&lt;self&gt;, object, object) -&gt; object</code></li>
 </ul>
 <h4 id="buffer-objects"><a class="header" href="#buffer-objects">Buffer objects</a></h4>
 <p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
