@@ -290,9 +290,6 @@
 <span id="290">290</span>
 <span id="291">291</span>
 <span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 <span class="comment">// based on Daniel Grunwald&#39;s https://github.com/dgrunwald/rust-cpython</span>
@@ -403,19 +400,16 @@
             <span class="kw">fn</span> <span class="ident">extract</span>(<span class="ident">ob</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;source</span> <span class="ident">PyAny</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">rust_ty</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">ob</span>.<span class="ident">py</span>();
                 <span class="kw">unsafe</span> {
-                    <span class="kw">let</span> <span class="ident">num</span> <span class="op">=</span> <span class="ident">ffi::PyNumber_Index</span>(<span class="ident">ob</span>.<span class="ident">as_ptr</span>());
-                    <span class="kw">if</span> <span class="ident">num</span>.<span class="ident">is_null</span>() {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">py</span>));
-                    }
-                    <span class="kw">let</span> <span class="ident">n_bits</span> <span class="op">=</span> <span class="ident">ffi::_PyLong_NumBits</span>(<span class="ident">num</span>);
-                    <span class="kw">let</span> <span class="ident">n_bytes</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">n_bits</span> <span class="op">&lt;</span> <span class="number">0</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::api_call_failed</span>(<span class="ident">py</span>));
+                    <span class="kw">let</span> <span class="ident">num</span>: <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyLong</span><span class="op">&gt;</span> <span class="op">=</span>
+                        <span class="ident">Py::from_owned_ptr_or_err</span>(<span class="ident">py</span>, <span class="ident">ffi::PyNumber_Index</span>(<span class="ident">ob</span>.<span class="ident">as_ptr</span>()))<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">n_bits</span> <span class="op">=</span> <span class="ident">ffi::_PyLong_NumBits</span>(<span class="ident">num</span>.<span class="ident">as_ptr</span>());
+                    <span class="kw">let</span> <span class="ident">n_bytes</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">n_bits</span> <span class="op">==</span> <span class="op">-</span><span class="number">1</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">PyErr::fetch</span>(<span class="ident">py</span>));
                     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">n_bits</span> <span class="op">==</span> <span class="number">0</span> {
                         <span class="number">0</span>
                     } <span class="kw">else</span> {
                         (<span class="ident">n_bits</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">-</span> <span class="number">1</span> <span class="op">+</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">is_signed</span>) <span class="op">/</span> <span class="number">8</span> <span class="op">+</span> <span class="number">1</span>
                     };
-                    <span class="kw">let</span> <span class="ident">num</span>: <span class="ident">Py</span><span class="op">&lt;</span><span class="ident">PyLong</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Py::from_owned_ptr</span>(<span class="ident">py</span>, <span class="ident">num</span>);
                     <span class="kw">if</span> <span class="ident">n_bytes</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">128</span> {
                         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span> <span class="op">=</span> [<span class="number">0</span>; <span class="number">128</span>];
                         <span class="ident">extract</span>(<span class="ident">num</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>), <span class="kw-2">&amp;mut</span> <span class="ident">buffer</span>[..<span class="ident">n_bytes</span>], <span class="macro-nonterminal">$</span><span class="macro-nonterminal">is_signed</span>)<span class="question-mark">?</span>;
