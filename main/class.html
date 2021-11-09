@@ -825,6 +825,107 @@ py_args=(), py_kwargs=None, name=World, num=-1
 num=44
 num=-1
 </code></pre>
+<h2 id="making-class-method-signatures-available-to-python"><a class="header" href="#making-class-method-signatures-available-to-python">Making class method signatures available to Python</a></h2>
+<p>The <a href="./function.html#text_signature"><code>#[pyo3(text_signature = &quot;...&quot;)]</code></a> option for <code>#[pyfunction]</code> also works for classes and methods:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(dead_code)]
+</span>use pyo3::prelude::*;
+use pyo3::types::PyType;
+
+// it works even if the item is not documented:
+#[pyclass]
+#[pyo3(text_signature = &quot;(c, d, /)&quot;)]
+struct MyClass {}
+
+#[pymethods]
+impl MyClass {
+    // the signature for the constructor is attached
+    // to the struct definition instead.
+    #[new]
+    fn new(c: i32, d: &amp;str) -&gt; Self {
+        Self {}
+    }
+    // the self argument should be written $self
+    #[pyo3(text_signature = &quot;($self, e, f)&quot;)]
+    fn my_method(&amp;self, e: i32, f: i32) -&gt; i32 {
+        e + f
+    }
+    #[classmethod]
+    #[pyo3(text_signature = &quot;(cls, e, f)&quot;)]
+    fn my_class_method(cls: &amp;PyType, e: i32, f: i32) -&gt; i32 {
+        e + f
+    }
+    #[staticmethod]
+    #[pyo3(text_signature = &quot;(e, f)&quot;)]
+    fn my_static_method(e: i32, f: i32) -&gt; i32 {
+        e + f
+    }
+}
+<span class="boring">
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span><span class="boring">    Python::with_gil(|py| {
+</span><span class="boring">        let inspect = PyModule::import(py, &quot;inspect&quot;)?.getattr(&quot;signature&quot;)?;
+</span><span class="boring">        let module = PyModule::new(py, &quot;my_module&quot;)?;
+</span><span class="boring">        module.add_class::&lt;MyClass&gt;()?;
+</span><span class="boring">        let class = module.getattr(&quot;MyClass&quot;)?;
+</span><span class="boring">
+</span><span class="boring">        if cfg!(not(Py_LIMITED_API)) || py.version_info() &gt;= (3, 10)  {
+</span><span class="boring">            let doc: String = class.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">            assert_eq!(doc, &quot;&quot;);
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((class,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(c, d, /)&quot;);
+</span><span class="boring">        } else {
+</span><span class="boring">            let doc: String = class.getattr(&quot;__doc__&quot;)?.extract()?;
+</span><span class="boring">            assert_eq!(doc, &quot;&quot;);
+</span><span class="boring">
+</span><span class="boring">            inspect.call1((class,)).expect_err(&quot;`text_signature` on classes is not compatible with compilation in `abi3` mode until Python 3.10 or greater&quot;);
+</span><span class="boring">         }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(self, /, e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_class_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(cls, e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        {
+</span><span class="boring">            let method = class.getattr(&quot;my_static_method&quot;)?;
+</span><span class="boring">
+</span><span class="boring">            assert!(method.getattr(&quot;__doc__&quot;)?.is_none());
+</span><span class="boring">
+</span><span class="boring">            let sig: String = inspect
+</span><span class="boring">                .call1((method,))?
+</span><span class="boring">                .call_method0(&quot;__str__&quot;)?
+</span><span class="boring">                .extract()?;
+</span><span class="boring">            assert_eq!(sig, &quot;(e, f)&quot;);
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        Ok(())
+</span><span class="boring">    })
+</span><span class="boring">}
+</span></code></pre></pre>
+<p>Note that <code>text_signature</code> on classes is not compatible with compilation in
+<code>abi3</code> mode until Python 3.10 or greater.</p>
 <h2 id="implementation-details"><a class="header" href="#implementation-details">Implementation details</a></h2>
 <p>The <code>#[pyclass]</code> macros rely on a lot of conditional code generation: each <code>#[pyclass]</code> can optionally have a <code>#[pymethods]</code> block as well as several different possible <code>#[pyproto]</code> trait implementations.</p>
 <p>To support this flexibility the <code>#[pyclass]</code> macro expands to a blob of boilerplate code which sets up the structure for <a href="https://github.com/dtolnay/case-studies/blob/master/autoref-specialization/README.md">&quot;dtolnay specialization&quot;</a>. This implementation pattern enables the Rust compiler to use <code>#[pymethods]</code> and <code>#[pyproto]</code> implementations when they are present, and fall back to default (empty) definitions when they are not.</p>
