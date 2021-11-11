@@ -193,6 +193,25 @@ string object.  This is indicated by <code>object (Python type)</code>.</li>
 </li>
 <li>
 <p><code>__hash__(&lt;self&gt;) -&gt; isize</code></p>
+<details>
+<summary>Disabling Python's default hash</summary>
+<p>By default, all <code>#[pyclass]</code> types have a default hash implementation from Python. Types which should not be hashable can override this by setting <code>__hash__</code> to <code>None</code>. This is the same mechanism as for a pure-Python class. This is done like so:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">
+</span>#[pyclass]
+struct NotHashable { }
+
+#[pymethods]
+impl NotHashable {
+    #[classattr]
+    const __hash__: Option&lt;PyObject&gt; = None;
+}
+<span class="boring">}
+</span></code></pre></pre>
+</details>
 </li>
 <li>
 <p><code>__richcmp__(&lt;self&gt;, object, pyo3::basic::CompareOp) -&gt; object</code></p>
@@ -287,11 +306,40 @@ hello
 <p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
 <h4 id="mapping-types"><a class="header" href="#mapping-types">Mapping types</a></h4>
 <ul>
-<li><code>__len__(&lt;self&gt;) -&gt; usize</code></li>
-<li><code>__contains__(&lt;self&gt;, object) -&gt; bool</code></li>
-<li><code>__getitem__(&lt;self&gt;, object) -&gt; object</code></li>
-<li><code>__setitem__(&lt;self&gt;, object, object) -&gt; ()</code></li>
-<li><code>__delitem__(&lt;self&gt;, object) -&gt; ()</code></li>
+<li>
+<p><code>__len__(&lt;self&gt;) -&gt; usize</code></p>
+</li>
+<li>
+<p><code>__contains__(&lt;self&gt;, object) -&gt; bool</code></p>
+<details>
+<summary>Disabling Python's default contains</summary>
+<p>By default, all <code>#[pyclass]</code> types with an <code>__iter__</code> method support a default implementation of the <code>in</code> operator. Types which do not want this can override this by setting <code>__contains__</code> to <code>None</code>. This is the same mechanism as for a pure-Python class. This is done like so:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">
+</span>#[pyclass]
+struct NoContains { }
+
+#[pymethods]
+impl NoContains {
+    #[classattr]
+    const __contains__: Option&lt;PyObject&gt; = None;
+}
+<span class="boring">}
+</span></code></pre></pre>
+</details>
+</li>
+<li>
+<p><code>__getitem__(&lt;self&gt;, object) -&gt; object</code></p>
+</li>
+<li>
+<p><code>__setitem__(&lt;self&gt;, object, object) -&gt; ()</code></p>
+</li>
+<li>
+<p><code>__delitem__(&lt;self&gt;, object) -&gt; ()</code></p>
+</li>
 </ul>
 <h4 id="descriptors"><a class="header" href="#descriptors">Descriptors</a></h4>
 <ul>
