@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1636994767604,
+  "lastUpdate": 1636995075574,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -37505,6 +37505,180 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item_unchecked",
             "value": 717559,
             "range": "± 5092",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "1939362+davidhewitt@users.noreply.github.com",
+            "name": "David Hewitt",
+            "username": "davidhewitt"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e790d55304dec613ac02c1bf505e5d68c8dc327b",
+          "message": "Merge pull request #1997 from davidhewitt/get-panic\n\nmacros: fix panic in __get__ implementation",
+          "timestamp": "2021-11-15T16:42:06Z",
+          "tree_id": "94831f9e0b3d1314c8a5feae1469662bcabd7518",
+          "url": "https://github.com/PyO3/pyo3/commit/e790d55304dec613ac02c1bf505e5d68c8dc327b"
+        },
+        "date": 1636995047522,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 86480,
+            "range": "± 3787",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 257202,
+            "range": "± 10703",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 3010207,
+            "range": "± 117986",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_new",
+            "value": 5111020,
+            "range": "± 377012",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 3146978,
+            "range": "± 88249",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 9714126,
+            "range": "± 339021",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 14096464,
+            "range": "± 481772",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 9053000,
+            "range": "± 502766",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 21,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 115,
+            "range": "± 5",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 119,
+            "range": "± 4",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 2340879,
+            "range": "± 116241",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_new",
+            "value": 1640349,
+            "range": "± 92896",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 1433038,
+            "range": "± 67388",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item_unchecked",
+            "value": 1126490,
+            "range": "± 74244",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 5194,
+            "range": "± 24048",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 4408,
+            "range": "± 186",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 2819576,
+            "range": "± 106369",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 10694199,
+            "range": "± 316348",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 12763869,
+            "range": "± 476093",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 8106380,
+            "range": "± 236523",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 1400786,
+            "range": "± 44646",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_new",
+            "value": 1741611,
+            "range": "± 72373",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 936083,
+            "range": "± 43381",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item_unchecked",
+            "value": 853082,
+            "range": "± 35611",
             "unit": "ns/iter"
           }
         ]
