@@ -239,6 +239,8 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Various types defined by the Python interpreter such as `int`, `str` and `tuple`.</span>
@@ -267,6 +269,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>), <span class="ident">target_endian</span> <span class="op">=</span> <span class="string">&quot;little&quot;</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::string::PyStringData</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::string</span>::{<span class="ident">PyString</span>, <span class="ident">PyString</span> <span class="kw">as</span> <span class="ident">PyUnicode</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::traceback::PyTraceback</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::tuple::PyTuple</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::typeobject::PyType</span>;
 
@@ -478,6 +481,7 @@
 <span class="kw">mod</span> <span class="ident">set</span>;
 <span class="kw">mod</span> <span class="ident">slice</span>;
 <span class="kw">mod</span> <span class="ident">string</span>;
+<span class="kw">mod</span> <span class="ident">traceback</span>;
 <span class="kw">mod</span> <span class="ident">tuple</span>;
 <span class="kw">mod</span> <span class="ident">typeobject</span>;
 </code></pre></div>
