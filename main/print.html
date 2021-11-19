@@ -152,7 +152,7 @@
 <a href="https://pyo3.rs/dev/bench/"><img src="https://github.com/PyO3/pyo3/actions/workflows/bench.yml/badge.svg" alt="benchmark" /></a>
 <a href="https://codecov.io/gh/PyO3/pyo3"><img src="https://codecov.io/gh/PyO3/pyo3/branch/main/graph/badge.svg" alt="codecov" /></a>
 <a href="https://crates.io/crates/pyo3"><img src="https://img.shields.io/crates/v/pyo3" alt="crates.io" /></a>
-<a href="https://rust-lang.github.io/rfcs/2495-min-rust-version.html"><img src="https://img.shields.io/badge/rustc-1.41+-blue.svg" alt="minimum rustc 1.41" /></a>
+<a href="https://rust-lang.github.io/rfcs/2495-min-rust-version.html"><img src="https://img.shields.io/badge/rustc-1.48+-blue.svg" alt="minimum rustc 1.48" /></a>
 <a href="https://gitter.im/PyO3/Lobby"><img src="https://img.shields.io/gitter/room/nwjs/nw.js.svg" alt="dev chat" /></a>
 <a href="https://github.com/PyO3/pyo3/blob/main/Contributing.md"><img src="https://img.shields.io/badge/contribute-on%20github-Green" alt="contributing notes" /></a></p>
 <p><a href="https://www.rust-lang.org/">Rust</a> bindings for <a href="https://www.python.org/">Python</a>, including tools for creating native Python extension modules. Running and interacting with Python code from a Rust binary is also supported.</p>
@@ -168,7 +168,7 @@
 <p>PyO3 supports the following software versions:</p>
 <ul>
 <li>Python 3.6 and up (CPython and PyPy)</li>
-<li>Rust 1.41 and up</li>
+<li>Rust 1.48 and up</li>
 </ul>
 <p>You can use PyO3 to write a native Python module in Rust, or to embed Python in a Rust binary. The following sections explain each of these in turn.</p>
 <h3 id="using-rust-from-python"><a class="header" href="#using-rust-from-python">Using Rust from Python</a></h3>
@@ -6097,6 +6097,13 @@ class StopIteration(Exception):
 PyO3 versions, please see the <a href="https://pyo3.rs/latest/migration.html">migration guide</a>.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
+<h3 id="packaging"><a class="header" href="#packaging">Packaging</a></h3>
+<ul>
+<li>Update MSRV to Rust 1.48. <a href="https://github.com/PyO3/pyo3/pull/2004">#2004</a></li>
+<li>Update <code>indoc</code> optional dependency to 1.0. <a href="https://github.com/PyO3/pyo3/pull/2004">#2004</a></li>
+<li>Update <code>paste</code> optional dependency to 1.0. <a href="https://github.com/PyO3/pyo3/pull/2004">#2004</a></li>
+</ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a href="https://github.com/pyo3/pyo3/compare/v0.15.0...v0.15.1">0.15.1</a> - 2021-11-19</a></h2>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
 <ul>
@@ -6116,7 +6123,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Fix panic in <code>__get__</code> implementation when accessing descriptor on type object. <a href="https://github.com/PyO3/pyo3/pull/1997">#1997</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0145v01500150a---2021-11-03"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0145v01500150a---2021-11-03"><a href="https://github.com/pyo3/pyo3/compare/v0.14.5...v0.15.0">0.15.0</a> - 2021-11-03</a></h2>
-<h3 id="packaging"><a class="header" href="#packaging">Packaging</a></h3>
+<h3 id="packaging-1"><a class="header" href="#packaging-1">Packaging</a></h3>
 <ul>
 <li><code>pyo3</code>'s <code>Cargo.toml</code> now advertises <code>links = &quot;python&quot;</code> to inform Cargo that it links against <em>libpython</em>. <a href="https://github.com/PyO3/pyo3/pull/1819">#1819</a></li>
 <li>Added optional <code>anyhow</code> feature to convert <code>anyhow::Error</code> into <code>PyErr</code>. <a href="https://github.com/PyO3/pyo3/pull/1822">#1822</a></li>
@@ -6231,7 +6238,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Fix crashes on PyPy due to incorrect definitions of <code>PyList_SET_ITEM</code>. <a href="https://github.com/PyO3/pyo3/pull/1713">#1713</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0132v01400140a---2021-07-03"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0132v01400140a---2021-07-03"><a href="https://github.com/pyo3/pyo3/compare/v0.13.2...v0.14.0">0.14.0</a> - 2021-07-03</a></h2>
-<h3 id="packaging-1"><a class="header" href="#packaging-1">Packaging</a></h3>
+<h3 id="packaging-2"><a class="header" href="#packaging-2">Packaging</a></h3>
 <ul>
 <li>Update <code>num-bigint</code> optional dependency to 0.4. <a href="https://github.com/PyO3/pyo3/pull/1481">#1481</a></li>
 <li>Update <code>num-complex</code> optional dependency to 0.4. <a href="https://github.com/PyO3/pyo3/pull/1482">#1482</a></li>
@@ -6341,7 +6348,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Fix <code>ToPyObject</code> impl for <code>HashSet</code> to accept non-default hashers. <a href="https://github.com/PyO3/pyo3/pull/1702">#1702</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0131v01320132a---2021-02-12"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0131v01320132a---2021-02-12"><a href="https://github.com/pyo3/pyo3/compare/v0.13.1...v0.13.2">0.13.2</a> - 2021-02-12</a></h2>
-<h3 id="packaging-2"><a class="header" href="#packaging-2">Packaging</a></h3>
+<h3 id="packaging-3"><a class="header" href="#packaging-3">Packaging</a></h3>
 <ul>
 <li>Lower minimum supported Rust version to 1.41. <a href="https://github.com/PyO3/pyo3/pull/1421">#1421</a></li>
 </ul>
@@ -6400,7 +6407,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Fix missing <code>Py_INCREF</code> on heap type objects on Python versions before 3.8. <a href="https://github.com/PyO3/pyo3/pull/1365">#1365</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0124v01300130a---2020-12-22"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0124v01300130a---2020-12-22"><a href="https://github.com/pyo3/pyo3/compare/v0.12.4...v0.13.0">0.13.0</a> - 2020-12-22</a></h2>
-<h3 id="packaging-3"><a class="header" href="#packaging-3">Packaging</a></h3>
+<h3 id="packaging-4"><a class="header" href="#packaging-4">Packaging</a></h3>
 <ul>
 <li>Drop support for Python 3.5 (as it is now end-of-life). <a href="https://github.com/PyO3/pyo3/pull/1250">#1250</a></li>
 <li>Bump minimum supported Rust version to 1.45. <a href="https://github.com/PyO3/pyo3/pull/1272">#1272</a></li>

@@ -797,8 +797,6 @@
 <span id="797">797</span>
 <span id="798">798</span>
 <span id="799">799</span>
-<span id="800">800</span>
-<span id="801">801</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -1343,7 +1341,6 @@
 <span class="doccomment">/// # Safety</span>
 <span class="doccomment">/// - `obj` must be a valid pointer to an instance of T (not a subclass).</span>
 <span class="doccomment">/// - The GIL must be held.</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::collapsible_if</span>)]</span> <span class="comment">// for if cfg!</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">free_with_freelist</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClassWithFreeList</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>) {
     <span class="kw">let</span> <span class="ident">obj</span> <span class="op">=</span> <span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>;
     <span class="macro">debug_assert_eq!</span>(
@@ -1361,10 +1358,9 @@
         };
         <span class="ident">free</span>(<span class="ident">obj</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">c_void</span>);
 
-        <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">Py_3_8</span>) {
-            <span class="kw">if</span> <span class="ident">ffi::PyType_HasFeature</span>(<span class="ident">ty</span>, <span class="ident">ffi::Py_TPFLAGS_HEAPTYPE</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="ident">ffi::Py_DECREF</span>(<span class="ident">ty</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>);
-            }
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_8</span>)]</span>
+        <span class="kw">if</span> <span class="ident">ffi::PyType_HasFeature</span>(<span class="ident">ty</span>, <span class="ident">ffi::Py_TPFLAGS_HEAPTYPE</span>) <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+            <span class="ident">ffi::Py_DECREF</span>(<span class="ident">ty</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>);
         }
     }
 }
