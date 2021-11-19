@@ -190,7 +190,7 @@ name = &quot;string_sum&quot;
 crate-type = [&quot;cdylib&quot;]
 
 [dependencies.pyo3]
-version = &quot;0.15.0&quot;
+version = &quot;0.15.1&quot;
 features = [&quot;extension-module&quot;]
 </code></pre>
 <p><strong><code>src/lib.rs</code></strong></p>
@@ -238,7 +238,7 @@ $ python
 </code></pre>
 <p>Start a new project with <code>cargo new</code> and add  <code>pyo3</code> to the <code>Cargo.toml</code> like this:</p>
 <pre><code class="language-toml">[dependencies.pyo3]
-version = &quot;0.15.0&quot;
+version = &quot;0.15.1&quot;
 features = [&quot;auto-initialize&quot;]
 </code></pre>
 <p>Example program displaying the value of <code>sys.version</code> and the current user name:</p>
@@ -6097,7 +6097,7 @@ class StopIteration(Exception):
 PyO3 versions, please see the <a href="https://pyo3.rs/latest/migration.html">migration guide</a>.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0150headunreleaseda"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0150headunreleaseda"><a href="https://github.com/pyo3/pyo3/compare/v0.15.0...HEAD">Unreleased</a></a></h2>
+<h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a href="https://github.com/pyo3/pyo3/compare/v0.15.0...v0.15.1">0.15.1</a> - 2021-11-19</a></h2>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
 <ul>
 <li>Add implementations for <code>Py::as_ref()</code> and <code>Py::into_ref()</code> for <code>Py&lt;PySequence&gt;</code>, <code>Py&lt;PyIterator&gt;</code> and <code>Py&lt;PyMapping&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/1682">#1682</a></li>
