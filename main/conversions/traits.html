@@ -155,7 +155,7 @@ fails, so usually you will use something like</p>
 variety of Rust types, which you can check out in the implementor list of
 <a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a>.</p>
 <p><a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> is also implemented for your own Rust types wrapped as Python
-objects (see <a href="class.html">the chapter about classes</a>).  There, in order to both be
+objects (see <a href="../class.html">the chapter about classes</a>).  There, in order to both be
 able to operate on mutable references <em>and</em> satisfy Rust's rules of non-aliasing
 mutable references, you have to extract the PyO3 reference wrappers <a href="https://pyo3.rs/main/doc/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
 and <a href="https://pyo3.rs/main/doc/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of

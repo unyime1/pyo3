@@ -302,6 +302,7 @@ about this topic.</p>
 </ul>
 <h2 id="articles-and-other-media"><a class="header" href="#articles-and-other-media">Articles and other media</a></h2>
 <ul>
+<li><a href="https://saidvandeklundert.net/learn/2021-11-18-calling-rust-from-python-using-pyo3/">Calling Rust from Python using PyO3</a> - Nov 18, 2021</li>
 <li><a href="https://www.youtube.com/watch?v=-XyWG_klSAw&amp;t=320s">davidhewitt's 2021 talk at Rust Manchester meetup</a> - Aug 19, 2021</li>
 <li><a href="https://blog.waleedkhan.name/port-python-to-rust/">Incrementally porting a small Python project to Rust</a> - Apr 29, 2021</li>
 <li><a href="https://www.vortexa.com/insight/integrating-rust-into-python">Vortexa - Integrating Rust into Python</a> - Apr 12, 2021</li>
@@ -2388,7 +2389,7 @@ fails, so usually you will use something like</p>
 variety of Rust types, which you can check out in the implementor list of
 <a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a>.</p>
 <p><a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> is also implemented for your own Rust types wrapped as Python
-objects (see <a href="conversions/class.html">the chapter about classes</a>).  There, in order to both be
+objects (see <a href="conversions/../class.html">the chapter about classes</a>).  There, in order to both be
 able to operate on mutable references <em>and</em> satisfy Rust's rules of non-aliasing
 mutable references, you have to extract the PyO3 reference wrappers <a href="https://pyo3.rs/main/doc/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a>
 and <a href="https://pyo3.rs/main/doc/pyo3/pycell/struct.PyRefMut.html"><code>PyRefMut</code></a>.  They work like the reference wrappers of
@@ -6112,6 +6113,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Fix use of <code>catch_unwind</code> in <code>allow_threads</code> which can cause fatal crashes. <a href="https://github.com/PyO3/pyo3/pull/1989">#1989</a></li>
 <li>Fix build failure on PyPy when abi3 features are activated. <a href="https://github.com/PyO3/pyo3/pull/1991">#1991</a></li>
 <li>Fix mingw platform detection. <a href="https://github.com/PyO3/pyo3/pull/1993">#1993</a></li>
+<li>Fix panic in <code>__get__</code> implementation when accessing descriptor on type object. <a href="https://github.com/PyO3/pyo3/pull/1997">#1997</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0145v01500150a---2021-11-03"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0145v01500150a---2021-11-03"><a href="https://github.com/pyo3/pyo3/compare/v0.14.5...v0.15.0">0.15.0</a> - 2021-11-03</a></h2>
 <h3 id="packaging"><a class="header" href="#packaging">Packaging</a></h3>
