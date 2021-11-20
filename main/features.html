@@ -191,10 +191,8 @@
 </ul>
 <h3 id="resolve-config"><a class="header" href="#resolve-config"><code>resolve-config</code></a></h3>
 <p>The <code>resolve-config</code> feature of the <code>pyo3-build-config</code> crate controls whether that crate's
-build script automatically resolves a Python interpreter / build configuration. Disabling
-this feature enables this crate to be used in <em>library mode</em>. This may be desirable for
-use cases where you want to read or write PyO3 build configuration files or resolve
-metadata about a Python interpreter.</p>
+build script automatically resolves a Python interpreter / build configuration. This feature is primarily useful when building PyO3
+itself. By default this feature is not enabled, meaning you can freely use <code>pyo3-build-config</code> as a standalone library to read or write PyO3 build configuration files or resolve metadata about a Python interpreter.</p>
 <h2 id="optional-dependencies"><a class="header" href="#optional-dependencies">Optional Dependencies</a></h2>
 <p>These features enable conversions between Python types and types from other Rust crates, enabling easy access to the rest of the Rust ecosystem.</p>
 <h3 id="anyhow"><a class="header" href="#anyhow"><code>anyhow</code></a></h3>
