@@ -156,7 +156,7 @@
 <h2 id="running-with-valgrind"><a class="header" href="#running-with-valgrind">Running with Valgrind</a></h2>
 <p>Valgrind is a tool to detect memory management bugs such as memory leaks.</p>
 <p>You first need to install a debug build of Python, otherwise Valgrind won't produce usable results. In Ubuntu there's e.g. a <code>python3-dbg</code> package.</p>
-<p>Activate an environment with the debug interpreter and recompile. If you're on Linux, use <code>ldd</code> with the name of your binary and check that you're linking e.g. <code>libpython3.6dm.so.1.0</code> instead of <code>libpython3.6m.so.1.0</code>.</p>
+<p>Activate an environment with the debug interpreter and recompile. If you're on Linux, use <code>ldd</code> with the name of your binary and check that you're linking e.g. <code>libpython3.7d.so.1.0</code> instead of <code>libpython3.7.so.1.0</code>.</p>
 <p><a href="https://raw.githubusercontent.com/python/cpython/master/Misc/valgrind-python.supp">Download the suppressions file for cpython</a>.</p>
 <p>Run Valgrind with <code>valgrind --suppressions=valgrind-python.supp ./my-command --with-options</code></p>
 <h2 id="getting-a-stacktrace"><a class="header" href="#getting-a-stacktrace">Getting a stacktrace</a></h2>

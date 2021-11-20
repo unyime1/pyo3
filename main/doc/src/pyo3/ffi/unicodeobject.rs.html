@@ -333,9 +333,6 @@
 <span id="333">333</span>
 <span id="334">334</span>
 <span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::object</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pyport::Py_ssize_t</span>;
 <span class="kw">use</span> <span class="ident">libc::wchar_t</span>;
@@ -503,12 +500,9 @@
     ) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyUnicode_AsUTF8String&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_AsUTF8String</span>(<span class="ident">unicode</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">Py_3_10</span>, <span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">Py_3_10</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyUnicode_AsUTF8AndSize&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_AsUTF8AndSize</span>(<span class="ident">unicode</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>, <span class="ident">size</span>: <span class="kw-2">*mut</span> <span class="ident">Py_ssize_t</span>) -&gt; <span class="kw-2">*const</span> <span class="ident">c_char</span>;
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">Py_3_7</span>, <span class="ident">Py_LIMITED_API</span>)))]</span>
-    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyUnicode_AsUTF8AndSize&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_AsUTF8AndSize</span>(<span class="ident">unicode</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>, <span class="ident">size</span>: <span class="kw-2">*mut</span> <span class="ident">Py_ssize_t</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_char</span>;
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyUnicode_DecodeUTF32&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyUnicode_DecodeUTF32</span>(
         <span class="ident">string</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>,

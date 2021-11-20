@@ -167,7 +167,7 @@
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>PyO3 supports the following software versions:</p>
 <ul>
-<li>Python 3.6 and up (CPython and PyPy)</li>
+<li>Python 3.7 and up (CPython and PyPy)</li>
 <li>Rust 1.48 and up</li>
 </ul>
 <p>You can use PyO3 to write a native Python module in Rust, or to embed Python in a Rust binary. The following sections explain each of these in turn.</p>
@@ -3633,7 +3633,7 @@ test_word_count_python_sequential                      27.3985 (15.82)    45.452
 <h2 id="running-with-valgrind"><a class="header" href="#running-with-valgrind">Running with Valgrind</a></h2>
 <p>Valgrind is a tool to detect memory management bugs such as memory leaks.</p>
 <p>You first need to install a debug build of Python, otherwise Valgrind won't produce usable results. In Ubuntu there's e.g. a <code>python3-dbg</code> package.</p>
-<p>Activate an environment with the debug interpreter and recompile. If you're on Linux, use <code>ldd</code> with the name of your binary and check that you're linking e.g. <code>libpython3.6dm.so.1.0</code> instead of <code>libpython3.6m.so.1.0</code>.</p>
+<p>Activate an environment with the debug interpreter and recompile. If you're on Linux, use <code>ldd</code> with the name of your binary and check that you're linking e.g. <code>libpython3.7d.so.1.0</code> instead of <code>libpython3.7.so.1.0</code>.</p>
 <p><a href="https://raw.githubusercontent.com/python/cpython/master/Misc/valgrind-python.supp">Download the suppressions file for cpython</a>.</p>
 <p>Run Valgrind with <code>valgrind --suppressions=valgrind-python.supp ./my-command --with-options</code></p>
 <h2 id="getting-a-stacktrace"><a class="header" href="#getting-a-stacktrace">Getting a stacktrace</a></h2>
@@ -3657,7 +3657,7 @@ test_word_count_python_sequential                      27.3985 (15.82)    45.452
 <p>It restricts PyO3's API to a subset of the full Python API which is guaranteed by <a href="https://www.python.org/dev/peps/pep-0384/">PEP 384</a> to be forwards-compatible with future Python versions.</p>
 <p>See the <a href="building_and_distribution.html#py_limited_apiabi3">building and distribution</a> section for further detail.</p>
 <h3 id="the-abi3-pyxy-features"><a class="header" href="#the-abi3-pyxy-features">The <code>abi3-pyXY</code> features</a></h3>
-<p>(<code>abi3-py36</code>, <code>abi3-py37</code>, <code>abi3-py38</code>, <code>abi3-py39</code>, and <code>abi3-py310</code>)</p>
+<p>(<code>abi3-py37</code>, <code>abi3-py38</code>, <code>abi3-py39</code>, and <code>abi3-py310</code>)</p>
 <p>These features are extensions of the <code>abi3</code> feature to specify the exact minimum Python version which the multiple-version-wheel will support.</p>
 <p>See the <a href="building_and_distribution.html#minimum-python-version-for-abi3">building and distribution</a> section for further detail.</p>
 <h2 id="features-for-embedding-python-in-rust"><a class="header" href="#features-for-embedding-python-in-rust">Features for embedding Python in Rust</a></h2>
@@ -3933,7 +3933,7 @@ the chapter on <a href="./memory.html">memory management</a> for more informatio
 <li>The <code>python</code> executable (if it's a Python 3 interpreter).</li>
 <li>The <code>python3</code> executable.</li>
 </ul>
-<p>You can override the Python interpreter by setting the <code>PYO3_PYTHON</code> environment variable, e.g. <code>PYO3_PYTHON=python3.6</code>, <code>PYO3_PYTHON=/usr/bin/python3.9</code>, or even a PyPy interpreter <code>PYO3_PYTHON=pypy3</code>.</p>
+<p>You can override the Python interpreter by setting the <code>PYO3_PYTHON</code> environment variable, e.g. <code>PYO3_PYTHON=python3.7</code>, <code>PYO3_PYTHON=/usr/bin/python3.9</code>, or even a PyPy interpreter <code>PYO3_PYTHON=pypy3</code>.</p>
 <p>Once the Python interpreter is located, <code>pyo3-build-config</code> executes it to query the information in the <code>sysconfig</code> module which is needed to configure the rest of the compilation.</p>
 <p>To validate the configuration which PyO3 will use, you can run a compilation with the environment variable <code>PYO3_PRINT_CONFIG=1</code> set. An example output of doing this is shown below:</p>
 <pre><code class="language-console">$ PYO3_PRINT_CONFIG=1 cargo build
@@ -4034,13 +4034,13 @@ See the <a href="https://github.com/PyO3/maturin/pull/353">corresponding</a> <a 
 </li>
 </ol>
 <h4 id="minimum-python-version-for-abi3"><a class="header" href="#minimum-python-version-for-abi3">Minimum Python version for <code>abi3</code></a></h4>
-<p>Because a single <code>abi3</code> wheel can be used with many different Python versions, PyO3 has feature flags <code>abi3-py36</code>, <code>abi3-py37</code>, <code>abi-py38</code> etc. to set the minimum required Python version for your <code>abi3</code> wheel.
-For example, if you set the <code>abi3-py36</code> feature, your extension wheel can be used on all Python 3 versions from Python 3.6 and up. <code>maturin</code> and <code>setuptools-rust</code> will give the wheel a name like <code>my-extension-1.0-cp36-abi3-manylinux2020_x86_64.whl</code>.</p>
+<p>Because a single <code>abi3</code> wheel can be used with many different Python versions, PyO3 has feature flags <code>abi3-py37</code>, <code>abi3-py38</code>, <code>abi3-py39</code> etc. to set the minimum required Python version for your <code>abi3</code> wheel.
+For example, if you set the <code>abi3-py37</code> feature, your extension wheel can be used on all Python 3 versions from Python 3.7 and up. <code>maturin</code> and <code>setuptools-rust</code> will give the wheel a name like <code>my-extension-1.0-cp37-abi3-manylinux2020_x86_64.whl</code>.</p>
 <p>As your extension module may be run with multiple different Python versions you may occasionally find you need to check the Python version at runtime to customize behavior. See <a href="./building_and_distribution/multiple_python_versions.html#checking-the-python-version-at-runtime">the relevant section of this guide</a> on supporting multiple Python versions at runtime.</p>
-<p>PyO3 is only able to link your extension module to api3 version up to and including your host Python version. E.g., if you set <code>abi3-py38</code> and try to compile the crate with a host of Python 3.6, the build will fail.</p>
+<p>PyO3 is only able to link your extension module to api3 version up to and including your host Python version. E.g., if you set <code>abi3-py38</code> and try to compile the crate with a host of Python 3.7, the build will fail.</p>
 <p>As an advanced feature, you can build PyO3 wheel without calling Python interpreter with the environment variable <code>PYO3_NO_PYTHON</code> set. On unix systems this works unconditionally; on Windows you must also set the <code>RUSTFLAGS</code> evironment variable to contain <code>-L native=/path/to/python/libs</code> so that the linker can find <code>python3.lib</code>.</p>
 <blockquote>
-<p>Note: If you set more that one of these api version feature flags the highest version always wins. For example, with both <code>abi3-py36</code> and <code>abi3-py38</code> set, PyO3 would build a wheel which supports Python 3.8 and up.</p>
+<p>Note: If you set more that one of these api version feature flags the lowest version always wins. For example, with both <code>abi3-py37</code> and <code>abi3-py38</code> set, PyO3 would build a wheel which supports Python 3.7 and up.</p>
 </blockquote>
 <h4 id="missing-features"><a class="header" href="#missing-features">Missing features</a></h4>
 <p>Due to limitations in the Python API, there are a few <code>pyo3</code> features that do
@@ -4844,6 +4844,9 @@ b: &lt;builtins.Inner object at 0x0000020044FCC670&gt;
 <div style="break-before: page; page-break-before: always;"></div><h1 id="migrating-from-older-pyo3-versions"><a class="header" href="#migrating-from-older-pyo3-versions">Migrating from older PyO3 versions</a></h1>
 <p>This guide can help you upgrade code through breaking changes from one PyO3 version to the next.
 For a detailed list of all changes, see the <a href="changelog.html">CHANGELOG</a>.</p>
+<h2 id="from-015-to-016"><a class="header" href="#from-015-to-016">from 0.15.* to 0.16</a></h2>
+<h3 id="drop-support-for-older-technogies"><a class="header" href="#drop-support-for-older-technogies">Drop support for older technogies</a></h3>
+<p>PyO3 0.16 has increased minimum Rust version to 1.48 and minimum Python version to 3.7. This enables ore use of newer language features (enabling some of the other additions in 0.16) and simplifies maintenance of the project.</p>
 <h2 id="from-014-to-015"><a class="header" href="#from-014-to-015">from 0.14.* to 0.15</a></h2>
 <h3 id="changes-in-sequence-indexing"><a class="header" href="#changes-in-sequence-indexing">Changes in sequence indexing</a></h3>
 <p>For all types that take sequence indices (<code>PyList</code>, <code>PyTuple</code> and <code>PySequence</code>),
@@ -6100,6 +6103,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Update MSRV to Rust 1.48. <a href="https://github.com/PyO3/pyo3/pull/2004">#2004</a></li>
 <li>Update <code>indoc</code> optional dependency to 1.0. <a href="https://github.com/PyO3/pyo3/pull/2004">#2004</a></li>
 <li>Update <code>paste</code> optional dependency to 1.0. <a href="https://github.com/PyO3/pyo3/pull/2004">#2004</a></li>
+<li>Drop support for Python 3.6, remove <code>abi3-py36</code> feature. <a href="https://github.com/PyO3/pyo3/pull/2006">#2006</a></li>
 <li><code>pyo3-build-config</code> no longer enables the <code>resolve-config</code> feature by default. <a href="https://github.com/PyO3/pyo3/pull/2008">#2008</a></li>
 </ul>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>

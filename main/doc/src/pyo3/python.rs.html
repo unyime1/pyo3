@@ -941,10 +941,6 @@
 <span id="941">941</span>
 <span id="942">942</span>
 <span id="943">943</span>
-<span id="944">944</span>
-<span id="945">945</span>
-<span id="946">946</span>
-<span id="947">947</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 <span class="comment">// based on Daniel Grunwald&#39;s https://github.com/dgrunwald/rust-cpython</span>
@@ -1497,9 +1493,9 @@
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use pyo3::Python;</span>
     <span class="doccomment">/// Python::with_gil(|py| {</span>
-    <span class="doccomment">///     // PyO3 supports Python 3.6 and up.</span>
-    <span class="doccomment">///     assert!(py.version_info() &gt;= (3, 6));</span>
-    <span class="doccomment">///     assert!(py.version_info() &gt;= (3, 6, 0));</span>
+    <span class="doccomment">///     // PyO3 supports Python 3.7 and up.</span>
+    <span class="doccomment">///     assert!(py.version_info() &gt;= (3, 7));</span>
+    <span class="doccomment">///     assert!(py.version_info() &gt;= (3, 7, 0));</span>
     <span class="doccomment">/// });</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version_info</span>(<span class="self">self</span>) -&gt; <span class="ident">PythonVersionInfo</span><span class="op">&lt;</span><span class="lifetime">&#39;py</span><span class="op">&gt;</span> {
@@ -1838,10 +1834,6 @@
     <span class="kw">fn</span> <span class="ident">test_python_version_info</span>() {
         <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">version_info</span>();
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
-            <span class="macro">assert!</span>(<span class="ident">version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">3</span>, <span class="number">6</span>));
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_6</span>)]</span>
-            <span class="macro">assert!</span>(<span class="ident">version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">3</span>, <span class="number">6</span>, <span class="number">0</span>));
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_7</span>)]</span>
             <span class="macro">assert!</span>(<span class="ident">version</span> <span class="op">&gt;</span><span class="op">=</span> (<span class="number">3</span>, <span class="number">7</span>));
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_7</span>)]</span>

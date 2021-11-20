@@ -248,7 +248,7 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PyMethodType</span> {
     <span class="ident">PyCFunction</span>(<span class="ident">PyCFunction</span>),
     <span class="ident">PyCFunctionWithKeywords</span>(<span class="ident">PyCFunctionWithKeywords</span>),
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
     <span class="ident">PyCFunctionFastWithKeywords</span>(<span class="ident">PyCFunctionFastWithKeywords</span>),
 }
 
@@ -258,7 +258,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyCFunction</span>(<span class="kw">pub</span> <span class="ident">ffi::PyCFunction</span>);
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyCFunctionWithKeywords</span>(<span class="kw">pub</span> <span class="ident">ffi::PyCFunctionWithKeywords</span>);
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyCFunctionFastWithKeywords</span>(<span class="kw">pub</span> <span class="ident">ffi::_PyCFunctionFastWithKeywords</span>);
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
@@ -331,7 +331,7 @@
     }
 
     <span class="doccomment">/// Define a function that can take `*args` and `**kwargs`.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">fastcall_cfunction_with_keywords</span>(
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="ident">cfunction</span>: <span class="ident">PyCFunctionFastWithKeywords</span>,
@@ -355,7 +355,7 @@
         <span class="kw">let</span> <span class="ident">meth</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ml_meth</span> {
             <span class="ident">PyMethodType::PyCFunction</span>(<span class="ident">meth</span>) =&gt; <span class="ident">meth</span>.<span class="number">0</span>,
             <span class="ident">PyMethodType::PyCFunctionWithKeywords</span>(<span class="ident">meth</span>) =&gt; <span class="kw">unsafe</span> { <span class="ident">std::mem::transmute</span>(<span class="ident">meth</span>.<span class="number">0</span>) },
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span>
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
             <span class="ident">PyMethodType::PyCFunctionFastWithKeywords</span>(<span class="ident">meth</span>) =&gt; <span class="kw">unsafe</span> {
                 <span class="ident">std::mem::transmute</span>(<span class="ident">meth</span>.<span class="number">0</span>)
             },

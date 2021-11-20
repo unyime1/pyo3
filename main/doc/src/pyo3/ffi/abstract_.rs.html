@@ -417,7 +417,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyObject_GetIter</span>(<span class="ident">arg1</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
 }
 
-<span class="comment">// Defined as this macro in Python 3.6, 3.7 limited API, but relies on</span>
+<span class="comment">// Defined as this macro in Python limited API, but relies on</span>
 <span class="comment">// non-limited PyTypeObject. Don&#39;t expose this since it cannot be used.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">PyPy</span>)))]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -482,7 +482,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyNumber_Or</span>(<span class="ident">o1</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>, <span class="ident">o2</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
 }
 
-<span class="comment">// Defined as this macro in Python 3.6, 3.7 limited API, but relies on</span>
+<span class="comment">// Defined as this macro in Python limited API, but relies on</span>
 <span class="comment">// non-limited PyTypeObject. Don&#39;t expose this since it cannot be used.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">PyPy</span>)))]</span>
 <span class="attribute">#[<span class="ident">inline</span>]</span>

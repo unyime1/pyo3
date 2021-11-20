@@ -93,7 +93,6 @@
 <span id="93">93</span>
 <span id="94">94</span>
 <span id="95">95</span>
-<span id="96">96</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::object::PyObject</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::ffi::pystate::PyThreadState</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_void</span>};
@@ -163,7 +162,6 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyEval_RestoreThread</span>(<span class="ident">arg1</span>: <span class="kw-2">*mut</span> <span class="ident">PyThreadState</span>);
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">py_sys_config</span> <span class="op">=</span> <span class="string">&quot;WITH_THREAD&quot;</span>)]</span>
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyEval_ThreadsInitialized&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyEval_ThreadsInitialized</span>() -&gt; <span class="ident">c_int</span>;

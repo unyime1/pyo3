@@ -108,7 +108,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyInterpreterState_GetDict</span>(<span class="ident">arg1</span>: <span class="kw-2">*mut</span> <span class="ident">PyInterpreterState</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_7</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyInterpreterState_GetID</span>(<span class="ident">arg1</span>: <span class="kw-2">*mut</span> <span class="ident">PyInterpreterState</span>) -&gt; <span class="ident">i64</span>;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
