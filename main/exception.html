@@ -234,7 +234,7 @@ Python::with_gil(|py| {
 </code></pre>
 <h2 id="checking-exception-types"><a class="header" href="#checking-exception-types">Checking exception types</a></h2>
 <p>Python has an <a href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance</code></a> method to check an object's type.
-In PyO3 every native type has access to the <a href="https://pyo3.rs/main/doc/pyo3/struct.PyAny.html#method.is_instance"><code>PyAny::is_instance</code></a> method which does the same thing.</p>
+In PyO3 every object has the <a href="https://pyo3.rs/main/doc/pyo3/struct.PyAny.html#method.is_instance"><code>PyAny::is_instance</code></a> and <a href="https://pyo3.rs/main/doc/pyo3/struct.PyAny.html#method.is_instance_of"><code>PyAny::is_instance_of</code></a> methods which do the same thing.</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -242,15 +242,13 @@ In PyO3 every native type has access to the <a href="https://pyo3.rs/main/doc/py
 use pyo3::types::{PyBool, PyList};
 
 Python::with_gil(|py| {
-    assert!(PyBool::new(py, true).is_instance::&lt;PyBool&gt;().unwrap());
+    assert!(PyBool::new(py, true).is_instance_of::&lt;PyBool&gt;().unwrap());
     let list = PyList::new(py, &amp;[1, 2, 3, 4]);
-    assert!(!list.is_instance::&lt;PyBool&gt;().unwrap());
-    assert!(list.is_instance::&lt;PyList&gt;().unwrap());
+    assert!(!list.is_instance_of::&lt;PyBool&gt;().unwrap());
+    assert!(list.is_instance_of::&lt;PyList&gt;().unwrap());
 });
 <span class="boring">}
 </span></code></pre></pre>
-<p><a href="https://pyo3.rs/main/doc/pyo3/struct.PyAny.html#method.is_instance"><code>PyAny::is_instance</code></a> calls the underlying <a href="https://pyo3.rs/main/doc/pyo3/types/struct.PyType.html#method.is_instance"><code>PyType::is_instance</code></a>
-method to do the actual work.</p>
 <p>To check the type of an exception, you can similarly do:</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
@@ -259,7 +257,7 @@ method to do the actual work.</p>
 </span><span class="boring">use pyo3::prelude::*;
 </span><span class="boring">Python::with_gil(|py| {
 </span><span class="boring">let err = PyTypeError::new_err(());
-</span>err.is_instance::&lt;PyTypeError&gt;(py);
+</span>err.is_instance_of::&lt;PyTypeError&gt;(py);
 <span class="boring">});
 </span><span class="boring">}
 </span></code></pre></pre>
@@ -314,7 +312,7 @@ fn main() {
     Python::with_gil(|py| {
         let fun = pyo3::wrap_pyfunction!(connect, py).unwrap();
         let err = fun.call1((&quot;0.0.0.0&quot;,)).unwrap_err();
-        assert!(err.is_instance::&lt;PyOSError&gt;(py));
+        assert!(err.is_instance_of::&lt;PyOSError&gt;(py));
     });
 }
 </code></pre></pre>
@@ -336,13 +334,13 @@ fn parse_int(s: String) -&gt; PyResult&lt;usize&gt; {
 </span><span class="boring">
 </span><span class="boring">        assert!(parse_int(String::from(&quot;-1&quot;))
 </span><span class="boring">            .unwrap_err()
-</span><span class="boring">            .is_instance::&lt;PyValueError&gt;(py));
+</span><span class="boring">            .is_instance_of::&lt;PyValueError&gt;(py));
 </span><span class="boring">        assert!(parse_int(String::from(&quot;foo&quot;))
 </span><span class="boring">            .unwrap_err()
-</span><span class="boring">            .is_instance::&lt;PyValueError&gt;(py));
+</span><span class="boring">            .is_instance_of::&lt;PyValueError&gt;(py));
 </span><span class="boring">        assert!(parse_int(String::from(&quot;13.37&quot;))
 </span><span class="boring">            .unwrap_err()
-</span><span class="boring">            .is_instance::&lt;PyValueError&gt;(py));
+</span><span class="boring">            .is_instance_of::&lt;PyValueError&gt;(py));
 </span><span class="boring">    })
 </span><span class="boring">}
 </span></code></pre></pre>

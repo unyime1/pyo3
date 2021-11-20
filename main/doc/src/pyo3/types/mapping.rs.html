@@ -482,7 +482,7 @@
             <span class="macro">assert!</span>(<span class="ident">mapping</span>
                 .<span class="ident">get_item</span>(<span class="number">8i32</span>)
                 .<span class="ident">unwrap_err</span>()
-                .<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyKeyError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+                .<span class="ident">is_instance_of</span>::<span class="op">&lt;</span><span class="ident">PyKeyError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
         });
     }
 
@@ -518,7 +518,7 @@
             <span class="macro">assert!</span>(<span class="ident">mapping</span>
                 .<span class="ident">get_item</span>(<span class="number">7i32</span>)
                 .<span class="ident">unwrap_err</span>()
-                .<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">PyKeyError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+                .<span class="ident">is_instance_of</span>::<span class="op">&lt;</span><span class="ident">PyKeyError</span><span class="op">&gt;</span>(<span class="ident">py</span>));
         });
     }
 

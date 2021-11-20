@@ -520,7 +520,7 @@ enum RustyEnum {
 #         {
 #             let thing = b&quot;foo&quot;.to_object(py);
 #             let error = thing.extract::&lt;RustyEnum&gt;(py).unwrap_err();
-#             assert!(error.is_instance::&lt;pyo3::exceptions::PyTypeError&gt;(py));
+#             assert!(error.is_instance_of::&lt;pyo3::exceptions::PyTypeError&gt;(py));
 #         }
 # 
 #         Ok(())

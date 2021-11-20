@@ -1161,7 +1161,7 @@ fn always_throws() -&gt; PyResult&lt;()&gt; {
 # Python::with_gil(|py| {
 #     let fun = pyo3::wrap_pyfunction!(always_throws, py).unwrap();
 #     let err = fun.call0().expect_err(\&quot;called a function that should always return an error but the return value was Ok\&quot;);
-#     assert!(err.is_instance::&lt;Py&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;&gt;(py))
+#     assert!(err.is_instance_of::&lt;Py&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;&gt;(py))
 # });
 ```
 
@@ -1186,7 +1186,7 @@ Python::with_gil(|py| {
 
     let error_type = match result {
         Ok(_) =&gt; \&quot;Not an error\&quot;,
-        Err(error) if error.is_instance::&lt;Py&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;&gt;(py) =&gt; \&quot;&quot;</span> , <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;\&quot;,
+        Err(error) if error.is_instance_of::&lt;Py&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;&gt;(py) =&gt; \&quot;&quot;</span> , <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>, <span class="string">&quot;\&quot;,
         Err(_) =&gt; \&quot;Some other error\&quot;,
     };
 
@@ -1505,7 +1505,7 @@ Python::with_gil(|py| {
                         .<span class="ident">unwrap_or</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty::new_err</span>(<span class="string">&quot;a test exception&quot;</span>))
                 };
 
-                <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+                <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance_of</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span><span class="op">&gt;</span>(<span class="ident">py</span>));
 
                 <span class="kw">let</span> <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">instance</span>(<span class="ident">py</span>).<span class="ident">downcast</span>().<span class="ident">unwrap</span>();
                 <span class="macro">assert!</span>(<span class="ident">value</span>.<span class="ident">source</span>().<span class="ident">is_none</span>());
@@ -1513,7 +1513,7 @@ Python::with_gil(|py| {
                 <span class="ident">err</span>.<span class="ident">set_cause</span>(<span class="ident">py</span>, <span class="prelude-val">Some</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::exceptions::PyValueError::new_err</span>(<span class="string">&quot;a cause&quot;</span>)));
                 <span class="macro">assert!</span>(<span class="ident">value</span>.<span class="ident">source</span>().<span class="ident">is_some</span>());
 
-                <span class="macro">assert!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr::from</span>(<span class="ident">value</span>).<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span><span class="op">&gt;</span>(<span class="ident">py</span>));
+                <span class="macro">assert!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr::from</span>(<span class="ident">value</span>).<span class="ident">is_instance_of</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span><span class="op">&gt;</span>(<span class="ident">py</span>));
             })
         }
     };

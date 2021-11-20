@@ -529,7 +529,7 @@
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">getattr</span>(<span class="string">&quot;__all__&quot;</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">idx</span>) =&gt; <span class="ident">idx</span>.<span class="ident">downcast</span>().<span class="ident">map_err</span>(<span class="ident">PyErr::from</span>),
             <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
-                <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_instance</span>::<span class="op">&lt;</span><span class="ident">exceptions::PyAttributeError</span><span class="op">&gt;</span>(<span class="self">self</span>.<span class="ident">py</span>()) {
+                <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_instance_of</span>::<span class="op">&lt;</span><span class="ident">exceptions::PyAttributeError</span><span class="op">&gt;</span>(<span class="self">self</span>.<span class="ident">py</span>()) {
                     <span class="kw">let</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">PyList::empty</span>(<span class="self">self</span>.<span class="ident">py</span>());
                     <span class="self">self</span>.<span class="ident">setattr</span>(<span class="string">&quot;__all__&quot;</span>, <span class="ident">l</span>).<span class="ident">map_err</span>(<span class="ident">PyErr::from</span>)<span class="question-mark">?</span>;
                     <span class="prelude-val">Ok</span>(<span class="ident">l</span>)
