@@ -1067,7 +1067,7 @@
                     <span class="ident">_other</span>: <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyObject</span>,
                 ) -&gt; <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyObject</span> {
                     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::callback::handle_panic</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
-                        <span class="kw">use</span> <span class="ident">::pyo3::class::impl_</span>::<span class="kw-2">*</span>;
+                        <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::class::impl_</span>::<span class="kw-2">*</span>;
                         <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">cls</span><span class="op">&gt;</span><span class="ident">::new</span>();
                         <span class="kw">let</span> <span class="ident">lhs_result</span> <span class="op">=</span> <span class="ident">collector</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">lhs</span>(<span class="ident">py</span>, <span class="ident">_slf</span>, <span class="ident">_other</span>)<span class="question-mark">?</span>;
                         <span class="kw">if</span> <span class="ident">lhs_result</span> <span class="op">==</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::Py_NotImplemented</span>() {
@@ -1259,7 +1259,7 @@
             <span class="ident">_mod</span>: <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyObject</span>,
         ) -&gt; <span class="kw-2">*mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::PyObject</span> {
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::callback::handle_panic</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
-                <span class="kw">use</span> <span class="ident">::pyo3::class::impl_</span>::<span class="kw-2">*</span>;
+                <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::class::impl_</span>::<span class="kw-2">*</span>;
                 <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">cls</span><span class="op">&gt;</span><span class="ident">::new</span>();
                 <span class="kw">let</span> <span class="ident">lhs_result</span> <span class="op">=</span> <span class="ident">collector</span>.<span class="ident">__pow__</span>(<span class="ident">py</span>, <span class="ident">_slf</span>, <span class="ident">_other</span>, <span class="ident">_mod</span>)<span class="question-mark">?</span>;
                 <span class="kw">if</span> <span class="ident">lhs_result</span> <span class="op">==</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::ffi::Py_NotImplemented</span>() {
