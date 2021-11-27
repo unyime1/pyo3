@@ -116,7 +116,7 @@
     <span class="doccomment">///         .run(&quot;raise Exception(&#39;banana&#39;)&quot;, None, None)</span>
     <span class="doccomment">///         .expect_err(&quot;raise will create a Python error&quot;);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">///     let traceback = err.ptraceback(py).expect(&quot;raised exception will have a traceback&quot;);</span>
+    <span class="doccomment">///     let traceback = err.traceback(py).expect(&quot;raised exception will have a traceback&quot;);</span>
     <span class="doccomment">///     assert_eq!(</span>
     <span class="doccomment">///         format!(&quot;{}{}&quot;, traceback.format()?, err),</span>
     <span class="doccomment">///         &quot;\</span>
@@ -157,7 +157,7 @@
                 .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>);
 
             <span class="macro">assert_eq!</span>(
-                <span class="ident">err</span>.<span class="ident">ptraceback</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>().<span class="ident">format</span>().<span class="ident">unwrap</span>(),
+                <span class="ident">err</span>.<span class="ident">traceback</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>().<span class="ident">format</span>().<span class="ident">unwrap</span>(),
                 <span class="string">&quot;Traceback (most recent call last):\n  File \&quot;&lt;string&gt;\&quot;, line 1, in &lt;module&gt;\n&quot;</span>
             );
         })

@@ -669,7 +669,7 @@
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Ucs1</span>(<span class="ident">data</span>) =&gt; <span class="kw">match</span> <span class="ident">str::from_utf8</span>(<span class="ident">data</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">s</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Cow::Borrowed</span>(<span class="ident">s</span>)),
-                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::PyErr::from_instance</span>(<span class="ident">PyUnicodeDecodeError::new_utf8</span>(
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::PyErr::from_value</span>(<span class="ident">PyUnicodeDecodeError::new_utf8</span>(
                     <span class="ident">py</span>, <span class="ident">data</span>, <span class="ident">e</span>,
                 )<span class="question-mark">?</span>)),
             },
@@ -679,7 +679,7 @@
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">to_string</span>().<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>();
                     <span class="ident">message</span>.<span class="ident">push</span>(<span class="number">0</span>);
 
-                    <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::PyErr::from_instance</span>(<span class="ident">PyUnicodeDecodeError::new</span>(
+                    <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::PyErr::from_value</span>(<span class="ident">PyUnicodeDecodeError::new</span>(
                         <span class="ident">py</span>,
                         <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;utf-16\0&quot;</span>).<span class="ident">unwrap</span>(),
                         <span class="self">self</span>.<span class="ident">as_bytes</span>(),
@@ -690,7 +690,7 @@
             },
             <span class="ident"><span class="self">Self</span>::Ucs4</span>(<span class="ident">data</span>) =&gt; <span class="kw">match</span> <span class="ident">data</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">c</span><span class="op">|</span> <span class="ident">std::char::from_u32</span>(<span class="ident">c</span>)).<span class="ident">collect</span>() {
                 <span class="prelude-val">Some</span>(<span class="ident">s</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Cow::Owned</span>(<span class="ident">s</span>)),
-                <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::PyErr::from_instance</span>(<span class="ident">PyUnicodeDecodeError::new</span>(
+                <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident"><span class="kw">crate</span>::PyErr::from_value</span>(<span class="ident">PyUnicodeDecodeError::new</span>(
                     <span class="ident">py</span>,
                     <span class="ident">CStr::from_bytes_with_nul</span>(<span class="string">b&quot;utf-32\0&quot;</span>).<span class="ident">unwrap</span>(),
                     <span class="self">self</span>.<span class="ident">as_bytes</span>(),
@@ -1100,7 +1100,7 @@
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">s</span>.<span class="ident">data</span>().<span class="ident">unwrap</span>() };
             <span class="macro">assert_eq!</span>(<span class="ident">data</span>, <span class="ident">PyStringData::Ucs1</span>(<span class="string">b&quot;f\xfe&quot;</span>));
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">to_string</span>(<span class="ident">py</span>).<span class="ident">unwrap_err</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">err</span>.<span class="ident">ptype</span>(<span class="ident">py</span>), <span class="ident">PyUnicodeDecodeError::type_object</span>(<span class="ident">py</span>));
+            <span class="macro">assert_eq!</span>(<span class="ident">err</span>.<span class="ident">get_type</span>(<span class="ident">py</span>), <span class="ident">PyUnicodeDecodeError::type_object</span>(<span class="ident">py</span>));
             <span class="macro">assert!</span>(<span class="ident">err</span>
                 .<span class="ident">to_string</span>()
                 .<span class="ident">contains</span>(<span class="string">&quot;&#39;utf-8&#39; codec can&#39;t decode byte 0xfe in position 1&quot;</span>));
@@ -1142,7 +1142,7 @@
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">s</span>.<span class="ident">data</span>().<span class="ident">unwrap</span>() };
             <span class="macro">assert_eq!</span>(<span class="ident">data</span>, <span class="ident">PyStringData::Ucs2</span>(<span class="kw-2">&amp;</span>[<span class="number">0xff22</span>, <span class="number">0xd800</span>]));
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">to_string</span>(<span class="ident">py</span>).<span class="ident">unwrap_err</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">err</span>.<span class="ident">ptype</span>(<span class="ident">py</span>), <span class="ident">PyUnicodeDecodeError::type_object</span>(<span class="ident">py</span>));
+            <span class="macro">assert_eq!</span>(<span class="ident">err</span>.<span class="ident">get_type</span>(<span class="ident">py</span>), <span class="ident">PyUnicodeDecodeError::type_object</span>(<span class="ident">py</span>));
             <span class="macro">assert!</span>(<span class="ident">err</span>
                 .<span class="ident">to_string</span>()
                 .<span class="ident">contains</span>(<span class="string">&quot;&#39;utf-16&#39; codec can&#39;t decode bytes in position 0-3&quot;</span>));
@@ -1181,7 +1181,7 @@
             <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">s</span>.<span class="ident">data</span>().<span class="ident">unwrap</span>() };
             <span class="macro">assert_eq!</span>(<span class="ident">data</span>, <span class="ident">PyStringData::Ucs4</span>(<span class="kw-2">&amp;</span>[<span class="number">0x20000</span>, <span class="number">0xd800</span>]));
             <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">to_string</span>(<span class="ident">py</span>).<span class="ident">unwrap_err</span>();
-            <span class="macro">assert_eq!</span>(<span class="ident">err</span>.<span class="ident">ptype</span>(<span class="ident">py</span>), <span class="ident">PyUnicodeDecodeError::type_object</span>(<span class="ident">py</span>));
+            <span class="macro">assert_eq!</span>(<span class="ident">err</span>.<span class="ident">get_type</span>(<span class="ident">py</span>), <span class="ident">PyUnicodeDecodeError::type_object</span>(<span class="ident">py</span>));
             <span class="macro">assert!</span>(<span class="ident">err</span>
                 .<span class="ident">to_string</span>()
                 .<span class="ident">contains</span>(<span class="string">&quot;&#39;utf-32&#39; codec can&#39;t decode bytes in position 0-7&quot;</span>));

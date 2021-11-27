@@ -2902,8 +2902,8 @@ Python::with_gil(|py| {
 });
 <span class="boring">}
 </span></code></pre></pre>
-<p>If you already have a Python exception instance, you can simply call <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html#method.from_instance"><code>PyErr::from_instance</code></a>.</p>
-<pre><code class="language-rust ignore">PyErr::from_instance(py, err).restore(py);
+<p>If you already have a Python exception object, you can simply call <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html#method.from_value"><code>PyErr::from_value</code></a>.</p>
+<pre><code class="language-rust ignore">PyErr::from_value(py, err).restore(py);
 </code></pre>
 <h2 id="checking-exception-types"><a class="header" href="#checking-exception-types">Checking exception types</a></h2>
 <p>Python has an <a href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance</code></a> method to check an object's type.
@@ -2940,7 +2940,7 @@ Python::with_gil(|py| {
 which is an alias for the type <code>Result&lt;T, PyErr&gt;</code>.</p>
 <p>A <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html"><code>PyErr</code></a> represents a Python exception. Errors within the PyO3 library are also exposed as
 Python exceptions.</p>
-<p>If your code has a custom error type, adding an implementation of <code>std::convert::From&lt;MyError&gt; for PyErr</code> 
+<p>If your code has a custom error type, adding an implementation of <code>std::convert::From&lt;MyError&gt; for PyErr</code>
 is usually enough. PyO3 will then automatically convert your error to a Python exception when needed.</p>
 <p>The following code snippet defines a Rust error named <code>CustomIOError</code>. In its <code>From&lt;CustomIOError&gt; for PyErr</code>
 implementation it returns a <code>PyErr</code> representing Python's <code>OSError</code>.</p>
@@ -2990,7 +2990,7 @@ fn main() {
 }
 </code></pre></pre>
 <p>This has been implemented for most of Rust's standard library errors, so that you can use the <code>?</code>
-(&quot;try&quot;) operator with them. The following code snippet will raise a <code>ValueError</code> in Python if 
+(&quot;try&quot;) operator with them. The following code snippet will raise a <code>ValueError</code> in Python if
 <code>String::parse()</code> returns an error.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 
@@ -3293,7 +3293,7 @@ class House(object):
             Err(e) =&gt; {
                 house.call_method1(
                     &quot;__exit__&quot;,
-                    (e.ptype(py), e.pvalue(py), e.ptraceback(py))
+                    (e.get_type(py), e.value(py), e.traceback(py))
                 ).unwrap();
             }
         }
@@ -4966,10 +4966,7 @@ makes it possible to interact with Python exception objects.</p>
 <pre><code class="language-rust ignore">let err: PyErr = TypeError::py_err(&quot;error message&quot;);
 </code></pre>
 <p>After:</p>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">use pyo3::{PyErr, PyResult, Python, type_object::PyTypeObject};
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::{PyErr, PyResult, Python, type_object::PyTypeObject};
 </span><span class="boring">use pyo3::exceptions::{PyBaseException, PyTypeError};
 </span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
 </span>let err: PyErr = PyTypeError::new_err(&quot;error message&quot;);
@@ -4982,8 +4979,7 @@ let instance: &amp;PyBaseException = err.instance(py);
 assert_eq!(instance.getattr(&quot;__class__&quot;)?, PyTypeError::type_object(py).as_ref());
 <span class="boring">Ok(())
 </span><span class="boring">}).unwrap();
-</span><span class="boring">}
-</span></code></pre></pre>
+</span></code></pre>
 <h3 id="frompy-has-been-removed"><a class="header" href="#frompy-has-been-removed"><code>FromPy</code> has been removed</a></h3>
 <p>To simplify the PyO3 conversion traits, the <code>FromPy</code> trait has been removed. Previously there were
 two ways to define the to-Python conversion for a type:
@@ -6114,6 +6110,15 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
 <li><code>PyType::is_subclass</code>, <code>PyErr::is_instance</code> and <code>PyAny::is_instance</code> now operate run-time type object instead of a type known at compile-time. The old behavior is still available as <code>PyType::is_subclass_of</code>, <code>PyErr::is_instance_of</code> and <code>PyAny::is_instance_of</code>.  <a href="https://github.com/PyO3/pyo3/pull/1985">#1985</a></li>
+<li>Rename some methods on <code>PyErr</code> (the old names are just marked deprecated for now): <a href="https://github.com/PyO3/pyo3/pull/2026">#2026</a>
+<ul>
+<li><code>pytype</code> -&gt; <code>get_type</code></li>
+<li><code>pvalue</code> -&gt; <code>value</code> (and deprecate equivalent <code>instance</code>)</li>
+<li><code>ptraceback</code> -&gt; <code>traceback</code></li>
+<li><code>from_instance</code> -&gt; <code>from_value</code></li>
+<li><code>into_instance</code> -&gt; <code>into_value</code></li>
+</ul>
+</li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
@@ -6123,6 +6128,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <ul>
 <li>Fix undefined symbol for <code>PyObject_HasAttr</code> on PyPy. <a href="https://github.com/PyO3/pyo3/pull/2025">#2025</a></li>
+<li>Fix memory leak in <code>PyErr::into_value</code>. <a href="https://github.com/PyO3/pyo3/pull/2026">#2026</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a href="https://github.com/pyo3/pyo3/compare/v0.15.0...v0.15.1">0.15.1</a> - 2021-11-19</a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>

@@ -229,8 +229,8 @@ Python::with_gil(|py| {
 });
 <span class="boring">}
 </span></code></pre></pre>
-<p>If you already have a Python exception instance, you can simply call <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html#method.from_instance"><code>PyErr::from_instance</code></a>.</p>
-<pre><code class="language-rust ignore">PyErr::from_instance(py, err).restore(py);
+<p>If you already have a Python exception object, you can simply call <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html#method.from_value"><code>PyErr::from_value</code></a>.</p>
+<pre><code class="language-rust ignore">PyErr::from_value(py, err).restore(py);
 </code></pre>
 <h2 id="checking-exception-types"><a class="header" href="#checking-exception-types">Checking exception types</a></h2>
 <p>Python has an <a href="https://docs.python.org/3/library/functions.html#isinstance"><code>isinstance</code></a> method to check an object's type.
@@ -267,7 +267,7 @@ Python::with_gil(|py| {
 which is an alias for the type <code>Result&lt;T, PyErr&gt;</code>.</p>
 <p>A <a href="https://pyo3.rs/main/doc/pyo3/struct.PyErr.html"><code>PyErr</code></a> represents a Python exception. Errors within the PyO3 library are also exposed as
 Python exceptions.</p>
-<p>If your code has a custom error type, adding an implementation of <code>std::convert::From&lt;MyError&gt; for PyErr</code> 
+<p>If your code has a custom error type, adding an implementation of <code>std::convert::From&lt;MyError&gt; for PyErr</code>
 is usually enough. PyO3 will then automatically convert your error to a Python exception when needed.</p>
 <p>The following code snippet defines a Rust error named <code>CustomIOError</code>. In its <code>From&lt;CustomIOError&gt; for PyErr</code>
 implementation it returns a <code>PyErr</code> representing Python's <code>OSError</code>.</p>
@@ -317,7 +317,7 @@ fn main() {
 }
 </code></pre></pre>
 <p>This has been implemented for most of Rust's standard library errors, so that you can use the <code>?</code>
-(&quot;try&quot;) operator with them. The following code snippet will raise a <code>ValueError</code> in Python if 
+(&quot;try&quot;) operator with them. The following code snippet will raise a <code>ValueError</code> in Python if
 <code>String::parse()</code> returns an error.</p>
 <pre><pre class="playground"><code class="language-rust">use pyo3::prelude::*;
 

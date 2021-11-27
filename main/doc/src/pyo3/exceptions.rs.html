@@ -916,7 +916,7 @@
         <span class="kw">impl</span> <span class="ident">::std::convert::From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr</span> {
             <span class="attribute">#[<span class="ident">inline</span>]</span>
             <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>) -&gt; <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr</span> {
-                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr::from_instance</span>(<span class="ident">err</span>)
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::PyErr::from_value</span>(<span class="ident">err</span>)
             }
         }
 
@@ -1508,7 +1508,7 @@ Python::with_gil(|py| {
 
                 <span class="macro">assert!</span>(<span class="ident">err</span>.<span class="ident">is_instance_of</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span><span class="op">&gt;</span>(<span class="ident">py</span>));
 
-                <span class="kw">let</span> <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">instance</span>(<span class="ident">py</span>).<span class="ident">downcast</span>().<span class="ident">unwrap</span>();
+                <span class="kw">let</span> <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">exc_ty</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">value</span>(<span class="ident">py</span>).<span class="ident">downcast</span>().<span class="ident">unwrap</span>();
                 <span class="macro">assert!</span>(<span class="ident">value</span>.<span class="ident">source</span>().<span class="ident">is_none</span>());
 
                 <span class="ident">err</span>.<span class="ident">set_cause</span>(<span class="ident">py</span>, <span class="prelude-val">Some</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::exceptions::PyValueError::new_err</span>(<span class="string">&quot;a cause&quot;</span>)));
@@ -1650,7 +1650,7 @@ Python::with_gil(|py| {
             <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
                 .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
                 .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
-                .<span class="ident">into_instance</span>(<span class="ident">py</span>)
+                .<span class="ident">into_value</span>(<span class="ident">py</span>)
                 .<span class="ident">into_ref</span>(<span class="ident">py</span>);
             <span class="macro">assert_eq!</span>(
                 <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>),
@@ -1665,7 +1665,7 @@ Python::with_gil(|py| {
             <span class="kw">let</span> <span class="ident">exc</span> <span class="op">=</span> <span class="ident">py</span>
                 .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
                 .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
-                .<span class="ident">into_instance</span>(<span class="ident">py</span>)
+                .<span class="ident">into_value</span>(<span class="ident">py</span>)
                 .<span class="ident">into_ref</span>(<span class="ident">py</span>);
             <span class="macro">assert_eq!</span>(
                 <span class="ident">exc</span>.<span class="ident">to_string</span>(),
@@ -1686,7 +1686,7 @@ Python::with_gil(|py| {
                     <span class="prelude-val">None</span>,
                 )
                 .<span class="ident">expect_err</span>(<span class="string">&quot;raising should have given us an error&quot;</span>)
-                .<span class="ident">into_instance</span>(<span class="ident">py</span>)
+                .<span class="ident">into_value</span>(<span class="ident">py</span>)
                 .<span class="ident">into_ref</span>(<span class="ident">py</span>);
 
             <span class="macro">assert_eq!</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">exc</span>), <span class="string">&quot;Exception(&#39;banana&#39;)&quot;</span>);
@@ -1756,7 +1756,7 @@ Python::with_gil(|py| {
     <span class="macro">test_exception!</span>(<span class="ident">PyUnicodeDecodeError</span>, <span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">invalid_utf8</span> <span class="op">=</span> <span class="string">b&quot;fo\xd8o&quot;</span>;
         <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">std::str::from_utf8</span>(<span class="ident">invalid_utf8</span>).<span class="ident">expect_err</span>(<span class="string">&quot;should be invalid utf8&quot;</span>);
-        <span class="ident">PyErr::from_instance</span>(<span class="ident">PyUnicodeDecodeError::new_utf8</span>(<span class="ident">py</span>, <span class="ident">invalid_utf8</span>, <span class="ident">err</span>).<span class="ident">unwrap</span>())
+        <span class="ident">PyErr::from_value</span>(<span class="ident">PyUnicodeDecodeError::new_utf8</span>(<span class="ident">py</span>, <span class="ident">invalid_utf8</span>, <span class="ident">err</span>).<span class="ident">unwrap</span>())
     });
     <span class="macro">test_exception!</span>(<span class="ident">PyUnicodeEncodeError</span>, <span class="op">|</span><span class="ident">py</span>: <span class="ident">Python</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">|</span> {
         <span class="ident">py</span>.<span class="ident">eval</span>(<span class="string">&quot;chr(40960).encode(&#39;ascii&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)

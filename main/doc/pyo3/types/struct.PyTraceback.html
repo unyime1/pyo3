@@ -11,7 +11,7 @@ formatted using the <code>Display</code> implementation for <code>PyErr</code>.<
         .<span class="ident">run</span>(<span class="string">&quot;raise Exception(&#39;banana&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
         .<span class="ident">expect_err</span>(<span class="string">&quot;raise will create a Python error&quot;</span>);
 
-    <span class="kw">let</span> <span class="ident">traceback</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">ptraceback</span>(<span class="ident">py</span>).<span class="ident">expect</span>(<span class="string">&quot;raised exception will have a traceback&quot;</span>);
+    <span class="kw">let</span> <span class="ident">traceback</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">traceback</span>(<span class="ident">py</span>).<span class="ident">expect</span>(<span class="string">&quot;raised exception will have a traceback&quot;</span>);
     <span class="macro">assert_eq!</span>(
         <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">traceback</span>.<span class="ident">format</span>()<span class="question-mark">?</span>, <span class="ident">err</span>),
         <span class="string">&quot;\

@@ -390,7 +390,7 @@ class House(object):
             Err(e) =&gt; {
                 house.call_method1(
                     &quot;__exit__&quot;,
-                    (e.ptype(py), e.pvalue(py), e.ptraceback(py))
+                    (e.get_type(py), e.value(py), e.traceback(py))
                 ).unwrap();
             }
         }
