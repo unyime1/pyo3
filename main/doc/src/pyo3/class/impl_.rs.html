@@ -790,6 +790,9 @@
 <span id="789">789</span>
 <span id="790">790</span>
 <span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -1448,6 +1451,9 @@
 <span class="macro">slots_trait!</span>(<span class="ident">PyAsyncProtocolSlots</span>, <span class="ident">async_protocol_slots</span>);
 <span class="macro">slots_trait!</span>(<span class="ident">PySequenceProtocolSlots</span>, <span class="ident">sequence_protocol_slots</span>);
 <span class="macro">slots_trait!</span>(<span class="ident">PyBufferProtocolSlots</span>, <span class="ident">buffer_protocol_slots</span>);
+
+<span class="comment">// slots that PyO3 implements by default, but can be overidden by the users.</span>
+<span class="macro">slots_trait!</span>(<span class="ident">PyClassDefaultSlots</span>, <span class="ident">py_class_default_slots</span>);
 
 <span class="comment">// Protocol slots from #[pymethods] if not using inventory.</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiple-pymethods&quot;</span>))]</span>
