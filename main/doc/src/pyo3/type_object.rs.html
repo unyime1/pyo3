@@ -227,6 +227,17 @@
 <span id="226">226</span>
 <span id="227">227</span>
 <span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="doccomment">//! Python type object information</span>
 
@@ -245,6 +256,10 @@
 <span class="doccomment">/// is of `PyAny`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This trait is intended to be used internally.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This trait must only be implemented for types which represent valid layouts of Python objects.</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">PyLayout</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 
 <span class="doccomment">/// `T: PySizedLayout&lt;U&gt;` represents that `T` is not a instance of</span>
@@ -260,6 +275,11 @@
 <span class="doccomment">///  - the return value of type_object must always point to the same PyTypeObject instance</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// It is safely implemented by the `pyclass` macro.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Safety</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Implementations must provide an implementation for `type_object_raw` which infallibly produces a</span>
+<span class="doccomment">/// non-null pointer to the corresponding Python type object.</span>
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">trait</span> <span class="ident">PyTypeInfo</span>: <span class="ident">Sized</span> {
     <span class="doccomment">/// Class name.</span>
     <span class="kw">const</span> <span class="ident">NAME</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>;
@@ -285,6 +305,8 @@
 }
 
 <span class="doccomment">/// Python object types that have a corresponding type object.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Safety</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This trait is marked unsafe because not fulfilling the contract for type_object</span>
 <span class="doccomment">/// leads to UB.</span>
@@ -456,5 +478,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (e2116acae 2021-12-05)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (0b6f079e4 2021-12-07)" ></div>
 </body></html>
