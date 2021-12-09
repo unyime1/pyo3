@@ -789,6 +789,15 @@
 <span id="788">788</span>
 <span id="789">789</span>
 <span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Interaction with Python&#39;s global interpreter lock</span>
@@ -972,6 +981,15 @@
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;auto-initialize&quot;</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span> {
                 <span class="ident">prepare_freethreaded_python</span>();
             } <span class="kw">else</span> {
+                <span class="comment">// This is a &quot;hack&quot; to make running `cargo test` for PyO3 convenient (i.e. no need</span>
+                <span class="comment">// to specify `--features auto-initialize` manually. Tests within the crate itself</span>
+                <span class="comment">// all depend on the auto-initialize feature for conciseness but Cargo does not</span>
+                <span class="comment">// provide a mechanism to specify required features for tests.</span>
+                <span class="kw">if</span> <span class="macro">option_env!</span>(<span class="string">&quot;CARGO_PRIMARY_PACKAGE&quot;</span>).<span class="ident">is_some</span>() {
+                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
+                    <span class="ident">prepare_freethreaded_python</span>();
+                }
+
                 <span class="ident">START</span>.<span class="ident">call_once_force</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="kw">unsafe</span> {
                     <span class="comment">// Use call_once_force because if there is a panic because the interpreter is</span>
                     <span class="comment">// not initialized, it&#39;s fine for the user to initialize the interpreter and</span>

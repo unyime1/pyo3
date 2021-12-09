@@ -462,6 +462,11 @@
 <span id="461">461</span>
 <span id="462">462</span>
 <span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 <span class="comment">// based on Daniel Grunwald&#39;s https://github.com/dgrunwald/rust-cpython</span>
@@ -742,6 +747,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test_128bit_intergers</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types::PyDict</span>;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
     <span class="kw">use</span> <span class="ident">proptest::prelude</span>::<span class="kw-2">*</span>;
@@ -752,7 +758,9 @@
         <span class="kw">fn</span> <span class="ident">test_i128_roundtrip</span>(<span class="ident">x</span>: <span class="ident">i128</span>) {
             <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">x_py</span> <span class="op">=</span> <span class="ident">x</span>.<span class="ident">into_py</span>(<span class="ident">py</span>);
-                <span class="macro">crate::py_run!</span>(<span class="ident">py</span>, <span class="ident">x_py</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>));
+                <span class="kw">let</span> <span class="ident">locals</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
+                <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;x_py&quot;</span>, <span class="ident">x_py</span>.<span class="ident">clone_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+                <span class="ident">py</span>.<span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>)).<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="ident">roundtripped</span>: <span class="ident">i128</span> <span class="op">=</span> <span class="ident">x_py</span>.<span class="ident">extract</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>();
                 <span class="macro">assert_eq!</span>(<span class="ident">x</span>, <span class="ident">roundtripped</span>);
             })
@@ -765,7 +773,9 @@
         <span class="kw">fn</span> <span class="ident">test_u128_roundtrip</span>(<span class="ident">x</span>: <span class="ident">u128</span>) {
             <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
                 <span class="kw">let</span> <span class="ident">x_py</span> <span class="op">=</span> <span class="ident">x</span>.<span class="ident">into_py</span>(<span class="ident">py</span>);
-                <span class="macro">crate::py_run!</span>(<span class="ident">py</span>, <span class="ident">x_py</span>, <span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>));
+                <span class="kw">let</span> <span class="ident">locals</span> <span class="op">=</span> <span class="ident">PyDict::new</span>(<span class="ident">py</span>);
+                <span class="ident">locals</span>.<span class="ident">set_item</span>(<span class="string">&quot;x_py&quot;</span>, <span class="ident">x_py</span>.<span class="ident">clone_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+                <span class="ident">py</span>.<span class="ident">run</span>(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;assert x_py == {}&quot;</span>, <span class="ident">x</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">locals</span>)).<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="ident">roundtripped</span>: <span class="ident">u128</span> <span class="op">=</span> <span class="ident">x_py</span>.<span class="ident">extract</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>();
                 <span class="macro">assert_eq!</span>(<span class="ident">x</span>, <span class="ident">roundtripped</span>);
             })
