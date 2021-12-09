@@ -176,6 +176,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 </ul>
 </li>
 <li>Deprecate <code>PyType::is_instance</code>; it is inconsistent with other <code>is_instance</code> methods in PyO3. Instead of <code>typ.is_instance(obj)</code>, use <code>obj.is_instance(typ)</code>. <a href="https://github.com/PyO3/pyo3/pull/2031">#2031</a></li>
+<li>Optional parameters of <code>#[pymethods]</code> and <code>#[pyfunction]</code>s cannot be followed by required parameters, i.e. <code>fn opt_first(a: Option&lt;i32&gt;, b: i32) {}</code> is not allowed, while <code>fn opt_last(a:i32, b: Option&lt;i32&gt;) {}</code> is. <a href="https://github.com/PyO3/pyo3/pull/2041">#2041</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
