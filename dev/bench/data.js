@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639529286110,
+  "lastUpdate": 1639529730197,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -42551,6 +42551,180 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item_unchecked",
             "value": 717594,
             "range": "± 953",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "59372212+mejrs@users.noreply.github.com",
+            "name": "Bruno Kolenbrander",
+            "username": "mejrs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "39cac9075b848295d015ada46205718423d4f5bb",
+          "message": "Organize examples + add __call__ example (#2043)\n\n* Add decorator example crate and split off chapter\r\n\r\n* Move not-examples to their own folder\r\n\r\n* Add some readme's\r\n\r\n* Make black happy\r\n\r\n* Make clippy happy\r\n\r\n* Add decorator example crate and split off chapter\r\n\r\n* Fix ci\r\n\r\n* Add empty workspace key\r\n\r\n* Try fix ci\r\n\r\n* fix ci\r\n\r\n* reuse target dir for examples CI\r\n\r\n* add pytests folder to makefile recipes\r\n\r\n* fix ci, try 2\r\n\r\n* add missing pyproject.toml\r\n\r\n* remove TOX_TESTENV_PASSENV from Makefile\r\n\r\nCo-authored-by: David Hewitt <1939362+davidhewitt@users.noreply.github.com>",
+          "timestamp": "2021-12-15T00:45:26Z",
+          "tree_id": "99852fe705fb3c421ead4ce6c8c365ddaacaa2a2",
+          "url": "https://github.com/PyO3/pyo3/commit/39cac9075b848295d015ada46205718423d4f5bb"
+        },
+        "date": 1639529703638,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 72257,
+            "range": "± 1392",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 209899,
+            "range": "± 11810",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 3334048,
+            "range": "± 53676",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_new",
+            "value": 5156175,
+            "range": "± 149504",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 2880740,
+            "range": "± 49487",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 17400483,
+            "range": "± 684349",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 13206732,
+            "range": "± 104125",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 16422830,
+            "range": "± 855598",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 16,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 88,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 92,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 1841391,
+            "range": "± 46035",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_new",
+            "value": 1519205,
+            "range": "± 39216",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 1086483,
+            "range": "± 31149",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item_unchecked",
+            "value": 931988,
+            "range": "± 22378",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 4389,
+            "range": "± 25402",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 3018,
+            "range": "± 3",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 2431980,
+            "range": "± 33829",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 11070532,
+            "range": "± 275240",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 4223780,
+            "range": "± 74545",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 8543532,
+            "range": "± 320004",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 1316036,
+            "range": "± 35603",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_new",
+            "value": 1552386,
+            "range": "± 35855",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 744023,
+            "range": "± 3279",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item_unchecked",
+            "value": 662868,
+            "range": "± 8035",
             "unit": "ns/iter"
           }
         ]
