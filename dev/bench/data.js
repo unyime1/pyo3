@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639606148705,
+  "lastUpdate": 1639614033922,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -73134,6 +73134,128 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 3.7269134128693154e-9",
             "extra": "mean: 123.3482987766675 nsec\nrounds: 78132"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "aanderson@hyperfine-research.com",
+            "name": "Ashley Anderson",
+            "username": "aganders3"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c30ca03b60a813df003332e0cc1496a5031e3598",
+          "message": "Expose cross compiling configuration from pyo3-build-config (#1996)\n\n* Initial refactor - expose cross-compiling functions and add necessary fields to InterpreterConfig\r\n\r\n* Refactor cross_compiling to take arch/vendor/os separately.\r\n\r\n* Address review comments.\r\n\r\n* Update changelog with note about pyo3-build-config APIs.\r\n\r\n* Fix panic when parsing ABI tag on Windows.\r\n\r\n* Update parse_sysconfigdata test to best-guess values for linux.\r\n\r\n* Revert added fields in InterpreterConfig.\r\n\r\n* Refactor parse_sysconfigdata to return Sysconfigdata (HashMap). Add InterpreterConfig::from_sysconfigdata.\r\n\r\n* Update BuildFlags test to use from_sysconfigdata.\r\n\r\n* Add tests for from_sysconfigdata. Refactor Sysconfigdata API to be more open.\r\n\r\n* Add basic tests for not cross compiling. Add some error handling.\r\n\r\n* Address review comments.\r\n\r\n* Update search_lib_dir to recurse into lib and pypy dirs.\r\n\r\n* Look even harder for sysconfigdata.\r\n\r\n* Add skip-build-config feature.\r\n\r\n* Revert skip-build-config feature.\r\n\r\n* Suppress cargo:rerun-if-env-changed without resolve-config feature.",
+          "timestamp": "2021-12-16T00:18:37Z",
+          "tree_id": "9cc443c483528f436e2f1a370677cae028d4d829",
+          "url": "https://github.com/PyO3/pyo3/commit/c30ca03b60a813df003332e0cc1496a5031e3598"
+        },
+        "date": 1639614004484,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "tests/test_benchmarks.py::test_none_py",
+            "value": 7204909.546632375,
+            "unit": "iter/sec",
+            "range": "stddev: 3.107441730317707e-7",
+            "extra": "mean: 138.79424766231975 nsec\nrounds: 79366"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_none_rs",
+            "value": 8033053.572217333,
+            "unit": "iter/sec",
+            "range": "stddev: 3.3516278250941824e-7",
+            "extra": "mean: 124.48566301845837 nsec\nrounds: 87720"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_py",
+            "value": 2737194.6062850836,
+            "unit": "iter/sec",
+            "range": "stddev: 7.589463148515933e-7",
+            "extra": "mean: 365.33756047306485 nsec\nrounds: 169492"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_rs",
+            "value": 1790355.9694631617,
+            "unit": "iter/sec",
+            "range": "stddev: 3.134007179473905e-7",
+            "extra": "mean: 558.5481418535427 nsec\nrounds: 29411"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_py",
+            "value": 2390795.4677243372,
+            "unit": "iter/sec",
+            "range": "stddev: 3.7512973104750317e-7",
+            "extra": "mean: 418.2708280569559 nsec\nrounds: 44248"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_rs",
+            "value": 1558274.1801437072,
+            "unit": "iter/sec",
+            "range": "stddev: 3.3981833204530643e-7",
+            "extra": "mean: 641.7355897585187 nsec\nrounds: 68028"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_kwargs_py",
+            "value": 1637482.9166675948,
+            "unit": "iter/sec",
+            "range": "stddev: 6.443500959879669e-7",
+            "extra": "mean: 610.6933940020075 nsec\nrounds: 78126"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_kwargs_rs",
+            "value": 1391052.1241891307,
+            "unit": "iter/sec",
+            "range": "stddev: 5.211768882730417e-7",
+            "extra": "mean: 718.8803227506178 nsec\nrounds: 70922"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_kwargs_py",
+            "value": 1529169.3414476276,
+            "unit": "iter/sec",
+            "range": "stddev: 4.7366788697009724e-7",
+            "extra": "mean: 653.9498098056065 nsec\nrounds: 75188"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_simple_args_kwargs_rs",
+            "value": 1330205.3075277281,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000012637947353032098",
+            "extra": "mean: 751.7636520776175 nsec\nrounds: 65360"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_kwargs_py",
+            "value": 1876566.0185999905,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000011373807932417703",
+            "extra": "mean: 532.8882597723868 nsec\nrounds: 153847"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_args_kwargs_rs",
+            "value": 3990731.222286649,
+            "unit": "iter/sec",
+            "range": "stddev: 2.902091120291251e-7",
+            "extra": "mean: 250.58064407264092 nsec\nrounds: 192308"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_empty_class_init",
+            "value": 5003587.394953723,
+            "unit": "iter/sec",
+            "range": "stddev: 1.6228452762703404e-7",
+            "extra": "mean: 199.8566070832441 nsec\nrounds: 59524"
+          },
+          {
+            "name": "tests/test_benchmarks.py::test_empty_class_init_py",
+            "value": 6185140.560796382,
+            "unit": "iter/sec",
+            "range": "stddev: 4.2662371474353856e-7",
+            "extra": "mean: 161.67781316698824 nsec\nrounds: 76924"
           }
         ]
       }
