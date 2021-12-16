@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639614033922,
+  "lastUpdate": 1639614487163,
   "repoUrl": "https://github.com/PyO3/pyo3",
   "entries": {
     "pyo3-bench": [
@@ -42899,6 +42899,180 @@ window.BENCHMARK_DATA = {
             "name": "tuple_get_item_unchecked",
             "value": 829948,
             "range": "± 40844",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "aanderson@hyperfine-research.com",
+            "name": "Ashley Anderson",
+            "username": "aganders3"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c30ca03b60a813df003332e0cc1496a5031e3598",
+          "message": "Expose cross compiling configuration from pyo3-build-config (#1996)\n\n* Initial refactor - expose cross-compiling functions and add necessary fields to InterpreterConfig\r\n\r\n* Refactor cross_compiling to take arch/vendor/os separately.\r\n\r\n* Address review comments.\r\n\r\n* Update changelog with note about pyo3-build-config APIs.\r\n\r\n* Fix panic when parsing ABI tag on Windows.\r\n\r\n* Update parse_sysconfigdata test to best-guess values for linux.\r\n\r\n* Revert added fields in InterpreterConfig.\r\n\r\n* Refactor parse_sysconfigdata to return Sysconfigdata (HashMap). Add InterpreterConfig::from_sysconfigdata.\r\n\r\n* Update BuildFlags test to use from_sysconfigdata.\r\n\r\n* Add tests for from_sysconfigdata. Refactor Sysconfigdata API to be more open.\r\n\r\n* Add basic tests for not cross compiling. Add some error handling.\r\n\r\n* Address review comments.\r\n\r\n* Update search_lib_dir to recurse into lib and pypy dirs.\r\n\r\n* Look even harder for sysconfigdata.\r\n\r\n* Add skip-build-config feature.\r\n\r\n* Revert skip-build-config feature.\r\n\r\n* Suppress cargo:rerun-if-env-changed without resolve-config feature.",
+          "timestamp": "2021-12-16T00:18:37Z",
+          "tree_id": "9cc443c483528f436e2f1a370677cae028d4d829",
+          "url": "https://github.com/PyO3/pyo3/commit/c30ca03b60a813df003332e0cc1496a5031e3598"
+        },
+        "date": 1639614458228,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "call_0",
+            "value": 96722,
+            "range": "± 4454",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "call_method_0",
+            "value": 290694,
+            "range": "± 10040",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_dict",
+            "value": 3284115,
+            "range": "± 114003",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_new",
+            "value": 5392749,
+            "range": "± 247828",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dict_get_item",
+            "value": 3381937,
+            "range": "± 127077",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashmap",
+            "value": 10354351,
+            "range": "± 692881",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreemap",
+            "value": 15763213,
+            "range": "± 548206",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_map",
+            "value": 8900712,
+            "range": "± 536958",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_gilpool_new",
+            "value": 22,
+            "range": "± 0",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "clean_acquire_gil",
+            "value": 120,
+            "range": "± 7",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "dirty_acquire_gil",
+            "value": 126,
+            "range": "± 6",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_list",
+            "value": 2232014,
+            "range": "± 97138",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_new",
+            "value": 1685614,
+            "range": "± 72874",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item",
+            "value": 1377137,
+            "range": "± 68020",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "list_get_item_unchecked",
+            "value": 1201855,
+            "range": "± 53771",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "first_time_init",
+            "value": 5230,
+            "range": "± 21998",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "drop_many_objects",
+            "value": 4627,
+            "range": "± 193",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_set",
+            "value": 2631662,
+            "range": "± 109330",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashset",
+            "value": 11628820,
+            "range": "± 586849",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_btreeset",
+            "value": 4711204,
+            "range": "± 216114",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "extract_hashbrown_set",
+            "value": 8309033,
+            "range": "± 358260",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "iter_tuple",
+            "value": 1589823,
+            "range": "± 87070",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_new",
+            "value": 1672290,
+            "range": "± 103352",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item",
+            "value": 1048378,
+            "range": "± 78434",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "tuple_get_item_unchecked",
+            "value": 923438,
+            "range": "± 29117",
             "unit": "ns/iter"
           }
         ]
