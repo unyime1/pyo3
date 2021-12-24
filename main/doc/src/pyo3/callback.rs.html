@@ -264,11 +264,6 @@
 <span id="262">262</span>
 <span id="263">263</span>
 <span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Utilities for a Python callable object that invokes a Rust function.</span>
@@ -281,7 +276,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">IntoPy</span>, <span class="ident">PyObject</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="ident">std::any::Any</span>;
 <span class="kw">use</span> <span class="ident">std::os::raw::c_int</span>;
-<span class="kw">use</span> <span class="ident">std::panic</span>::{<span class="ident">AssertUnwindSafe</span>, <span class="ident">UnwindSafe</span>};
+<span class="kw">use</span> <span class="ident">std::panic::UnwindSafe</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">isize</span>, <span class="ident">panic</span>};
 
 <span class="doccomment">/// A type which can be the return type of a python C-API callback</span>
@@ -512,13 +507,8 @@
     <span class="ident">R</span>: <span class="ident">PyCallbackOutput</span>,
 {
     <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident">GILPool::new</span>();
-    <span class="kw">let</span> <span class="ident">unwind_safe_py</span> <span class="op">=</span> <span class="ident">AssertUnwindSafe</span>(<span class="ident">pool</span>.<span class="ident">python</span>());
-    <span class="kw">let</span> <span class="ident">panic_result</span> <span class="op">=</span> <span class="ident">panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">unwind_safe_py</span>;
-        <span class="ident">body</span>(<span class="ident">py</span>)
-    });
-
-    <span class="ident">panic_result_into_callback_output</span>(<span class="ident">pool</span>.<span class="ident">python</span>(), <span class="ident">panic_result</span>)
+    <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">python</span>();
+    <span class="ident">panic_result_into_callback_output</span>(<span class="ident">py</span>, <span class="ident">panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> { <span class="ident">body</span>(<span class="ident">py</span>) }))
 }
 
 <span class="kw">fn</span> <span class="ident">panic_result_into_callback_output</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
@@ -539,5 +529,5 @@
     })
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (e100ec5bc 2021-12-21)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (34926f0a1 2021-12-22)" ></div>
 </body></html>

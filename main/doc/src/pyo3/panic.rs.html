@@ -29,6 +29,7 @@
 <span id="27">27</span>
 <span id="28">28</span>
 <span id="29">29</span>
+<span id="30">30</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Helper to convert Rust panics to Python exceptions.</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exceptions::PyBaseException</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::PyErr</span>;
@@ -48,6 +49,7 @@ Python interpreter to exit.
 
 <span class="kw">impl</span> <span class="ident">PanicException</span> {
     <span class="comment">// Try to format the error in the same way panic does</span>
+    <span class="attribute">#[<span class="ident">cold</span>]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_panic_payload</span>(<span class="ident">payload</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>) -&gt; <span class="ident">PyErr</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">string</span>) <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">downcast_ref</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>() {
             <span class="ident"><span class="self">Self</span>::new_err</span>((<span class="ident">string</span>.<span class="ident">clone</span>(),))
@@ -59,5 +61,5 @@ Python interpreter to exit.
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (e100ec5bc 2021-12-21)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (34926f0a1 2021-12-22)" ></div>
 </body></html>
