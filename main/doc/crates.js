@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["pyo3"];
+window.ALL_CRATES = ["pyo3","pyo3_build_config"];
