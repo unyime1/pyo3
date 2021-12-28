@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["deprecations","Symbols used to denote deprecated usages of PyO3’s proc macros."],["extract_argument",""],["freelist","Support for free allocation lists."],["frompyobject",""],["not_send",""]]});
