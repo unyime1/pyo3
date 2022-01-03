@@ -742,6 +742,8 @@
 <span id="738">738</span>
 <span id="739">739</span>
 <span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::attributes::TextSignatureAttribute</span>;
@@ -973,6 +975,7 @@
     <span class="kw">pub</span> <span class="ident">convention</span>: <span class="ident">CallingConvention</span>,
     <span class="kw">pub</span> <span class="ident">text_signature</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TextSignatureAttribute</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">krate</span>: <span class="ident">syn::Path</span>,
+    <span class="kw">pub</span> <span class="ident">unsafety</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="macro">syn::Token!</span>[<span class="kw">unsafe</span>]<span class="op">&gt;</span>,
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_return_info</span>(<span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="ident">syn::ReturnType</span>) -&gt; <span class="ident">syn::Type</span> {
@@ -1060,6 +1063,7 @@
             <span class="ident">deprecations</span>,
             <span class="ident">text_signature</span>,
             <span class="ident">krate</span>,
+            <span class="ident">unsafety</span>: <span class="ident">sig</span>.<span class="ident">unsafety</span>,
         })
     }
 

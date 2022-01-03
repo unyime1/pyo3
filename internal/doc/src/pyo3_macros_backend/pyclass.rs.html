@@ -948,10 +948,6 @@
 <span id="944">944</span>
 <span id="945">945</span>
 <span id="946">946</span>
-<span id="947">947</span>
-<span id="948">948</span>
-<span id="949">949</span>
-<span id="950">950</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::attributes</span>::{
@@ -1801,12 +1797,8 @@
                     #<span class="ident">methods_protos</span>
                 }
 
-                <span class="kw">fn</span> <span class="ident">get_buffer</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">_pyo3::class::impl_::PyBufferProcs</span><span class="op">&gt;</span> {
-                    <span class="kw">use</span> <span class="ident">_pyo3::class::impl_</span>::<span class="kw-2">*</span>;
-                    <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
-                    <span class="ident">collector</span>.<span class="ident">buffer_procs</span>()
-                }
                 #<span class="ident">dict_offset</span>
+
                 #<span class="ident">weaklist_offset</span>
             }
 

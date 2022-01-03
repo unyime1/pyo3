@@ -558,6 +558,7 @@
 <span id="554">554</span>
 <span id="555">555</span>
 <span id="556">556</span>
+<span id="557">557</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -991,6 +992,7 @@
         <span class="ident">deprecations</span>: <span class="ident">options</span>.<span class="ident">deprecations</span>,
         <span class="ident">text_signature</span>: <span class="ident">options</span>.<span class="ident">text_signature</span>,
         <span class="ident">krate</span>: <span class="ident">krate</span>.<span class="ident">clone</span>(),
+        <span class="ident">unsafety</span>: <span class="ident">func</span>.<span class="ident">sig</span>.<span class="ident">unsafety</span>,
     };
 
     <span class="kw">let</span> <span class="ident">wrapper_ident</span> <span class="op">=</span> <span class="macro">format_ident!</span>(<span class="string">&quot;__pyo3_raw_{}&quot;</span>, <span class="ident">spec</span>.<span class="ident">name</span>);
