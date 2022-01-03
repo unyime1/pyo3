@@ -307,12 +307,6 @@
 <span id="303">303</span>
 <span id="304">304</span>
 <span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -368,12 +362,11 @@
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">impl_arg_params</span>(
     <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">FnSpec</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
     <span class="ident">self_</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">syn::Type</span><span class="op">&gt;</span>,
-    <span class="ident">body</span>: <span class="ident">TokenStream</span>,
     <span class="ident">py</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
     <span class="ident">fastcall</span>: <span class="ident">bool</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">spec</span>.<span class="ident">args</span>.<span class="ident">is_empty</span>() {
-        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">body</span>);
+        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">TokenStream::new</span>());
     }
 
     <span class="kw">let</span> <span class="ident">args_array</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(<span class="string">&quot;output&quot;</span>, <span class="ident">Span::call_site</span>());
@@ -385,11 +378,11 @@
         <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">arg</span>) <span class="kw">in</span> <span class="ident">spec</span>.<span class="ident">args</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
             <span class="ident">arg_convert</span>.<span class="ident">push</span>(<span class="ident">impl_arg_param</span>(<span class="ident">arg</span>, <span class="ident">spec</span>, <span class="ident">i</span>, <span class="prelude-val">None</span>, <span class="kw-2">&amp;mut</span> <span class="number">0</span>, <span class="ident">py</span>, <span class="kw-2">&amp;</span><span class="ident">args_array</span>)<span class="question-mark">?</span>);
         }
-        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {{
-            <span class="kw">let</span> <span class="ident">_args</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">_args</span>);
+        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {
+            <span class="kw">let</span> <span class="ident">_args</span> <span class="op">=</span> <span class="ident">::std::option::Option::Some</span>(#<span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">_pyo3::types::PyTuple</span><span class="op">&gt;</span>(<span class="ident">_args</span>));
+            <span class="kw">let</span> <span class="ident">_kwargs</span>: <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">_pyo3::types::PyDict</span><span class="op">&gt;</span> <span class="op">=</span> #<span class="ident">py</span>.<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">_kwargs</span>);
             #(#<span class="ident">arg_convert</span>)<span class="op">*</span>
-            #<span class="ident">body</span>
-        }});
+        });
     };
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">positional_parameter_names</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
@@ -410,7 +403,7 @@
 
         <span class="kw">if</span> <span class="ident">kwonly</span> {
             <span class="ident">keyword_only_parameters</span>.<span class="ident">push</span>(<span class="macro">quote!</span> {
-                <span class="ident">_pyo3::derive_utils::KeywordOnlyParameterDescription</span> {
+                <span class="ident">_pyo3::impl_::extract_argument::KeywordOnlyParameterDescription</span> {
                     <span class="ident">name</span>: #<span class="ident">name</span>,
                     <span class="ident">required</span>: #<span class="ident">required</span>,
                 }
@@ -457,28 +450,30 @@
     };
     <span class="kw">let</span> <span class="ident">python_name</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">spec</span>.<span class="ident">python_name</span>;
 
-    <span class="kw">let</span> (<span class="ident">args_to_extract</span>, <span class="ident">kwargs_to_extract</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">fastcall</span> {
-        <span class="comment">// _args is a &amp;[&amp;PyAny], _kwnames is a Option&lt;&amp;PyTuple&gt; containing the</span>
-        <span class="comment">// keyword names of the keyword args in _kwargs</span>
-        (
-            <span class="comment">// need copied() for &amp;&amp;PyAny -&gt; &amp;PyAny</span>
-            <span class="macro">quote!</span> { <span class="ident">::std::iter::Iterator::copied</span>(<span class="ident">_args</span>.<span class="ident">iter</span>()) },
-            <span class="macro">quote!</span> { <span class="ident">_kwnames</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">kwnames</span><span class="op">|</span> {
-                <span class="kw">use</span> <span class="ident">::std::iter::Iterator</span>;
-                <span class="ident">kwnames</span>.<span class="ident">as_slice</span>().<span class="ident">iter</span>().<span class="ident">copied</span>().<span class="ident">zip</span>(<span class="ident">_kwargs</span>.<span class="ident">iter</span>().<span class="ident">copied</span>())
-            }) },
-        )
+    <span class="kw">let</span> <span class="ident">extract_expression</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">fastcall</span> {
+        <span class="macro">quote!</span> {
+            <span class="ident">DESCRIPTION</span>.<span class="ident">extract_arguments_fastcall</span>(
+                #<span class="ident">py</span>,
+                <span class="ident">_args</span>,
+                <span class="ident">_nargs</span>,
+                <span class="ident">_kwnames</span>,
+                <span class="kw-2">&amp;mut</span> #<span class="ident">args_array</span>
+            )<span class="question-mark">?</span>
+        }
     } <span class="kw">else</span> {
-        <span class="comment">// _args is a &amp;PyTuple, _kwargs is an Option&lt;&amp;PyDict&gt;</span>
-        (
-            <span class="macro">quote!</span> { <span class="ident">_args</span>.<span class="ident">iter</span>() },
-            <span class="macro">quote!</span> { <span class="ident">_kwargs</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">dict</span><span class="op">|</span> <span class="ident">dict</span>.<span class="ident">iter</span>()) },
-        )
+        <span class="macro">quote!</span> {
+            <span class="ident">DESCRIPTION</span>.<span class="ident">extract_arguments_tuple_dict</span>(
+                #<span class="ident">py</span>,
+                <span class="ident">_args</span>,
+                <span class="ident">_kwargs</span>,
+                <span class="kw-2">&amp;mut</span> #<span class="ident">args_array</span>
+            )<span class="question-mark">?</span>
+        }
     };
 
     <span class="comment">// create array of arguments, and then parse</span>
-    <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {{
-            <span class="kw">const</span> <span class="ident">DESCRIPTION</span>: <span class="ident">_pyo3::derive_utils::FunctionDescription</span> <span class="op">=</span> <span class="ident">_pyo3::derive_utils::FunctionDescription</span> {
+    <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {
+            <span class="kw">const</span> <span class="ident">DESCRIPTION</span>: <span class="ident">_pyo3::impl_::extract_argument::FunctionDescription</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::extract_argument::FunctionDescription</span> {
                 <span class="ident">cls_name</span>: #<span class="ident">cls_name</span>,
                 <span class="ident">func_name</span>: <span class="macro">stringify!</span>(#<span class="ident">python_name</span>),
                 <span class="ident">positional_parameter_names</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">positional_parameter_names</span>),<span class="kw-2">*</span>],
@@ -490,17 +485,10 @@
             };
 
             <span class="kw">let</span> <span class="kw-2">mut</span> #<span class="ident">args_array</span> <span class="op">=</span> [<span class="ident">::std::option::Option::None</span>; #<span class="ident">num_params</span>];
-            <span class="kw">let</span> (<span class="ident">_args</span>, <span class="ident">_kwargs</span>) <span class="op">=</span> <span class="ident">DESCRIPTION</span>.<span class="ident">extract_arguments</span>(
-                #<span class="ident">py</span>,
-                #<span class="ident">args_to_extract</span>,
-                #<span class="ident">kwargs_to_extract</span>,
-                <span class="kw-2">&amp;mut</span> #<span class="ident">args_array</span>
-            )<span class="question-mark">?</span>;
+            <span class="kw">let</span> (<span class="ident">_args</span>, <span class="ident">_kwargs</span>) <span class="op">=</span> #<span class="ident">extract_expression</span>;
 
             #(#<span class="ident">param_conversion</span>)<span class="op">*</span>
-
-            #<span class="ident">body</span>
-    }})
+    })
 }
 
 <span class="doccomment">/// Re option_pos: The option slice doesn&#39;t contain the py: Python argument, so the argument</span>
@@ -625,5 +613,5 @@
     };
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (c14569225 2022-01-01)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (8f3238f89 2022-01-02)" ></div>
 </body></html>
