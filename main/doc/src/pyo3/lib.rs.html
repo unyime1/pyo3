@@ -421,6 +421,7 @@
 <span id="419">419</span>
 <span id="420">420</span>
 <span id="421">421</span>
+<span id="422">422</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">specialization</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">feature</span>(<span class="ident">doc_cfg</span>, <span class="ident">doc_auto_cfg</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(
@@ -727,7 +728,6 @@
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> {
     <span class="ident">indoc</span>,    <span class="comment">// Re-exported for py_run</span>
-    <span class="ident">paste</span>,    <span class="comment">// Re-exported for wrap_function</span>
     <span class="ident">unindent</span>, <span class="comment">// Re-exported for py_run</span>
 };
 
@@ -761,7 +761,6 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pycell</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pyclass</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pyclass_init</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pyclass_slots</span>;
 <span class="kw">mod</span> <span class="ident">python</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">type_object</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">types</span>;
@@ -779,8 +778,11 @@
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;macros&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyo3_macros</span>::{<span class="ident">pyclass</span>, <span class="ident">pyfunction</span>, <span class="ident">pymethods</span>, <span class="ident">pymodule</span>, <span class="ident">pyproto</span>, <span class="ident">FromPyObject</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyo3_macros</span>::{
+    <span class="ident">pyclass</span>, <span class="ident">pyfunction</span>, <span class="ident">pymethods</span>, <span class="ident">pymodule</span>, <span class="ident">pyproto</span>, <span class="ident">wrap_pyfunction</span>, <span class="ident">wrap_pymodule</span>, <span class="ident">FromPyObject</span>,
+};
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;macros&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">macros</span>;
 
@@ -843,5 +845,5 @@
     <span class="comment">// such as pyo3_asyncio.</span>
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (f8abed9ed 2021-12-26)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (c14569225 2022-01-01)" ></div>
 </body></html>
