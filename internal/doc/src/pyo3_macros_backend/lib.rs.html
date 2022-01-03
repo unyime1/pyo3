@@ -34,6 +34,8 @@
 <span id="30">30</span>
 <span id="31">31</span>
 <span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="doccomment">//! This crate contains the implementation of the proc macro attributes</span>
 
@@ -58,14 +60,16 @@
 <span class="kw">mod</span> <span class="ident">pyimpl</span>;
 <span class="kw">mod</span> <span class="ident">pymethod</span>;
 <span class="kw">mod</span> <span class="ident">pyproto</span>;
+<span class="kw">mod</span> <span class="ident">wrap</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">frompyobject::build_derive_from_pyobject</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">module</span>::{<span class="ident">process_functions_in_module</span>, <span class="ident">py_init</span>, <span class="ident">PyModuleOptions</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">module</span>::{<span class="ident">process_functions_in_module</span>, <span class="ident">pymodule_impl</span>, <span class="ident">PyModuleOptions</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyclass</span>::{<span class="ident">build_py_class</span>, <span class="ident">build_py_enum</span>, <span class="ident">PyClassArgs</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyfunction</span>::{<span class="ident">build_py_function</span>, <span class="ident">PyFunctionOptions</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyimpl</span>::{<span class="ident">build_py_methods</span>, <span class="ident">PyClassMethodsType</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyproto::build_py_proto</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">utils::get_doc</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">wrap</span>::{<span class="ident">wrap_pyfunction_impl</span>, <span class="ident">wrap_pymodule_impl</span>, <span class="ident">WrapPyFunctionArgs</span>};
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (f8abed9ed 2021-12-26)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (c14569225 2022-01-01)" ></div>
 </body></html>

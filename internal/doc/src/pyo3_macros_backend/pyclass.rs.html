@@ -933,6 +933,25 @@
 <span id="929">929</span>
 <span id="930">930</span>
 <span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
+<span id="950">950</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::attributes</span>::{
@@ -1598,20 +1617,16 @@
         <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cls</span>;
         <span class="kw">let</span> <span class="ident">attr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">attr</span>;
         <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">has_dict</span> {
-            <span class="macro">quote!</span> { <span class="ident">_pyo3::pyclass_slots::PyClassDictSlot</span> }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">has_extends</span> {
-            <span class="macro">quote!</span> { <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BaseType</span> <span class="kw">as</span> <span class="ident">_pyo3::class::impl_::PyClassBaseType</span><span class="op">&gt;</span><span class="ident">::Dict</span> }
+            <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::pyclass::PyClassDictSlot</span> }
         } <span class="kw">else</span> {
-            <span class="macro">quote!</span> { <span class="ident">_pyo3::pyclass_slots::PyClassDummySlot</span> }
+            <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::pyclass::PyClassDummySlot</span> }
         };
 
         <span class="comment">// insert space for weak ref</span>
         <span class="kw">let</span> <span class="ident">weakref</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">has_weaklist</span> {
-            <span class="macro">quote!</span> { <span class="ident">_pyo3::pyclass_slots::PyClassWeakRefSlot</span> }
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">has_extends</span> {
-            <span class="macro">quote!</span> { <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BaseType</span> <span class="kw">as</span> <span class="ident">_pyo3::class::impl_::PyClassBaseType</span><span class="op">&gt;</span><span class="ident">::WeakRef</span> }
+            <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::pyclass::PyClassWeakRefSlot</span> }
         } <span class="kw">else</span> {
-            <span class="macro">quote!</span> { <span class="ident">_pyo3::pyclass_slots::PyClassDummySlot</span> }
+            <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::pyclass::PyClassDummySlot</span> }
         };
 
         <span class="kw">let</span> <span class="ident">base_nativetype</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">has_extends</span> {
@@ -1665,6 +1680,27 @@
         <span class="kw">let</span> <span class="ident">is_basetype</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">is_basetype</span>;
         <span class="kw">let</span> <span class="ident">base</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">base</span>;
         <span class="kw">let</span> <span class="ident">is_subclass</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">has_extends</span>;
+
+        <span class="kw">let</span> <span class="ident">dict_offset</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">has_dict</span> {
+            <span class="macro">quote!</span> {
+                <span class="kw">fn</span> <span class="ident">dict_offset</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::Py_ssize_t</span><span class="op">&gt;</span> {
+                    <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::impl_::pyclass::dict_offset</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>())
+                }
+            }
+        } <span class="kw">else</span> {
+            <span class="ident">TokenStream::new</span>()
+        };
+
+        <span class="comment">// insert space for weak ref</span>
+        <span class="kw">let</span> <span class="ident">weaklist_offset</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">has_weaklist</span> {
+            <span class="macro">quote!</span> {
+                <span class="kw">fn</span> <span class="ident">weaklist_offset</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::Py_ssize_t</span><span class="op">&gt;</span> {
+                    <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::impl_::pyclass::weaklist_offset</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>())
+                }
+            }
+        } <span class="kw">else</span> {
+            <span class="ident">TokenStream::new</span>()
+        };
 
         <span class="kw">let</span> <span class="ident">thread_checker</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">has_unsendable</span> {
             <span class="macro">quote!</span> { <span class="ident">_pyo3::class::impl_::ThreadCheckerImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> }
@@ -1770,6 +1806,8 @@
                     <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
                     <span class="ident">collector</span>.<span class="ident">buffer_procs</span>()
                 }
+                #<span class="ident">dict_offset</span>
+                #<span class="ident">weaklist_offset</span>
             }
 
             #<span class="ident">inventory_class</span>
@@ -1865,5 +1903,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (f8abed9ed 2021-12-26)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (c14569225 2022-01-01)" ></div>
 </body></html>
