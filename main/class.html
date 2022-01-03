@@ -1020,12 +1020,6 @@ impl pyo3::class::impl_::PyClassImpl for MyClass {
         visitor(collector.buffer_protocol_slots());
         visitor(collector.methods_protocol_slots());
     }
-
-    fn get_buffer() -&gt; Option&lt;&amp;'static pyo3::class::impl_::PyBufferProcs&gt; {
-        use pyo3::class::impl_::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.buffer_procs()
-    }
 }
 <span class="boring">Python::with_gil(|py| {
 </span><span class="boring">    let cls = py.get_type::&lt;MyClass&gt;();

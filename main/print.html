@@ -1682,12 +1682,6 @@ impl pyo3::class::impl_::PyClassImpl for MyClass {
         visitor(collector.buffer_protocol_slots());
         visitor(collector.methods_protocol_slots());
     }
-
-    fn get_buffer() -&gt; Option&lt;&amp;'static pyo3::class::impl_::PyBufferProcs&gt; {
-        use pyo3::class::impl_::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.buffer_procs()
-    }
 }
 <span class="boring">Python::with_gil(|py| {
 </span><span class="boring">    let cls = py.get_type::&lt;MyClass&gt;();
@@ -1894,7 +1888,10 @@ impl NoContains {
 <li><code>__rpow__(&lt;self&gt;, object, object) -&gt; object</code></li>
 </ul>
 <h4 id="buffer-objects"><a class="header" href="#buffer-objects">Buffer objects</a></h4>
-<p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
+<ul>
+<li><code>__getbuffer__(&lt;self&gt;, *mut ffi::Py_buffer, flags) -&gt; ()</code></li>
+<li><code>__releasebuffer__(&lt;self&gt;, *mut ffi::Py_buffer)</code> (no return value, not even <code>PyResult</code>)</li>
+</ul>
 <h4 id="garbage-collector-integration"><a class="header" href="#garbage-collector-integration">Garbage Collector Integration</a></h4>
 <p>TODO; see <a href="https://github.com/PyO3/pyo3/issues/1884">#1884</a></p>
 <h3 id="pyproto-traits"><a class="header" href="#pyproto-traits"><code>#[pyproto]</code> traits</a></h3>
@@ -6204,6 +6201,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>All PyO3 proc-macros except the deprecated <code>#[pyproto]</code> now accept a supplemental attribute <code>#[pyo3(crate = &quot;some::path&quot;)]</code> that specifies
 where to find the <code>pyo3</code> crate, in case it has been renamed or is re-exported and not found at the crate root. <a href="https://github.com/PyO3/pyo3/pull/2022">#2022</a></li>
 <li>Expose <code>pyo3-build-config</code> APIs for cross-compiling and Python configuration discovery for use in other projects. <a href="https://github.com/PyO3/pyo3/pull/1996">#1996</a></li>
+<li>Add buffer magic methods <code>__getbuffer__</code> and <code>__releasebuffer__</code> to <code>#[pymethods]</code>. <a href="https://github.com/PyO3/pyo3/pull/2067">#2067</a></li>
 <li>Accept paths in <code>wrap_pyfunction</code> and <code>wrap_pymodule</code>. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
