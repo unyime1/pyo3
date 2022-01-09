@@ -771,6 +771,19 @@
 <span id="767">767</span>
 <span id="768">768</span>
 <span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Python Number Interface</span>
@@ -994,7 +1007,7 @@
     {
         <span class="macro">unimplemented!</span>()
     }
-    <span class="kw">fn</span> <span class="ident">__ipow__</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="ident"><span class="self">Self</span>::Other</span>) -&gt; <span class="ident"><span class="self">Self</span>::Result</span>
+    <span class="kw">fn</span> <span class="ident">__ipow__</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;p</span> <span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="ident"><span class="self">Self</span>::Other</span>, <span class="ident">modulo</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Modulo</span><span class="op">&gt;</span>) -&gt; <span class="ident"><span class="self">Self</span>::Result</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">PyNumberIPowProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
     {
@@ -1277,6 +1290,8 @@
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">PyNumberIPowProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>: <span class="ident">PyNumberProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Other</span>: <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="prelude-ty">Result</span>: <span class="ident">IntoPyCallbackOutput</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="comment">// See https://bugs.python.org/issue36379</span>
+    <span class="kw">type</span> <span class="ident">Modulo</span>: <span class="ident">FromPyObject</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
@@ -1491,17 +1506,28 @@
 <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">ipow</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
     <span class="ident">slf</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>,
     <span class="ident">other</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>,
-    <span class="ident">_modulo</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>,
+    <span class="ident">modulo</span>: <span class="ident"><span class="kw">crate</span>::impl_::pymethods::IPowModulo</span>,
 ) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span> <span class="ident">PyNumberIPowProtocol</span><span class="op">&lt;</span><span class="lifetime">&#39;p</span><span class="op">&gt;</span>,
 {
-    <span class="comment">// NOTE: Somehow __ipow__ causes SIGSEGV in Python &lt; 3.8 when we extract,</span>
-    <span class="comment">// so we ignore it. It&#39;s the same as what CPython does.</span>
     <span class="macro">crate::callback_body!</span>(<span class="ident">py</span>, {
         <span class="kw">let</span> <span class="ident">slf_cell</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::PyCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">slf</span>);
         <span class="kw">let</span> <span class="ident">other</span> <span class="op">=</span> <span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident"><span class="kw">crate</span>::PyAny</span><span class="op">&gt;</span>(<span class="ident">other</span>);
-        <span class="macro">call_operator_mut!</span>(<span class="ident">py</span>, <span class="ident">slf_cell</span>, <span class="ident">__ipow__</span>, <span class="ident">other</span>).<span class="ident">convert</span>(<span class="ident">py</span>)<span class="question-mark">?</span>;
+        <span class="ident">slf_cell</span>
+            .<span class="ident">try_borrow_mut</span>()<span class="question-mark">?</span>
+            .<span class="ident">__ipow__</span>(
+                <span class="macro">extract_or_return_not_implemented!</span>(<span class="ident">other</span>),
+                <span class="kw">match</span> <span class="ident">modulo</span>.<span class="ident">extract</span>(<span class="ident">py</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">value</span>) =&gt; <span class="ident">value</span>,
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {
+                        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::ffi::Py_NotImplemented</span>();
+                        <span class="ident"><span class="kw">crate</span>::ffi::Py_INCREF</span>(<span class="ident">res</span>);
+                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">res</span>);
+                    }
+                },
+            )
+            .<span class="ident">convert</span>(<span class="ident">py</span>)<span class="question-mark">?</span>;
         <span class="ident">ffi::Py_INCREF</span>(<span class="ident">slf</span>);
         <span class="prelude-val">Ok</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">PyErr</span><span class="op">&gt;</span>(<span class="ident">slf</span>)
     })
@@ -1541,5 +1567,5 @@
 <span class="macro">py_binary_reversed_num_func!</span>(<span class="ident">rmatmul</span>, <span class="ident">PyNumberRMatmulProtocol</span>, <span class="ident">T::__rmatmul__</span>);
 <span class="macro">py_binary_self_func!</span>(<span class="ident">imatmul</span>, <span class="ident">PyNumberIMatmulProtocol</span>, <span class="ident">T::__imatmul__</span>);
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (8f3238f89 2022-01-02)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (a7e2e3396 2022-01-08)" ></div>
 </body></html>

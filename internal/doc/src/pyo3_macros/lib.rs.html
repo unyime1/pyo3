@@ -282,6 +282,12 @@
 <span id="278">278</span>
 <span id="279">279</span>
 <span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="doccomment">//! This crate declares only the proc macro attributes, as a crate defining proc macro attributes</span>
 <span class="doccomment">//! must not contain any other public items.</span>
@@ -450,7 +456,8 @@
 
 <span class="doccomment">/// A proc macro used to expose Rust functions to Python.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Functions annotated with `#[pyfunction]` can also be annotated with the following `#[pyo3]` options:</span>
+<span class="doccomment">/// Functions annotated with `#[pyfunction]` can also be annotated with the following `#[pyo3]`</span>
+<span class="doccomment">/// options:</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// |  Annotation  |  Description |</span>
 <span class="doccomment">/// | :-  | :- |</span>
@@ -459,6 +466,11 @@
 <span class="doccomment">/// | `#[pyo3(pass_module)]` | Passes the module containing the function as a `&amp;PyModule` first argument to the function. |</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// For more on exposing functions see the [function section of the guide][1].</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Due to technical limitations on how `#[pyfunction]` is implemented, a function marked</span>
+<span class="doccomment">/// `#[pyfunction]` cannot have a module with the same name in the same scope. (The</span>
+<span class="doccomment">/// `#[pyfunction]` implementation generates a hidden module with the same name containing</span>
+<span class="doccomment">/// metadata about the function, which is used by `wrap_pyfunction!`).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [1]: https://pyo3.rs/latest/function.html</span>
 <span class="attribute">#[<span class="ident">proc_macro_attribute</span>]</span>
@@ -492,7 +504,7 @@
 <span class="attribute">#[<span class="ident">proc_macro</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_pyfunction</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
     <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">WrapPyFunctionArgs</span>);
-    <span class="ident">wrap_pyfunction_impl</span>(<span class="ident">args</span>).<span class="ident">unwrap_or_compile_error</span>().<span class="ident">into</span>()
+    <span class="ident">wrap_pyfunction_impl</span>(<span class="ident">args</span>).<span class="ident">into</span>()
 }
 
 <span class="doccomment">/// Returns a function that takes a `Python` instance and returns a Python module.</span>
@@ -563,5 +575,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (8f3238f89 2022-01-02)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (a7e2e3396 2022-01-08)" ></div>
 </body></html>
