@@ -446,7 +446,8 @@ signature, or raise a TypeError.</p>
 <li><code>fn __itruediv__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __ifloordiv__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __imod__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
-<li><code>fn __ipow__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __ipow__(&amp;'p mut self, other: impl FromPyObject, modulo: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code> on Python 3.8^</li>
+<li><code>fn __ipow__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code> on Python 3.7 see https://bugs.python.org/issue36379</li>
 <li><code>fn __ilshift__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __irshift__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __iand__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>

@@ -1993,7 +1993,8 @@ signature, or raise a TypeError.</p>
 <li><code>fn __itruediv__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __ifloordiv__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __imod__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
-<li><code>fn __ipow__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
+<li><code>fn __ipow__(&amp;'p mut self, other: impl FromPyObject, modulo: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code> on Python 3.8^</li>
+<li><code>fn __ipow__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code> on Python 3.7 see https://bugs.python.org/issue36379</li>
 <li><code>fn __ilshift__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __irshift__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
 <li><code>fn __iand__(&amp;'p mut self, other: impl FromPyObject) -&gt; PyResult&lt;()&gt;</code></li>
@@ -6203,6 +6204,8 @@ where to find the <code>pyo3</code> crate, in case it has been renamed or is re-
 <li>Expose <code>pyo3-build-config</code> APIs for cross-compiling and Python configuration discovery for use in other projects. <a href="https://github.com/PyO3/pyo3/pull/1996">#1996</a></li>
 <li>Add buffer magic methods <code>__getbuffer__</code> and <code>__releasebuffer__</code> to <code>#[pymethods]</code>. <a href="https://github.com/PyO3/pyo3/pull/2067">#2067</a></li>
 <li>Accept paths in <code>wrap_pyfunction</code> and <code>wrap_pymodule</code>. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
+<li>Add check for correct number of arguments on magic methods. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
+<li><code>wrap_pyfunction!</code> can now wrap a <code>#[pyfunction]</code> which is implemented in a different Rust module or crate. <a href="https://github.com/PyO3/pyo3/pull/2091">#2091</a></li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
@@ -6229,6 +6232,8 @@ accompanies your error type in your crate's documentation.</li>
 <li><code>#[pyclass]</code> type object creation <a href="https://github.com/PyO3/pyo3/pull/2076">#2076</a> <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
 </ul>
 </li>
+<li><code>__ipow__</code> now supports modulo argument on Python 3.8+. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
+<li><code>pyo3-macros-backend</code> is now compiled with PyO3 cfgs to enable different magic method definitions based on version. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
