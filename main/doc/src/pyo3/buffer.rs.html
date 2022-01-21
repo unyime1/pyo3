@@ -728,8 +728,6 @@
 <span id="722">722</span>
 <span id="723">723</span>
 <span id="724">724</span>
-<span id="725">725</span>
-<span id="726">726</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
 <span class="comment">// Copyright (c) 2017 Daniel Grunwald</span>
 <span class="comment">//</span>
@@ -766,7 +764,6 @@
 
 <span class="comment">// PyBuffer is thread-safe: the shape of the buffer is immutable while a Py_buffer exists.</span>
 <span class="comment">// Accessing the buffer contents is protected using the GIL.</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::non_send_fields_in_send_ty</span>)]</span>
 <span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">PyBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 <span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">PyBuffer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 
@@ -1421,7 +1418,6 @@
         });
     }
 
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::float_cmp</span>)]</span> <span class="comment">// The test wants to ensure that no precision was lost on the Python round-trip</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_array_buffer</span>() {
         <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
