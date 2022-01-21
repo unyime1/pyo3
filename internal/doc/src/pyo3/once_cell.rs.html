@@ -109,7 +109,6 @@
 <span id="101">101</span>
 <span id="102">102</span>
 <span id="103">103</span>
-<span id="104">104</span>
 </pre><pre class="rust"><code><span class="doccomment">//! A write-once cell mediated by the Python GIL.</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Python</span>;
 <span class="kw">use</span> <span class="ident">std::cell::UnsafeCell</span>;
@@ -140,7 +139,6 @@
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// # Python::with_gil(|py| assert_eq!(get_shared_list(py).len(), 0));</span>
 <span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">GILOnceCell</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">UnsafeCell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>);
 
 <span class="comment">// T: Send is needed for Sync because the thread which drops the GILOnceCell can be different</span>

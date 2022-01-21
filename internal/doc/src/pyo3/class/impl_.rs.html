@@ -788,7 +788,6 @@
 <span id="780">780</span>
 <span id="781">781</span>
 <span id="782">782</span>
-<span id="783">783</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -1437,7 +1436,6 @@
 
 <span class="macro">macro_rules!</span> <span class="ident">slots_trait</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">function_name</span>: <span class="ident">ident</span>) =&gt; {
-        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::upper_case_acronyms</span>)]</span>
         <span class="kw">pub</span> <span class="kw">trait</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
             <span class="kw">fn</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">function_name</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">ffi::PyType_Slot</span>];
         }
