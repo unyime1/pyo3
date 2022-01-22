@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["pyo3","pyo3_build_config"];
+window.ALL_CRATES = ["_pyo3_benchmarks","pyo3","pyo3_build_config","pyo3_pytests"];
