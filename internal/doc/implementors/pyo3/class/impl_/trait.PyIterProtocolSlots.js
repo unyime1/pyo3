@@ -1,3 +1,4 @@
 (function() {var implementors = {};
 implementors["pyo3"] = [];
+implementors["pyo3_pytests"] = [{"text":"impl PyIterProtocolSlots&lt;<a class=\"struct\" href=\"pyo3_pytests/pyclass_iter/struct.PyClassIter.html\" title=\"struct pyo3_pytests::pyclass_iter::PyClassIter\">PyClassIter</a>&gt; for PyClassImplCollector&lt;<a class=\"struct\" href=\"pyo3_pytests/pyclass_iter/struct.PyClassIter.html\" title=\"struct pyo3_pytests::pyclass_iter::PyClassIter\">PyClassIter</a>&gt;","synthetic":false,"types":["pyo3::class::impl_::PyClassImplCollector"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
