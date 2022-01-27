@@ -3342,21 +3342,21 @@ another you must preserve correct order while declaring <code>PyModule</code>.</
 <pre><code class="language-text">.
 ├── Cargo.lock
 ├── Cargo.toml
-├── python
+├── python_app
 │   ├── app.py
 │   └── utils
 │       └── foo.py
 └── src
     └── main.rs
 </code></pre>
-<p><code>python/app.py</code>:</p>
+<p><code>python_app/app.py</code>:</p>
 <pre><code class="language-python">from utils.foo import bar
 
 
 def run():
     return bar()
 </code></pre>
-<p><code>python/utils/foo.py</code>:</p>
+<p><code>python_app/utils/foo.py</code>:</p>
 <pre><code class="language-python">def bar():
     return &quot;baz&quot;
 </code></pre>
@@ -3370,8 +3370,8 @@ imported from <code>utils/foo.py</code></li>
 <pre><code class="language-ignore">use pyo3::prelude::*;
 
 fn main() -&gt; PyResult&lt;()&gt; {
-    let py_foo = include_str!(&quot;../python/utils/foo.py&quot;);
-    let py_app = include_str!(&quot;../python/app.py&quot;);
+    let py_foo = include_str!(concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/python_app/utils/foo.py&quot;));
+    let py_app = include_str!(concat!(env!(&quot;CARGO_MANIFEST_DIR&quot;), &quot;/python_app/app.py&quot;));
     let from_python = Python::with_gil(|py| -&gt; PyResult&lt;Py&lt;PyAny&gt;&gt; {
         PyModule::from_code(py, py_foo, &quot;utils.foo&quot;, &quot;utils.foo&quot;)?;
         let app: Py&lt;PyAny&gt; = PyModule::from_code(py, py_app, &quot;&quot;, &quot;&quot;)?
@@ -3386,21 +3386,26 @@ fn main() -&gt; PyResult&lt;()&gt; {
 </code></pre>
 <p>The example below shows:</p>
 <ul>
-<li>how to load content of <code>app.py</code> and <code>utils/foo.py</code> at runtime</li>
+<li>how to load content of <code>app.py</code> at runtime so that it sees its dependencies
+automatically</li>
 <li>how to call function <code>run()</code> (declared in <code>app.py</code>) that needs function
 imported from <code>utils/foo.py</code></li>
 </ul>
-<p>It is recommended to use an absolute path to your Python files because then
-your binary can be run from anywhere.</p>
+<p>It is recommended to use absolute paths because then your binary can be run
+from anywhere as long as your <code>app.py</code> is in the expected directory (in this example
+that directory is <code>/usr/share/python_app</code>).</p>
 <p><code>src/main.rs</code>:</p>
-<pre><code class="language-ignore">use std::fs;
-use pyo3::prelude::*;
+<pre><code class="language-ignore">use pyo3::prelude::*;
+use pyo3::types::PyList;
+use std::fs;
+use std::path::Path;
 
 fn main() -&gt; PyResult&lt;()&gt; {
-    let py_foo = fs::read_to_string(&quot;/some/absolute/path/to/python/utils/foo.py&quot;)?;
-    let py_app = fs::read_to_string(&quot;/some/absolute/path/to/python/app.py&quot;)?;
+    let path = Path::new(&quot;/usr/share/python_app&quot;);
+    let py_app = fs::read_to_string(path.join(&quot;app.py&quot;))?;
     let from_python = Python::with_gil(|py| -&gt; PyResult&lt;Py&lt;PyAny&gt;&gt; {
-        PyModule::from_code(py, &amp;py_foo, &quot;utils.foo&quot;, &quot;utils.foo&quot;)?;
+        let syspath: &amp;PyList = py.import(&quot;sys&quot;)?.getattr(&quot;path&quot;)?.downcast::&lt;PyList&gt;()?;
+        syspath.insert(0, &amp;path)?;
         let app: Py&lt;PyAny&gt; = PyModule::from_code(py, &amp;py_app, &quot;&quot;, &quot;&quot;)?
             .getattr(&quot;run&quot;)?
             .into();
@@ -6329,6 +6334,7 @@ accompanies your error type in your crate's documentation.</li>
 <li>Fix undefined behavior in <code>PySlice::indices</code>. <a href="https://github.com/PyO3/pyo3/pull/2061">#2061</a></li>
 <li>Use the Rust function path for <code>wrap_pymodule!</code> of a <code>#[pymodule]</code> with a <code>#[pyo3(name = &quot;..&quot;)]</code> attribute, not the Python name. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
 <li>Fix panic in <code>#[pyfunction]</code> generated code when a required argument following an <code>Option</code> was not provided.  <a href="https://github.com/PyO3/pyo3/pull/2093">#2093</a></li>
+<li>Fixed undefined behaviour caused by incorrect <code>ExactSizeIterator</code> implementations. <a href="https://github.com/PyO3/pyo3/pull/2124">#2124</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a href="https://github.com/pyo3/pyo3/compare/v0.15.0...v0.15.1">0.15.1</a> - 2021-11-19</a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
