@@ -157,6 +157,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><code>pyo3-build-config</code> no longer enables the <code>resolve-config</code> feature by default. <a href="https://github.com/PyO3/pyo3/pull/2008">#2008</a></li>
 <li>Update <code>inventory</code> optional dependency to 0.2. <a href="https://github.com/PyO3/pyo3/pull/2019">#2019</a></li>
 <li>Drop <code>paste</code> dependency. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
+<li>The bindings found <code>pyo3::ffi</code> are now a re-export of the new <code>pyo3-ffi</code> crate. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
 </ul>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
 <ul>
@@ -197,6 +198,25 @@ accompanies your error type in your crate's documentation.</li>
 </li>
 <li><code>__ipow__</code> now supports modulo argument on Python 3.8+. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
 <li><code>pyo3-macros-backend</code> is now compiled with PyO3 cfgs to enable different magic method definitions based on version. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
+<li><code>_PyCFunctionFast</code> now correctly reflects the signature defined in the <a href="https://docs.python.org/3/c-api/structures.html#c._PyCFunctionFast">Python docs</a>. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
+<li><code>PyDateTimeAPI</code> and <code>PyDateTime_TimeZone_UTC</code> are are now unsafe functions instead of statics. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
+<li><code>PyDateTimeAPI</code> does not implicitly call <code>PyDateTime_IMPORT</code> anymore to reflect the original Python API more closely. Before the first call to <code>PyDateTime_IMPORT</code> a null pointer is returned. Therefore before calling any of the following FFI functions <code>PyDateTime_IMPORT</code> must be called to avoid undefined behaviour: <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a>
+<ul>
+<li><code>PyDateTime_TimeZone_UTC</code></li>
+<li><code>PyDate_Check</code></li>
+<li><code>PyDate_CheckExact</code></li>
+<li><code>PyDateTime_Check</code></li>
+<li><code>PyDateTime_CheckExact</code></li>
+<li><code>PyTime_Check</code></li>
+<li><code>PyTime_CheckExact</code></li>
+<li><code>PyDelta_Check</code></li>
+<li><code>PyDelta_CheckExact</code></li>
+<li><code>PyTZInfo_Check</code></li>
+<li><code>PyTZInfo_CheckExact</code></li>
+<li><code>PyDateTime_FromTimestamp</code></li>
+<li><code>PyDate_FromTimestamp</code></li>
+</ul>
+</li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
