@@ -334,6 +334,8 @@
 <span id="327">327</span>
 <span id="328">328</span>
 <span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
@@ -629,6 +631,8 @@
     );
     <span class="macro">try_add_shared_slot!</span>(<span class="string">&quot;__pow__&quot;</span>, <span class="string">&quot;__rpow__&quot;</span>, <span class="ident">generate_pyclass_pow_slot</span>);
 
+    <span class="comment">// if this assertion trips, a slot fragment has been implemented which has not been added in the</span>
+    <span class="comment">// list above</span>
     <span class="macro">assert!</span>(<span class="ident">implemented_proto_fragments</span>.<span class="ident">is_empty</span>());
 }
 
