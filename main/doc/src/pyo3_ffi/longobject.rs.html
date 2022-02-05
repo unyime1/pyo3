@@ -235,7 +235,7 @@
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
     <span class="comment">// skipped non-limited _PyLong_Sign</span>
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;_PyPyLong_NumBits&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">_PyLong_NumBits</span>(<span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>) -&gt; <span class="ident">c_int</span>;
 
     <span class="comment">// skipped _PyLong_DivmodNear</span>
@@ -248,7 +248,7 @@
         <span class="ident">is_signed</span>: <span class="ident">c_int</span>,
     ) -&gt; <span class="kw-2">*mut</span> <span class="ident">PyObject</span>;
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;_PyPyLong_AsByteArrayO&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">_PyLong_AsByteArray</span>(
         <span class="ident">v</span>: <span class="kw-2">*mut</span> <span class="ident">PyLongObject</span>,
         <span class="ident">bytes</span>: <span class="kw-2">*mut</span> <span class="ident">c_uchar</span>,

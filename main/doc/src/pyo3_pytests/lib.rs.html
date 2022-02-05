@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `pytests/pyo3-pytests/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../scrape-examples.js"></script><script defer src="../../source-files.js"></script>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `pytests/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../scrape-examples.js"></script><script defer src="../../source-files.js"></script>
     <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pyo3_pytests/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
         </a><h2 class="location"></h2>
     </nav>
@@ -48,6 +48,9 @@
 <span id="43">43</span>
 <span id="44">44</span>
 <span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::PyDict</span>;
 <span class="kw">use</span> <span class="ident">pyo3::wrap_pymodule</span>;
@@ -59,7 +62,8 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">objstore</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">othermod</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">path</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pyclass_iter</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pyclasses</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pyfunctions</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">subclassing</span>;
 
 <span class="attribute">#[<span class="ident">pymodule</span>]</span>
@@ -73,7 +77,8 @@
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule!</span>(<span class="ident">objstore::objstore</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule!</span>(<span class="ident">othermod::othermod</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule!</span>(<span class="ident">path::path</span>))<span class="question-mark">?</span>;
-    <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule!</span>(<span class="ident">pyclass_iter::pyclass_iter</span>))<span class="question-mark">?</span>;
+    <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule!</span>(<span class="ident">pyclasses::pyclasses</span>))<span class="question-mark">?</span>;
+    <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule!</span>(<span class="ident">pyfunctions::pyfunctions</span>))<span class="question-mark">?</span>;
     <span class="ident">m</span>.<span class="ident">add_wrapped</span>(<span class="macro">wrap_pymodule!</span>(<span class="ident">subclassing::subclassing</span>))<span class="question-mark">?</span>;
 
     <span class="comment">// Inserting to sys.modules allows importing submodules nicely from Python</span>
@@ -88,7 +93,8 @@
     <span class="ident">sys_modules</span>.<span class="ident">set_item</span>(<span class="string">&quot;pyo3_pytests.objstore&quot;</span>, <span class="ident">m</span>.<span class="ident">getattr</span>(<span class="string">&quot;objstore&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
     <span class="ident">sys_modules</span>.<span class="ident">set_item</span>(<span class="string">&quot;pyo3_pytests.othermod&quot;</span>, <span class="ident">m</span>.<span class="ident">getattr</span>(<span class="string">&quot;othermod&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
     <span class="ident">sys_modules</span>.<span class="ident">set_item</span>(<span class="string">&quot;pyo3_pytests.path&quot;</span>, <span class="ident">m</span>.<span class="ident">getattr</span>(<span class="string">&quot;path&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-    <span class="ident">sys_modules</span>.<span class="ident">set_item</span>(<span class="string">&quot;pyo3_pytests.pyclass_iter&quot;</span>, <span class="ident">m</span>.<span class="ident">getattr</span>(<span class="string">&quot;pyclass_iter&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+    <span class="ident">sys_modules</span>.<span class="ident">set_item</span>(<span class="string">&quot;pyo3_pytests.pyclasses&quot;</span>, <span class="ident">m</span>.<span class="ident">getattr</span>(<span class="string">&quot;pyclasses&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+    <span class="ident">sys_modules</span>.<span class="ident">set_item</span>(<span class="string">&quot;pyo3_pytests.pyfunctions&quot;</span>, <span class="ident">m</span>.<span class="ident">getattr</span>(<span class="string">&quot;pyfunctions&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
     <span class="ident">sys_modules</span>.<span class="ident">set_item</span>(<span class="string">&quot;pyo3_pytests.subclassing&quot;</span>, <span class="ident">m</span>.<span class="ident">getattr</span>(<span class="string">&quot;subclassing&quot;</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
