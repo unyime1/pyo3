@@ -188,6 +188,7 @@ where to find the <code>pyo3</code> crate, in case it has been renamed or is re-
 <li><code>PyErr::new_type</code> now takes an optional docstring and now returns <code>PyResult&lt;Py&lt;PyType&gt;&gt;</code> rather than a <code>ffi::PyTypeObject</code> pointer.</li>
 <li>The <code>create_exception!</code> macro can now take an optional docstring. This docstring, if supplied, is visible to users (with <code>.__doc__</code> and <code>help()</code>) and
 accompanies your error type in your crate's documentation.</li>
+<li><code>__getitem__</code>, <code>__setitem__</code> and <code>__delitem__</code> in <code>#[pymethods]</code> now implement both a Python mapping and sequence by default. <a href="https://github.com/PyO3/pyo3/pull/2065">#2065</a></li>
 <li>Improve performance and error messages for <code>#[derive(FromPyObject)]</code> for enums. <a href="https://github.com/PyO3/pyo3/pull/2068">#2068</a></li>
 <li>Reduce generated LLVM code size (to improve compile times) for:
 <ul>

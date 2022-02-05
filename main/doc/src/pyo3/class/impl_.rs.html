@@ -785,6 +785,42 @@
 <span id="780">780</span>
 <span id="781">781</span>
 <span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -796,7 +832,12 @@
     <span class="ident">type_object</span>::{<span class="ident">PyLayout</span>, <span class="ident">PyTypeObject</span>},
     <span class="ident">PyClass</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyNativeType</span>, <span class="ident">PyResult</span>, <span class="ident">PyTypeInfo</span>, <span class="ident">Python</span>,
 };
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">os::raw::c_void</span>, <span class="ident">ptr::NonNull</span>, <span class="ident">thread</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">marker::PhantomData</span>,
+    <span class="ident">os::raw</span>::{<span class="ident">c_int</span>, <span class="ident">c_void</span>},
+    <span class="ident">ptr::NonNull</span>,
+    <span class="ident">thread</span>,
+};
 
 <span class="doccomment">/// This type is used as a &quot;dummy&quot; type on which dtolnay specializations are</span>
 <span class="doccomment">/// applied to apply implementations from `#[pymethods]` &amp; `#[pyproto]`</span>
@@ -1566,6 +1607,37 @@
 <span class="doccomment">/// Implementation of tp_dealloc for all pyclasses</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">tp_dealloc</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">PyClass</span><span class="op">&gt;</span>(<span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>) {
     <span class="macro">crate::callback_body!</span>(<span class="ident">py</span>, <span class="ident">T::Layout::tp_dealloc</span>(<span class="ident">obj</span>, <span class="ident">py</span>))
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">get_sequence_item_from_mapping</span>(
+    <span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>,
+    <span class="ident">index</span>: <span class="ident">ffi::Py_ssize_t</span>,
+) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span> {
+    <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">ffi::PyLong_FromSsize_t</span>(<span class="ident">index</span>);
+    <span class="kw">if</span> <span class="ident">index</span>.<span class="ident">is_null</span>() {
+        <span class="kw">return</span> <span class="ident">std::ptr::null_mut</span>();
+    }
+    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">ffi::PyObject_GetItem</span>(<span class="ident">obj</span>, <span class="ident">index</span>);
+    <span class="ident">ffi::Py_DECREF</span>(<span class="ident">index</span>);
+    <span class="ident">result</span>
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">assign_sequence_item_from_mapping</span>(
+    <span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>,
+    <span class="ident">index</span>: <span class="ident">ffi::Py_ssize_t</span>,
+    <span class="ident">value</span>: <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span>,
+) -&gt; <span class="ident">c_int</span> {
+    <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">ffi::PyLong_FromSsize_t</span>(<span class="ident">index</span>);
+    <span class="kw">if</span> <span class="ident">index</span>.<span class="ident">is_null</span>() {
+        <span class="kw">return</span> <span class="op">-</span><span class="number">1</span>;
+    }
+    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">is_null</span>() {
+        <span class="ident">ffi::PyObject_DelItem</span>(<span class="ident">obj</span>, <span class="ident">index</span>)
+    } <span class="kw">else</span> {
+        <span class="ident">ffi::PyObject_SetItem</span>(<span class="ident">obj</span>, <span class="ident">index</span>, <span class="ident">value</span>)
+    };
+    <span class="ident">ffi::Py_DECREF</span>(<span class="ident">index</span>);
+    <span class="ident">result</span>
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (71226d717 2022-02-04)" ></div>
