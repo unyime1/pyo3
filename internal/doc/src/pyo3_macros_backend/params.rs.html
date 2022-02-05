@@ -303,6 +303,32 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -375,7 +401,7 @@
             <span class="ident">arg_convert</span>.<span class="ident">push</span>(<span class="ident">impl_arg_param</span>(<span class="ident">arg</span>, <span class="ident">spec</span>, <span class="ident">i</span>, <span class="prelude-val">None</span>, <span class="kw-2">&amp;mut</span> <span class="number">0</span>, <span class="ident">py</span>, <span class="kw-2">&amp;</span><span class="ident">args_array</span>)<span class="question-mark">?</span>);
         }
         <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {
-            <span class="kw">let</span> <span class="ident">_args</span> <span class="op">=</span> <span class="ident">::std::option::Option::Some</span>(#<span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">_pyo3::types::PyTuple</span><span class="op">&gt;</span>(<span class="ident">_args</span>));
+            <span class="kw">let</span> <span class="ident">_args</span> <span class="op">=</span> #<span class="ident">py</span>.<span class="ident">from_borrowed_ptr</span>::<span class="op">&lt;</span><span class="ident">_pyo3::types::PyTuple</span><span class="op">&gt;</span>(<span class="ident">_args</span>);
             <span class="kw">let</span> <span class="ident">_kwargs</span>: <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">_pyo3::types::PyDict</span><span class="op">&gt;</span> <span class="op">=</span> #<span class="ident">py</span>.<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">_kwargs</span>);
             #(#<span class="ident">arg_convert</span>)<span class="op">*</span>
         });
@@ -431,6 +457,16 @@
     }
 
     <span class="kw">let</span> (<span class="ident">accept_args</span>, <span class="ident">accept_kwargs</span>) <span class="op">=</span> <span class="ident">accept_args_kwargs</span>(<span class="kw-2">&amp;</span><span class="ident">spec</span>.<span class="ident">attrs</span>);
+    <span class="kw">let</span> <span class="ident">args_handler</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">accept_args</span> {
+        <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::extract_argument::TupleVarargs</span> }
+    } <span class="kw">else</span> {
+        <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::extract_argument::NoVarargs</span> }
+    };
+    <span class="kw">let</span> <span class="ident">kwargs_handler</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">accept_kwargs</span> {
+        <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::extract_argument::DictVarkeywords</span> }
+    } <span class="kw">else</span> {
+        <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::extract_argument::NoVarkeywords</span> }
+    };
 
     <span class="kw">let</span> <span class="ident">cls_name</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">cls</span>) <span class="op">=</span> <span class="ident">self_</span> {
         <span class="macro">quote!</span> { <span class="ident">::std::option::Option::Some</span>(<span class="op">&lt;</span>#<span class="ident">cls</span> <span class="kw">as</span> <span class="ident">_pyo3::type_object::PyTypeInfo</span><span class="op">&gt;</span><span class="ident">::NAME</span>) }
@@ -441,7 +477,7 @@
 
     <span class="kw">let</span> <span class="ident">extract_expression</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">fastcall</span> {
         <span class="macro">quote!</span> {
-            <span class="ident">DESCRIPTION</span>.<span class="ident">extract_arguments_fastcall</span>(
+            <span class="ident">DESCRIPTION</span>.<span class="ident">extract_arguments_fastcall</span>::<span class="op">&lt;</span>#<span class="ident">args_handler</span>, #<span class="ident">kwargs_handler</span><span class="op">&gt;</span>(
                 #<span class="ident">py</span>,
                 <span class="ident">_args</span>,
                 <span class="ident">_nargs</span>,
@@ -451,7 +487,7 @@
         }
     } <span class="kw">else</span> {
         <span class="macro">quote!</span> {
-            <span class="ident">DESCRIPTION</span>.<span class="ident">extract_arguments_tuple_dict</span>(
+            <span class="ident">DESCRIPTION</span>.<span class="ident">extract_arguments_tuple_dict</span>::<span class="op">&lt;</span>#<span class="ident">args_handler</span>, #<span class="ident">kwargs_handler</span><span class="op">&gt;</span>(
                 #<span class="ident">py</span>,
                 <span class="ident">_args</span>,
                 <span class="ident">_kwargs</span>,
@@ -469,8 +505,6 @@
                 <span class="ident">positional_only_parameters</span>: #<span class="ident">positional_only_parameters</span>,
                 <span class="ident">required_positional_parameters</span>: #<span class="ident">required_positional_parameters</span>,
                 <span class="ident">keyword_only_parameters</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">keyword_only_parameters</span>),<span class="kw-2">*</span>],
-                <span class="ident">accept_varargs</span>: #<span class="ident">accept_args</span>,
-                <span class="ident">accept_varkeywords</span>: #<span class="ident">accept_kwargs</span>,
             };
 
             <span class="kw">let</span> <span class="kw-2">mut</span> #<span class="ident">args_array</span> <span class="op">=</span> [<span class="ident">::std::option::Option::None</span>; #<span class="ident">num_params</span>];
@@ -506,9 +540,6 @@
     <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">ty</span>;
     <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">arg</span>.<span class="ident">name</span>;
     <span class="kw">let</span> <span class="ident">name_str</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">to_string</span>();
-    <span class="kw">let</span> <span class="ident">transform_error</span> <span class="op">=</span> <span class="macro">quote!</span> {
-        <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">_pyo3::impl_::extract_argument::argument_extraction_error</span>(#<span class="ident">py</span>, #<span class="ident">name_str</span>, <span class="ident">e</span>)
-    };
 
     <span class="kw">if</span> <span class="ident">is_args</span>(<span class="kw-2">&amp;</span><span class="ident">spec</span>.<span class="ident">attrs</span>, <span class="ident">name</span>) {
         <span class="macro">ensure_spanned!</span>(
@@ -516,7 +547,7 @@
             <span class="ident">arg</span>.<span class="ident">name</span>.<span class="ident">span</span>() =&gt; <span class="string">&quot;args cannot be optional&quot;</span>
         );
         <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="macro">quote_arg_span!</span> {
-            <span class="kw">let</span> #<span class="ident">arg_name</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::extract_argument::extract_argument</span>(<span class="ident">_args</span>.<span class="ident">unwrap</span>(), #<span class="ident">name_str</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> #<span class="ident">arg_name</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::extract_argument::extract_argument</span>(<span class="ident">_args</span>, #<span class="ident">name_str</span>)<span class="question-mark">?</span>;
         });
     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_kwargs</span>(<span class="kw-2">&amp;</span><span class="ident">spec</span>.<span class="ident">attrs</span>, <span class="ident">name</span>) {
         <span class="macro">ensure_spanned!</span>(
@@ -524,43 +555,64 @@
             <span class="ident">arg</span>.<span class="ident">name</span>.<span class="ident">span</span>() =&gt; <span class="string">&quot;kwargs must be Option&lt;_&gt;&quot;</span>
         );
         <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="macro">quote_arg_span!</span> {
-            <span class="kw">let</span> #<span class="ident">arg_name</span> <span class="op">=</span> <span class="ident">_kwargs</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">kwargs</span><span class="op">|</span> <span class="ident">_pyo3::impl_::extract_argument::extract_argument</span>(<span class="ident">kwargs</span>, #<span class="ident">name_str</span>))
-                .<span class="ident">transpose</span>()<span class="question-mark">?</span>;
+            <span class="kw">let</span> #<span class="ident">arg_name</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::extract_argument::extract_optional_argument</span>(<span class="ident">_kwargs</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">kwargs</span><span class="op">|</span> <span class="ident">kwargs</span>.<span class="ident">as_ref</span>()), #<span class="ident">name_str</span>)<span class="question-mark">?</span>;
         });
     }
 
     <span class="kw">let</span> <span class="ident">arg_value</span> <span class="op">=</span> <span class="macro">quote_arg_span!</span>(#<span class="ident">args_array</span>[#<span class="ident">option_pos</span>]);
     <span class="kw-2">*</span><span class="ident">option_pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
 
-    <span class="kw">let</span> <span class="ident">extract</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">FromPyWithAttribute</span>(<span class="ident">expr_path</span>)) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">attrs</span>.<span class="ident">from_py_with</span> {
-        <span class="macro">quote_arg_span!</span> { #<span class="ident">expr_path</span>(<span class="ident">_obj</span>).<span class="ident">map_err</span>(#<span class="ident">transform_error</span>) }
+    <span class="kw">let</span> <span class="ident">arg_value_or_default</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">FromPyWithAttribute</span>(<span class="ident">expr_path</span>)) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">arg</span>.<span class="ident">attrs</span>.<span class="ident">from_py_with</span>
+    {
+        <span class="kw">match</span> (<span class="ident">spec</span>.<span class="ident">default_value</span>(<span class="ident">name</span>), <span class="ident">arg</span>.<span class="ident">optional</span>.<span class="ident">is_some</span>()) {
+            (<span class="prelude-val">Some</span>(<span class="ident">default</span>), <span class="bool-val">true</span>) <span class="kw">if</span> <span class="ident">default</span>.<span class="ident">to_string</span>() <span class="op">!</span><span class="op">=</span> <span class="string">&quot;None&quot;</span> =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::from_py_with_with_default</span>(#<span class="ident">arg_value</span>, #<span class="ident">name_str</span>, #<span class="ident">expr_path</span>, <span class="op">|</span><span class="op">|</span> <span class="prelude-val">Some</span>(#<span class="ident">default</span>))
+                }
+            }
+            (<span class="prelude-val">Some</span>(<span class="ident">default</span>), <span class="kw">_</span>) =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::from_py_with_with_default</span>(#<span class="ident">arg_value</span>, #<span class="ident">name_str</span>, #<span class="ident">expr_path</span>, <span class="op">|</span><span class="op">|</span> #<span class="ident">default</span>)
+                }
+            }
+            (<span class="prelude-val">None</span>, <span class="bool-val">true</span>) =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::from_py_with_with_default</span>(#<span class="ident">arg_value</span>, #<span class="ident">name_str</span>, #<span class="ident">expr_path</span>, <span class="op">|</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="prelude-val">None</span>))
+                }
+            }
+            (<span class="prelude-val">None</span>, <span class="bool-val">false</span>) =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::from_py_with</span>(
+                        <span class="ident">_pyo3::impl_::extract_argument::unwrap_required_argument</span>(#<span class="ident">arg_value</span>),
+                        #<span class="ident">name_str</span>,
+                        #<span class="ident">expr_path</span>,
+                    )
+                }
+            }
+        }
     } <span class="kw">else</span> {
-        <span class="macro">quote_arg_span!</span> { <span class="ident">_pyo3::impl_::extract_argument::extract_argument</span>(<span class="ident">_obj</span>, #<span class="ident">name_str</span>) }
-    };
-
-    <span class="kw">let</span> <span class="ident">arg_value_or_default</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">spec</span>.<span class="ident">default_value</span>(<span class="ident">name</span>), <span class="ident">arg</span>.<span class="ident">optional</span>.<span class="ident">is_some</span>()) {
-        (<span class="prelude-val">Some</span>(<span class="ident">default</span>), <span class="bool-val">true</span>) <span class="kw">if</span> <span class="ident">default</span>.<span class="ident">to_string</span>() <span class="op">!</span><span class="op">=</span> <span class="string">&quot;None&quot;</span> =&gt; {
-            <span class="macro">quote_arg_span!</span> {
-                #<span class="ident">arg_value</span>.<span class="ident">map_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">::std::result::Result::Ok</span>(<span class="ident">::std::option::Option::Some</span>(#<span class="ident">default</span>)),
-                                       <span class="op">|</span><span class="ident">_obj</span><span class="op">|</span> #<span class="ident">extract</span>)<span class="question-mark">?</span>
+        <span class="kw">match</span> (<span class="ident">spec</span>.<span class="ident">default_value</span>(<span class="ident">name</span>), <span class="ident">arg</span>.<span class="ident">optional</span>.<span class="ident">is_some</span>()) {
+            (<span class="prelude-val">Some</span>(<span class="ident">default</span>), <span class="bool-val">true</span>) <span class="kw">if</span> <span class="ident">default</span>.<span class="ident">to_string</span>() <span class="op">!</span><span class="op">=</span> <span class="string">&quot;None&quot;</span> =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::extract_argument_with_default</span>(#<span class="ident">arg_value</span>, #<span class="ident">name_str</span>, <span class="op">|</span><span class="op">|</span> <span class="prelude-val">Some</span>(#<span class="ident">default</span>))
+                }
             }
-        }
-        (<span class="prelude-val">Some</span>(<span class="ident">default</span>), <span class="kw">_</span>) =&gt; {
-            <span class="macro">quote_arg_span!</span> {
-                #<span class="ident">arg_value</span>.<span class="ident">map_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">::std::result::Result::Ok</span>(#<span class="ident">default</span>), <span class="op">|</span><span class="ident">_obj</span><span class="op">|</span> #<span class="ident">extract</span>)<span class="question-mark">?</span>
+            (<span class="prelude-val">Some</span>(<span class="ident">default</span>), <span class="kw">_</span>) =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::extract_argument_with_default</span>(#<span class="ident">arg_value</span>, #<span class="ident">name_str</span>, <span class="op">|</span><span class="op">|</span> #<span class="ident">default</span>)
+                }
             }
-        }
-        (<span class="prelude-val">None</span>, <span class="bool-val">true</span>) =&gt; {
-            <span class="macro">quote_arg_span!</span> {
-                #<span class="ident">arg_value</span>.<span class="ident">map_or</span>(<span class="ident">::std::result::Result::Ok</span>(<span class="ident">::std::option::Option::None</span>),
-                                  <span class="op">|</span><span class="ident">_obj</span><span class="op">|</span> #<span class="ident">extract</span>)<span class="question-mark">?</span>
+            (<span class="prelude-val">None</span>, <span class="bool-val">true</span>) =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::extract_optional_argument</span>(#<span class="ident">arg_value</span>, #<span class="ident">name_str</span>)
+                }
             }
-        }
-        (<span class="prelude-val">None</span>, <span class="bool-val">false</span>) =&gt; {
-            <span class="macro">quote_arg_span!</span> {
-                {
-                    <span class="kw">let</span> <span class="ident">_obj</span> <span class="op">=</span> #<span class="ident">arg_value</span>.<span class="ident">expect</span>(<span class="string">&quot;Failed to extract required method argument&quot;</span>);
-                    #<span class="ident">extract</span><span class="question-mark">?</span>
+            (<span class="prelude-val">None</span>, <span class="bool-val">false</span>) =&gt; {
+                <span class="macro">quote_arg_span!</span> {
+                    <span class="ident">_pyo3::impl_::extract_argument::extract_argument</span>(
+                        <span class="ident">_pyo3::impl_::extract_argument::unwrap_required_argument</span>(#<span class="ident">arg_value</span>),
+                        #<span class="ident">name_str</span>
+                    )
                 }
             }
         }
@@ -591,16 +643,16 @@
         };
 
         <span class="prelude-val">Ok</span>(<span class="macro">quote_arg_span!</span> {
-            <span class="kw">let</span> #<span class="ident">mut_</span> <span class="ident">_tmp</span>: #<span class="ident">target_ty</span> <span class="op">=</span> #<span class="ident">arg_value_or_default</span>;
+            <span class="kw">let</span> #<span class="ident">mut_</span> <span class="ident">_tmp</span>: #<span class="ident">target_ty</span> <span class="op">=</span> #<span class="ident">arg_value_or_default</span><span class="question-mark">?</span>;
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::needless_option_as_deref</span>)]</span>
             <span class="kw">let</span> #<span class="ident">arg_name</span> <span class="op">=</span> #<span class="ident">borrow_tmp</span>;
         })
     } <span class="kw">else</span> {
         <span class="prelude-val">Ok</span>(<span class="macro">quote_arg_span!</span> {
-            <span class="kw">let</span> #<span class="ident">arg_name</span> <span class="op">=</span> #<span class="ident">arg_value_or_default</span>;
+            <span class="kw">let</span> #<span class="ident">arg_name</span> <span class="op">=</span> #<span class="ident">arg_value_or_default</span><span class="question-mark">?</span>;
         })
     };
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (08df8b81d 2022-01-30)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (4e8fb743c 2022-02-03)" ></div>
 </body></html>
