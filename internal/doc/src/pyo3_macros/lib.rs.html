@@ -302,9 +302,8 @@
 <span class="kw">use</span> <span class="ident">proc_macro2::TokenStream</span> <span class="kw">as</span> <span class="ident">TokenStream2</span>;
 <span class="kw">use</span> <span class="ident">pyo3_macros_backend</span>::{
     <span class="ident">build_derive_from_pyobject</span>, <span class="ident">build_py_class</span>, <span class="ident">build_py_enum</span>, <span class="ident">build_py_function</span>, <span class="ident">build_py_methods</span>,
-    <span class="ident">build_py_proto</span>, <span class="ident">get_doc</span>, <span class="ident">process_functions_in_module</span>, <span class="ident">pymodule_impl</span>, <span class="ident">wrap_pyfunction_impl</span>,
-    <span class="ident">wrap_pymodule_impl</span>, <span class="ident">PyClassArgs</span>, <span class="ident">PyClassMethodsType</span>, <span class="ident">PyFunctionOptions</span>, <span class="ident">PyModuleOptions</span>,
-    <span class="ident">WrapPyFunctionArgs</span>,
+    <span class="ident">get_doc</span>, <span class="ident">process_functions_in_module</span>, <span class="ident">pymodule_impl</span>, <span class="ident">wrap_pyfunction_impl</span>, <span class="ident">wrap_pymodule_impl</span>,
+    <span class="ident">PyClassArgs</span>, <span class="ident">PyClassMethodsType</span>, <span class="ident">PyFunctionOptions</span>, <span class="ident">PyModuleOptions</span>, <span class="ident">WrapPyFunctionArgs</span>,
 };
 <span class="kw">use</span> <span class="ident">quote::quote</span>;
 <span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">parse::Nothing</span>, <span class="ident">parse_macro_input</span>};
@@ -361,9 +360,10 @@
 <span class="doccomment">/// [4]: ../class/gc/trait.PyGCProtocol.html</span>
 <span class="doccomment">/// [5]: ../class/iter/trait.PyIterProtocol.html</span>
 <span class="attribute">#[<span class="ident">proc_macro_attribute</span>]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pyproto&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pyproto</span>(<span class="kw">_</span>: <span class="ident">TokenStream</span>, <span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ast</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">syn::ItemImpl</span>);
-    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">build_py_proto</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>).<span class="ident">unwrap_or_compile_error</span>();
+    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">pyo3_macros_backend::build_py_proto</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>).<span class="ident">unwrap_or_compile_error</span>();
 
     <span class="macro">quote!</span>(
         #<span class="ident">ast</span>

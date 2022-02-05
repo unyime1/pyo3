@@ -933,24 +933,6 @@
 <span id="926">926</span>
 <span id="927">927</span>
 <span id="928">928</span>
-<span id="929">929</span>
-<span id="930">930</span>
-<span id="931">931</span>
-<span id="932">932</span>
-<span id="933">933</span>
-<span id="934">934</span>
-<span id="935">935</span>
-<span id="936">936</span>
-<span id="937">937</span>
-<span id="938">938</span>
-<span id="939">939</span>
-<span id="940">940</span>
-<span id="941">941</span>
-<span id="942">942</span>
-<span id="943">943</span>
-<span id="944">944</span>
-<span id="945">945</span>
-<span id="946">946</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::attributes</span>::{
@@ -958,7 +940,7 @@
 };
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::deprecations::Deprecations</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::konst</span>::{<span class="ident">ConstAttributes</span>, <span class="ident">ConstSpec</span>};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyimpl</span>::{<span class="ident">gen_default_slot_impls</span>, <span class="ident">gen_py_const</span>, <span class="ident">PyClassMethodsType</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyimpl</span>::{<span class="ident">gen_default_items</span>, <span class="ident">gen_py_const</span>, <span class="ident">PyClassMethodsType</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pymethod</span>::{<span class="ident">impl_py_getter_def</span>, <span class="ident">impl_py_setter_def</span>, <span class="ident">PropertyType</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::utils</span>::{<span class="self">self</span>, <span class="ident">get_pyo3_crate</span>, <span class="ident">unwrap_group</span>, <span class="ident">PythonDoc</span>};
 <span class="kw">use</span> <span class="ident">proc_macro2</span>::{<span class="ident">Span</span>, <span class="ident">TokenStream</span>};
@@ -1430,7 +1412,7 @@
         }
     };
 
-    <span class="kw">let</span> <span class="ident">default_impls</span> <span class="op">=</span> <span class="ident">gen_default_slot_impls</span>(<span class="ident">cls</span>, <span class="macro">vec!</span>[<span class="ident">default_repr_impl</span>]);
+    <span class="kw">let</span> <span class="ident">default_impls</span> <span class="op">=</span> <span class="ident">gen_default_items</span>(<span class="ident">cls</span>, <span class="macro">vec!</span>[<span class="ident">default_repr_impl</span>]);
     <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {
         <span class="kw">const</span> <span class="kw">_</span>: () <span class="op">=</span> {
             <span class="kw">use</span> #<span class="ident">krate</span> <span class="kw">as</span> <span class="ident">_pyo3</span>;
@@ -1464,12 +1446,15 @@
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">var</span><span class="op">|</span> <span class="ident">gen_py_const</span>(<span class="kw-2">&amp;</span><span class="ident">cls_type</span>, <span class="kw-2">&amp;</span><span class="ident">variant_to_attribute</span>(<span class="ident">var</span>)));
 
     <span class="macro">quote!</span> {
-        <span class="kw">impl</span> <span class="ident">_pyo3::class::impl_::PyClassDescriptors</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="ident">_pyo3::class::impl_::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
+        <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassIntrinsicItems</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
+            <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
         {
-            <span class="kw">fn</span> <span class="ident">py_class_descriptors</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::class::methods::PyMethodDefType</span>] {
-                <span class="kw">static</span> <span class="ident">METHODS</span>: <span class="kw-2">&amp;</span>[<span class="ident">_pyo3::class::methods::PyMethodDefType</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[#(#<span class="ident">py_methods</span>),<span class="kw-2">*</span>];
-                <span class="ident">METHODS</span>
+            <span class="kw">fn</span> <span class="ident">pyclass_intrinsic_items</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
+                <span class="kw">static</span> <span class="ident">ITEMS</span>: <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
+                    <span class="ident">methods</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">py_methods</span>),<span class="kw-2">*</span>],
+                    <span class="ident">slots</span>: <span class="kw-2">&amp;</span>[]
+                };
+                <span class="kw-2">&amp;</span><span class="ident">ITEMS</span>
             }
         }
     }
@@ -1527,12 +1512,15 @@
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">syn::Result</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {
-        <span class="kw">impl</span> <span class="ident">_pyo3::class::impl_::PyClassDescriptors</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="ident">_pyo3::class::impl_::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
+        <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassIntrinsicItems</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
+            <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
         {
-            <span class="kw">fn</span> <span class="ident">py_class_descriptors</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::class::methods::PyMethodDefType</span>] {
-                <span class="kw">static</span> <span class="ident">METHODS</span>: <span class="kw-2">&amp;</span>[<span class="ident">_pyo3::class::methods::PyMethodDefType</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[#(#<span class="ident">py_methods</span>),<span class="kw-2">*</span>];
-                <span class="ident">METHODS</span>
+            <span class="kw">fn</span> <span class="ident">pyclass_intrinsic_items</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
+                <span class="kw">static</span> <span class="ident">ITEMS</span>: <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
+                    <span class="ident">methods</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">py_methods</span>),<span class="kw-2">*</span>],
+                    <span class="ident">slots</span>: <span class="kw-2">&amp;</span>[]
+                };
+                <span class="kw-2">&amp;</span><span class="ident">ITEMS</span>
             }
         }
     })
@@ -1629,7 +1617,7 @@
         };
 
         <span class="kw">let</span> <span class="ident">base_nativetype</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">attr</span>.<span class="ident">has_extends</span> {
-            <span class="macro">quote!</span> { <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BaseType</span> <span class="kw">as</span> <span class="ident">_pyo3::class::impl_::PyClassBaseType</span><span class="op">&gt;</span><span class="ident">::BaseNativeType</span> }
+            <span class="macro">quote!</span> { <span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::BaseType</span> <span class="kw">as</span> <span class="ident">_pyo3::impl_::pyclass::PyClassBaseType</span><span class="op">&gt;</span><span class="ident">::BaseNativeType</span> }
         } <span class="kw">else</span> {
             <span class="macro">quote!</span> { <span class="ident">_pyo3::PyAny</span> }
         };
@@ -1702,24 +1690,19 @@
         };
 
         <span class="kw">let</span> <span class="ident">thread_checker</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">has_unsendable</span> {
-            <span class="macro">quote!</span> { <span class="ident">_pyo3::class::impl_::ThreadCheckerImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> }
+            <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::pyclass::ThreadCheckerImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">has_extends</span> {
             <span class="macro">quote!</span> {
-                <span class="ident">_pyo3::class::impl_::ThreadCheckerInherited</span><span class="op">&lt;</span>#<span class="ident">cls</span>, <span class="op">&lt;</span>#<span class="ident">cls</span> <span class="kw">as</span> <span class="ident">_pyo3::class::impl_::PyClassImpl</span><span class="op">&gt;</span><span class="ident">::BaseType</span><span class="op">&gt;</span>
+                <span class="ident">_pyo3::impl_::pyclass::ThreadCheckerInherited</span><span class="op">&lt;</span>#<span class="ident">cls</span>, <span class="op">&lt;</span>#<span class="ident">cls</span> <span class="kw">as</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImpl</span><span class="op">&gt;</span><span class="ident">::BaseType</span><span class="op">&gt;</span>
             }
         } <span class="kw">else</span> {
-            <span class="macro">quote!</span> { <span class="ident">_pyo3::class::impl_::ThreadCheckerStub</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> }
+            <span class="macro">quote!</span> { <span class="ident">_pyo3::impl_::pyclass::ThreadCheckerStub</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> }
         };
 
-        <span class="kw">let</span> (<span class="ident">for_each_py_method</span>, <span class="ident">methods_protos</span>, <span class="ident">inventory</span>, <span class="ident">inventory_class</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>
-            .<span class="ident">methods_type</span>
-        {
-            <span class="ident">PyClassMethodsType::Specialization</span> =&gt; (
-                <span class="macro">quote!</span> { <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">py_methods</span>()); },
-                <span class="macro">quote!</span> { <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">methods_protocol_slots</span>()); },
-                <span class="prelude-val">None</span>,
-                <span class="prelude-val">None</span>,
-            ),
+        <span class="kw">let</span> (<span class="ident">pymethods_items</span>, <span class="ident">inventory</span>, <span class="ident">inventory_class</span>) <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">methods_type</span> {
+            <span class="ident">PyClassMethodsType::Specialization</span> =&gt; {
+                (<span class="macro">quote!</span> { <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">py_methods</span>()); }, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+            }
             <span class="ident">PyClassMethodsType::Inventory</span> =&gt; {
                 <span class="comment">// To allow multiple #[pymethods] block, we define inventory types.</span>
                 <span class="kw">let</span> <span class="ident">inventory_class_name</span> <span class="op">=</span> <span class="ident">syn::Ident::new</span>(
@@ -1728,13 +1711,8 @@
                 );
                 (
                     <span class="macro">quote!</span> {
-                        <span class="kw">for</span> <span class="ident">inventory</span> <span class="kw">in</span> <span class="ident">_pyo3::inventory::iter</span>::<span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">_pyo3::class::impl_::PyClassImpl</span><span class="op">&gt;</span><span class="ident">::Inventory</span><span class="op">&gt;</span>() {
-                            <span class="ident">visitor</span>(<span class="ident">_pyo3::class::impl_::PyClassInventory::methods</span>(<span class="ident">inventory</span>));
-                        }
-                    },
-                    <span class="macro">quote!</span> {
-                        <span class="kw">for</span> <span class="ident">inventory</span> <span class="kw">in</span> <span class="ident">_pyo3::inventory::iter</span>::<span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">_pyo3::class::impl_::PyClassImpl</span><span class="op">&gt;</span><span class="ident">::Inventory</span><span class="op">&gt;</span>() {
-                            <span class="ident">visitor</span>(<span class="ident">_pyo3::class::impl_::PyClassInventory::slots</span>(<span class="ident">inventory</span>));
+                        <span class="kw">for</span> <span class="ident">inventory</span> <span class="kw">in</span> <span class="ident">_pyo3::inventory::iter</span>::<span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImpl</span><span class="op">&gt;</span><span class="ident">::Inventory</span><span class="op">&gt;</span>() {
+                            <span class="ident">visitor</span>(<span class="ident">_pyo3::impl_::pyclass::PyClassInventory::items</span>(<span class="ident">inventory</span>));
                         }
                     },
                     <span class="prelude-val">Some</span>(<span class="macro">quote!</span> { <span class="kw">type</span> <span class="ident">Inventory</span> <span class="op">=</span> #<span class="ident">inventory_class_name</span>; }),
@@ -1742,8 +1720,25 @@
                 )
             }
         };
+
+        <span class="kw">let</span> <span class="ident">pyproto_items</span> <span class="op">=</span> <span class="kw">if</span> <span class="macro">cfg!</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pyproto&quot;</span>) {
+            <span class="prelude-val">Some</span>(<span class="macro">quote!</span> {
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">object_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">number_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">iter_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">gc_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">descr_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">mapping_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">sequence_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">async_protocol_items</span>());
+                <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">buffer_protocol_items</span>());
+            })
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        };
+
         <span class="macro">quote!</span> {
-            <span class="kw">impl</span> <span class="ident">_pyo3::class::impl_::PyClassImpl</span> <span class="kw">for</span> #<span class="ident">cls</span> {
+            <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImpl</span> <span class="kw">for</span> #<span class="ident">cls</span> {
                 <span class="kw">const</span> <span class="ident">DOC</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> #<span class="ident">doc</span>;
                 <span class="kw">const</span> <span class="ident">IS_GC</span>: <span class="ident">bool</span> <span class="op">=</span> #<span class="ident">is_gc</span>;
                 <span class="kw">const</span> <span class="ident">IS_BASETYPE</span>: <span class="ident">bool</span> <span class="op">=</span> #<span class="ident">is_basetype</span>;
@@ -1754,50 +1749,30 @@
                 <span class="kw">type</span> <span class="ident">ThreadChecker</span> <span class="op">=</span> #<span class="ident">thread_checker</span>;
                 #<span class="ident">inventory</span>
 
-                <span class="kw">fn</span> <span class="ident">for_each_method_def</span>(<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">::std::ops::FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">_pyo3::class::PyMethodDefType</span>])) {
-                    <span class="kw">use</span> <span class="ident">_pyo3::class::impl_</span>::<span class="kw-2">*</span>;
+                <span class="kw">fn</span> <span class="ident">for_all_items</span>(<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">::std::ops::FnMut</span>(<span class="op">&amp;</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span>)) {
+                    <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
                     <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
-                    #<span class="ident">for_each_py_method</span>;
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">py_class_descriptors</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">object_protocol_methods</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">async_protocol_methods</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">descr_protocol_methods</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">mapping_protocol_methods</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">number_protocol_methods</span>());
+                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">pyclass_intrinsic_items</span>());
+                    <span class="comment">// This depends on Python implementation detail;</span>
+                    <span class="comment">// an old slot entry will be overriden by newer ones.</span>
+                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">pyclass_default_items</span>());
+                    #<span class="ident">pymethods_items</span>
+                    #<span class="ident">pyproto_items</span>
                 }
                 <span class="kw">fn</span> <span class="ident">get_new</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::newfunc</span><span class="op">&gt;</span> {
-                    <span class="kw">use</span> <span class="ident">_pyo3::class::impl_</span>::<span class="kw-2">*</span>;
+                    <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
                     <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
                     <span class="ident">collector</span>.<span class="ident">new_impl</span>()
                 }
                 <span class="kw">fn</span> <span class="ident">get_alloc</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::allocfunc</span><span class="op">&gt;</span> {
-                    <span class="kw">use</span> <span class="ident">_pyo3::class::impl_</span>::<span class="kw-2">*</span>;
+                    <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
                     <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
                     <span class="ident">collector</span>.<span class="ident">alloc_impl</span>()
                 }
                 <span class="kw">fn</span> <span class="ident">get_free</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::freefunc</span><span class="op">&gt;</span> {
-                    <span class="kw">use</span> <span class="ident">_pyo3::class::impl_</span>::<span class="kw-2">*</span>;
+                    <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
                     <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
                     <span class="ident">collector</span>.<span class="ident">free_impl</span>()
-                }
-
-                <span class="kw">fn</span> <span class="ident">for_each_proto_slot</span>(<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">::std::ops::FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">_pyo3::ffi::PyType_Slot</span>])) {
-                    <span class="comment">// Implementation which uses dtolnay specialization to load all slots.</span>
-                    <span class="kw">use</span> <span class="ident">_pyo3::class::impl_</span>::<span class="kw-2">*</span>;
-                    <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
-                    <span class="comment">// This depends on Python implementation detail;</span>
-                    <span class="comment">// an old slot entry will be overriden by newer ones.</span>
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">py_class_default_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">object_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">number_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">iter_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">gc_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">descr_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">mapping_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">sequence_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">async_protocol_slots</span>());
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">buffer_protocol_slots</span>());
-                    #<span class="ident">methods_protos</span>
                 }
 
                 #<span class="ident">dict_offset</span>
@@ -1814,7 +1789,7 @@
 
         <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">freelist</span>.<span class="ident">as_ref</span>().<span class="ident">map_or</span>(<span class="macro">quote!</span>{}, <span class="op">|</span><span class="ident">freelist</span><span class="op">|</span> {
             <span class="macro">quote!</span> {
-                <span class="kw">impl</span> <span class="ident">_pyo3::class::impl_::PyClassWithFreeList</span> <span class="kw">for</span> #<span class="ident">cls</span> {
+                <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassWithFreeList</span> <span class="kw">for</span> #<span class="ident">cls</span> {
                     <span class="attribute">#[<span class="ident">inline</span>]</span>
                     <span class="kw">fn</span> <span class="ident">get_free_list</span>(<span class="ident">_py</span>: <span class="ident">_pyo3::Python</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="kw-2">&amp;mut</span> <span class="ident">_pyo3::impl_::freelist::FreeList</span><span class="op">&lt;</span><span class="kw-2">*mut</span> <span class="ident">_pyo3::ffi::PyObject</span><span class="op">&gt;</span> {
                         <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">FREELIST</span>: <span class="kw-2">*mut</span> <span class="ident">_pyo3::impl_::freelist::FreeList</span><span class="op">&lt;</span><span class="kw-2">*mut</span> <span class="ident">_pyo3::ffi::PyObject</span><span class="op">&gt;</span> <span class="op">=</span> <span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>;
@@ -1828,17 +1803,17 @@
                     }
                 }
 
-                <span class="kw">impl</span> <span class="ident">_pyo3::class::impl_::PyClassAllocImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">_pyo3::class::impl_::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
+                <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassAllocImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
                     <span class="attribute">#[<span class="ident">inline</span>]</span>
                     <span class="kw">fn</span> <span class="ident">alloc_impl</span>(<span class="self">self</span>) -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::allocfunc</span><span class="op">&gt;</span> {
-                        <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::class::impl_::alloc_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>)
+                        <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::impl_::pyclass::alloc_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>)
                     }
                 }
 
-                <span class="kw">impl</span> <span class="ident">_pyo3::class::impl_::PyClassFreeImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">_pyo3::class::impl_::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
+                <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassFreeImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
                     <span class="attribute">#[<span class="ident">inline</span>]</span>
                     <span class="kw">fn</span> <span class="ident">free_impl</span>(<span class="self">self</span>) -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::freefunc</span><span class="op">&gt;</span> {
-                        <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::class::impl_::free_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>)
+                        <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::impl_::pyclass::free_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>)
                     }
                 }
             }
@@ -1869,30 +1844,19 @@
     <span class="macro">quote!</span> {
         <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
         <span class="kw">pub</span> <span class="kw">struct</span> #<span class="ident">inventory_class_name</span> {
-            <span class="ident">methods</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::class::PyMethodDefType</span>],
-            <span class="ident">slots</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::ffi::PyType_Slot</span>],
+            <span class="ident">items</span>: <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span>,
         }
         <span class="kw">impl</span> #<span class="ident">inventory_class_name</span> {
-            <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
-                <span class="ident">methods</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::class::PyMethodDefType</span>],
-                <span class="ident">slots</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::ffi::PyType_Slot</span>],
-            ) -&gt; <span class="self">Self</span> {
-                <span class="self">Self</span> { <span class="ident">methods</span>, <span class="ident">slots</span> }
+            <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">items</span>: <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span>) -&gt; <span class="self">Self</span> {
+                <span class="self">Self</span> { <span class="ident">items</span> }
             }
         }
 
-        <span class="kw">impl</span> <span class="ident">_pyo3::class::impl_::PyClassInventory</span> <span class="kw">for</span> #<span class="ident">inventory_class_name</span> {
-            <span class="kw">fn</span> <span class="ident">methods</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::class::PyMethodDefType</span>] {
-                <span class="self">self</span>.<span class="ident">methods</span>
-            }
-            <span class="kw">fn</span> <span class="ident">slots</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">_pyo3::ffi::PyType_Slot</span>] {
-                <span class="self">self</span>.<span class="ident">slots</span>
+        <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassInventory</span> <span class="kw">for</span> #<span class="ident">inventory_class_name</span> {
+            <span class="kw">fn</span> <span class="ident">items</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">items</span>
             }
         }
-
-        <span class="comment">// inventory requires these bounds</span>
-        <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">::std::marker::Send</span> <span class="kw">for</span> #<span class="ident">inventory_class_name</span> {}
-        <span class="kw">unsafe</span> <span class="kw">impl</span> <span class="ident">::std::marker::Sync</span> <span class="kw">for</span> #<span class="ident">inventory_class_name</span> {}
 
         <span class="macro">_pyo3::inventory::collect!</span>(#<span class="ident">inventory_class_name</span>);
     }

@@ -1,4 +1,0 @@
-(function() {var implementors = {};
-implementors["pyo3"] = [];
-implementors["pyo3_pytests"] = [{"text":"impl <a class=\"trait\" href=\"pyo3/class/impl_/trait.PyObjectProtocolSlots.html\" title=\"trait pyo3::class::impl_::PyObjectProtocolSlots\">PyObjectProtocolSlots</a>&lt;<a class=\"struct\" href=\"pyo3_pytests/subclassing/struct.Subclassable.html\" title=\"struct pyo3_pytests::subclassing::Subclassable\">Subclassable</a>&gt; for <a class=\"struct\" href=\"pyo3/class/impl_/struct.PyClassImplCollector.html\" title=\"struct pyo3::class::impl_::PyClassImplCollector\">PyClassImplCollector</a>&lt;<a class=\"struct\" href=\"pyo3_pytests/subclassing/struct.Subclassable.html\" title=\"struct pyo3_pytests::subclassing::Subclassable\">Subclassable</a>&gt;","synthetic":false,"types":["pyo3::class::impl_::PyClassImplCollector"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

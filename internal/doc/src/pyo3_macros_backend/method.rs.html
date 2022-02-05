@@ -1302,23 +1302,23 @@
         <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">doc</span>;
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">convention</span> {
             <span class="ident">CallingConvention::Noargs</span> =&gt; <span class="macro">quote!</span> {
-                <span class="ident">_pyo3::class::methods::PyMethodDef::noargs</span>(
+                <span class="ident">_pyo3::impl_::pymethods::PyMethodDef::noargs</span>(
                     #<span class="ident">python_name</span>,
-                    <span class="ident">_pyo3::class::methods::PyCFunction</span>(#<span class="ident">wrapper</span>),
+                    <span class="ident">_pyo3::impl_::pymethods::PyCFunction</span>(#<span class="ident">wrapper</span>),
                     #<span class="ident">doc</span>,
                 )
             },
             <span class="ident">CallingConvention::Fastcall</span> =&gt; <span class="macro">quote!</span> {
-                <span class="ident">_pyo3::class::methods::PyMethodDef::fastcall_cfunction_with_keywords</span>(
+                <span class="ident">_pyo3::impl_::pymethods::PyMethodDef::fastcall_cfunction_with_keywords</span>(
                     #<span class="ident">python_name</span>,
-                    <span class="ident">_pyo3::class::methods::PyCFunctionFastWithKeywords</span>(#<span class="ident">wrapper</span>),
+                    <span class="ident">_pyo3::impl_::pymethods::PyCFunctionFastWithKeywords</span>(#<span class="ident">wrapper</span>),
                     #<span class="ident">doc</span>,
                 )
             },
             <span class="ident">CallingConvention::Varargs</span> =&gt; <span class="macro">quote!</span> {
-                <span class="ident">_pyo3::class::methods::PyMethodDef::cfunction_with_keywords</span>(
+                <span class="ident">_pyo3::impl_::pymethods::PyMethodDef::cfunction_with_keywords</span>(
                     #<span class="ident">python_name</span>,
-                    <span class="ident">_pyo3::class::methods::PyCFunctionWithKeywords</span>(#<span class="ident">wrapper</span>),
+                    <span class="ident">_pyo3::impl_::pymethods::PyCFunctionWithKeywords</span>(#<span class="ident">wrapper</span>),
                     #<span class="ident">doc</span>,
                 )
             },

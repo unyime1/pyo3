@@ -39,6 +39,10 @@
 <span id="32">32</span>
 <span id="33">33</span>
 <span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="doccomment">//! This crate contains the implementation of the proc macro attributes</span>
 
@@ -50,6 +54,7 @@
 <span class="kw">mod</span> <span class="ident">utils</span>;
 
 <span class="kw">mod</span> <span class="ident">attributes</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pyproto&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">defs</span>;
 <span class="kw">mod</span> <span class="ident">deprecations</span>;
 <span class="kw">mod</span> <span class="ident">frompyobject</span>;
@@ -57,11 +62,13 @@
 <span class="kw">mod</span> <span class="ident">method</span>;
 <span class="kw">mod</span> <span class="ident">module</span>;
 <span class="kw">mod</span> <span class="ident">params</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pyproto&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">proto_method</span>;
 <span class="kw">mod</span> <span class="ident">pyclass</span>;
 <span class="kw">mod</span> <span class="ident">pyfunction</span>;
 <span class="kw">mod</span> <span class="ident">pyimpl</span>;
 <span class="kw">mod</span> <span class="ident">pymethod</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pyproto&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">pyproto</span>;
 <span class="kw">mod</span> <span class="ident">wrap</span>;
 
@@ -70,6 +77,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyclass</span>::{<span class="ident">build_py_class</span>, <span class="ident">build_py_enum</span>, <span class="ident">PyClassArgs</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyfunction</span>::{<span class="ident">build_py_function</span>, <span class="ident">PyFunctionOptions</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyimpl</span>::{<span class="ident">build_py_methods</span>, <span class="ident">PyClassMethodsType</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pyproto&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pyproto::build_py_proto</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">utils::get_doc</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">wrap</span>::{<span class="ident">wrap_pyfunction_impl</span>, <span class="ident">wrap_pymodule_impl</span>, <span class="ident">WrapPyFunctionArgs</span>};
