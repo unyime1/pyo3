@@ -935,7 +935,6 @@
 <span id="930">930</span>
 <span id="931">931</span>
 <span id="932">932</span>
-<span id="933">933</span>
 </pre><pre class="rust"><code><span class="doccomment">//! PyO3&#39;s interior mutability primitive.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Rust has strict aliasing rules - you can either have any number of immutable (shared) references or one mutable</span>
@@ -1113,12 +1112,11 @@
 <span class="doccomment">//! [Interior Mutability]: https://doc.rust-lang.org/book/ch15-05-interior-mutability.html &quot;RefCell&lt;T&gt; and the Interior Mutability Pattern - The Rust Programming Language&quot;</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::exceptions::PyRuntimeError</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::impl_::pyclass</span>::{<span class="ident">PyClassDict</span>, <span class="ident">PyClassWeakRef</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::impl_::pyclass</span>::{<span class="ident">PyClassBaseType</span>, <span class="ident">PyClassDict</span>, <span class="ident">PyClassThreadChecker</span>, <span class="ident">PyClassWeakRef</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass::PyClass</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass_init::PyClassInitializer</span>;
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::type_object</span>::{<span class="ident">PyLayout</span>, <span class="ident">PySizedLayout</span>};
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types::PyAny</span>;
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">class::impl_::PyClassBaseType</span>, <span class="ident">class::impl_::PyClassThreadChecker</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">conversion</span>::{<span class="ident">AsPyPointer</span>, <span class="ident">FromPyPointer</span>, <span class="ident">ToPyObject</span>},
     <span class="ident">ffi::PyBaseObject_Type</span>,

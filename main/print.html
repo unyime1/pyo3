@@ -1637,55 +1637,35 @@ impl pyo3::IntoPy&lt;PyObject&gt; for MyClass {
     }
 }
 
-impl pyo3::class::impl_::PyClassImpl for MyClass {
+impl pyo3::impl_::pyclass::PyClassImpl for MyClass {
     const DOC: &amp;'static str = &quot;Class for demonstration\u{0}&quot;;
     const IS_GC: bool = false;
     const IS_BASETYPE: bool = false;
     const IS_SUBCLASS: bool = false;
     type Layout = PyCell&lt;MyClass&gt;;
     type BaseType = PyAny;
-    type ThreadChecker = pyo3::class::impl_::ThreadCheckerStub&lt;MyClass&gt;;
+    type ThreadChecker = pyo3::impl_::pyclass::ThreadCheckerStub&lt;MyClass&gt;;
 
-    fn for_each_method_def(visitor: &amp;mut dyn FnMut(&amp;[pyo3::class::PyMethodDefType])) {
-        use pyo3::class::impl_::*;
+    fn for_all_items(visitor: &amp;mut dyn FnMut(&amp;pyo3::impl_::pyclass::PyClassItems)) {
+        use pyo3::impl_::pyclass::*;
         let collector = PyClassImplCollector::&lt;MyClass&gt;::new();
         visitor(collector.py_methods());
-        visitor(collector.py_class_descriptors());
-        visitor(collector.object_protocol_methods());
-        visitor(collector.async_protocol_methods());
-        visitor(collector.descr_protocol_methods());
-        visitor(collector.mapping_protocol_methods());
-        visitor(collector.number_protocol_methods());
+        visitor(collector.pyclass_intrinsic_items());
     }
     fn get_new() -&gt; Option&lt;pyo3::ffi::newfunc&gt; {
-        use pyo3::class::impl_::*;
+        use pyo3::impl_::pyclass::*;
         let collector = PyClassImplCollector::&lt;Self&gt;::new();
         collector.new_impl()
     }
     fn get_alloc() -&gt; Option&lt;pyo3::ffi::allocfunc&gt; {
-        use pyo3::class::impl_::*;
+        use pyo3::impl_::pyclass::*;
         let collector = PyClassImplCollector::&lt;Self&gt;::new();
         collector.alloc_impl()
     }
     fn get_free() -&gt; Option&lt;pyo3::ffi::freefunc&gt; {
-        use pyo3::class::impl_::*;
+        use pyo3::impl_::pyclass::*;
         let collector = PyClassImplCollector::&lt;Self&gt;::new();
         collector.free_impl()
-    }
-    fn for_each_proto_slot(visitor: &amp;mut dyn FnMut(&amp;[pyo3::ffi::PyType_Slot])) {
-        // Implementation which uses dtolnay specialization to load all slots.
-        use pyo3::class::impl_::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        visitor(collector.object_protocol_slots());
-        visitor(collector.number_protocol_slots());
-        visitor(collector.iter_protocol_slots());
-        visitor(collector.gc_protocol_slots());
-        visitor(collector.descr_protocol_slots());
-        visitor(collector.mapping_protocol_slots());
-        visitor(collector.sequence_protocol_slots());
-        visitor(collector.async_protocol_slots());
-        visitor(collector.buffer_protocol_slots());
-        visitor(collector.methods_protocol_slots());
     }
 }
 <span class="boring">Python::with_gil(|py| {
@@ -3845,6 +3825,11 @@ test_word_count_python_sequential                      27.3985 (15.82)    45.452
 <p>This feature enables a dependency on <code>inventory</code>, which enables each <code>#[pyclass]</code> to have more than one <code>#[pymethods]</code> block.</p>
 <p>Most users should only need a single <code>#[pymethods]</code> per <code>#[pyclass]</code>. In addition, not all platforms (e.g. Wasm) are supported by <code>inventory</code>. For this reason this feature is not enabled by default, meaning fewer dependencies and faster compilation for the majority of users.</p>
 <p>See <a href="class.html#implementation-details">the <code>#[pyclass]</code> implementation details</a> for more information.</p>
+<h3 id="pyproto"><a class="header" href="#pyproto"><code>pyproto</code></a></h3>
+<p>This feature enables the <code>#[pyproto]</code> macro, which is an alternative (older, soon-to-be-deprecated) to <code>#[pymethods]</code> for defining magic methods such as <code>__eq__</code>.</p>
+<blockquote>
+<p>This feature is enabled by default. To disable it, set <code>default-features = false</code> for the <code>pyo3</code> entry in your Cargo.toml.</p>
+</blockquote>
 <h3 id="nightly"><a class="header" href="#nightly"><code>nightly</code></a></h3>
 <p>The <code>nightly</code> feature needs the nightly Rust compiler. This allows PyO3 to use Rust's unstable specialization feature to apply the following optimizations:</p>
 <ul>
@@ -5542,7 +5527,7 @@ let obj_ref_mut: PyRefMut&lt;MyClass&gt; = obj.extract().unwrap();
 <span class="boring">})
 </span><span class="boring">}
 </span></code></pre></pre>
-<h4 id="pyproto"><a class="header" href="#pyproto"><code>#[pyproto]</code></a></h4>
+<h4 id="pyproto-1"><a class="header" href="#pyproto-1"><code>#[pyproto]</code></a></h4>
 <p>Most of the arguments to methods in <code>#[pyproto]</code> impls require a
 <a href="https://pyo3.rs/main/doc/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> implementation.
 So if your protocol methods take <code>&amp;T</code> or <code>&amp;mut T</code> (where <code>T: PyClass</code>),

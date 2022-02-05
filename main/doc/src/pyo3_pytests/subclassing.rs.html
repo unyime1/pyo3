@@ -27,9 +27,6 @@
 <span id="22">22</span>
 <span id="23">23</span>
 <span id="24">24</span>
-<span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Test for [#220](https://github.com/PyO3/pyo3/issues/220)</span>
 
 <span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
@@ -43,10 +40,7 @@
     <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
         <span class="ident">Subclassable</span> {}
     }
-}
 
-<span class="attribute">#[<span class="ident">pyproto</span>]</span>
-<span class="kw">impl</span> <span class="ident">pyo3::PyObjectProtocol</span> <span class="kw">for</span> <span class="ident">Subclassable</span> {
     <span class="kw">fn</span> <span class="ident">__str__</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="string">&quot;Subclassable&quot;</span>)
     }

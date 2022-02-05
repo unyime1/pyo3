@@ -311,11 +311,9 @@
 <span id="306">306</span>
 <span id="307">307</span>
 <span id="308">308</span>
-<span id="309">309</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Contains initialization utilities for `#[pyclass]`.</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::class::impl_::PyClassThreadChecker</span>;
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::impl_::pyclass</span>::{<span class="ident">PyClassDict</span>, <span class="ident">PyClassWeakRef</span>};
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">callback::IntoPyCallbackOutput</span>, <span class="ident">class::impl_::PyClassBaseType</span>};
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::callback::IntoPyCallbackOutput</span>;
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::impl_::pyclass</span>::{<span class="ident">PyClassBaseType</span>, <span class="ident">PyClassDict</span>, <span class="ident">PyClassThreadChecker</span>, <span class="ident">PyClassWeakRef</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ffi</span>, <span class="ident">PyCell</span>, <span class="ident">PyClass</span>, <span class="ident">PyErr</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">ffi::PyTypeObject</span>,
