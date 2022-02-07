@@ -45,7 +45,7 @@
 <span class="kw">mod</span> <span class="ident">macros</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">basic</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>), <span class="ident">Py_3_11</span>))]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">buffer</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">descr</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">gc</span>;
@@ -58,7 +58,7 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">sequence</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::basic::PyObjectProtocol</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>), <span class="ident">Py_3_11</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::buffer::PyBufferProtocol</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::descr::PyDescrProtocol</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::gc</span>::{<span class="ident">PyGCProtocol</span>, <span class="ident">PyTraverseError</span>, <span class="ident">PyVisit</span>};
@@ -72,5 +72,5 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::pyasync::PyAsyncProtocol</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::sequence::PySequenceProtocol</span>;
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (71226d717 2022-02-04)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (f624427f8 2022-02-06)" ></div>
 </body></html>

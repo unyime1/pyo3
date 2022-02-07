@@ -305,8 +305,19 @@
 <span id="300">300</span>
 <span id="301">301</span>
 <span id="302">302</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PyObject</span>, <span class="ident">Py_buffer</span>, <span class="ident">Py_ssize_t</span>};
-<span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>, <span class="ident">c_void</span>};
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PyObject</span>, <span class="ident">Py_ssize_t</span>};
+<span class="kw">use</span> <span class="ident">std::os::raw</span>::{<span class="ident">c_char</span>, <span class="ident">c_int</span>};
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_11</span>))]</span>
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Py_buffer</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_8</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -518,6 +529,7 @@
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyObject_LengthHint&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyObject_LengthHint</span>(<span class="ident">o</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>, <span class="ident">arg1</span>: <span class="ident">Py_ssize_t</span>) -&gt; <span class="ident">Py_ssize_t</span>;
 
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_11</span>))]</span> <span class="comment">// moved to src/buffer.rs from 3.11</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_9</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyObject_CheckBuffer</span>(<span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>) -&gt; <span class="ident">c_int</span>;
 }
@@ -529,16 +541,20 @@
     (<span class="op">!</span><span class="ident">tp_as_buffer</span>.<span class="ident">is_null</span>() <span class="op">&amp;&amp;</span> (<span class="kw-2">*</span><span class="ident">tp_as_buffer</span>).<span class="ident">bf_getbuffer</span>.<span class="ident">is_some</span>()) <span class="kw">as</span> <span class="ident">c_int</span>
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">Py_3_11</span>))]</span> <span class="comment">// moved to src/buffer.rs from 3.11</span>
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyObject_GetBuffer&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyObject_GetBuffer</span>(<span class="ident">obj</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>, <span class="ident">view</span>: <span class="kw-2">*mut</span> <span class="ident">Py_buffer</span>, <span class="ident">flags</span>: <span class="ident">c_int</span>) -&gt; <span class="ident">c_int</span>;
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyBuffer_GetPointer&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyBuffer_GetPointer</span>(<span class="ident">view</span>: <span class="kw-2">*mut</span> <span class="ident">Py_buffer</span>, <span class="ident">indices</span>: <span class="kw-2">*mut</span> <span class="ident">Py_ssize_t</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">c_void</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyBuffer_GetPointer</span>(
+        <span class="ident">view</span>: <span class="kw-2">*mut</span> <span class="ident">Py_buffer</span>,
+        <span class="ident">indices</span>: <span class="kw-2">*mut</span> <span class="ident">Py_ssize_t</span>,
+    ) -&gt; <span class="kw-2">*mut</span> <span class="ident">std::os::raw::c_void</span>;
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyBuffer_SizeFromFormat&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyBuffer_SizeFromFormat</span>(<span class="ident">format</span>: <span class="kw-2">*const</span> <span class="ident">c_char</span>) -&gt; <span class="ident">Py_ssize_t</span>;
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyBuffer_ToContiguous&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyBuffer_ToContiguous</span>(
-        <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>,
+        <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">std::os::raw::c_void</span>,
         <span class="ident">view</span>: <span class="kw-2">*mut</span> <span class="ident">Py_buffer</span>,
         <span class="ident">len</span>: <span class="ident">Py_ssize_t</span>,
         <span class="ident">order</span>: <span class="ident">c_char</span>,
@@ -546,7 +562,7 @@
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">PyPy</span>, <span class="ident">link_name</span> <span class="op">=</span> <span class="string">&quot;PyPyBuffer_FromContiguous&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyBuffer_FromContiguous</span>(
         <span class="ident">view</span>: <span class="kw-2">*mut</span> <span class="ident">Py_buffer</span>,
-        <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>,
+        <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">std::os::raw::c_void</span>,
         <span class="ident">len</span>: <span class="ident">Py_ssize_t</span>,
         <span class="ident">order</span>: <span class="ident">c_char</span>,
     ) -&gt; <span class="ident">c_int</span>;
@@ -564,7 +580,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">PyBuffer_FillInfo</span>(
         <span class="ident">view</span>: <span class="kw-2">*mut</span> <span class="ident">Py_buffer</span>,
         <span class="ident">o</span>: <span class="kw-2">*mut</span> <span class="ident">PyObject</span>,
-        <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">c_void</span>,
+        <span class="ident">buf</span>: <span class="kw-2">*mut</span> <span class="ident">std::os::raw::c_void</span>,
         <span class="ident">len</span>: <span class="ident">Py_ssize_t</span>,
         <span class="ident">readonly</span>: <span class="ident">c_int</span>,
         <span class="ident">flags</span>: <span class="ident">c_int</span>,
@@ -608,5 +624,5 @@
 
 <span class="comment">// skipped _PyNumber_Index(*mut PyObject o)</span>
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3_ffi" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (71226d717 2022-02-04)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3_ffi" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (f624427f8 2022-02-06)" ></div>
 </body></html>
