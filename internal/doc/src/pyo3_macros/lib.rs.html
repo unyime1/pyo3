@@ -372,7 +372,7 @@
     .<span class="ident">into</span>()
 }
 
-<span class="doccomment">/// A proc macro used to expose Rust structs as Python objects.</span>
+<span class="doccomment">/// A proc macro used to expose Rust structs and fieldless enums as Python objects.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// `#[pyclass]` accepts the following [parameters][2]:</span>
 <span class="doccomment">///</span>
@@ -383,7 +383,7 @@
 <span class="doccomment">/// | `gc`  | Participate in Python&#39;s [garbage collection][5]. Required if your type contains references to other Python objects. If you don&#39;t (or incorrectly) implement this, contained Python objects may be hidden from Python&#39;s garbage collector and you may leak memory. Note that leaking memory, while undesirable, [is safe behavior][7].|</span>
 <span class="doccomment">/// | `weakref` | Allows this class to be [weakly referenceable][6]. |</span>
 <span class="doccomment">/// | &lt;span style=&quot;white-space: pre&quot;&gt;`extends = BaseType`&lt;/span&gt;  | Use a custom baseclass. Defaults to [`PyAny`][4] |</span>
-<span class="doccomment">/// | `subclass` | Allows other Python classes and `#[pyclass]` to inherit from this class.  |</span>
+<span class="doccomment">/// | `subclass` | Allows other Python classes and `#[pyclass]` to inherit from this class. Enums cannot be subclassed. |</span>
 <span class="doccomment">/// | `unsendable` | Required if your struct is not [`Send`][3]. Rather than using `unsendable`, consider implementing your struct in a threadsafe way by e.g. substituting [`Rc`][8] with [`Arc`][9]. By using `unsendable`, your class will panic when accessed by another thread.|</span>
 <span class="doccomment">/// | &lt;span style=&quot;white-space: pre&quot;&gt;`module = &quot;module_name&quot;`&lt;/span&gt; |  Python code will see the class as being defined in this module. Defaults to `builtins`. |</span>
 <span class="doccomment">///</span>
@@ -578,5 +578,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (71226d717 2022-02-04)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (f624427f8 2022-02-06)" ></div>
 </body></html>

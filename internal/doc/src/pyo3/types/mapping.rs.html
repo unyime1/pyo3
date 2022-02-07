@@ -307,6 +307,31 @@
 <span id="300">300</span>
 <span id="301">301</span>
 <span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::err</span>::{<span class="ident">PyDowncastError</span>, <span class="ident">PyErr</span>, <span class="ident">PyResult</span>};
@@ -340,6 +365,16 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">len</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span> <span class="op">==</span> <span class="number">0</span>)
+    }
+
+    <span class="doccomment">/// Determines if the mapping contains the specified key.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is equivalent to the Python expression `key in self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">K</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">K</span>: <span class="ident">ToBorrowedObject</span>,
+    {
+        <span class="ident">PyAny::contains</span>(<span class="self">self</span>, <span class="ident">key</span>)
     }
 
     <span class="doccomment">/// Gets the item in self with key `key`.</span>
@@ -472,6 +507,21 @@
             <span class="kw">let</span> <span class="ident">mapping2</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyMapping</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">ob</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
             <span class="macro">assert_eq!</span>(<span class="number">1</span>, <span class="ident">mapping2</span>.<span class="ident">len</span>().<span class="ident">unwrap</span>());
             <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">mapping2</span>.<span class="ident">is_empty</span>().<span class="ident">unwrap</span>());
+        });
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_contains</span>() {
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">HashMap::new</span>();
+            <span class="ident">v</span>.<span class="ident">insert</span>(<span class="string">&quot;key0&quot;</span>, <span class="number">1234</span>);
+            <span class="kw">let</span> <span class="ident">ob</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">to_object</span>(<span class="ident">py</span>);
+            <span class="kw">let</span> <span class="ident">mapping</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">PyMapping</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">ob</span>.<span class="ident">as_ref</span>(<span class="ident">py</span>)).<span class="ident">unwrap</span>();
+            <span class="ident">mapping</span>.<span class="ident">set_item</span>(<span class="string">&quot;key1&quot;</span>, <span class="string">&quot;foo&quot;</span>).<span class="ident">unwrap</span>();
+
+            <span class="macro">assert!</span>(<span class="ident">mapping</span>.<span class="ident">contains</span>(<span class="string">&quot;key0&quot;</span>).<span class="ident">unwrap</span>());
+            <span class="macro">assert!</span>(<span class="ident">mapping</span>.<span class="ident">contains</span>(<span class="string">&quot;key1&quot;</span>).<span class="ident">unwrap</span>());
+            <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">mapping</span>.<span class="ident">contains</span>(<span class="string">&quot;key2&quot;</span>).<span class="ident">unwrap</span>());
         });
     }
 
@@ -610,5 +660,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (71226d717 2022-02-04)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (f624427f8 2022-02-06)" ></div>
 </body></html>

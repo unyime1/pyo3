@@ -539,8 +539,8 @@
         <span class="kw">impl</span> #<span class="ident">cls</span> {
             #(#<span class="ident">method_defs</span>)<span class="op">*</span>
         }
-        <span class="kw">impl</span> <span class="ident">::pyo3::impl_::pyclass::PyClassDefaultItems</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="ident">::pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
+        <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassDefaultItems</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
+            <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
                 <span class="kw">fn</span> <span class="ident">pyclass_default_items</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
                     <span class="kw">static</span> <span class="ident">ITEMS</span>: <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
                         <span class="ident">methods</span>: <span class="kw-2">&amp;</span>[],
@@ -634,5 +634,5 @@
         .<span class="ident">collect</span>()
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (71226d717 2022-02-04)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (f624427f8 2022-02-06)" ></div>
 </body></html>
