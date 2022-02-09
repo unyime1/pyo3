@@ -295,30 +295,6 @@
 <span id="288">288</span>
 <span id="289">289</span>
 <span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident">std::collections::HashSet</span>;
@@ -429,10 +405,6 @@
                         <span class="kw">let</span> <span class="ident">attrs</span> <span class="op">=</span> <span class="ident">get_cfg_attributes</span>(<span class="kw-2">&amp;</span><span class="ident">meth</span>.<span class="ident">attrs</span>);
                         <span class="ident">methods</span>.<span class="ident">push</span>(<span class="macro">quote!</span>(#(#<span class="ident">attrs</span>)<span class="op">*</span> #<span class="ident">token_stream</span>));
                     }
-                    <span class="ident">GeneratedPyMethod::TraitImpl</span>(<span class="ident">token_stream</span>) =&gt; {
-                        <span class="kw">let</span> <span class="ident">attrs</span> <span class="op">=</span> <span class="ident">get_cfg_attributes</span>(<span class="kw-2">&amp;</span><span class="ident">meth</span>.<span class="ident">attrs</span>);
-                        <span class="ident">trait_impls</span>.<span class="ident">push</span>(<span class="macro">quote!</span>(#(#<span class="ident">attrs</span>)<span class="op">*</span> #<span class="ident">token_stream</span>));
-                    }
                     <span class="ident">GeneratedPyMethod::SlotTraitImpl</span>(<span class="ident">method_name</span>, <span class="ident">token_stream</span>) =&gt; {
                         <span class="ident">implemented_proto_fragments</span>.<span class="ident">insert</span>(<span class="ident">method_name</span>);
                         <span class="kw">let</span> <span class="ident">attrs</span> <span class="op">=</span> <span class="ident">get_cfg_attributes</span>(<span class="kw-2">&amp;</span><span class="ident">meth</span>.<span class="ident">attrs</span>);
@@ -507,49 +479,29 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_default_items</span>(<span class="ident">cls</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>, <span class="ident">method_defs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span>) -&gt; <span class="ident">TokenStream</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gen_default_items</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+    <span class="ident">cls</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
+    <span class="ident">method_defs</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> [<span class="ident">syn::ImplItemMethod</span>],
+) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">TokenStream</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> {
     <span class="comment">// This function uses a lot of `unwrap()`; since method_defs are provided by us, they should</span>
     <span class="comment">// all succeed.</span>
     <span class="kw">let</span> <span class="ident">ty</span>: <span class="ident">syn::Type</span> <span class="op">=</span> <span class="macro">syn::parse_quote!</span>(#<span class="ident">cls</span>);
 
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">method_defs</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">method_defs</span>
-        .<span class="ident">into_iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">token</span><span class="op">|</span> <span class="ident">syn::parse2</span>::<span class="op">&lt;</span><span class="ident">syn::ImplItemMethod</span><span class="op">&gt;</span>(<span class="ident">token</span>).<span class="ident">unwrap</span>())
-        .<span class="ident">collect</span>();
-
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">proto_impls</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-
-    <span class="kw">for</span> <span class="ident">meth</span> <span class="kw">in</span> <span class="kw-2">&amp;mut</span> <span class="ident">method_defs</span> {
+    <span class="ident">method_defs</span>.<span class="ident">iter_mut</span>().<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">meth</span><span class="op">|</span> {
         <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="ident">PyFunctionOptions::from_attrs</span>(<span class="kw-2">&amp;mut</span> <span class="ident">meth</span>.<span class="ident">attrs</span>).<span class="ident">unwrap</span>();
         <span class="kw">match</span> <span class="ident">pymethod::gen_py_method</span>(<span class="kw-2">&amp;</span><span class="ident">ty</span>, <span class="kw-2">&amp;mut</span> <span class="ident">meth</span>.<span class="ident">sig</span>, <span class="kw-2">&amp;mut</span> <span class="ident">meth</span>.<span class="ident">attrs</span>, <span class="ident">options</span>).<span class="ident">unwrap</span>() {
             <span class="ident">GeneratedPyMethod::Proto</span>(<span class="ident">token_stream</span>) =&gt; {
                 <span class="kw">let</span> <span class="ident">attrs</span> <span class="op">=</span> <span class="ident">get_cfg_attributes</span>(<span class="kw-2">&amp;</span><span class="ident">meth</span>.<span class="ident">attrs</span>);
-                <span class="ident">proto_impls</span>.<span class="ident">push</span>(<span class="macro">quote!</span>(#(#<span class="ident">attrs</span>)<span class="op">*</span> #<span class="ident">token_stream</span>))
+                <span class="macro">quote!</span>(#(#<span class="ident">attrs</span>)<span class="op">*</span> #<span class="ident">token_stream</span>)
             }
             <span class="ident">GeneratedPyMethod::SlotTraitImpl</span>(..) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;SlotFragment methods cannot have default implementation!&quot;</span>)
             }
-            <span class="ident">GeneratedPyMethod::Method</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">GeneratedPyMethod::TraitImpl</span>(<span class="kw">_</span>) =&gt; {
+            <span class="ident">GeneratedPyMethod::Method</span>(<span class="kw">_</span>) =&gt; {
                 <span class="macro">panic!</span>(<span class="string">&quot;Only protocol methods can have default implementation!&quot;</span>)
             }
         }
-    }
-
-    <span class="macro">quote!</span> {
-        <span class="kw">impl</span> #<span class="ident">cls</span> {
-            #(#<span class="ident">method_defs</span>)<span class="op">*</span>
-        }
-        <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassDefaultItems</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>
-            <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
-                <span class="kw">fn</span> <span class="ident">pyclass_default_items</span>(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
-                    <span class="kw">static</span> <span class="ident">ITEMS</span>: <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> <span class="op">=</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
-                        <span class="ident">methods</span>: <span class="kw-2">&amp;</span>[],
-                        <span class="ident">slots</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">proto_impls</span>),<span class="kw-2">*</span>]
-                    };
-                    <span class="kw-2">&amp;</span><span class="ident">ITEMS</span>
-                }
-        }
-    }
+    })
 }
 
 <span class="kw">fn</span> <span class="ident">impl_py_methods</span>(
@@ -634,5 +586,5 @@
         .<span class="ident">collect</span>()
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (f624427f8 2022-02-06)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
 </body></html>

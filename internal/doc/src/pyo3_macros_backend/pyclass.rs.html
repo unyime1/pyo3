@@ -1031,8 +1031,6 @@
 <span id="1024">1024</span>
 <span id="1025">1025</span>
 <span id="1026">1026</span>
-<span id="1027">1027</span>
-<span id="1028">1028</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::attributes</span>::{
@@ -1422,6 +1420,7 @@
         <span class="ident">attr</span>,
         <span class="ident">methods_type</span>,
         <span class="ident">descriptors_to_items</span>(<span class="ident">cls</span>, <span class="ident">field_options</span>)<span class="question-mark">?</span>,
+        <span class="macro">vec!</span>[],
     )
     .<span class="ident">doc</span>(<span class="ident">doc</span>)
     .<span class="ident">impl_all</span>();
@@ -1532,23 +1531,15 @@
     <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="ident">enum_</span>.<span class="ident">ident</span>;
     <span class="kw">let</span> <span class="ident">variants</span> <span class="op">=</span> <span class="ident">enum_</span>.<span class="ident">variants</span>;
     <span class="kw">let</span> <span class="ident">pytypeinfo</span> <span class="op">=</span> <span class="ident">impl_pytypeinfo</span>(<span class="ident">cls</span>, <span class="ident">args</span>, <span class="prelude-val">None</span>);
-    <span class="kw">let</span> <span class="ident">pyclass_impls</span> <span class="op">=</span> <span class="ident">PyClassImplsBuilder::new</span>(
-        <span class="ident">cls</span>,
-        <span class="ident">args</span>,
-        <span class="ident">methods_type</span>,
-        <span class="ident">unit_variants_as_items</span>(<span class="ident">cls</span>, <span class="ident">variants</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">ident</span>)),
-    )
-    .<span class="ident">doc</span>(<span class="ident">doc</span>)
-    .<span class="ident">impl_all</span>();
 
-    <span class="kw">let</span> <span class="ident">default_repr_impl</span> <span class="op">=</span> {
+    <span class="kw">let</span> <span class="ident">default_repr_impl</span>: <span class="ident">syn::ImplItemMethod</span> <span class="op">=</span> {
         <span class="kw">let</span> <span class="ident">variants_repr</span> <span class="op">=</span> <span class="ident">variants</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">variant</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">variant_name</span> <span class="op">=</span> <span class="ident">variant</span>.<span class="ident">ident</span>;
             <span class="comment">// Assuming all variants are unit variants because they are the only type we support.</span>
             <span class="kw">let</span> <span class="ident">repr</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}.{}&quot;</span>, <span class="ident">cls</span>, <span class="ident">variant_name</span>);
             <span class="macro">quote!</span> { #<span class="ident">cls</span>::#<span class="ident">variant_name</span> =&gt; #<span class="ident">repr</span>, }
         });
-        <span class="macro">quote!</span> {
+        <span class="macro">syn::parse_quote!</span> {
             <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
             <span class="attribute">#[<span class="ident">pyo3</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;__repr__&quot;</span>)]</span>
@@ -1568,7 +1559,7 @@
             <span class="kw">let</span> <span class="ident">variant_name</span> <span class="op">=</span> <span class="ident">variant</span>.<span class="ident">ident</span>;
             <span class="macro">quote!</span> { #<span class="ident">cls</span>::#<span class="ident">variant_name</span> =&gt; #<span class="ident">cls</span>::#<span class="ident">variant_name</span> <span class="kw">as</span> #<span class="ident">repr_type</span>, }
         });
-        <span class="macro">quote!</span> {
+        <span class="macro">syn::parse_quote!</span> {
             <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
             <span class="attribute">#[<span class="ident">pyo3</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;__int__&quot;</span>)]</span>
@@ -1588,7 +1579,7 @@
                     <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>.<span class="ident">to_object</span>(<span class="ident">py</span>)),
             }
         });
-        <span class="macro">quote!</span> {
+        <span class="macro">syn::parse_quote!</span> {
             <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
             <span class="attribute">#[<span class="ident">pyo3</span>(<span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;__richcmp__&quot;</span>)]</span>
@@ -1619,8 +1610,17 @@
         }
     };
 
-    <span class="kw">let</span> <span class="ident">default_items</span> <span class="op">=</span>
-        <span class="ident">gen_default_items</span>(<span class="ident">cls</span>, <span class="macro">vec!</span>[<span class="ident">default_repr_impl</span>, <span class="ident">default_richcmp</span>, <span class="ident">default_int</span>]);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">default_methods</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="ident">default_repr_impl</span>, <span class="ident">default_richcmp</span>, <span class="ident">default_int</span>];
+
+    <span class="kw">let</span> <span class="ident">pyclass_impls</span> <span class="op">=</span> <span class="ident">PyClassImplsBuilder::new</span>(
+        <span class="ident">cls</span>,
+        <span class="ident">args</span>,
+        <span class="ident">methods_type</span>,
+        <span class="ident">enum_default_methods</span>(<span class="ident">cls</span>, <span class="ident">variants</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">ident</span>)),
+        <span class="ident">enum_default_slots</span>(<span class="ident">cls</span>, <span class="kw-2">&amp;mut</span> <span class="ident">default_methods</span>),
+    )
+    .<span class="ident">doc</span>(<span class="ident">doc</span>)
+    .<span class="ident">impl_all</span>();
 
     <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {
         <span class="kw">const</span> <span class="kw">_</span>: () <span class="op">=</span> {
@@ -1630,15 +1630,17 @@
 
             #<span class="ident">pyclass_impls</span>
 
-            #<span class="ident">default_items</span>
+            <span class="kw">impl</span> #<span class="ident">cls</span> {
+                #(#<span class="ident">default_methods</span>)<span class="op">*</span>
+            }
         };
     })
 }
 
-<span class="kw">fn</span> <span class="ident">unit_variants_as_items</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+<span class="kw">fn</span> <span class="ident">enum_default_methods</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
     <span class="ident">cls</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">syn::Ident</span>,
-    <span class="ident">variant_names</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">syn::Ident</span><span class="op">&gt;</span>,
-) -&gt; <span class="ident">TokenStream</span> {
+    <span class="ident">unit_variant_names</span>: <span class="kw">impl</span> <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">syn::Ident</span><span class="op">&gt;</span>,
+) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">cls_type</span> <span class="op">=</span> <span class="macro">syn::parse_quote!</span>(#<span class="ident">cls</span>);
     <span class="kw">let</span> <span class="ident">variant_to_attribute</span> <span class="op">=</span> <span class="op">|</span><span class="ident">ident</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span><span class="op">|</span> <span class="ident">ConstSpec</span> {
         <span class="ident">rust_ident</span>: <span class="ident">ident</span>.<span class="ident">clone</span>(),
@@ -1648,16 +1650,17 @@
             <span class="ident">deprecations</span>: <span class="ident">Default::default</span>(),
         },
     };
-    <span class="kw">let</span> <span class="ident">py_methods</span> <span class="op">=</span> <span class="ident">variant_names</span>
+    <span class="ident">unit_variant_names</span>
         .<span class="ident">into_iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">var</span><span class="op">|</span> <span class="ident">gen_py_const</span>(<span class="kw-2">&amp;</span><span class="ident">cls_type</span>, <span class="kw-2">&amp;</span><span class="ident">variant_to_attribute</span>(<span class="ident">var</span>)));
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">var</span><span class="op">|</span> <span class="ident">gen_py_const</span>(<span class="kw-2">&amp;</span><span class="ident">cls_type</span>, <span class="kw-2">&amp;</span><span class="ident">variant_to_attribute</span>(<span class="ident">var</span>)))
+        .<span class="ident">collect</span>()
+}
 
-    <span class="macro">quote!</span> {
-        <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
-            <span class="ident">methods</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">py_methods</span>),<span class="kw-2">*</span>],
-            <span class="ident">slots</span>: <span class="kw-2">&amp;</span>[]
-        }
-    }
+<span class="kw">fn</span> <span class="ident">enum_default_slots</span>(
+    <span class="ident">cls</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
+    <span class="ident">default_items</span>: <span class="kw-2">&amp;mut</span> [<span class="ident">syn::ImplItemMethod</span>],
+) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span> {
+    <span class="ident">gen_default_items</span>(<span class="ident">cls</span>, <span class="ident">default_items</span>).<span class="ident">collect</span>()
 }
 
 <span class="kw">fn</span> <span class="ident">extract_variant_data</span>(<span class="ident">variant</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Variant</span>) -&gt; <span class="ident">syn::Result</span><span class="op">&lt;</span><span class="ident">PyClassEnumVariant</span><span class="op">&gt;</span> {
@@ -1672,9 +1675,9 @@
 <span class="kw">fn</span> <span class="ident">descriptors_to_items</span>(
     <span class="ident">cls</span>: <span class="kw-2">&amp;</span><span class="ident">syn::Ident</span>,
     <span class="ident">field_options</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">syn::Field</span>, <span class="ident">FieldPyO3Options</span>)<span class="op">&gt;</span>,
-) -&gt; <span class="ident">syn::Result</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span> {
+) -&gt; <span class="ident">syn::Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">ty</span> <span class="op">=</span> <span class="macro">syn::parse_quote!</span>(#<span class="ident">cls</span>);
-    <span class="kw">let</span> <span class="ident">py_methods</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">field_options</span>
+    <span class="ident">field_options</span>
         .<span class="ident">into_iter</span>()
         .<span class="ident">enumerate</span>()
         .<span class="ident">flat_map</span>(<span class="op">|</span>(<span class="ident">field_index</span>, (<span class="ident">field</span>, <span class="ident">options</span>))<span class="op">|</span> {
@@ -1706,14 +1709,7 @@
 
             <span class="ident">name_err</span>.<span class="ident">into_iter</span>().<span class="ident">chain</span>(<span class="ident">getter</span>).<span class="ident">chain</span>(<span class="ident">setter</span>)
         })
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">syn::Result</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-
-    <span class="prelude-val">Ok</span>(<span class="macro">quote!</span> {
-        <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span> {
-            <span class="ident">methods</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">py_methods</span>),<span class="kw-2">*</span>],
-            <span class="ident">slots</span>: <span class="kw-2">&amp;</span>[]
-        }
-    })
+        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">syn::Result</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
 }
 
 <span class="kw">fn</span> <span class="ident">impl_pytypeinfo</span>(
@@ -1757,7 +1753,8 @@
     <span class="ident">cls</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">syn::Ident</span>,
     <span class="ident">attr</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyClassArgs</span>,
     <span class="ident">methods_type</span>: <span class="ident">PyClassMethodsType</span>,
-    <span class="ident">default_items</span>: <span class="ident">TokenStream</span>,
+    <span class="ident">default_methods</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span>,
+    <span class="ident">default_slots</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span>,
     <span class="ident">doc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PythonDoc</span><span class="op">&gt;</span>,
 }
 
@@ -1766,13 +1763,15 @@
         <span class="ident">cls</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">syn::Ident</span>,
         <span class="ident">attr</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">PyClassArgs</span>,
         <span class="ident">methods_type</span>: <span class="ident">PyClassMethodsType</span>,
-        <span class="ident">default_items</span>: <span class="ident">TokenStream</span>,
+        <span class="ident">default_methods</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span>,
+        <span class="ident">default_slots</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span>,
     ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">cls</span>,
             <span class="ident">attr</span>,
             <span class="ident">methods_type</span>,
-            <span class="ident">default_items</span>,
+            <span class="ident">default_methods</span>,
+            <span class="ident">default_slots</span>,
             <span class="ident">doc</span>: <span class="prelude-val">None</span>,
         }
     }
@@ -1934,7 +1933,9 @@
             <span class="prelude-val">None</span>
         };
 
-        <span class="kw">let</span> <span class="ident">default_items</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">default_items</span>;
+        <span class="kw">let</span> <span class="ident">default_methods</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">default_methods</span>;
+        <span class="kw">let</span> <span class="ident">default_slots</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">default_slots</span>;
+        <span class="kw">let</span> <span class="ident">freelist_slots</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">freelist_slots</span>();
 
         <span class="macro">quote!</span> {
             <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImpl</span> <span class="kw">for</span> #<span class="ident">cls</span> {
@@ -1951,28 +1952,13 @@
                 <span class="kw">fn</span> <span class="ident">for_all_items</span>(<span class="ident">visitor</span>: <span class="kw-2">&amp;mut</span> <span class="kw">dyn</span> <span class="ident">::std::ops::FnMut</span>(<span class="op">&amp;</span> <span class="ident">_pyo3::impl_::pyclass::PyClassItems</span>)) {
                     <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
                     <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
-                    <span class="kw">static</span> <span class="ident">INTRINSIC_ITEMS</span>: <span class="ident">PyClassItems</span> <span class="op">=</span> #<span class="ident">default_items</span>;
+                    <span class="kw">static</span> <span class="ident">INTRINSIC_ITEMS</span>: <span class="ident">PyClassItems</span> <span class="op">=</span> <span class="ident">PyClassItems</span> {
+                        <span class="ident">methods</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">default_methods</span>),<span class="kw-2">*</span>],
+                        <span class="ident">slots</span>: <span class="kw-2">&amp;</span>[#(#<span class="ident">default_slots</span>),<span class="op">*</span> #(#<span class="ident">freelist_slots</span>),<span class="kw-2">*</span>],
+                    };
                     <span class="ident">visitor</span>(<span class="kw-2">&amp;</span><span class="ident">INTRINSIC_ITEMS</span>);
-                    <span class="comment">// This depends on Python implementation detail;</span>
-                    <span class="comment">// an old slot entry will be overriden by newer ones.</span>
-                    <span class="ident">visitor</span>(<span class="ident">collector</span>.<span class="ident">pyclass_default_items</span>());
                     #<span class="ident">pymethods_items</span>
                     #<span class="ident">pyproto_items</span>
-                }
-                <span class="kw">fn</span> <span class="ident">get_new</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::newfunc</span><span class="op">&gt;</span> {
-                    <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
-                    <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
-                    <span class="ident">collector</span>.<span class="ident">new_impl</span>()
-                }
-                <span class="kw">fn</span> <span class="ident">get_alloc</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::allocfunc</span><span class="op">&gt;</span> {
-                    <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
-                    <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
-                    <span class="ident">collector</span>.<span class="ident">alloc_impl</span>()
-                }
-                <span class="kw">fn</span> <span class="ident">get_free</span>() -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::freefunc</span><span class="op">&gt;</span> {
-                    <span class="kw">use</span> <span class="ident">_pyo3::impl_::pyclass</span>::<span class="kw-2">*</span>;
-                    <span class="kw">let</span> <span class="ident">collector</span> <span class="op">=</span> <span class="ident">PyClassImplCollector</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="ident">::new</span>();
-                    <span class="ident">collector</span>.<span class="ident">free_impl</span>()
                 }
 
                 #<span class="ident">dict_offset</span>
@@ -2002,23 +1988,33 @@
                         }
                     }
                 }
-
-                <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassAllocImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
-                    <span class="attribute">#[<span class="ident">inline</span>]</span>
-                    <span class="kw">fn</span> <span class="ident">alloc_impl</span>(<span class="self">self</span>) -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::allocfunc</span><span class="op">&gt;</span> {
-                        <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::impl_::pyclass::alloc_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>)
-                    }
-                }
-
-                <span class="kw">impl</span> <span class="ident">_pyo3::impl_::pyclass::PyClassFreeImpl</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">_pyo3::impl_::pyclass::PyClassImplCollector</span><span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> {
-                    <span class="attribute">#[<span class="ident">inline</span>]</span>
-                    <span class="kw">fn</span> <span class="ident">free_impl</span>(<span class="self">self</span>) -&gt; <span class="ident">::std::option::Option</span><span class="op">&lt;</span><span class="ident">_pyo3::ffi::freefunc</span><span class="op">&gt;</span> {
-                        <span class="ident">::std::option::Option::Some</span>(<span class="ident">_pyo3::impl_::pyclass::free_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span>)
-                    }
-                }
             }
         })
     }
+
+    <span class="kw">fn</span> <span class="ident">freelist_slots</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TokenStream</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cls</span>;
+
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">attr</span>.<span class="ident">freelist</span>.<span class="ident">is_some</span>() {
+            <span class="macro">vec!</span>[
+                <span class="macro">quote!</span> {
+                    <span class="ident">_pyo3::ffi::PyType_Slot</span> {
+                        <span class="ident">slot</span>: <span class="ident">_pyo3::ffi::Py_tp_alloc</span>,
+                        <span class="ident">pfunc</span>: <span class="ident">_pyo3::impl_::pyclass::alloc_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>,
+                    }
+                },
+                <span class="macro">quote!</span> {
+                    <span class="ident">_pyo3::ffi::PyType_Slot</span> {
+                        <span class="ident">slot</span>: <span class="ident">_pyo3::ffi::Py_tp_free</span>,
+                        <span class="ident">pfunc</span>: <span class="ident">_pyo3::impl_::pyclass::free_with_freelist</span>::<span class="op">&lt;</span>#<span class="ident">cls</span><span class="op">&gt;</span> <span class="kw">as</span> <span class="kw-2">*mut</span> <span class="kw">_</span>,
+                    }
+                },
+            ]
+        } <span class="kw">else</span> {
+            <span class="ident">Vec::new</span>()
+        }
+    }
+
     <span class="doccomment">/// Enforce at compile time that PyGCProtocol is implemented</span>
     <span class="kw">fn</span> <span class="ident">impl_gc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">TokenStream</span> {
         <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">cls</span>;
@@ -2062,5 +2058,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (f624427f8 2022-02-06)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
 </body></html>
