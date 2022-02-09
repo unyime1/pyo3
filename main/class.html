@@ -1108,21 +1108,6 @@ impl pyo3::impl_::pyclass::PyClassImpl for MyClass {
         visitor(&amp;INTRINSIC_ITEMS);
         visitor(collector.py_methods());
     }
-    fn get_new() -&gt; Option&lt;pyo3::ffi::newfunc&gt; {
-        use pyo3::impl_::pyclass::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.new_impl()
-    }
-    fn get_alloc() -&gt; Option&lt;pyo3::ffi::allocfunc&gt; {
-        use pyo3::impl_::pyclass::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.alloc_impl()
-    }
-    fn get_free() -&gt; Option&lt;pyo3::ffi::freefunc&gt; {
-        use pyo3::impl_::pyclass::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.free_impl()
-    }
 }
 <span class="boring">Python::with_gil(|py| {
 </span><span class="boring">    let cls = py.get_type::&lt;MyClass&gt;();

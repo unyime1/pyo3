@@ -1775,21 +1775,6 @@ impl pyo3::impl_::pyclass::PyClassImpl for MyClass {
         visitor(&amp;INTRINSIC_ITEMS);
         visitor(collector.py_methods());
     }
-    fn get_new() -&gt; Option&lt;pyo3::ffi::newfunc&gt; {
-        use pyo3::impl_::pyclass::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.new_impl()
-    }
-    fn get_alloc() -&gt; Option&lt;pyo3::ffi::allocfunc&gt; {
-        use pyo3::impl_::pyclass::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.alloc_impl()
-    }
-    fn get_free() -&gt; Option&lt;pyo3::ffi::freefunc&gt; {
-        use pyo3::impl_::pyclass::*;
-        let collector = PyClassImplCollector::&lt;Self&gt;::new();
-        collector.free_impl()
-    }
 }
 <span class="boring">Python::with_gil(|py| {
 </span><span class="boring">    let cls = py.get_type::&lt;MyClass&gt;();
@@ -6451,7 +6436,7 @@ accompanies your error type in your crate's documentation.</li>
 <ul>
 <li>internal <code>handle_panic</code> helper <a href="https://github.com/PyO3/pyo3/pull/2074">#2074</a></li>
 <li><code>#[pyfunction]</code> and <code>#[pymethods]</code> argument extraction <a href="https://github.com/PyO3/pyo3/pull/2075">#2075</a> <a href="https://github.com/PyO3/pyo3/pull/2085">#2085</a></li>
-<li><code>#[pyclass]</code> type object creation <a href="https://github.com/PyO3/pyo3/pull/2076">#2076</a> <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
+<li><code>#[pyclass]</code> type object creation <a href="https://github.com/PyO3/pyo3/pull/2076">#2076</a> <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a> <a href="https://github.com/PyO3/pyo3/pull/2157">#2157</a></li>
 </ul>
 </li>
 <li><code>__ipow__</code> now supports modulo argument on Python 3.8+. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
