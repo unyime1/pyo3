@@ -18,7 +18,7 @@ map the error from your Rust code into another Python exception. See <a href="..
 information about that.</p>
 <p>For information about error handling in general, see the <a href="https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html" title="Recoverable Errors with Result - The Rust Programming Language">Error handling</a> chapter of the Rust
 book.</p>
-<h2 id="setup" class="section-header"><a href="#setup">Setup</a></h2>
+<h2 id="setup"><a href="#setup">Setup</a></h2>
 <p>To use this feature, add this to your <strong><code>Cargo.toml</code></strong>:</p>
 <div class="example-wrap"><pre class="language-toml"><code>[dependencies]
 # change * to the version you want to use, ideally the latest.
@@ -26,7 +26,7 @@ anyhow = &quot;*&quot;
 pyo3 = { version = &quot;0.15.1&quot;, features = [&quot;anyhow&quot;] }</code></pre></div>
 <p>Note that you must use compatible versions of anyhow and PyO3.
 The required anyhow version may vary based on the version of PyO3.</p>
-<h2 id="example-propagating-a-pyerr-into-anyhowerror" class="section-header"><a href="#example-propagating-a-pyerr-into-anyhowerror">Example: Propagating a <code>PyErr</code> into <code>anyhow::Error</code></a></h2>
+<h2 id="example-propagating-a-pyerr-into-anyhowerror"><a href="#example-propagating-a-pyerr-into-anyhowerror">Example: Propagating a <code>PyErr</code> into <code>anyhow::Error</code></a></h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::wrap_pyfunction</span>;
 <span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
@@ -48,7 +48,7 @@ The required anyhow version may vary based on the version of PyO3.</p>
 
     <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">error</span>);
 }</code></pre></div>
-<h2 id="example-using-anyhow-in-general" class="section-header"><a href="#example-using-anyhow-in-general">Example: Using <code>anyhow</code> in general</a></h2>
+<h2 id="example-using-anyhow-in-general"><a href="#example-using-anyhow-in-general">Example: Using <code>anyhow</code> in general</a></h2>
 <p>Note that you don’t need this feature to convert a <a href="../../err/struct.PyErr.html" title="PyErr"><code>PyErr</code></a> into an <a href="https://docs.rs/anyhow/1.0.53/anyhow/struct.Error.html" title="anyhow::Error"><code>anyhow::Error</code></a>, because
 it can already convert anything that implements <a href="https://doc.rust-lang.org/nightly/std/error/trait.Error.html"><code>Error</code></a>:</p>
 
@@ -86,5 +86,5 @@ it can already convert anything that implements <a href="https://doc.rust-lang.o
     <span class="macro">println!</span>(<span class="string">&quot;The text is \&quot;{}\&quot;&quot;</span>, <span class="ident">text</span>);
     <span class="prelude-val">Ok</span>(())
 }</code></pre></div>
-</div></details></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</div></details></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>

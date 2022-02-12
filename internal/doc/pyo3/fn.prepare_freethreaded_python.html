@@ -15,10 +15,10 @@ initializes the Python interpreter.</p>
 <p>This function is unavailable under PyPy because PyPy cannot be embedded in Rust (or any other
 software). Support for this is tracked on the
 <a href="https://foss.heptapod.net/pypy/pypy/-/issues/3286">PyPy issue tracker</a>.</p>
-<h2 id="examples" class="section-header"><a href="#examples">Examples</a></h2>
+<h2 id="examples"><a href="#examples">Examples</a></h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="ident">pyo3::prepare_freethreaded_python</span>();
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> <span class="ident">py</span>.<span class="ident">run</span>(<span class="string">&quot;print(&#39;Hello World&#39;)&quot;</span>, <span class="prelude-val">None</span>, <span class="prelude-val">None</span>))</code></pre></div>
-</div></details></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</div></details></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>

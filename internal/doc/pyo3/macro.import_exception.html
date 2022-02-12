@@ -10,13 +10,13 @@
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">module</span>: <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>) =&gt; { ... };
 }</code></pre></div>
 </div><details class="rustdoc-toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Defines a Rust type for an exception defined in Python code.</p>
-<h2 id="syntax" class="section-header"><a href="#syntax">Syntax</a></h2>
+<h2 id="syntax"><a href="#syntax">Syntax</a></h2>
 <p><code>import_exception!(module, MyError)</code></p>
 <ul>
 <li><code>module</code> is the name of the containing module.</li>
 <li><code>MyError</code> is the name of the new exception type.</li>
 </ul>
-<h2 id="examples" class="section-header"><a href="#examples">Examples</a></h2>
+<h2 id="examples"><a href="#examples">Examples</a></h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::import_exception</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::IntoPyDict</span>;
 <span class="kw">use</span> <span class="ident">pyo3::Python</span>;
@@ -28,5 +28,5 @@
     <span class="macro">pyo3::py_run!</span>(<span class="ident">py</span>, <span class="kw-2">*</span><span class="ident">ctx</span>, <span class="string">&quot;import socket; assert gaierror is socket.gaierror&quot;</span>);
 });
 </code></pre></div>
-</div></details></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</div></details></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>

@@ -603,6 +603,23 @@
 <span id="596">596</span>
 <span id="597">597</span>
 <span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Defines conversions between Rust and Python types.</span>
@@ -649,7 +666,7 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span> {
         <span class="self">self</span>.<span class="ident">as_ref</span>()
-            .<span class="ident">map_or_else</span>(<span class="ident">std::ptr::null_mut</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">into_ptr</span>())
+            .<span class="ident">map_or_else</span>(<span class="ident">std::ptr::null_mut</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">as_ptr</span>())
     }
 }
 
@@ -1160,7 +1177,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::types</span>::{<span class="ident">IntoPyDict</span>, <span class="ident">PyAny</span>, <span class="ident">PyDict</span>, <span class="ident">PyList</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Python</span>, <span class="ident">ToPyObject</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">AsPyPointer</span>, <span class="ident">PyObject</span>, <span class="ident">Python</span>, <span class="ident">ToPyObject</span>};
 
     <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::PyTryFrom</span>;
 
@@ -1200,7 +1217,24 @@
             <span class="macro">assert_eq!</span>(<span class="ident">list</span>, <span class="ident">val</span>);
         });
     }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_option_as_ptr</span>() {
+        <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">option</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+            <span class="macro">assert_eq!</span>(<span class="ident">option</span>.<span class="ident">as_ptr</span>(), <span class="ident">std::ptr::null_mut</span>());
+
+            <span class="kw">let</span> <span class="ident">none</span> <span class="op">=</span> <span class="ident">py</span>.<span class="prelude-val">None</span>();
+            <span class="ident">option</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">none</span>.<span class="ident">clone</span>());
+
+            <span class="kw">let</span> <span class="ident">ref_cnt</span> <span class="op">=</span> <span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>);
+            <span class="macro">assert_eq!</span>(<span class="ident">option</span>.<span class="ident">as_ptr</span>(), <span class="ident">none</span>.<span class="ident">as_ptr</span>());
+
+            <span class="comment">// Ensure ref count not changed by as_ptr call</span>
+            <span class="macro">assert_eq!</span>(<span class="ident">none</span>.<span class="ident">get_refcnt</span>(<span class="ident">py</span>), <span class="ident">ref_cnt</span>);
+        });
+    }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>

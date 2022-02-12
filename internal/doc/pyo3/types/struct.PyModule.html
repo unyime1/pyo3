@@ -11,7 +11,7 @@
 This means they can be passed to or returned from functions,
 created dynamically, assigned to variables and so forth.</p>
 </div></details><h2 id="fields" class="fields small-section-header">Tuple Fields<a href="#fields" class="anchor"></a></h2><span id="structfield.0" class="structfield small-section-header"><a href="#structfield.0" class="anchor field"></a><code>0: <a class="struct" href="../prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a></code></span><h2 id="implementations" class="small-section-header">Implementations<a href="#implementations" class="anchor"></a></h2><details class="rustdoc-toggle implementors-toggle" open><summary><section id="impl" class="impl has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/module.rs.html#29-395">source</a></span><a href="#impl" class="anchor"></a><h3 class="code-header in-band">impl <a class="struct" href="../prelude/struct.PyModule.html" title="struct pyo3::prelude::PyModule">PyModule</a></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.new" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/module.rs.html#46-50">source</a></span><a href="#method.new" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.new" class="fnname">new</a>&lt;'p&gt;(py: <a class="struct" href="../prelude/struct.Python.html" title="struct pyo3::prelude::Python">Python</a>&lt;'p&gt;, name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;&amp;'p <a class="struct" href="../prelude/struct.PyModule.html" title="struct pyo3::prelude::PyModule">PyModule</a>&gt;</h4></section></summary><div class="docblock"><p>Creates a new module object with the <code>__name__</code> attribute set to <code>name</code>.</p>
-<h5 id="examples" class="section-header"><a href="#examples">Examples</a></h5>
+<h5 id="examples"><a href="#examples">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>{
@@ -21,7 +21,7 @@ created dynamically, assigned to variables and so forth.</p>
     <span class="prelude-val">Ok</span>(())
 })<span class="question-mark">?</span>;</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.import" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/module.rs.html#70-73">source</a></span><a href="#method.import" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.import" class="fnname">import</a>&lt;'p&gt;(py: <a class="struct" href="../prelude/struct.Python.html" title="struct pyo3::prelude::Python">Python</a>&lt;'p&gt;, name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;&amp;'p <a class="struct" href="../prelude/struct.PyModule.html" title="struct pyo3::prelude::PyModule">PyModule</a>&gt;</h4></section></summary><div class="docblock"><p>Imports the Python module with the specified name.</p>
-<h5 id="examples-1" class="section-header"><a href="#examples-1">Examples</a></h5>
+<h5 id="examples-1"><a href="#examples-1">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
@@ -36,14 +36,14 @@ and pretending to live at <code>file_name</code>.</p>
 </div><div class="example-wrap" style="display:inline-block"><pre class="compile_fail" style="white-space:normal;font:inherit;">
  <strong>Warning</strong>: This will compile and execute code. <strong>Never</strong> pass untrusted code to this function!
 <p></pre></div></p>
-<h5 id="errors" class="section-header"><a href="#errors">Errors</a></h5>
+<h5 id="errors"><a href="#errors">Errors</a></h5>
 <p>Returns <code>PyErr</code> if:</p>
 <ul>
 <li><code>code</code> is not syntactically correct Python.</li>
 <li>Any Python exceptions are raised while initializing the module.</li>
 <li>Any of the arguments cannot be converted to <a href="https://doc.rust-lang.org/nightly/std/ffi/c_str/struct.CString.html"><code>CString</code></a>s.</li>
 </ul>
-<h5 id="examples-2" class="section-header"><a href="#examples-2">Examples</a></h5>
+<h5 id="examples-2"><a href="#examples-2">Examples</a></h5>
 <p>Include a file at compile time by using <a href="https://doc.rust-lang.org/std/macro.include_str.html"><code>std::include_str</code> macro</a>:</p>
 
 <div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
@@ -78,7 +78,7 @@ creating one if needed.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.add" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/module.rs.html#243-251">source</a></span><a href="#method.add" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.add" class="fnname">add</a>&lt;V&gt;(&amp;self, name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, value: V) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;V: <a class="trait" href="../conversion/trait.IntoPy.html" title="trait pyo3::conversion::IntoPy">IntoPy</a>&lt;<a class="type" href="../instance/type.PyObject.html" title="type pyo3::instance::PyObject">PyObject</a>&gt;,&nbsp;</span></h4></section></summary><div class="docblock"><p>Adds an attribute to the module.</p>
 <p>For adding classes, functions or modules, prefer to use <a href="../prelude/struct.PyModule.html#method.add_class" title="PyModule::add_class"><code>PyModule::add_class</code></a>,
 <a href="../prelude/struct.PyModule.html#method.add_function" title="PyModule::add_function"><code>PyModule::add_function</code></a> or <a href="../prelude/struct.PyModule.html#method.add_submodule" title="PyModule::add_submodule"><code>PyModule::add_submodule</code></a> instead, respectively.</p>
-<h5 id="examples-3" class="section-header"><a href="#examples-3">Examples</a></h5>
+<h5 id="examples-3"><a href="#examples-3">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="attribute">#[<span class="ident">pymodule</span>]</span>
@@ -95,7 +95,7 @@ print(&quot;c is&quot;, c)</code></pre></div>
 <p>Notice that this method does not take an argument.
 Instead, this method is <em>generic</em>, and requires us to use the
 “turbofish” syntax to specify the class we want to add.</p>
-<h5 id="examples-4" class="section-header"><a href="#examples-4">Examples</a></h5>
+<h5 id="examples-4"><a href="#examples-4">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="attribute">#[<span class="ident">pyclass</span>]</span>
@@ -115,7 +115,7 @@ print(&quot;Foo is&quot;, Foo)</code></pre></div>
 <p>Note that as we haven’t defined a <a href="https://pyo3.rs/latest/class.html#constructor">constructor</a>, Python code can’t actually
 make an <em>instance</em> of <code>Foo</code> (or <em>get</em> one for that matter, as we haven’t exported
 anything that can return instances of <code>Foo</code>).</p>
-</div><div class="docblock scraped-example-list"><span></span><h5 id="scraped-examples" class="section-header"><a href="#scraped-examples">Examples found in repository</a></h5><div class="scraped-example expanded" data-locs="[[[1,1],&quot;../../src/decorator/lib.rs.html#52&quot;,&quot;line 52&quot;]]"><div class="scraped-example-title">examples/decorator/src/lib.rs (<a href="../../src/decorator/lib.rs.html#52">line 52</a>)</div><div class="code-wrapper"><div class="example-wrap"><pre class="line-numbers"><span>51</span>
+</div><div class="docblock scraped-example-list"><span></span><h5 id="scraped-examples"><a href="#scraped-examples">Examples found in repository</a></h5><div class="scraped-example expanded" data-locs="[[[1,1],&quot;../../src/decorator/lib.rs.html#52&quot;,&quot;line 52&quot;]]"><div class="scraped-example-title">examples/decorator/src/lib.rs (<a href="../../src/decorator/lib.rs.html#52">line 52</a>)</div><div class="code-wrapper"><div class="example-wrap"><pre class="line-numbers"><span>51</span>
 <span>52</span>
 <span>53</span>
 <span>54</span>
@@ -131,7 +131,7 @@ anything that can return instances of <code>Foo</code>).</p>
 to directly import submodules by using
 <span style="white-space: pre"><code>from my_module import submodule</code></span>.
 For more information, see <a href="https://github.com/PyO3/pyo3/issues/759">#759</a> and <a href="https://github.com/PyO3/pyo3/issues/1517#issuecomment-808664021">#1517</a>.</p>
-<h5 id="examples-5" class="section-header"><a href="#examples-5">Examples</a></h5>
+<h5 id="examples-5"><a href="#examples-5">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="attribute">#[<span class="ident">pymodule</span>]</span>
@@ -167,7 +167,7 @@ to wrap a function annotated with <a href="../attr.pyfunction.html"><code>#[pyfu
 say_hello()</code></pre></div>
 <p>This will result in the following output:</p>
 <div class="example-wrap"><pre class="language-text"><code>Hello world!</code></pre></div></div></details></div></details><h2 id="deref-methods-PyAny" class="small-section-header"><span>Methods from <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/deref/trait.Deref.html" title="trait core::ops::deref::Deref">Deref</a>&lt;Target = <a class="struct" href="../prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a>&gt;</span><a href="#deref-methods-PyAny" class="anchor"></a></h2><div class="impl-items"><details class="rustdoc-toggle method-toggle" open><summary><section id="method.downcast" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/any.rs.html#83-88">source</a></span><a href="#method.downcast" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.downcast" class="fnname">downcast</a>&lt;T&gt;(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T, <a class="struct" href="../err/struct.PyDowncastError.html" title="struct pyo3::err::PyDowncastError">PyDowncastError</a>&lt;'_&gt;&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;for&lt;'py&gt; T: <a class="trait" href="../conversion/trait.PyTryFrom.html" title="trait pyo3::conversion::PyTryFrom">PyTryFrom</a>&lt;'py&gt;,&nbsp;</span></h4></section></summary><div class="docblock"><p>Converts this <code>PyAny</code> to a concrete Python type.</p>
-<h5 id="examples-6" class="section-header"><a href="#examples-6">Examples</a></h5>
+<h5 id="examples-6"><a href="#examples-6">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types</span>::{<span class="ident">PyAny</span>, <span class="ident">PyDict</span>, <span class="ident">PyList</span>};
 
@@ -195,7 +195,7 @@ elif a &lt; b:
 elif a &gt; b:
     return Greater
 else:
-    raise TypeError(&quot;PyAny::compare(): All comparisons returned false&quot;)</code></pre></div><h5 id="examples-7" class="section-header"><a href="#examples-7">Examples</a></h5>
+    raise TypeError(&quot;PyAny::compare(): All comparisons returned false&quot;)</code></pre></div><h5 id="examples-7"><a href="#examples-7">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::PyFloat</span>;
 <span class="kw">use</span> <span class="ident">std::cmp::Ordering</span>;
@@ -228,7 +228,7 @@ following Python expressions:</p>
 <tr><td style="text-align: center"><a href="../pyclass/enum.CompareOp.html#variant.Gt" title="CompareOp::Gt"><code>CompareOp::Gt</code></a></td><td style="text-align: center"><code>self &gt; other</code></td></tr>
 <tr><td style="text-align: center"><a href="../pyclass/enum.CompareOp.html#variant.Ge" title="CompareOp::Ge"><code>CompareOp::Ge</code></a></td><td style="text-align: center"><code>self &gt;= other</code></td></tr>
 </tbody></table>
-</div><h5 id="examples-8" class="section-header"><a href="#examples-8">Examples</a></h5>
+</div><h5 id="examples-8"><a href="#examples-8">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::class::basic::CompareOp</span>;
 <span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::PyInt</span>;
@@ -241,7 +241,7 @@ following Python expressions:</p>
 })<span class="question-mark">?</span>;</code></pre></div>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.is_callable" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/any.rs.html#289-291">source</a></span><a href="#method.is_callable" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.is_callable" class="fnname">is_callable</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock"><p>Determines whether this object appears callable.</p>
 <p>This is equivalent to Python’s <a href="https://docs.python.org/3/library/functions.html#callable"><code>callable()</code></a> function.</p>
-<h5 id="examples-9" class="section-header"><a href="#examples-9">Examples</a></h5>
+<h5 id="examples-9"><a href="#examples-9">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -259,7 +259,7 @@ exceptions.</p>
 <p>This is equivalent to the Python expression <code>self(*args, **kwargs)</code>.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.call0" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/any.rs.html#334-345">source</a></span><a href="#method.call0" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.call0" class="fnname">call0</a>(&amp;self) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;&amp;<a class="struct" href="../prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a>&gt;</h4></section></summary><div class="docblock"><p>Calls the object without arguments.</p>
 <p>This is equivalent to the Python expression <code>self()</code>.</p>
-<h5 id="examples-10" class="section-header"><a href="#examples-10">Examples</a></h5>
+<h5 id="examples-10"><a href="#examples-10">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -271,7 +271,7 @@ exceptions.</p>
 <p>This is equivalent to the Python expression <code>help()</code>.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.call1" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/any.rs.html#376-378">source</a></span><a href="#method.call1" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.call1" class="fnname">call1</a>(&amp;self, args: impl <a class="trait" href="../conversion/trait.IntoPy.html" title="trait pyo3::conversion::IntoPy">IntoPy</a>&lt;<a class="struct" href="../instance/struct.Py.html" title="struct pyo3::instance::Py">Py</a>&lt;<a class="struct" href="tuple/struct.PyTuple.html" title="struct pyo3::types::tuple::PyTuple">PyTuple</a>&gt;&gt;) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;&amp;<a class="struct" href="../prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a>&gt;</h4></section></summary><div class="docblock"><p>Calls the object with only positional arguments.</p>
 <p>This is equivalent to the Python expression <code>self(*args)</code>.</p>
-<h5 id="examples-11" class="section-header"><a href="#examples-11">Examples</a></h5>
+<h5 id="examples-11"><a href="#examples-11">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 
 <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -288,7 +288,7 @@ exceptions.</p>
 value = add(1,2)
 assert value == 3</code></pre></div></div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.call_method" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/any.rs.html#409-430">source</a></span><a href="#method.call_method" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.call_method" class="fnname">call_method</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;args: impl <a class="trait" href="../conversion/trait.IntoPy.html" title="trait pyo3::conversion::IntoPy">IntoPy</a>&lt;<a class="struct" href="../instance/struct.Py.html" title="struct pyo3::instance::Py">Py</a>&lt;<a class="struct" href="tuple/struct.PyTuple.html" title="struct pyo3::types::tuple::PyTuple">PyTuple</a>&gt;&gt;, <br>&nbsp;&nbsp;&nbsp;&nbsp;kwargs: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="dict/struct.PyDict.html" title="struct pyo3::types::dict::PyDict">PyDict</a>&gt;<br>) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;&amp;<a class="struct" href="../prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a>&gt;</h4></section></summary><div class="docblock"><p>Calls a method on the object.</p>
 <p>This is equivalent to the Python expression <code>self.name(*args, **kwargs)</code>.</p>
-<h5 id="examples-12" class="section-header"><a href="#examples-12">Examples</a></h5>
+<h5 id="examples-12"><a href="#examples-12">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types</span>::{<span class="ident">IntoPyDict</span>, <span class="ident">PyList</span>};
 
@@ -305,7 +305,7 @@ assert value == 3</code></pre></div></div></details><details class="rustdoc-togg
 my_list.sort(reverse = True)
 assert my_list == [7, 6, 5, 4, 3]</code></pre></div></div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.call_method0" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/any.rs.html#462-474">source</a></span><a href="#method.call_method0" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.call_method0" class="fnname">call_method0</a>(&amp;self, name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;&amp;<a class="struct" href="../prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a>&gt;</h4></section></summary><div class="docblock"><p>Calls a method on the object without arguments.</p>
 <p>This is equivalent to the Python expression <code>self.name()</code>.</p>
-<h5 id="examples-13" class="section-header"><a href="#examples-13">Examples</a></h5>
+<h5 id="examples-13"><a href="#examples-13">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::PyFloat</span>;
 <span class="kw">use</span> <span class="ident">std::f64::consts::PI</span>;
@@ -323,7 +323,7 @@ assert my_list == [7, 6, 5, 4, 3]</code></pre></div></div></details><details cla
 
 a, b = math.pi.as_integer_ratio()</code></pre></div></div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.call_method1" class="method has-srclink"><span class="rightside"><a class="srclink" href="../../src/pyo3/types/any.rs.html#503-505">source</a></span><a href="#method.call_method1" class="anchor"></a><h4 class="code-header">pub fn <a href="#method.call_method1" class="fnname">call_method1</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;args: impl <a class="trait" href="../conversion/trait.IntoPy.html" title="trait pyo3::conversion::IntoPy">IntoPy</a>&lt;<a class="struct" href="../instance/struct.Py.html" title="struct pyo3::instance::Py">Py</a>&lt;<a class="struct" href="tuple/struct.PyTuple.html" title="struct pyo3::types::tuple::PyTuple">PyTuple</a>&gt;&gt;<br>) -&gt; <a class="type" href="../err/type.PyResult.html" title="type pyo3::err::PyResult">PyResult</a>&lt;&amp;<a class="struct" href="../prelude/struct.PyAny.html" title="struct pyo3::prelude::PyAny">PyAny</a>&gt;</h4></section></summary><div class="docblock"><p>Calls a method on the object with only positional arguments.</p>
 <p>This is equivalent to the Python expression <code>self.name(*args)</code>.</p>
-<h5 id="examples-14" class="section-header"><a href="#examples-14">Examples</a></h5>
+<h5 id="examples-14"><a href="#examples-14">Examples</a></h5>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use</span> <span class="ident">pyo3::prelude</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">pyo3::types::PyList</span>;
 
@@ -424,5 +424,5 @@ on the native FFI pointer underlying the Python object. <a href="../conversion/t
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_from-1" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#595">source</a></span><a href="#method.try_from-1" class="anchor"></a><h4 class="code-header">pub fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from" class="fnname">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
 </div></details></div></details><details class="rustdoc-toggle implementors-toggle" open><summary><section id="impl-TryInto%3CU%3E" class="impl has-srclink"><span class="rightside"><a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#574-583">source</a></span><a href="#impl-TryInto%3CU%3E" class="anchor"></a><h3 class="code-header in-band">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></h3></section></summary><div class="impl-items"><details class="rustdoc-toggle" open><summary><section id="associatedtype.Error" class="type trait-impl has-srclink"><a href="#associatedtype.Error" class="anchor"></a><h4 class="code-header">type <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error" class="associatedtype">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class='docblock'><p>The type returned in the event of a conversion error.</p>
 </div></details><details class="rustdoc-toggle method-toggle" open><summary><section id="method.try_into" class="method trait-impl has-srclink"><span class="rightside"><span class="since" title="const unstable">const: <a href="https://github.com/rust-lang/rust/issues/88674" title="Tracking issue for const_convert">unstable</a></span> · <a class="srclink" href="https://doc.rust-lang.org/nightly/src/core/convert/mod.rs.html#580">source</a></span><a href="#method.try_into" class="anchor"></a><h4 class="code-header">pub fn <a href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into" class="fnname">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class='docblock'><p>Performs the conversion.</p>
-</div></details></div></details></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</div></details></div></details></div></section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>

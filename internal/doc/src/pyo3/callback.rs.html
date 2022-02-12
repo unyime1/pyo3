@@ -269,6 +269,10 @@
 <span id="262">262</span>
 <span id="263">263</span>
 <span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="doccomment">//! Utilities for a Python callable object that invokes a Rust function.</span>
@@ -516,7 +520,11 @@
     <span class="ident">panic_result_into_callback_output</span>(<span class="ident">py</span>, <span class="ident">panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> { <span class="ident">body</span>(<span class="ident">py</span>) }))
 }
 
-<span class="kw">fn</span> <span class="ident">panic_result_into_callback_output</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
+<span class="doccomment">/// Converts the output of std::panic::catch_unwind into a Python function output, either by raising a Python</span>
+<span class="doccomment">/// exception or by unwrapping the contained success output.</span>
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">panic_result_into_callback_output</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>(
     <span class="ident">py</span>: <span class="ident">Python</span>,
     <span class="ident">panic_result</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Any</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 ) -&gt; <span class="ident">R</span>
@@ -534,5 +542,5 @@
     })
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>

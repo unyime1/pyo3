@@ -1130,6 +1130,12 @@
 <span id="1123">1123</span>
 <span id="1124">1124</span>
 <span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 
 <span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
@@ -1436,7 +1442,9 @@
                         <span class="ident">_value</span>: <span class="kw-2">*mut</span> <span class="ident">_pyo3::ffi::PyObject</span>,
                         <span class="kw">_</span>: <span class="kw-2">*mut</span> <span class="ident">::std::os::raw::c_void</span>
                     ) -&gt; <span class="ident">::std::os::raw::c_int</span> {
-                        <span class="ident">_pyo3::callback::handle_panic</span>(<span class="op">|</span><span class="ident">_py</span><span class="op">|</span> {
+                        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">_pyo3::GILPool::new</span>();
+                        <span class="kw">let</span> <span class="ident">_py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+                        <span class="ident">_pyo3::callback::panic_result_into_callback_output</span>(<span class="ident">_py</span>, <span class="ident">::std::panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">_pyo3::PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> {
                             #<span class="ident">slf</span>
                             <span class="kw">let</span> <span class="ident">_value</span> <span class="op">=</span> <span class="ident">_py</span>
                                 .<span class="ident">from_borrowed_ptr_or_opt</span>(<span class="ident">_value</span>)
@@ -1446,7 +1454,7 @@
                             <span class="kw">let</span> <span class="ident">_val</span> <span class="op">=</span> <span class="ident">_pyo3::FromPyObject::extract</span>(<span class="ident">_value</span>)<span class="question-mark">?</span>;
 
                             <span class="ident">_pyo3::callback::convert</span>(<span class="ident">_py</span>, #<span class="ident">setter_impl</span>)
-                        })
+                        }))
                     }
                     <span class="ident">__wrap</span>
                 }),
@@ -1515,10 +1523,12 @@
                         <span class="ident">_slf</span>: <span class="kw-2">*mut</span> <span class="ident">_pyo3::ffi::PyObject</span>,
                         <span class="kw">_</span>: <span class="kw-2">*mut</span> <span class="ident">::std::os::raw::c_void</span>
                     ) -&gt; <span class="kw-2">*mut</span> <span class="ident">_pyo3::ffi::PyObject</span> {
-                        <span class="ident">_pyo3::callback::handle_panic</span>(<span class="op">|</span><span class="ident">_py</span><span class="op">|</span> {
+                        <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">_pyo3::GILPool::new</span>();
+                        <span class="kw">let</span> <span class="ident">_py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+                        <span class="ident">_pyo3::callback::panic_result_into_callback_output</span>(<span class="ident">_py</span>, <span class="ident">::std::panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">_pyo3::PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> {
                             #<span class="ident">slf</span>
                             <span class="ident">_pyo3::callback::convert</span>(<span class="ident">_py</span>, #<span class="ident">getter_impl</span>)
-                        })
+                        }))
                     }
                     <span class="ident">__wrap</span>
                 }),
@@ -2012,9 +2022,11 @@
             <span class="kw">unsafe</span> <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> <span class="kw">fn</span> <span class="ident">__wrap</span>(<span class="ident">_raw_slf</span>: <span class="kw-2">*mut</span> <span class="ident">_pyo3::ffi::PyObject</span>, #(#<span class="ident">method_arguments</span>),<span class="kw-2">*</span>) -&gt; #<span class="ident">ret_ty</span> {
                 <span class="kw">let</span> <span class="ident">_slf</span> <span class="op">=</span> <span class="ident">_raw_slf</span>;
                 #<span class="ident">before_call_method</span>
-                <span class="ident">_pyo3::callback::handle_panic</span>(<span class="op">|</span>#<span class="ident">py</span><span class="op">|</span> {
+                <span class="kw">let</span> <span class="ident">gil</span> <span class="op">=</span> <span class="ident">_pyo3::GILPool::new</span>();
+                <span class="kw">let</span> #<span class="ident">py</span> <span class="op">=</span> <span class="ident">gil</span>.<span class="ident">python</span>();
+                <span class="ident">_pyo3::callback::panic_result_into_callback_output</span>(#<span class="ident">py</span>, <span class="ident">::std::panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">_pyo3::PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> {
                     #<span class="ident">body</span>
-                })
+                }))
             }
             <span class="ident">_pyo3::ffi::PyType_Slot</span> {
                 <span class="ident">slot</span>: <span class="ident">_pyo3::ffi</span>::#<span class="ident">slot</span>,
@@ -2256,5 +2268,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros_backend" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>
