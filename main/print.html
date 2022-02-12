@@ -6434,7 +6434,7 @@ accompanies your error type in your crate's documentation.</li>
 <li>Improve performance and error messages for <code>#[derive(FromPyObject)]</code> for enums. <a href="https://github.com/PyO3/pyo3/pull/2068">#2068</a></li>
 <li>Reduce generated LLVM code size (to improve compile times) for:
 <ul>
-<li>internal <code>handle_panic</code> helper <a href="https://github.com/PyO3/pyo3/pull/2074">#2074</a></li>
+<li>internal <code>handle_panic</code> helper <a href="https://github.com/PyO3/pyo3/pull/2074">#2074</a> <a href="https://github.com/PyO3/pyo3/pull/2158">#2158</a></li>
 <li><code>#[pyfunction]</code> and <code>#[pymethods]</code> argument extraction <a href="https://github.com/PyO3/pyo3/pull/2075">#2075</a> <a href="https://github.com/PyO3/pyo3/pull/2085">#2085</a></li>
 <li><code>#[pyclass]</code> type object creation <a href="https://github.com/PyO3/pyo3/pull/2076">#2076</a> <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a> <a href="https://github.com/PyO3/pyo3/pull/2157">#2157</a></li>
 </ul>
@@ -6475,6 +6475,7 @@ accompanies your error type in your crate's documentation.</li>
 <li>Fix panic in <code>#[pyfunction]</code> generated code when a required argument following an <code>Option</code> was not provided.  <a href="https://github.com/PyO3/pyo3/pull/2093">#2093</a></li>
 <li>Fixed undefined behaviour caused by incorrect <code>ExactSizeIterator</code> implementations. <a href="https://github.com/PyO3/pyo3/pull/2124">#2124</a></li>
 <li>Add missing FFI definitions <code>_PyLong_NumBits</code> and <code>_PyLong_AsByteArray</code> on PyPy. <a href="https://github.com/PyO3/pyo3/pull/2146">#2146</a></li>
+<li>Fix memory leak in implementation of <code>AsPyPointer</code> for <code>Option&lt;T&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/2160">#2160</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a href="https://github.com/pyo3/pyo3/compare/v0.15.0...v0.15.1">0.15.1</a> - 2021-11-19</a></h2>
 <h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>

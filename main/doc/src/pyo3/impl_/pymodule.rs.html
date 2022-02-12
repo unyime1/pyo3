@@ -152,12 +152,21 @@
 <span id="147">147</span>
 <span id="148">148</span>
 <span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Implementation details of `#[pymodule]` which need to be accessible from proc-macro generated code.</span>
 
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cell::UnsafeCell</span>, <span class="ident">panic::AssertUnwindSafe</span>};
+<span class="kw">use</span> <span class="ident">std::cell::UnsafeCell</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">callback::handle_panic</span>, <span class="ident">ffi</span>, <span class="ident">types::PyModule</span>, <span class="ident">IntoPyPointer</span>, <span class="ident">Py</span>, <span class="ident">PyObject</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>,
+    <span class="ident">callback::panic_result_into_callback_output</span>, <span class="ident">ffi</span>, <span class="ident">types::PyModule</span>, <span class="ident">GILPool</span>, <span class="ident">IntoPyPointer</span>, <span class="ident">Py</span>,
+    <span class="ident">PyObject</span>, <span class="ident">PyResult</span>, <span class="ident">Python</span>,
 };
 
 <span class="doccomment">/// `Sync` wrapper of `ffi::PyModuleDef`.</span>
@@ -218,8 +227,15 @@
     <span class="doccomment">/// # Safety</span>
     <span class="doccomment">/// The Python GIL must be held.</span>
     <span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">module_init</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="self">self</span>) -&gt; <span class="kw-2">*mut</span> <span class="ident">ffi::PyObject</span> {
-        <span class="kw">let</span> <span class="ident">unwind_safe_self</span> <span class="op">=</span> <span class="ident">AssertUnwindSafe</span>(<span class="self">self</span>);
-        <span class="ident">handle_panic</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="ident">unwind_safe_self</span>.<span class="ident">make_module</span>(<span class="ident">py</span>)<span class="question-mark">?</span>.<span class="ident">into_ptr</span>()))
+        <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident">GILPool::new</span>();
+        <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">python</span>();
+        <span class="kw">let</span> <span class="ident">unwind_safe_self</span> <span class="op">=</span> <span class="ident">std::panic::AssertUnwindSafe</span>(<span class="self">self</span>);
+        <span class="ident">panic_result_into_callback_output</span>(
+            <span class="ident">py</span>,
+            <span class="ident">std::panic::catch_unwind</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">unwind_safe_self</span>.<span class="ident">make_module</span>(<span class="ident">py</span>)<span class="question-mark">?</span>.<span class="ident">into_ptr</span>())
+            }),
+        )
     }
 }
 
@@ -302,5 +318,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (0c292c966 2022-02-08)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.60.0-nightly (e789f3a3a 2022-02-11)" ></div>
 </body></html>
