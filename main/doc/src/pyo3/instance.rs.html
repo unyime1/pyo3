@@ -1565,7 +1565,7 @@
     <span class="doccomment">/// This is equivalent to the Python expression `self()`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">call0</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if::cfg_if!</span> {
-            <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">Py_3_9</span>)]</span> {
+            <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_9</span>, <span class="ident">not</span>(<span class="ident">PyPy</span>)))]</span> {
                 <span class="comment">// Optimized path on python 3.9+</span>
                 <span class="kw">unsafe</span> {
                     <span class="ident">PyObject::from_owned_ptr_or_err</span>(<span class="ident">py</span>, <span class="ident">ffi::PyObject_CallNoArgs</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()))
@@ -1618,7 +1618,7 @@
     <span class="doccomment">/// This is equivalent to the Python expression `self.name()`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">call_method0</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">py</span>: <span class="ident">Python</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">PyResult</span><span class="op">&lt;</span><span class="ident">PyObject</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if::cfg_if!</span> {
-            <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_9</span>, <span class="ident">not</span>(<span class="ident">Py_LIMITED_API</span>)))]</span> {
+            <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">Py_3_9</span>, <span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">Py_LIMITED_API</span>, <span class="ident">PyPy</span>))))]</span> {
                 <span class="comment">// Optimized path on python 3.9+</span>
                 <span class="kw">unsafe</span> {
                     <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">into_py</span>(<span class="ident">py</span>);
@@ -1958,5 +1958,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (68369a041 2022-02-22)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (4b043faba 2022-02-24)" ></div>
 </body></html>
