@@ -7141,6 +7141,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li>Add <code>PyMapping::contains</code> method (<code>in</code> operator for <code>PyMapping</code>). <a href="https://github.com/PyO3/pyo3/pull/2133">#2133</a></li>
 <li>Add garbage collection magic methods <code>__traverse__</code> and <code>__clear__</code> to <code>#[pymethods]</code>. <a href="https://github.com/PyO3/pyo3/pull/2159">#2159</a></li>
 <li>Add support for <code>from_py_with</code> on struct tuples and enums to override the default from-Python conversion. <a href="https://github.com/PyO3/pyo3/pull/2181">#2181</a></li>
+<li>Add <code>eq</code>, <code>ne</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code> methods to <code>PyAny</code> that wrap <code>rich_compare</code>.</li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
