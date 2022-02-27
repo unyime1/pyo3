@@ -460,6 +460,15 @@
 <span id="453">453</span>
 <span id="454">454</span>
 <span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">feature</span>(<span class="ident">auto_traits</span>, <span class="ident">negative_impls</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">feature</span>(<span class="ident">doc_cfg</span>, <span class="ident">doc_auto_cfg</span>))]</span>
 <span class="attribute">#![<span class="ident">cfg_attr</span>(
@@ -524,7 +533,10 @@
 <span class="doccomment">//! ## Default feature flags</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The following features are turned on by default:</span>
-<span class="doccomment">//! - `macros`: Enables various macros, including all the attribute macros.</span>
+<span class="doccomment">//! - `macros`: Enables various macros, including all the attribute macros excluding the deprecated</span>
+<span class="doccomment">//! `#[pyproto]` attribute.</span>
+<span class="doccomment">//! - `pyproto`: Adds the deprecated `#[pyproto]` attribute macro. Likely to become optional and</span>
+<span class="doccomment">//! then removed in the future.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ## Optional feature flags</span>
 <span class="doccomment">//!</span>
@@ -768,6 +780,8 @@
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::impl_::pymethods</span> <span class="kw">as</span> <span class="ident">methods</span>;
 
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::gc</span>::{<span class="ident">PyTraverseError</span>, <span class="ident">PyVisit</span>};
+
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::methods</span>::{
         <span class="ident">PyClassAttributeDef</span>, <span class="ident">PyGetterDef</span>, <span class="ident">PyMethodDef</span>, <span class="ident">PyMethodDefType</span>, <span class="ident">PyMethodType</span>, <span class="ident">PySetterDef</span>,
@@ -783,6 +797,10 @@
 
     <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">iter</span> {
         <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::pyclass</span>::{<span class="ident">IterNextOutput</span>, <span class="ident">PyIterNextOutput</span>};
+    }
+
+    <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">gc</span> {
+        <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::impl_::pymethods</span>::{<span class="ident">PyTraverseError</span>, <span class="ident">PyVisit</span>};
     }
 }
 
@@ -916,5 +934,5 @@
     <span class="comment">// such as pyo3_asyncio.</span>
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (4b043faba 2022-02-24)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (10cc7a6d0 2022-02-26)" ></div>
 </body></html>
