@@ -1150,7 +1150,7 @@
         <span class="ident">Python::with_gil</span>(<span class="op">|</span><span class="ident">py</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">PyList::new</span>(<span class="ident">py</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
             <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="op">&lt;</span><span class="ident">PyList</span> <span class="kw">as</span> <span class="ident">PyTryFrom</span><span class="op">&gt;</span><span class="ident">::try_from_unchecked</span>(<span class="ident">list</span>.<span class="ident">as_ref</span>()) };
-            <span class="macro">assert_eq!</span>(<span class="ident">list</span>, <span class="ident">val</span>);
+            <span class="macro">assert!</span>(<span class="ident">list</span>.<span class="ident">is</span>(<span class="ident">val</span>));
         });
     }
 
@@ -1172,5 +1172,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (4b043faba 2022-02-24)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (4ce374923 2022-02-28)" ></div>
 </body></html>

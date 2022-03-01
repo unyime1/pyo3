@@ -226,6 +226,17 @@ automatically `return NotImplemented`.
 <p><code>__getattr__(&lt;self&gt;, object) -&gt; object</code></p>
 </li>
 <li>
+<p><code>__getattribute__(&lt;self&gt;, object) -&gt; object</code></p>
+<details>
+<summary>Differences between `__getattr__` and `__getattribute__`</summary>
+As in Python, `__getattr__` is only called if the attribute is not found
+by normal attribute lookup.  `__getattribute__`, on the other hand, is
+called for *every* attribute access.  If it wants to access existing
+attributes on `self`, it needs to be very careful not to introduce
+infinite recursion, and use `baseclass.__getattribute__()`.
+</details>
+</li>
+<li>
 <p><code>__setattr__(&lt;self&gt;, value: object) -&gt; ()</code></p>
 </li>
 <li>

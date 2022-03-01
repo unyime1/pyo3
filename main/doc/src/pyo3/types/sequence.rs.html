@@ -1571,11 +1571,11 @@
             <span class="kw">let</span> <span class="ident">seq</span> <span class="op">=</span> <span class="ident">ob</span>.<span class="ident">cast_as</span>::<span class="op">&lt;</span><span class="ident">PySequence</span><span class="op">&gt;</span>(<span class="ident">py</span>).<span class="ident">unwrap</span>();
             <span class="kw">let</span> <span class="ident">rep_seq</span> <span class="op">=</span> <span class="ident">seq</span>.<span class="ident">in_place_repeat</span>(<span class="number">3</span>).<span class="ident">unwrap</span>();
             <span class="macro">assert_eq!</span>(<span class="number">6</span>, <span class="ident">seq</span>.<span class="ident">len</span>().<span class="ident">unwrap</span>());
-            <span class="macro">assert_eq!</span>(<span class="ident">seq</span>, <span class="ident">rep_seq</span>);
+            <span class="macro">assert!</span>(<span class="ident">seq</span>.<span class="ident">is</span>(<span class="ident">rep_seq</span>));
 
             <span class="kw">let</span> <span class="ident">conc_seq</span> <span class="op">=</span> <span class="ident">seq</span>.<span class="ident">in_place_concat</span>(<span class="ident">seq</span>).<span class="ident">unwrap</span>();
             <span class="macro">assert_eq!</span>(<span class="number">12</span>, <span class="ident">seq</span>.<span class="ident">len</span>().<span class="ident">unwrap</span>());
-            <span class="macro">assert_eq!</span>(<span class="ident">seq</span>, <span class="ident">conc_seq</span>);
+            <span class="macro">assert!</span>(<span class="ident">seq</span>.<span class="ident">is</span>(<span class="ident">conc_seq</span>));
         });
     }
 
@@ -1686,5 +1686,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (4b043faba 2022-02-24)" ></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (4ce374923 2022-02-28)" ></div>
 </body></html>

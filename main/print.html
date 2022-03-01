@@ -206,7 +206,7 @@ name = &quot;string_sum&quot;
 crate-type = [&quot;cdylib&quot;]
 
 [dependencies]
-pyo3 = { version = &quot;0.15.1&quot;, features = [&quot;extension-module&quot;] }
+pyo3 = { version = &quot;0.16.0&quot;, features = [&quot;extension-module&quot;] }
 </code></pre>
 <p><strong><code>src/lib.rs</code></strong></p>
 <pre><pre class="playground"><code class="language-rust">
@@ -255,7 +255,7 @@ maturin develop
 </code></pre>
 <p>Start a new project with <code>cargo new</code> and add  <code>pyo3</code> to the <code>Cargo.toml</code> like this:</p>
 <pre><code class="language-toml">[dependencies.pyo3]
-version = &quot;0.15.1&quot;
+version = &quot;0.16.0&quot;
 features = [&quot;auto-initialize&quot;]
 </code></pre>
 <p>Example program displaying the value of <code>sys.version</code> and the current user name:</p>
@@ -1871,6 +1871,17 @@ automatically `return NotImplemented`.
 </li>
 <li>
 <p><code>__getattr__(&lt;self&gt;, object) -&gt; object</code></p>
+</li>
+<li>
+<p><code>__getattribute__(&lt;self&gt;, object) -&gt; object</code></p>
+<details>
+<summary>Differences between `__getattr__` and `__getattribute__`</summary>
+As in Python, `__getattr__` is only called if the attribute is not found
+by normal attribute lookup.  `__getattribute__`, on the other hand, is
+called for *every* attribute access.  If it wants to access existing
+attributes on `self`, it needs to be very careful not to introduce
+infinite recursion, and use `baseclass.__getattribute__()`.
+</details>
 </li>
 <li>
 <p><code>__setattr__(&lt;self&gt;, value: object) -&gt; ()</code></p>
@@ -5850,6 +5861,16 @@ impl MyClass {
     }
 }
 </code></pre>
+<h3 id="removed-partialeq-for-object-wrappers"><a class="header" href="#removed-partialeq-for-object-wrappers">Removed <code>PartialEq</code> for object wrappers</a></h3>
+<p>The Python object wrappers <code>Py</code> and <code>PyAny</code> had implementations of <code>PartialEq</code>
+so that <code>object_a == object_b</code> would compare the Python objects for pointer
+equality, which corresponds to the <code>is</code> operator, not the <code>==</code> operator in
+Python.  This has been removed in favor of a new method: use
+<code>object_a.is(object_b)</code>.  This also has the advantage of not requiring the same
+wrapper type for <code>object_a</code> and <code>object_b</code>; you can now directly compare a
+<code>Py&lt;T&gt;</code> with a <code>&amp;PyAny</code> without having to convert.</p>
+<p>To check for Python object equality (the Python <code>==</code> operator), use the new
+method <code>eq()</code>.</p>
 <h3 id="container-magic-methods-now-match-python-behavior"><a class="header" href="#container-magic-methods-now-match-python-behavior">Container magic methods now match Python behavior</a></h3>
 <p>In PyO3 0.15, <code>__getitem__</code>, <code>__setitem__</code> and <code>__delitem__</code> in <code>#[pymethods]</code> would generate only the <em>mapping</em> implementation for a <code>#[pyclass]</code>. To match the Python behavior, these methods now generate both the <em>mapping</em> <strong>and</strong> <em>sequence</em> implementations.</p>
 <p>This means that classes implementing these <code>#[pymethods]</code> will now also be treated as sequences, same as a Python <code>class</code> would be. Small differences in behavior may result:</p>
@@ -5872,6 +5893,55 @@ impl MyClass {
 <p>The <code>__len__</code> and <code>__getitem__</code> methods are also used to implement a Python <a href="https://docs.python.org/3/glossary.html#term-mapping">mapping</a>. In the Python C-API, these methods are not shared: the sequence <code>__len__</code> and <code>__getitem__</code> are defined by the <code>sq_len</code> and <code>sq_item</code> slots, and the mapping equivalents are <code>mp_len</code> and <code>mp_subscript</code>. There are similar distinctions for <code>__setitem__</code> and <code>__delitem__</code>.</p>
 <p>Because there is no such distinction from Python, implementing these methods will fill the mapping and sequence slots simultaneously. A Python class with <code>__len__</code> implemented, for example, will have both the <code>sq_len</code> and <code>mp_len</code> slots filled.</p>
 <p>The PyO3 behavior in 0.16 has been changed to be closer to this Python behavior by default.</p>
+<h3 id="wrap_pymodule-now-respects-privacy-correctly"><a class="header" href="#wrap_pymodule-now-respects-privacy-correctly"><code>wrap_pymodule!</code> now respects privacy correctly</a></h3>
+<p>Prior to PyO3 0.16 the <code>wrap_pymodule!</code> macro could use modules declared in Rust modules which were not reachable.</p>
+<p>For example, the following code was legal before 0.16, but in 0.16 is rejected because the <code>wrap_pymodule!</code> macro cannot access the <code>private_submodule</code> function:</p>
+<pre><pre class="playground"><code class="language-rust compile_fail">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>mod foo {
+    use pyo3::prelude::*;
+
+    #[pymodule]
+    fn private_submodule(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+        Ok(())
+    }
+}
+
+use pyo3::prelude::*;
+use foo::*;
+
+#[pymodule]
+fn my_module(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    m.add_wrapped(wrap_pymodule!(private_submodule))?;
+    Ok(())
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>To fix it, make the private submodule visible, e.g. with <code>pub</code> or <code>pub(crate)</code>.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>mod foo {
+    use pyo3::prelude::*;
+
+    #[pymodule]
+    pub(crate) fn private_submodule(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+        Ok(())
+    }
+}
+
+use pyo3::prelude::*;
+use pyo3::wrap_pymodule;
+use foo::*;
+
+#[pymodule]
+fn my_module(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    m.add_wrapped(wrap_pymodule!(private_submodule))?;
+    Ok(())
+}
+<span class="boring">}
+</span></code></pre></pre>
 <h2 id="from-014-to-015"><a class="header" href="#from-014-to-015">from 0.14.* to 0.15</a></h2>
 <h3 id="changes-in-sequence-indexing"><a class="header" href="#changes-in-sequence-indexing">Changes in sequence indexing</a></h3>
 <p>For all types that take sequence indices (<code>PyList</code>, <code>PyTuple</code> and <code>PySequence</code>),
@@ -7114,7 +7184,7 @@ class StopIteration(Exception):
 PyO3 versions, please see the <a href="https://pyo3.rs/latest/migration.html">migration guide</a>.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>
 and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h2 id="unreleased"><a class="header" href="#unreleased">Unreleased</a></h2>
+<h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0151v01600160a---2022-02-27"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0151v01600160a---2022-02-27"><a href="https://github.com/pyo3/pyo3/compare/v0.15.1...v0.16.0">0.16.0</a> - 2022-02-27</a></h2>
 <h3 id="packaging"><a class="header" href="#packaging">Packaging</a></h3>
 <ul>
 <li>Update MSRV to Rust 1.48. <a href="https://github.com/PyO3/pyo3/pull/2004">#2004</a></li>
@@ -7123,25 +7193,27 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><code>pyo3-build-config</code> no longer enables the <code>resolve-config</code> feature by default. <a href="https://github.com/PyO3/pyo3/pull/2008">#2008</a></li>
 <li>Update <code>inventory</code> optional dependency to 0.2. <a href="https://github.com/PyO3/pyo3/pull/2019">#2019</a></li>
 <li>Drop <code>paste</code> dependency. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
-<li>The bindings found <code>pyo3::ffi</code> are now a re-export of the new <code>pyo3-ffi</code> crate. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
+<li>The bindings found in <code>pyo3::ffi</code> are now a re-export of a separate <code>pyo3-ffi</code> crate. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
 <li>Support PyPy 3.9. <a href="https://github.com/PyO3/pyo3/pull/2143">#2143</a></li>
 </ul>
 <h3 id="added"><a class="header" href="#added">Added</a></h3>
 <ul>
+<li>Add <code>PyCapsule</code> type exposing the <a href="https://docs.python.org/3/c-api/capsule.html#capsules">Capsule API</a>. <a href="https://github.com/PyO3/pyo3/pull/1980">#1980</a></li>
+<li>Add <code>pyo3_build_config::Sysconfigdata</code> and supporting APIs. <a href="https://github.com/PyO3/pyo3/pull/1996">#1996</a></li>
 <li>Add <code>Py::setattr</code> method. <a href="https://github.com/PyO3/pyo3/pull/2009">#2009</a></li>
-<li>Add <code>PyCapsule</code>, exposing the <a href="https://docs.python.org/3/c-api/capsule.html#capsules">Capsule API</a>. <a href="https://github.com/PyO3/pyo3/pull/1980">#1980</a></li>
-<li>Expose <code>pyo3-build-config</code> APIs for cross-compiling and Python configuration discovery for use in other projects. <a href="https://github.com/PyO3/pyo3/pull/1996">#1996</a></li>
-<li>All PyO3 proc-macros except the deprecated <code>#[pyproto]</code> now accept a supplemental attribute <code>#[pyo3(crate = &quot;some::path&quot;)]</code> that specifies where to find the <code>pyo3</code> crate, in case it has been renamed or is re-exported and not found at the crate root. <a href="https://github.com/PyO3/pyo3/pull/2022">#2022</a></li>
+<li>Add <code>#[pyo3(crate = &quot;some::path&quot;)]</code> option to all attribute macros (except the deprecated <code>#[pyproto]</code>). <a href="https://github.com/PyO3/pyo3/pull/2022">#2022</a></li>
+<li>Enable <code>create_exception!</code> macro to take an optional docstring. <a href="https://github.com/PyO3/pyo3/pull/2027">#2027</a></li>
 <li>Enable <code>#[pyclass]</code> for fieldless (aka C-like) enums. <a href="https://github.com/PyO3/pyo3/pull/2034">#2034</a></li>
 <li>Add buffer magic methods <code>__getbuffer__</code> and <code>__releasebuffer__</code> to <code>#[pymethods]</code>. <a href="https://github.com/PyO3/pyo3/pull/2067">#2067</a></li>
-<li>Accept paths in <code>wrap_pyfunction</code> and <code>wrap_pymodule</code>. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
-<li>Add check for correct number of arguments on magic methods. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
-<li><code>wrap_pyfunction!</code> can now wrap a <code>#[pyfunction]</code> which is implemented in a different Rust module or crate. <a href="https://github.com/PyO3/pyo3/pull/2091">#2091</a></li>
+<li>Add support for paths in <code>wrap_pyfunction</code> and <code>wrap_pymodule</code>. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
+<li>Enable <code>wrap_pyfunction!</code> to wrap a <code>#[pyfunction]</code> implemented in a different Rust module or crate. <a href="https://github.com/PyO3/pyo3/pull/2091">#2091</a></li>
 <li>Add <code>PyAny::contains</code> method (<code>in</code> operator for <code>PyAny</code>). <a href="https://github.com/PyO3/pyo3/pull/2115">#2115</a></li>
 <li>Add <code>PyMapping::contains</code> method (<code>in</code> operator for <code>PyMapping</code>). <a href="https://github.com/PyO3/pyo3/pull/2133">#2133</a></li>
-<li>Add garbage collection magic methods <code>__traverse__</code> and <code>__clear__</code> to <code>#[pymethods]</code>. <a href="https://github.com/PyO3/pyo3/pull/2159">#2159</a></li>
+<li>Add garbage collection magic magic methods <code>__traverse__</code> and <code>__clear__</code> to <code>#[pymethods]</code>. <a href="https://github.com/PyO3/pyo3/pull/2159">#2159</a></li>
 <li>Add support for <code>from_py_with</code> on struct tuples and enums to override the default from-Python conversion. <a href="https://github.com/PyO3/pyo3/pull/2181">#2181</a></li>
-<li>Add <code>eq</code>, <code>ne</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code> methods to <code>PyAny</code> that wrap <code>rich_compare</code>.</li>
+<li>Add <code>eq</code>, <code>ne</code>, <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code> methods to <code>PyAny</code> that wrap <code>rich_compare</code>. <a href="https://github.com/PyO3/pyo3/pull/2175">#2175</a></li>
+<li>Add <code>Py::is</code> and <code>PyAny::is</code> methods to check for object identity. <a href="https://github.com/PyO3/pyo3/pull/2183">#2183</a></li>
+<li>Add support for the <code>__getattribute__</code> magic method. <a href="https://github.com/PyO3/pyo3/pull/2187">#2187</a></li>
 </ul>
 <h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
 <ul>
@@ -7155,10 +7227,8 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><code>into_instance</code> -&gt; <code>into_value</code></li>
 </ul>
 </li>
+<li><code>PyErr::new_type</code> now takes an optional docstring and now returns <code>PyResult&lt;Py&lt;PyType&gt;&gt;</code> rather than a <code>ffi::PyTypeObject</code> pointer. <a href="https://github.com/PyO3/pyo3/pull/2027">#2027</a></li>
 <li>Deprecate <code>PyType::is_instance</code>; it is inconsistent with other <code>is_instance</code> methods in PyO3. Instead of <code>typ.is_instance(obj)</code>, use <code>obj.is_instance(typ)</code>. <a href="https://github.com/PyO3/pyo3/pull/2031">#2031</a></li>
-<li><code>PyErr::new_type</code> now takes an optional docstring and now returns <code>PyResult&lt;Py&lt;PyType&gt;&gt;</code> rather than a <code>ffi::PyTypeObject</code> pointer.</li>
-<li>The <code>create_exception!</code> macro can now take an optional docstring. This docstring, if supplied, is visible to users (with <code>.__doc__</code> and <code>help()</code>) and
-accompanies your error type in your crate's documentation.</li>
 <li><code>__getitem__</code>, <code>__setitem__</code> and <code>__delitem__</code> in <code>#[pymethods]</code> now implement both a Python mapping and sequence by default. <a href="https://github.com/PyO3/pyo3/pull/2065">#2065</a></li>
 <li>Improve performance and error messages for <code>#[derive(FromPyObject)]</code> for enums. <a href="https://github.com/PyO3/pyo3/pull/2068">#2068</a></li>
 <li>Reduce generated LLVM code size (to improve compile times) for:
@@ -7168,9 +7238,8 @@ accompanies your error type in your crate's documentation.</li>
 <li><code>#[pyclass]</code> type object creation <a href="https://github.com/PyO3/pyo3/pull/2076">#2076</a> <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a> <a href="https://github.com/PyO3/pyo3/pull/2157">#2157</a></li>
 </ul>
 </li>
-<li><code>__ipow__</code> now supports modulo argument on Python 3.8+. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
-<li><code>pyo3-macros-backend</code> is now compiled with PyO3 cfgs to enable different magic method definitions based on version. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
-<li><code>_PyCFunctionFast</code> now correctly reflects the signature defined in the <a href="https://docs.python.org/3/c-api/structures.html#c._PyCFunctionFast">Python docs</a>. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
+<li>Add modulo argument to <code>__ipow__</code> magic method. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
+<li>Fix FFI definition for <code>_PyCFunctionFast</code>. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
 <li><code>PyDateTimeAPI</code> and <code>PyDateTime_TimeZone_UTC</code> are are now unsafe functions instead of statics. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
 <li><code>PyDateTimeAPI</code> does not implicitly call <code>PyDateTime_IMPORT</code> anymore to reflect the original Python API more closely. Before the first call to <code>PyDateTime_IMPORT</code> a null pointer is returned. Therefore before calling any of the following FFI functions <code>PyDateTime_IMPORT</code> must be called to avoid undefined behaviour: <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a>
 <ul>
@@ -7190,13 +7259,14 @@ accompanies your error type in your crate's documentation.</li>
 </ul>
 </li>
 <li>Deprecate the <code>gc</code> option for <code>pyclass</code> (e.g. <code>#[pyclass(gc)]</code>). Just implement a <code>__traverse__</code> <code>#[pymethod]</code>. <a href="https://github.com/PyO3/pyo3/pull/2159">#2159</a></li>
-<li>The <code>ml_meth</code> field of <code>PyMethodDef</code> is now represented by the <code>PyMethodDefPointer</code> union <a href="https://github.com/PyO3/pyo3/pull/2166">2166</a></li>
+<li>The <code>ml_meth</code> field of <code>PyMethodDef</code> is now represented by the <code>PyMethodDefPointer</code> union. <a href="https://github.com/PyO3/pyo3/pull/2166">2166</a></li>
 <li>Deprecate the <code>#[pyproto]</code> traits. <a href="https://github.com/PyO3/pyo3/pull/2173">#2173</a></li>
 </ul>
 <h3 id="removed"><a class="header" href="#removed">Removed</a></h3>
 <ul>
 <li>Remove all functionality deprecated in PyO3 0.14. <a href="https://github.com/PyO3/pyo3/pull/2007">#2007</a></li>
-<li>Remove <code>Default</code> impl for <code>PyMethodDef</code> <a href="https://github.com/PyO3/pyo3/pull/2166">2166</a></li>
+<li>Remove <code>Default</code> impl for <code>PyMethodDef</code>. <a href="https://github.com/PyO3/pyo3/pull/2166">#2166</a></li>
+<li>Remove <code>PartialEq</code> impl for <code>Py</code> and <code>PyAny</code> (use the new <code>is()</code> instead). <a href="https://github.com/PyO3/pyo3/pull/2183">#2183</a></li>
 </ul>
 <h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
 <ul>
@@ -7204,13 +7274,14 @@ accompanies your error type in your crate's documentation.</li>
 <li>Fix memory leak in <code>PyErr::into_value</code>. <a href="https://github.com/PyO3/pyo3/pull/2026">#2026</a></li>
 <li>Fix clippy warning <code>needless-option-as-deref</code> in code generated by <code>#[pyfunction]</code> and <code>#[pymethods]</code>. <a href="https://github.com/PyO3/pyo3/pull/2040">#2040</a></li>
 <li>Fix undefined behavior in <code>PySlice::indices</code>. <a href="https://github.com/PyO3/pyo3/pull/2061">#2061</a></li>
-<li>Use the Rust function path for <code>wrap_pymodule!</code> of a <code>#[pymodule]</code> with a <code>#[pyo3(name = &quot;..&quot;)]</code> attribute, not the Python name. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
+<li>Fix the <code>wrap_pymodule!</code> macro using the wrong name for a <code>#[pymodule]</code> with a <code>#[pyo3(name = &quot;..&quot;)]</code> attribute. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
+<li>Fix magic methods in <code>#[pymethods]</code> accepting implementations with the wrong number of arguments. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
 <li>Fix panic in <code>#[pyfunction]</code> generated code when a required argument following an <code>Option</code> was not provided.  <a href="https://github.com/PyO3/pyo3/pull/2093">#2093</a></li>
 <li>Fixed undefined behaviour caused by incorrect <code>ExactSizeIterator</code> implementations. <a href="https://github.com/PyO3/pyo3/pull/2124">#2124</a></li>
 <li>Fix missing FFI definition <code>PyCMethod_New</code> on Python 3.9 and up. <a href="https://github.com/PyO3/pyo3/pull/2143">#2143</a></li>
 <li>Add missing FFI definitions <code>_PyLong_NumBits</code> and <code>_PyLong_AsByteArray</code> on PyPy. <a href="https://github.com/PyO3/pyo3/pull/2146">#2146</a></li>
 <li>Fix memory leak in implementation of <code>AsPyPointer</code> for <code>Option&lt;T&gt;</code>. <a href="https://github.com/PyO3/pyo3/pull/2160">#2160</a></li>
-<li>Fix the signature of <code>_PyLong_NumBits</code> <a href="https://github.com/PyO3/pyo3/pull/2161">#2161</a></li>
+<li>Fix FFI definition of <code>_PyLong_NumBits</code> to return <code>size_t</code> instead of <code>c_int</code>. <a href="https://github.com/PyO3/pyo3/pull/2161">#2161</a></li>
 <li>Fix <code>TypeError</code> thrown when argument parsing failed missing the originating causes. <a href="https://github.com/PyO3/pyo3/pull/2178">2177</a></li>
 </ul>
 <h2 id="a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a class="header" href="#a-hrefhttpsgithubcompyo3pyo3comparev0150v01510151a---2021-11-19"><a href="https://github.com/pyo3/pyo3/compare/v0.15.0...v0.15.1">0.15.1</a> - 2021-11-19</a></h2>
