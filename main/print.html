@@ -5893,8 +5893,8 @@ method <code>eq()</code>.</p>
 <p>The <code>__len__</code> and <code>__getitem__</code> methods are also used to implement a Python <a href="https://docs.python.org/3/glossary.html#term-mapping">mapping</a>. In the Python C-API, these methods are not shared: the sequence <code>__len__</code> and <code>__getitem__</code> are defined by the <code>sq_len</code> and <code>sq_item</code> slots, and the mapping equivalents are <code>mp_len</code> and <code>mp_subscript</code>. There are similar distinctions for <code>__setitem__</code> and <code>__delitem__</code>.</p>
 <p>Because there is no such distinction from Python, implementing these methods will fill the mapping and sequence slots simultaneously. A Python class with <code>__len__</code> implemented, for example, will have both the <code>sq_len</code> and <code>mp_len</code> slots filled.</p>
 <p>The PyO3 behavior in 0.16 has been changed to be closer to this Python behavior by default.</p>
-<h3 id="wrap_pymodule-now-respects-privacy-correctly"><a class="header" href="#wrap_pymodule-now-respects-privacy-correctly"><code>wrap_pymodule!</code> now respects privacy correctly</a></h3>
-<p>Prior to PyO3 0.16 the <code>wrap_pymodule!</code> macro could use modules declared in Rust modules which were not reachable.</p>
+<h3 id="wrap_pymodule-and-wrap_pyfunction-now-respect-privacy-correctly"><a class="header" href="#wrap_pymodule-and-wrap_pyfunction-now-respect-privacy-correctly"><code>wrap_pymodule!</code> and <code>wrap_pyfunction!</code> now respect privacy correctly</a></h3>
+<p>Prior to PyO3 0.16 the <code>wrap_pymodule!</code> and <code>wrap_pyfunction!</code> macros could use modules and functions whose defining <code>fn</code> was not reachable according Rust privacy rules.</p>
 <p>For example, the following code was legal before 0.16, but in 0.16 is rejected because the <code>wrap_pymodule!</code> macro cannot access the <code>private_submodule</code> function:</p>
 <pre><pre class="playground"><code class="language-rust compile_fail">
 <span class="boring">#![allow(unused)]
@@ -7243,6 +7243,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><code>#[pyclass]</code> type object creation <a href="https://github.com/PyO3/pyo3/pull/2076">#2076</a> <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a> <a href="https://github.com/PyO3/pyo3/pull/2157">#2157</a></li>
 </ul>
 </li>
+<li>Respect Rust privacy rules for items wrapped with <code>wrap_pyfunction</code> and <code>wrap_pymodule</code>. <a href="https://github.com/PyO3/pyo3/pull/2081">#2081</a></li>
 <li>Add modulo argument to <code>__ipow__</code> magic method. <a href="https://github.com/PyO3/pyo3/pull/2083">#2083</a></li>
 <li>Fix FFI definition for <code>_PyCFunctionFast</code>. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
 <li><code>PyDateTimeAPI</code> and <code>PyDateTime_TimeZone_UTC</code> are are now unsafe functions instead of statics. <a href="https://github.com/PyO3/pyo3/pull/2126">#2126</a></li>
