@@ -213,9 +213,14 @@ itself. By default this feature is not enabled, meaning you can freely use <code
 This allows to use <a href="https://serde.rs/derive.html"><code>#[derive(Serialize, Deserialize)</code></a> on structs that hold references to <code>#[pyclass]</code> instances</p>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[cfg(feature = &quot;serde&quot;)]
+</span><span class="boring">#[allow(dead_code)]
+</span><span class="boring">mod serde_only {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use serde::{Deserialize, Serialize};
 </span>
-<span class="boring">fn main() {
-</span>#[pyclass]
+#[pyclass]
 #[derive(Serialize, Deserialize)]
 struct Permission {
     name: String
@@ -228,6 +233,7 @@ struct User {
     permissions: Vec&lt;Py&lt;Permission&gt;&gt;
 }
 <span class="boring">}
+</span><span class="boring">}
 </span></code></pre></pre>
 
                     </main>
