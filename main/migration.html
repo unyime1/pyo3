@@ -182,6 +182,7 @@ use pyo3::types::PyString;
 #[pyclass]
 struct MyClass { }
 
+#[pymethods]
 impl MyClass {
     fn __str__(&amp;self) -&gt; &amp;'static [u8] {
         b&quot;hello, world&quot;

@@ -271,7 +271,7 @@ we are <em>not</em> holding the GIL?</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello: Py&lt;PyString&gt; = Python::with_gil(|py| {
-    Py&lt;PyString&gt; = py.eval(&quot;\&quot;Hello World!\&quot;&quot;, None, None)?.extract())
+    py.eval(&quot;\&quot;Hello World!\&quot;&quot;, None, None)?.extract())
 })?;
 // Do some stuff...
 // Now sometime later in the program we want to access `hello`.
@@ -296,7 +296,7 @@ release it the next time we acquire the GIL.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello: Py&lt;PyString&gt; = Python::with_gil(|py| {
-    Py&lt;PyString&gt; = py.eval(&quot;\&quot;Hello World!\&quot;&quot;, None, None)?.extract())
+    py.eval(&quot;\&quot;Hello World!\&quot;&quot;, None, None)?.extract())
 })?;
 // Do some stuff...
 // Now sometime later in the program:
@@ -315,7 +315,7 @@ until the GIL is dropped.</p>
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello: Py&lt;PyString&gt; = Python::with_gil(|py| {
-    Py&lt;PyString&gt; = py.eval(&quot;\&quot;Hello World!\&quot;&quot;, None, None)?.extract())
+    py.eval(&quot;\&quot;Hello World!\&quot;&quot;, None, None)?.extract())
 })?;
 // Do some stuff...
 // Now sometime later in the program:
