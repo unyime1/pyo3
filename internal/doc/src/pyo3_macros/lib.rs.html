@@ -1,109 +1,109 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `pyo3-macros/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../scrape-examples.js"></script><script defer src="../../source-files.js"></script>
-    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><div class='internal-banner' style='position:fixed; z-index: 99999; color:red;border:3px solid red;margin-left: auto; margin-right: auto; width: 430px;left:0;right: 0;'><div style='display: flex; align-items: center; justify-content: center;'> ⚠️ Internal Docs ⚠️ Not Public API 👉 <a href='https://pyo3.rs/main/doc/pyo3/index.html' style='color:red;text-decoration:underline;'>Official Docs Here</a></div></div>
-
-<nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pyo3_macros/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `pyo3-macros/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../pyo3_macros/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
         </a><h2 class="location"></h2>
     </nav>
     <nav class="sidebar"><a class="sidebar-logo" href="../../pyo3_macros/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
-        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pyo3_macros/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
-<span id="2">  2</span>
-<span id="3">  3</span>
-<span id="4">  4</span>
-<span id="5">  5</span>
-<span id="6">  6</span>
-<span id="7">  7</span>
-<span id="8">  8</span>
-<span id="9">  9</span>
-<span id="10"> 10</span>
-<span id="11"> 11</span>
-<span id="12"> 12</span>
-<span id="13"> 13</span>
-<span id="14"> 14</span>
-<span id="15"> 15</span>
-<span id="16"> 16</span>
-<span id="17"> 17</span>
-<span id="18"> 18</span>
-<span id="19"> 19</span>
-<span id="20"> 20</span>
-<span id="21"> 21</span>
-<span id="22"> 22</span>
-<span id="23"> 23</span>
-<span id="24"> 24</span>
-<span id="25"> 25</span>
-<span id="26"> 26</span>
-<span id="27"> 27</span>
-<span id="28"> 28</span>
-<span id="29"> 29</span>
-<span id="30"> 30</span>
-<span id="31"> 31</span>
-<span id="32"> 32</span>
-<span id="33"> 33</span>
-<span id="34"> 34</span>
-<span id="35"> 35</span>
-<span id="36"> 36</span>
-<span id="37"> 37</span>
-<span id="38"> 38</span>
-<span id="39"> 39</span>
-<span id="40"> 40</span>
-<span id="41"> 41</span>
-<span id="42"> 42</span>
-<span id="43"> 43</span>
-<span id="44"> 44</span>
-<span id="45"> 45</span>
-<span id="46"> 46</span>
-<span id="47"> 47</span>
-<span id="48"> 48</span>
-<span id="49"> 49</span>
-<span id="50"> 50</span>
-<span id="51"> 51</span>
-<span id="52"> 52</span>
-<span id="53"> 53</span>
-<span id="54"> 54</span>
-<span id="55"> 55</span>
-<span id="56"> 56</span>
-<span id="57"> 57</span>
-<span id="58"> 58</span>
-<span id="59"> 59</span>
-<span id="60"> 60</span>
-<span id="61"> 61</span>
-<span id="62"> 62</span>
-<span id="63"> 63</span>
-<span id="64"> 64</span>
-<span id="65"> 65</span>
-<span id="66"> 66</span>
-<span id="67"> 67</span>
-<span id="68"> 68</span>
-<span id="69"> 69</span>
-<span id="70"> 70</span>
-<span id="71"> 71</span>
-<span id="72"> 72</span>
-<span id="73"> 73</span>
-<span id="74"> 74</span>
-<span id="75"> 75</span>
-<span id="76"> 76</span>
-<span id="77"> 77</span>
-<span id="78"> 78</span>
-<span id="79"> 79</span>
-<span id="80"> 80</span>
-<span id="81"> 81</span>
-<span id="82"> 82</span>
-<span id="83"> 83</span>
-<span id="84"> 84</span>
-<span id="85"> 85</span>
-<span id="86"> 86</span>
-<span id="87"> 87</span>
-<span id="88"> 88</span>
-<span id="89"> 89</span>
-<span id="90"> 90</span>
-<span id="91"> 91</span>
-<span id="92"> 92</span>
-<span id="93"> 93</span>
-<span id="94"> 94</span>
-<span id="95"> 95</span>
-<span id="96"> 96</span>
-<span id="97"> 97</span>
-<span id="98"> 98</span>
-<span id="99"> 99</span>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../pyo3_macros/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><div id="settings-menu" tabindex="-1">
+                                <a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div>
+                        </div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
@@ -259,36 +259,6 @@
 <span id="252">252</span>
 <span id="253">253</span>
 <span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="doccomment">//! This crate declares only the proc macro attributes, as a crate defining proc macro attributes</span>
 <span class="doccomment">//! must not contain any other public items.</span>
@@ -300,8 +270,8 @@
 <span class="kw">use</span> <span class="ident">proc_macro2::TokenStream</span> <span class="kw">as</span> <span class="ident">TokenStream2</span>;
 <span class="kw">use</span> <span class="ident">pyo3_macros_backend</span>::{
     <span class="ident">build_derive_from_pyobject</span>, <span class="ident">build_py_class</span>, <span class="ident">build_py_enum</span>, <span class="ident">build_py_function</span>, <span class="ident">build_py_methods</span>,
-    <span class="ident">get_doc</span>, <span class="ident">process_functions_in_module</span>, <span class="ident">pymodule_impl</span>, <span class="ident">wrap_pyfunction_impl</span>, <span class="ident">wrap_pymodule_impl</span>,
-    <span class="ident">PyClassArgs</span>, <span class="ident">PyClassMethodsType</span>, <span class="ident">PyFunctionOptions</span>, <span class="ident">PyModuleOptions</span>, <span class="ident">WrapPyFunctionArgs</span>,
+    <span class="ident">get_doc</span>, <span class="ident">process_functions_in_module</span>, <span class="ident">pymodule_impl</span>, <span class="ident">PyClassArgs</span>, <span class="ident">PyClassMethodsType</span>,
+    <span class="ident">PyFunctionOptions</span>, <span class="ident">PyModuleOptions</span>,
 };
 <span class="kw">use</span> <span class="ident">quote::quote</span>;
 <span class="kw">use</span> <span class="ident">syn</span>::{<span class="ident">parse::Nothing</span>, <span class="ident">parse_macro_input</span>};
@@ -329,11 +299,11 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ast</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">syn::ItemFn</span>);
     <span class="kw">let</span> <span class="ident">options</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">PyModuleOptions::from_attrs</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>.<span class="ident">attrs</span>) {
         <span class="prelude-val">Ok</span>(<span class="ident">options</span>) =&gt; <span class="ident">options</span>,
-        <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="kw">return</span> <span class="ident">e</span>.<span class="ident">to_compile_error</span>().<span class="ident">into</span>(),
+        <span class="prelude-val">Err</span>(<span class="ident">e</span>) =&gt; <span class="kw">return</span> <span class="ident">e</span>.<span class="ident">into_compile_error</span>().<span class="ident">into</span>(),
     };
 
-    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">process_functions_in_module</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>) {
-        <span class="kw">return</span> <span class="ident">err</span>.<span class="ident">to_compile_error</span>().<span class="ident">into</span>();
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">process_functions_in_module</span>(<span class="kw-2">&amp;</span><span class="ident">options</span>, <span class="kw-2">&amp;mut</span> <span class="ident">ast</span>) {
+        <span class="kw">return</span> <span class="ident">err</span>.<span class="ident">into_compile_error</span>().<span class="ident">into</span>();
     }
 
     <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">get_doc</span>(<span class="kw-2">&amp;</span><span class="ident">ast</span>.<span class="ident">attrs</span>, <span class="prelude-val">None</span>);
@@ -349,7 +319,7 @@
 
 <span class="doccomment">/// A proc macro used to implement Python&#39;s [dunder methods][1].</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// This atribute is required on blocks implementing [`PyObjectProtocol`][2],</span>
+<span class="doccomment">/// This attribute is required on blocks implementing [`PyObjectProtocol`][2],</span>
 <span class="doccomment">/// [`PyNumberProtocol`][3], [`PyGCProtocol`][4] and [`PyIterProtocol`][5].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [1]: https://docs.python.org/3/reference/datamodel.html#special-method-names</span>
@@ -372,30 +342,19 @@
 
 <span class="doccomment">/// A proc macro used to expose Rust structs and fieldless enums as Python objects.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// `#[pyclass]` accepts the following [parameters][2]:</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// |  Parameter  |  Description |</span>
-<span class="doccomment">/// | :-  | :- |</span>
-<span class="doccomment">/// | &lt;span style=&quot;white-space: pre&quot;&gt;`name = &quot;python_name&quot;`&lt;/span&gt; | Sets the name that Python sees this class as. Defaults to the name of the Rust struct. |</span>
-<span class="doccomment">/// | &lt;span style=&quot;white-space: pre&quot;&gt;`freelist = N`&lt;/span&gt; |  Implements a [free list][9] of size N. This can improve performance for types that are often created and deleted in quick succession. Profile your code to see whether `freelist` is right for you.  |</span>
-<span class="doccomment">/// | `weakref` | Allows this class to be [weakly referenceable][6]. |</span>
-<span class="doccomment">/// | &lt;span style=&quot;white-space: pre&quot;&gt;`extends = BaseType`&lt;/span&gt;  | Use a custom baseclass. Defaults to [`PyAny`][4] |</span>
-<span class="doccomment">/// | `subclass` | Allows other Python classes and `#[pyclass]` to inherit from this class. Enums cannot be subclassed. |</span>
-<span class="doccomment">/// | `unsendable` | Required if your struct is not [`Send`][3]. Rather than using `unsendable`, consider implementing your struct in a threadsafe way by e.g. substituting [`Rc`][7] with [`Arc`][8]. By using `unsendable`, your class will panic when accessed by another thread.|</span>
-<span class="doccomment">/// | &lt;span style=&quot;white-space: pre&quot;&gt;`module = &quot;module_name&quot;`&lt;/span&gt; |  Python code will see the class as being defined in this module. Defaults to `builtins`. |</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">cfg_attr</span>(<span class="ident">docsrs</span>, <span class="ident">doc</span> <span class="op">=</span> <span class="macro">include_str!</span>(<span class="string">&quot;../docs/pyclass_parameters.md&quot;</span>)))]</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// For more on creating Python classes,</span>
 <span class="doccomment">/// see the [class section of the guide][1].</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// [1]: https://pyo3.rs/latest/class.html</span>
-<span class="doccomment">/// [2]: https://pyo3.rs/latest/class.html#customizing-the-class</span>
-<span class="doccomment">/// [3]: std::marker::Send</span>
-<span class="doccomment">/// [4]: ../prelude/struct.PyAny.html</span>
-<span class="doccomment">/// [5]: https://pyo3.rs/latest/class/protocols.html#garbage-collector-integration</span>
-<span class="doccomment">/// [6]: https://docs.python.org/3/library/weakref.html</span>
-<span class="doccomment">/// [7]: std::rc::Rc</span>
-<span class="doccomment">/// [8]: std::sync::Arc</span>
-<span class="doccomment">/// [9]: https://en.wikipedia.org/wiki/Free_list</span>
+<span class="doccomment">/// [params-1]: ../prelude/struct.PyAny.html</span>
+<span class="doccomment">/// [params-2]: https://en.wikipedia.org/wiki/Free_list</span>
+<span class="doccomment">/// [params-3]: std::marker::Send</span>
+<span class="doccomment">/// [params-4]: std::rc::Rc</span>
+<span class="doccomment">/// [params-5]: std::sync::Arc</span>
+<span class="doccomment">/// [params-6]: https://docs.python.org/3/library/weakref.html</span>
+<span class="doccomment">/// [params-mapping]: https://pyo3.rs/latest/class/protocols.html#mapping--sequence-types</span>
 <span class="attribute">#[<span class="ident">proc_macro_attribute</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pyclass</span>(<span class="ident">attr</span>: <span class="ident">TokenStream</span>, <span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
     <span class="kw">use</span> <span class="ident">syn::Item</span>;
@@ -405,7 +364,7 @@
         <span class="ident">Item::Enum</span>(<span class="ident">enum_</span>) =&gt; <span class="ident">pyclass_enum_impl</span>(<span class="ident">attr</span>, <span class="ident">enum_</span>, <span class="ident">methods_type</span>()),
         <span class="ident">unsupported</span> =&gt; {
             <span class="ident">syn::Error::new_spanned</span>(<span class="ident">unsupported</span>, <span class="string">&quot;#[pyclass] only supports structs and enums.&quot;</span>)
-                .<span class="ident">to_compile_error</span>()
+                .<span class="ident">into_compile_error</span>()
                 .<span class="ident">into</span>()
         }
     }
@@ -496,32 +455,13 @@
     .<span class="ident">into</span>()
 }
 
-<span class="doccomment">/// Wraps a Rust function annotated with [`#[pyfunction]`](macro@crate::pyfunction).</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This can be used with `PyModule::add_function` to add free functions to a `PyModule` - see its</span>
-<span class="doccomment">/// documentation for more information.</span>
-<span class="attribute">#[<span class="ident">proc_macro</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_pyfunction</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">WrapPyFunctionArgs</span>);
-    <span class="ident">wrap_pyfunction_impl</span>(<span class="ident">args</span>).<span class="ident">into</span>()
-}
-
-<span class="doccomment">/// Returns a function that takes a `Python` instance and returns a Python module.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Use this together with [`#[pymodule]`](macro@crate::pymodule) and `PyModule::add_wrapped`.</span>
-<span class="attribute">#[<span class="ident">proc_macro</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap_pymodule</span>(<span class="ident">input</span>: <span class="ident">TokenStream</span>) -&gt; <span class="ident">TokenStream</span> {
-    <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">input</span> <span class="kw">as</span> <span class="ident">syn::Path</span>);
-    <span class="ident">wrap_pymodule_impl</span>(<span class="ident">path</span>).<span class="ident">unwrap_or_compile_error</span>().<span class="ident">into</span>()
-}
-
 <span class="kw">fn</span> <span class="ident">pyclass_impl</span>(
     <span class="ident">attrs</span>: <span class="ident">TokenStream</span>,
     <span class="kw-2">mut</span> <span class="ident">ast</span>: <span class="ident">syn::ItemStruct</span>,
     <span class="ident">methods_type</span>: <span class="ident">PyClassMethodsType</span>,
 ) -&gt; <span class="ident">TokenStream</span> {
     <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">attrs</span> <span class="ident">with</span> <span class="ident">PyClassArgs::parse_stuct_args</span>);
-    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">build_py_class</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>, <span class="kw-2">&amp;</span><span class="ident">args</span>, <span class="ident">methods_type</span>).<span class="ident">unwrap_or_compile_error</span>();
+    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">build_py_class</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>, <span class="ident">args</span>, <span class="ident">methods_type</span>).<span class="ident">unwrap_or_compile_error</span>();
 
     <span class="macro">quote!</span>(
         #<span class="ident">ast</span>
@@ -536,7 +476,7 @@
     <span class="ident">methods_type</span>: <span class="ident">PyClassMethodsType</span>,
 ) -&gt; <span class="ident">TokenStream</span> {
     <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="macro">parse_macro_input!</span>(<span class="ident">attrs</span> <span class="ident">with</span> <span class="ident">PyClassArgs::parse_enum_args</span>);
-    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">build_py_enum</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>, <span class="kw-2">&amp;</span><span class="ident">args</span>, <span class="ident">methods_type</span>).<span class="ident">unwrap_or_compile_error</span>();
+    <span class="kw">let</span> <span class="ident">expanded</span> <span class="op">=</span> <span class="ident">build_py_enum</span>(<span class="kw-2">&amp;mut</span> <span class="ident">ast</span>, <span class="ident">args</span>, <span class="ident">methods_type</span>).<span class="ident">unwrap_or_compile_error</span>();
 
     <span class="macro">quote!</span>(
         #<span class="ident">ast</span>
@@ -574,5 +514,5 @@
     }
 }
 </code></pre></div>
-</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0-nightly (c274e4969 2022-03-05)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pyo3_macros" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (e71440575 2022-06-02)" ></div>
 </body></html>
