@@ -107,6 +107,7 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
 </pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::PyThreadState</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">PyFrameObject</span>, <span class="ident">PyInterpreterState</span>, <span class="ident">PyObject</span>};
@@ -136,6 +137,7 @@
 <span class="comment">// skipped PyTraceInfo</span>
 <span class="comment">// skipped CFrame</span>
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">_PyErr_StackItem</span> {
@@ -210,5 +212,5 @@
 <span class="comment">// skipped _PyCrossInterpreterData_RegisterClass</span>
 <span class="comment">// skipped _PyCrossInterpreterData_Lookup</span>
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3_ffi" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (e71440575 2022-06-02)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3_ffi" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (99930ac7f 2022-06-11)" ></div>
 </body></html>
