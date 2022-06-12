@@ -199,6 +199,14 @@
 <span id="192">192</span>
 <span id="193">193</span>
 <span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
 </pre><pre class="rust"><code><span class="comment">// Copyright (c) 2017-present PyO3 Project and Contributors</span>
 <span class="comment">//</span>
 
@@ -213,9 +221,17 @@
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PyFrozenSet</span>(<span class="ident">PyAny</span>);
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">PyPy</span>))]</span>
 <span class="macro">pyobject_native_type!</span>(
     <span class="ident">PyFrozenSet</span>,
     <span class="ident">ffi::PySetObject</span>,
+    <span class="ident">ffi::PyFrozenSet_Type</span>,
+    #<span class="ident">checkfunction</span><span class="op">=</span><span class="ident">ffi::PyFrozenSet_Check</span>
+);
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">PyPy</span>)]</span>
+<span class="macro">pyobject_native_type_core!</span>(
+    <span class="ident">PyFrozenSet</span>,
     <span class="ident">ffi::PyFrozenSet_Type</span>,
     #<span class="ident">checkfunction</span><span class="op">=</span><span class="ident">ffi::PyFrozenSet_Check</span>
 );
@@ -394,5 +410,5 @@
     }
 }
 </code></pre></div>
-</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (e71440575 2022-06-02)" ></div>
+</section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="pyo3" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.63.0-nightly (99930ac7f 2022-06-11)" ></div>
 </body></html>
